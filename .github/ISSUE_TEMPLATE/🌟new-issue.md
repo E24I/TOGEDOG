@@ -2,8 +2,8 @@
 name: "\U0001F31FNEW ISSUE"
 about: 새로운 이슈 작성
 title: "[FEAT] : 채팅 기능 구현"
-labels: essential, frontend, high
-assignees: kuetiipp
+labels: ''
+assignees: ''
 
 ---
 
