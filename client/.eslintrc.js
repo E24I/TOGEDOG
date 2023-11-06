@@ -10,7 +10,7 @@ module.exports = {
     "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:prettier/recommended",
-    "plugin:@tanstack-query/recommended",
+    "plugin:@tanstack/eslint-plugin-query/recommended",
   ],
   overrides: [
     {
@@ -37,7 +37,7 @@ module.exports = {
     "react-hooks",
     "jsx-a11y",
     "prettier",
-    "@tanstack-query",
+    "@tanstack/query",
   ],
   rules: {},
 };
