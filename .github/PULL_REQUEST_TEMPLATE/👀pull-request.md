@@ -1,5 +1,5 @@
 ---
-name: "NEW PULL REQUEST"
+name: "\U0001F31FNEW PULL REQUEST"
 about: pr 작성
 title: "[DOCS] : 문서 수정"
 
