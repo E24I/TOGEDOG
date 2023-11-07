@@ -1,0 +1,72 @@
+name: Java CI with Gradle
+
+on:
+  pull_request:
+    branches: [ dev ]
+  push:
+    branches: [ dev ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    env:
+      working-directory: ./server
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'zulu'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+        working-directory: ${{env.working-directory}}
+
+      - name: Build with Gradle
+        run: ./gradlew build --warning-mode all --scan
+        working-directory: ${{env.working-directory}}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: Build and push register app
+        run: |
+          docker build -t togedog -f ./server/Dockerfile .
+          docker tag togedog ${{ secrets.DOCKER_HUB_USERNAME }}/togedog:${GITHUB_SHA::7}
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/togedog:${GITHUB_SHA::7}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Start Session Manager session
+        run: aws ssm start-session --target ${{ secrets.AWS_INSTANCE_ID }}
+
+      - name: Deploy to Server
+        env:
+         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+         AWS_REGION: ap-northeast-2
+        run: |
+         aws ssm send-command \
+           --instance-ids ${{ secrets.AWS_INSTANCE_ID }} \
+           --document-name "AWS-RunShellScript" \
+           --parameters "commands=[
+             'if sudo docker ps -a --format \\'{{.Names}}\\' | grep -q \'^server$\\'; then',
+             '  sudo docker stop server',
+             '  sudo docker rm server',
+             'fi',
+             'sudo docker pull leesaewoo/togedog:${GITHUB_SHA::7}',
+             'sudo docker tag leesaewoo/togedog:${GITHUB_SHA::7} togedog',
+             'sudo docker run -e TZ=Asia/Seoul -d --name server -p 8080:8080 togedog'
+           ]" \
+           --output text
