@@ -12,6 +12,7 @@ import {
   NotificationsContainer,
 } from "./Header.Style";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {
   const [isRead, setRead] = useState<boolean>(false);
@@ -24,16 +25,28 @@ const Header: React.FC = () => {
 
   return (
     <HeaderContainer>
-      <Logo />
+      <Link to="/">
+        <Logo />
+      </Link>
+
       <MiddleButtonContainer>
-        <MainButtonStyle />
-        <MapButtonStyle />
-        <CreateFeedButtonStyle />
+        <Link to="/">
+          <MainButtonStyle />
+        </Link>
+        <Link to="/">
+          <MapButtonStyle />
+        </Link>
+        <Link to="/create">
+          <CreateFeedButtonStyle />
+        </Link>
+
         <NotificationsContainer onClick={convertToRead}>
           {isRead === false ? <RedPointStyle /> : <NotificationsStyle />}
         </NotificationsContainer>
       </MiddleButtonContainer>
-      <ProfileStyle />
+      <Link to="/">
+        <ProfileStyle />
+      </Link>
     </HeaderContainer>
   );
 };

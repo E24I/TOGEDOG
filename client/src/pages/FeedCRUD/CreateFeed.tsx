@@ -1,5 +1,7 @@
-const PostFeed = () => {
-  return;
+import React from "react";
+
+const CreateFeed: React.FC = () => {
+  return <></>;
 };
 
-export default PostFeed;
+export default CreateFeed;
