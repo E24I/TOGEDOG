@@ -1,5 +1,5 @@
-const PostFeed = () => {
+const EditFeed = () => {
   return;
 };
 
-export default PostFeed;
+export default EditFeed;

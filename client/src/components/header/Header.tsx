@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { ReactComponent as Home } from "../../assets/images/icons/headerIcons/Home.svg";
 import { ReactComponent as Main } from "../../assets/images/icons/headerIcons/Main.svg";
 import { ReactComponent as Map } from "../../assets/images/icons/headerIcons/Map.svg";
@@ -24,11 +25,21 @@ const Header: React.FC = () => {
 
   return (
     <HeaderContainer>
-      <Logo />
+      <Link to="/">
+        <Logo />
+      </Link>
+
       <MiddleButtonContainer>
-        <MainButtonStyle />
-        <MapButtonStyle />
-        <CreateFeedButtonStyle />
+        <Link to="/">
+          <MainButtonStyle />
+        </Link>
+        <Link to="/">
+          <MapButtonStyle />
+        </Link>
+        <Link to="/create">
+          <CreateFeedButtonStyle />
+        </Link>
+
         <NotificationsContainer onClick={convertToRead}>
           {isRead === false ? <RedPointStyle /> : <NotificationsStyle />}
         </NotificationsContainer>
