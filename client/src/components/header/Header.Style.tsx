@@ -18,11 +18,13 @@ export const CreateFeedButtonStyle = styled(CreateFeed)``;
 export const NotificationsStyle = styled(Notifications)``;
 export const RedPointStyle = styled(NotificationsRedPoint)``;
 export const ProfileStyle = styled(Profile)`
-  padding: 15px;
   background-color: #d7d7d7;
   border-radius: 100px;
+  width: 60px; //임시 사이징 입니다
+  height: 60px; //임시 사이징 입니다
 `;
 
+//component style
 export const HeaderContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -31,6 +33,7 @@ export const HeaderContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #d8d8d8; //구분을 위한 임시 코드 입니다
+  padding: 0 20px; //임시 코드 입니다
 `;
 
 export const MiddleButtonContainer = styled.div`
