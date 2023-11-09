@@ -4,13 +4,15 @@ import LoginForm from "../components/loginElement/LoginForm";
 
 const LoginContainer = styled.div`
   width: 1028px;
+  display: flex;
+  margin: 0 auto;
 `;
 
 const ImgBox = styled.div`
   width: 514px;
   height: 632px;
   background: gray;
-  border: 1px solid red;
+  border-radius: 30px 0 0 30px;
 `;
 
 const Login = () => {
