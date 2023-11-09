@@ -39,7 +39,6 @@ export const MiddleButtonContainer = styled.div`
   width: 500px; // 추후 수정 부분
   justify-content: space-between;
   align-items: center;
-  padding-left: 0;
 `;
 
 export const NotificationsContainer = styled.button`
