@@ -1,24 +1,41 @@
-import React from "react";
-import { ReactComponent as Message } from "../../assets/images/icons/Message.svg";
-import { styled } from "styled-components";
+import React, { useState } from "react";
+import {
+  MiddleButtonContainer,
+  HeaderContainer,
+  NotificationsContainer,
+  Logo,
+  MainButtonStyle,
+  MapButtonStyle,
+  CreateFeedButtonStyle,
+  RedPointStyle,
+  NotificationsStyle,
+  ProfileStyle,
+} from "./Header.Style";
 
 const Header: React.FC = () => {
-  return <HeaderContainer>{/* <Mes /> */}</HeaderContainer>;
+
+  const [isRead, setRead] = useState<boolean>(false);
+
+  const convertToRead = () => {
+    if (isRead !== true) {
+      setRead(true);
+    }
+  };
+
+  return (
+    <HeaderContainer>
+      <Logo />
+      <MiddleButtonContainer>
+        <MainButtonStyle />
+        <MapButtonStyle />
+        <CreateFeedButtonStyle />
+        <NotificationsContainer onClick={convertToRead}>
+          {isRead === false ? <RedPointStyle /> : <NotificationsStyle />}
+        </NotificationsContainer>
+      </MiddleButtonContainer>
+      <ProfileStyle />
+    </HeaderContainer>
+  );
 };
 
 export default Header;
-
-export const Mes = styled(Message)`
-  width: 200px;
-  height: 200px;
-  path {
-    fill: black;
-  }
-  margin-left: 40px;
-`;
-
-export const HeaderContainer = styled.header`
-  width: 100vw;
-  height: 70px;
-  background-color: pink;
-`;
