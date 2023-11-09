@@ -3,11 +3,7 @@ import { ReactComponent as Message } from "../../assets/images/icons/Message.svg
 import { styled } from "styled-components";
 
 const Header: React.FC = () => {
-  return (
-    <>
-      <Mes />
-    </>
-  );
+  return <HeaderContainer>{/* <Mes /> */}</HeaderContainer>;
 };
 
 export default Header;
@@ -19,4 +15,10 @@ export const Mes = styled(Message)`
     fill: black;
   }
   margin-left: 40px;
+`;
+
+export const HeaderContainer = styled.header`
+  width: 100vw;
+  height: 70px;
+  background-color: pink;
 `;
