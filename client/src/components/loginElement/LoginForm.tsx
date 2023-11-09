@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
-import LoginInput from "../loginElement/LoginInput";
 import OauthLogin from "./Oauth";
 
 const InputContainer = styled.div`
@@ -59,6 +58,16 @@ const InputContainer = styled.div`
     font-size: 12px;
     font-style: normal;
   }
+  input {
+    display: flex;
+    width: 240px;
+    padding: 10px 13px;
+    align-items: center;
+    gap: 10px;
+    border-radius: 100px;
+    border: 1px solid #d7d7d7;
+    margin-bottom: 20px;
+  }
 `;
 
 const LoginForm = () => {
@@ -71,8 +80,8 @@ const LoginForm = () => {
       <InputContainer>
         <div>로고</div>
         <div>
-          <LoginInput placeholder={"이메일을 입력하세요."} />
-          <LoginInput placeholder={"비밀번호를 입력하세요."} />
+          <input type="text" placeholder="이메일을 입력하세요." />
+          <input type="password" placeholder="비밀번호를 입력하세요." />
           <button onClick={handle}>비밀번호를 잊으셨나요?</button>
           <button className={loginInfo ? "buttonOn" : "buttonOff"}>
             로그인
