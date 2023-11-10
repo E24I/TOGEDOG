@@ -7,10 +7,14 @@ import { ReactComponent as Delete } from "../../assets/images/icons/Delete.svg";
 // assets
 export const BackspaceButton = styled(Backspace)``;
 export const AddButton = styled(Add)`
-  margin-top: 100px;
+  margin: 100px 75px;
 `;
 export const DeleteButton = styled(Delete)`
-  background-color: red;
+  position: absolute;
+  top: 0px;
+  right: 0;
+  z-index: 1;
+  cursor: pointer;
 `;
 
 // 피드 전체 컨테이너
@@ -68,27 +72,28 @@ export const AttachmentSpaceContainer = styled.div`
   flex-direction: row;
   border: 2px solid #d79fe3; //구분선 입니다
   height: fit-content;
-  text-align: center; //추후 용도에 따라 삭제될 코드
   overflow: scroll;
 `;
 
 //첨부파일 래핑
-export const AttachmentWrap = styled.div``;
+export const AttachmentWrap = styled.div`
+  width: 300px;
+  position: relative;
+  padding: 10px;
+`;
 
 //첨부이미지
 export const AttachedImg = styled.img`
-  width: 200px;
+  width: 100%;
   height: 275px;
   border-radius: 30px;
-  margin: 20px 20px 0 20px;
 `;
 
 //첨부영상
 export const AttachedVideo = styled.video`
-  width: 200px;
+  width: 100%;
   height: 275px;
   border-radius: 30px;
-  margin: 20px 20px 0 20px;
 `;
 
 //첨부버튼
@@ -100,7 +105,7 @@ export const AttachingButton = styled.label`
   line-height: normal;
   cursor: pointer;
   border-radius: 30px;
-  margin: 20px 20px 0 20px;
+  margin: 20px;
 `;
 
 //첨부인풋폼
