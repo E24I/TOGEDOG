@@ -40,17 +40,21 @@ textarea {
   resize: none;
 }
 
+input {
+  outline: none;
+}
+
 body::-webkit-scrollbar {
   display: none;
 }
 
+/* ::-webkit-scrollbar {
+  width: 0px
+} */
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
-
-::-webkit-scrollbar {
-  width: 0px
 }
 
 .flicking-arrow-prev,
@@ -68,8 +72,4 @@ table{
   border:0;
   border-spacing:0px;
   border-collapse:collapse;
-}
-
-input {
-  outline: none;
 }

@@ -14,7 +14,6 @@ import {
 import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {
-
   const [isRead, setRead] = useState<boolean>(false);
 
   const convertToRead = () => {
