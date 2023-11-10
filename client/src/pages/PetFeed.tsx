@@ -3,6 +3,7 @@ import FeedList from "../components/petFeed/FeedList";
 import { feedList } from "../types/feedDataType";
 import { feedLists } from "../components/petFeed/FeedDummy";
 import { ReactComponent as Pets } from "../assets/images/icons/Pets.svg";
+import loading from "../assets/loading/loading.gif";
 import styled from "styled-components";
 
 const PetFeed: React.FC = () => {
@@ -28,12 +29,15 @@ const PetFeed: React.FC = () => {
         <PetLeftFoot />
         <PetRightFoot />
         <PetLeftFoot />
+        <Loadings src={loading} />
       </LoadingContainer>
     </FeedContainer>
   );
 };
 
 export default PetFeed;
+
+export const Loadings = styled.img``;
 
 export const FeedContainer = styled.div`
   display: flex;
