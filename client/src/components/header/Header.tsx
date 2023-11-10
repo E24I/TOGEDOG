@@ -11,6 +11,7 @@ import {
   NotificationsStyle,
   ProfileStyle,
 } from "./Header.Style";
+
 import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { styled } from "styled-components";
-import OauthLogin from "./Oauth";
+import Oauth from "./Oauth";
 
 const InputContainer = styled.div`
   box-sizing: border-box;
@@ -30,6 +31,21 @@ const InputContainer = styled.div`
     border: none;
     cursor: pointer;
   }
+  p {
+    color: #404040;
+    font-size: 12px;
+    font-style: normal;
+  }
+  input {
+    display: flex;
+    width: 268px;
+    padding: 10px 13px;
+    align-items: center;
+    gap: 10px;
+    border-radius: 100px;
+    border: 1px solid #d7d7d7;
+    margin-bottom: 20px;
+  }
   .buttonOn {
     color: black;
     display: block;
@@ -53,45 +69,63 @@ const InputContainer = styled.div`
     transition: 1s;
     cursor: default;
   }
-  p {
-    color: #404040;
-    font-size: 12px;
-    font-style: normal;
-  }
-  input {
-    display: flex;
-    width: 240px;
-    padding: 10px 13px;
-    align-items: center;
-    gap: 10px;
-    border-radius: 100px;
-    border: 1px solid #d7d7d7;
-    margin-bottom: 20px;
+  .logoImg {
+    margin: 40px 0 20px;
   }
 `;
 
-const LoginForm = () => {
-  const [loginInfo, isLoginInfo] = useState<boolean>(false);
-  const handle = () => {
-    isLoginInfo(!loginInfo);
+const LoginForm: React.FC = () => {
+  const [loginInfo, setLoginInfo] = useState<boolean>(false); //아아디,비밀번호가 입력돼었으면 true
+  const [id, setId] = useState<string>("");
+  const [pw, setPw] = useState<string>("");
+
+  useEffect(() => {
+    if (id && pw) {
+      setLoginInfo(true);
+    } else {
+      setLoginInfo(false);
+    }
+  }, [id, pw]);
+
+  const handleId = (value: string) => {
+    const idValue = value;
+    setId(idValue);
+  };
+  const handlePw = (value: string) => {
+    const pwValue = value;
+    setPw(pwValue);
   };
   return (
     <>
       <InputContainer>
-        <div>로고</div>
-        <div>
-          <input type="text" placeholder="이메일을 입력하세요." />
-          <input type="password" placeholder="비밀번호를 입력하세요." />
-          <button onClick={handle}>비밀번호를 잊으셨나요?</button>
+        <div className="logoImg">로고</div>
+        <form>
+          <input
+            type="text"
+            placeholder="이메일을 입력하세요."
+            onChange={(e) => {
+              handleId(e.target.value);
+            }}
+          />
+          <input
+            type="password"
+            placeholder="비밀번호를 입력하세요."
+            onChange={(e) => {
+              handlePw(e.target.value);
+            }}
+          />
+          <button>비밀번호를 잊으셨나요?</button>
           <button className={loginInfo ? "buttonOn" : "buttonOff"}>
             로그인
           </button>
-        </div>
+        </form>
         <div>
-          <p>또는</p>
-          <OauthLogin />
+          <Oauth />
           <p>
-            계정이 없으신가요? <button>가입하기</button>
+            계정이 없으신가요?{" "}
+            <Link to="/SignUp">
+              <button>가입하기</button>
+            </Link>
           </p>
         </div>
       </InputContainer>
