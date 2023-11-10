@@ -3,6 +3,7 @@ export type feedList = {
   title: string;
   content: string;
   createDate: string;
+  createTime: string;
   media: {
     imgUrl: string[] | undefined;
     videoUrl: string | undefined;

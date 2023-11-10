@@ -7,6 +7,7 @@ export const feedLists: feedList[] = [
     content:
       "저히 몽자 오늘 애견카페가서 아주 신나게 놀다왔답니당 다들 저히 기여운 몽자 보고 가세요",
     createDate: "2023-11-06",
+    createTime: "12:11:56",
     member: {
       memberId: 1,
       nickname: "세계최강 귀요미 몽자",
@@ -16,7 +17,7 @@ export const feedLists: feedList[] = [
     location: "",
     media: {
       imgUrl: ["1", "2", "3", "4"],
-      videoUrl: "",
+      videoUrl: "11",
     },
     isLiked: false,
     isMarked: false,
@@ -29,6 +30,7 @@ export const feedLists: feedList[] = [
     content:
       "저희 마루는 이제 10개월 된 귀요미 간장 푸들입니다. 혹시 이 시기즈음 푸들 친구들은 최애 장난감이 무엇이었는지 공유해주실 수 있을까요???!!!",
     createDate: "2023-11-07",
+    createTime: "12:11:56",
     media: {
       imgUrl: undefined,
       videoUrl: undefined,
@@ -51,9 +53,10 @@ export const feedLists: feedList[] = [
     content:
       "중랑천 애견쉼터 처음 가봤는데 강아지들도 많고 너무 재미있게 놀다 왔습니당 추천해요! 중랑천 애견쉼터 처음 가봤는데 강아지들도 많고 너무 재미있게 놀다 왔습니당 추천해요! 중랑천 애견쉼터 처음 가봤는데 강아지들도 많고 너무 ... 더 보기",
     createDate: "2023-11-08",
+    createTime: "12:11:56",
     media: {
       imgUrl: ["1", "2", "3"],
-      videoUrl: "",
+      videoUrl: "11",
     },
     address: "중랑천애견쉼터",
     location: "",
