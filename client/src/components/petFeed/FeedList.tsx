@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { feedList } from "../../types/feedDataType";
 import { ReactComponent as Dots } from "../../assets/images/icons/Dots.svg";
 import { ReactComponent as Like } from "../../assets/images/icons/Heart.svg";
@@ -12,13 +12,20 @@ import styled from "styled-components";
 
 interface OwnProps {
   items: feedList;
+  handleMoreReview(): void;
 }
 
-const FeedList: React.FC<OwnProps> = ({ items }) => {
+type time = { type: string; time: number };
+
+const FeedList: React.FC<OwnProps> = ({ items, handleMoreReview }) => {
   const today = new Date();
+  const createDate = items.createDate;
+  const feedDate = createDate.split("-").map((el) => parseInt(el));
+  const createTime = items.createTime;
+  const feedTime = createTime.split(":").map((el) => parseInt(el));
 
   return (
-    <li>
+    <Feed>
       <FeedHeader>
         <Profile>
           <ProfileBox>
@@ -30,53 +37,77 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
           </ProfileBox>
           <div>
             <UserName>{items.member.nickname}</UserName>
-            <FeedAddress>
-              <PinMark />
-              {items.address}
-            </FeedAddress>
+            {items.address && (
+              <FeedAddress>
+                <PinPoint />
+                {items.address}
+              </FeedAddress>
+            )}
           </div>
         </Profile>
-        <UploadTime>{items.createDate}</UploadTime>
-        <UploadTime>{today.getFullYear()}</UploadTime>
-        <UploadTime>{today.getMonth() + 1}</UploadTime>
-        <UploadTime>{today.getDate()}</UploadTime>
-        <Dots />
+        <UploadTime>
+          {today.getFullYear() !== feedDate[0]
+            ? `${today.getFullYear() - feedDate[0]}년 전`
+            : today.getMonth() + 1 !== feedDate[1]
+            ? `${today.getMonth() + 1 - feedDate[1]}개월 전`
+            : today.getDate() !== feedDate[0]
+            ? `${today.getDate() - feedDate[2]}일 전`
+            : today.getHours() !== feedTime[0]
+            ? `${today.getHours() - feedTime[0]}시간 전`
+            : today.getMinutes() !== feedTime[1]
+            ? `${today.getMinutes() - feedTime[1]}분 전`
+            : `${today.getSeconds() - feedTime[2]}초 전`}
+        </UploadTime>
+        <Setting />
       </FeedHeader>
-      <div>
-        <div>{items.title}</div>
-        <div>{items.content}</div>
-      </div>
-      {items.media && (
-        <>
-          <LeftArrow />
-          <ul>
-            {items.media.imgUrl &&
-              items.media.imgUrl.map((el, idx) => <li key={idx}>{el}</li>)}
-            {items.media.videoUrl && <li>{items.media.videoUrl}</li>}
-          </ul>
-          <RightArrow />
-        </>
+      <FeedContents>
+        <FeedTitle>{items.title}</FeedTitle>
+        <FeedContent>{items.content}</FeedContent>
+      </FeedContents>
+      {items.media.imgUrl && items.media.videoUrl && (
+        <FeedMedia>
+          <LeftScroll />
+          <FeedImgs>
+            {items.media.imgUrl?.map((el, idx) => (
+              <FeedImgBox key={idx}>
+                <FeedImg src={el} alt={`피드 이미지${idx + 1}`} />
+              </FeedImgBox>
+            ))}
+            {items.media.videoUrl && (
+              <FeedImgBox>{items.media.videoUrl}</FeedImgBox>
+            )}
+          </FeedImgs>
+          <RightScroll />
+        </FeedMedia>
       )}
-      <div>
-        <div>
-          <Like />
+      <FeedStatus>
+        <LikeBox>
+          <FeedLike />
           <span>{items.likeCount}</span>
-        </div>
-        <BookMark />
-      </div>
-      <div>
-        <span>댓글 {items.replyCount}개</span>
-      </div>
-    </li>
+        </LikeBox>
+        <FeedMark />
+      </FeedStatus>
+      <FeedBottom>
+        <FeedReview onClick={handleMoreReview}>
+          댓글 {items.replyCount}개 모두 보기
+        </FeedReview>
+      </FeedBottom>
+    </Feed>
   );
 };
 
 export default FeedList;
 
-export const FeedHeader = styled.div`
-  border: 1px solid black;
+export const Feed = styled.li`
+  border-bottom: 1px solid rgb(215, 215, 215);
   width: 100%;
+  max-width: 1100px;
+  padding: 50px 70px;
+`;
+
+export const FeedHeader = styled.div`
   position: relative;
+  width: 100%;
   display: flex;
   justify-content: start;
   align-items: center;
@@ -89,8 +120,9 @@ export const Profile = styled.div`
 `;
 
 export const ProfileBox = styled.div`
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
+  margin: 0px 15px 0px 0px;
   border-radius: 50%;
   background-color: rgb(215, 215, 215);
   display: flex;
@@ -98,7 +130,10 @@ export const ProfileBox = styled.div`
   align-items: center;
 `;
 
-export const ProfileImg = styled.img``;
+export const ProfileImg = styled.img`
+  width: 30px;
+  height: 30px;
+`;
 
 export const Unknown = styled(Person)`
   width: 30px;
@@ -109,11 +144,135 @@ export const Unknown = styled(Person)`
 `;
 
 export const UserName = styled.div`
-  border: 1px solid black;
+  margin-bottom: 5px;
+  font-size: 18px;
+  font-weight: 600;
 `;
+
 export const FeedAddress = styled.div`
-  border: 1px solid black;
+  font-size: 12px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
 `;
+
+export const PinPoint = styled(PinMark)`
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+`;
+
 export const UploadTime = styled.div`
-  border: 1px solid black;
+  position: absolute;
+  right: 6%;
+`;
+
+export const Setting = styled(Dots)`
+  position: absolute;
+  right: 2%;
+  width: 20px;
+  height: 20px;
+  path {
+    fill: rgb(200, 200, 200);
+  }
+`;
+
+export const FeedContents = styled.div`
+  padding: 10px 50px;
+`;
+
+export const FeedTitle = styled.div`
+  width: 100%;
+  padding: 10px;
+  font-weight: 600;
+`;
+
+export const FeedContent = styled.div`
+  width: 100%;
+  padding: 10px;
+`;
+
+export const FeedMedia = styled.div`
+  border: 1px solid rgb(215, 215, 215);
+  border-radius: 15px;
+  margin: 0px 0px 5px 0px;
+  padding: 15px 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const FeedImgs = styled.div`
+  width: 880px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  white-space: nowrap;
+  overflow-x: auto;
+`;
+
+export const FeedImgBox = styled.div`
+  border: 1px solid rgb(215, 215, 215);
+  border-radius: 15px;
+  min-width: 350px;
+  height: 300px;
+  margin: 10px;
+  background-color: rgb(215, 215, 215);
+`;
+
+export const FeedImg = styled.img`
+  border-radius: 15px;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+`;
+
+export const LeftScroll = styled(LeftArrow)`
+  min-width: 30px;
+  height: 30px;
+  margin: 10px;
+`;
+export const RightScroll = styled(RightArrow)`
+  min-width: 30px;
+  height: 30px;
+  margin: 10px;
+`;
+
+export const FeedStatus = styled.div`
+  width: 100%;
+  padding: 20px 50px;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+`;
+
+export const LikeBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+`;
+
+export const FeedLike = styled(Like)`
+  width: 30px;
+  height: 30px;
+  margin: 0px 10px;
+  cursor: pointer;
+`;
+
+export const FeedMark = styled(BookMark)`
+  width: 30px;
+  height: 30px;
+  margin: 0px 10px;
+  cursor: pointer;
+`;
+
+export const FeedBottom = styled.div`
+  padding: 0px 50px;
+`;
+
+export const FeedReview = styled.span`
+  cursor: pointer;
 `;
