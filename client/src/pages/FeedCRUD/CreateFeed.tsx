@@ -16,8 +16,8 @@ import {
   AddButton,
   AttachmentWrap,
   DeleteButton,
+  Username,
 } from "./CreateFeed.Style";
-import { Username } from "../FeedCRUD/CreateFeed.Style";
 
 type fileSet = {
   url: string;
@@ -31,10 +31,9 @@ const CreateFeed: React.FC = () => {
     image: false,
     video: false,
   });
-
   const [files, setFiles] = useState<JSX.Element[]>([]);
 
-  const imageUpload = (e: ChangeEvent<HTMLInputElement>): void => {
+  const uploadImage = (e: ChangeEvent<HTMLInputElement>): void => {
     const selectedFile = e.target.files && e.target.files[0];
 
     if (selectedFile) {
@@ -68,6 +67,14 @@ const CreateFeed: React.FC = () => {
     }
   }, [file]);
 
+  const deleteImage = (idx: number) => {
+    setFiles((prevFiles) => {
+      const newFiles = [...prevFiles];
+      newFiles.splice(idx, 1);
+      return newFiles;
+    });
+  };
+
   return (
     <CreateFeedContainer>
       <FeedTopContainer>
@@ -80,19 +87,22 @@ const CreateFeed: React.FC = () => {
         <Username>세계 최강 귀요미 몽자</Username>
       </ProfileWrap>
       <AttachmentSpaceContainer>
-        {files.map((file) => {
+        {files.map((file, idx) => {
           return (
-            <AttachmentWrap key="">
+            <AttachmentWrap key={idx}>
               {file}
-              <DeleteButton />
+              <DeleteButton onClick={() => deleteImage(idx)} />
             </AttachmentWrap>
           );
         })}
-
-        <AttachingButton htmlFor="add_file">
-          <AddButton />
-        </AttachingButton>
-        <AttachingInput id="add_file" type="file" onChange={imageUpload} />
+        {files.length < 5 && (
+          <>
+            <AttachingButton htmlFor="add_file">
+              <AddButton />
+            </AttachingButton>
+            <AttachingInput id="add_file" type="file" onChange={uploadImage} />
+          </>
+        )}
       </AttachmentSpaceContainer>
     </CreateFeedContainer>
   );
