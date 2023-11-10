@@ -1,0 +1,11 @@
+<!-- 뒤로가기 버튼 입니다 -->
+<svg width="66" height="66" viewBox="0 0 66 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_118_701)">
+<path d="M52.3004 34.4375L52.3004 30.6156L20.8849 30.6156L29.8162 21.6843L27.1056 18.9737L13.5528 32.5266L27.1056 46.0795L29.8162 43.3689L20.8849 34.4375L52.3004 34.4375Z" fill="#222222"/>
+</g>
+<defs>
+<clipPath id="clip0_118_701">
+<rect width="46" height="46" fill="white" transform="translate(32.5269) rotate(45)"/>
+</clipPath>
+</defs>
+</svg>
