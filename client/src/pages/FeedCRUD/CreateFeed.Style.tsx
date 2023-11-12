@@ -33,7 +33,7 @@ export const FeedTopContainer = styled.div`
 `;
 
 //새 피드 올리기
-export const Title = styled.p`
+export const PageName = styled.p`
   font-weight: 800;
 `;
 
@@ -111,4 +111,78 @@ export const AttachingButton = styled.label`
 //첨부인풋폼
 export const AttachingInput = styled.input`
   display: none;
+`;
+
+//등록한 첨부파일의 갯수
+export const Count = styled.p`
+  border: 2px solid #e9d14b;
+`;
+
+//제목 입력칸
+export const Title = styled.input`
+  width: 100%;
+  height: 70px;
+  display: block;
+  border-bottom: 1px solid #d7d7d7;
+`;
+
+//본문 입력 공간 래핑
+export const ContentWrap = styled.div`
+  border-bottom: 1px solid #d7d7d7;
+`;
+
+//내용 입력칸
+export const Content = styled.textarea`
+  width: 100%;
+  padding: 90px 0px;
+`;
+
+//본문 글자수 카운팅
+export const ContentCount = styled.p`
+  text-align: right;
+  margin-bottom: 30px;
+`;
+
+//하단 컨테이너(지도 검색, 토글)
+export const FeedBottomContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+//검색한 주소 컨테이너
+export const AddressContainer = styled.div`
+  flex-grow: 1;
+`;
+
+//토글들
+export const Toggles = styled.div``;
+
+//토클 래핑
+export const ToggleWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  padding: 5px;
+`;
+
+//토글배경
+export const ToggleContainer = styled.div<{ data: boolean }>`
+  position: relative;
+  width: 45px;
+  height: 25px;
+  margin-left: 10px;
+  border-radius: 50px;
+  background-color: ${(props) => (props.data === true ? "#d7d7d7" : "#79D87C")};
+`;
+
+//토글배경
+export const ToggleCircle = styled.div<{ data: boolean }>`
+  position: absolute;
+  width: 23px;
+  height: 23px;
+  top: 1px;
+  left: ${(props) => (props.data === true ? "1px" : "21px")};
+  border-radius: 50px;
+  background-color: #ffffff;
+  transition: ${(props) => (props.data === true ? "none" : "0.3s")};
 `;

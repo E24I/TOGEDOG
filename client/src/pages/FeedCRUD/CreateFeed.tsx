@@ -17,23 +17,30 @@ import {
   AttachmentWrap,
   DeleteButton,
   Username,
+  Count,
+  PageName,
+  Content,
+  ContentWrap,
+  ContentCount,
+  FeedBottomContainer,
+  AddressContainer,
+  Toggles,
+  ToggleWrap,
+  ToggleContainer,
+  ToggleCircle,
 } from "./CreateFeed.Style";
 
-type fileSet = {
-  url: string;
-  image: boolean;
-  video: boolean;
-};
-
 const CreateFeed: React.FC = () => {
-  const [file, setFile] = useState<fileSet>({
+  const [file, setFile] = useState({
     url: "",
     image: false,
     video: false,
   });
   const [files, setFiles] = useState<JSX.Element[]>([]);
+  const [isFeedPublic, setFeedPublic] = useState<boolean>(true);
+  const [isMapAssign, setMapAssign] = useState<boolean>(true);
 
-  const uploadImage = (e: ChangeEvent<HTMLInputElement>): void => {
+  const uploadImage = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files && e.target.files[0];
 
     if (selectedFile) {
@@ -75,11 +82,27 @@ const CreateFeed: React.FC = () => {
     });
   };
 
+  const feedToggleCheck = () => {
+    if (isFeedPublic === false) {
+      setFeedPublic(true);
+    } else {
+      setFeedPublic(false);
+    }
+  };
+
+  const mapToggleCheck = () => {
+    if (isMapAssign === false) {
+      setMapAssign(true);
+    } else {
+      setMapAssign(false);
+    }
+  };
+
   return (
     <CreateFeedContainer>
       <FeedTopContainer>
         <BackspaceButton />
-        <Title>새 피드 올리기</Title>
+        <PageName>새 피드 올리기</PageName>
         <CreateButton>게시</CreateButton>
       </FeedTopContainer>
       <ProfileWrap>
@@ -104,6 +127,29 @@ const CreateFeed: React.FC = () => {
           </>
         )}
       </AttachmentSpaceContainer>
+      <Count>{files.length}/6</Count>
+      <Title placeholder="제목을 입력하세요" />
+      <ContentWrap>
+        <Content placeholder="내용을 입력하세요" />
+        <ContentCount>글자수 / 200</ContentCount>
+      </ContentWrap>
+      <FeedBottomContainer>
+        <AddressContainer></AddressContainer>
+        <Toggles>
+          <ToggleWrap onClick={() => feedToggleCheck()}>
+            피드 숨기기
+            <ToggleContainer data={isFeedPublic}>
+              <ToggleCircle data={isFeedPublic} />
+            </ToggleContainer>
+          </ToggleWrap>
+          <ToggleWrap onClick={() => mapToggleCheck()}>
+            마이 펫 지도에서 숨기기
+            <ToggleContainer data={isMapAssign}>
+              <ToggleCircle data={isMapAssign} />
+            </ToggleContainer>
+          </ToggleWrap>
+        </Toggles>
+      </FeedBottomContainer>
     </CreateFeedContainer>
   );
 };
