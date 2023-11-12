@@ -1,4 +1,4 @@
-export type feedList = {
+export type feedListsType = {
   feedId: number;
   title: string;
   content: string;
@@ -19,4 +19,16 @@ export type feedList = {
   isMarked: boolean;
   likeCount: number;
   replyCount: number;
+};
+
+export type feedReviewsType = {
+  feedId: number;
+  member: { memberId: number; nickname: string };
+  ReplyId: number;
+  content: string;
+  createdDateTime: string | null;
+  modifiedDateTime: string | null;
+  replyLike: number;
+  fix: boolean;
+  comments: boolean;
 };

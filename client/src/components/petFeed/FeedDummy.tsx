@@ -1,6 +1,6 @@
-import { feedList } from "../../types/feedDataType";
+import { feedListsType } from "../../types/feedDataType";
 
-export const feedLists: feedList[] = [
+export const feedLists: feedListsType[] = [
   {
     feedId: 1,
     title: "애카가서 신난 몽자",

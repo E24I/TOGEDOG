@@ -1,5 +1,5 @@
-import React from "react";
-import { feedList } from "../../types/feedDataType";
+import React, { useState } from "react";
+import { feedListsType } from "../../types/feedDataType";
 import { ReactComponent as Dots } from "../../assets/images/icons/Dots.svg";
 import { ReactComponent as Like } from "../../assets/images/icons/Heart.svg";
 import { ReactComponent as Person } from "../../assets/images/icons/Person.svg";
@@ -11,7 +11,7 @@ import { ReactComponent as ImageCover } from "../../assets/images/icons/ImageCov
 import styled from "styled-components";
 
 interface OwnProps {
-  items: feedList;
+  items: feedListsType;
   handleMoreReview(): void;
 }
 
@@ -172,6 +172,7 @@ export const Setting = styled(Dots)`
   right: 2%;
   width: 20px;
   height: 20px;
+  cursor: pointer;
   path {
     fill: rgb(200, 200, 200);
   }
