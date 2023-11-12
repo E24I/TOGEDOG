@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { feedList } from "../../types/feedDataType";
 import { ReactComponent as Dots } from "../../assets/images/icons/Dots.svg";
 import { ReactComponent as Like } from "../../assets/images/icons/Heart.svg";
@@ -214,7 +214,6 @@ export const FeedImgs = styled.div`
 export const FeedImgBox = styled.div`
   border: 1px solid rgb(215, 215, 215);
   border-radius: 15px;
-  min-width: 350px;
   height: 300px;
   margin: 10px;
   background-color: rgb(215, 215, 215);
@@ -222,7 +221,8 @@ export const FeedImgBox = styled.div`
 
 export const FeedImg = styled.img`
   border-radius: 15px;
-  width: 100%;
+  /* aspect-ratio: 7/6; */
+  /* min-width: 350px; */
   height: 100%;
   background-size: cover;
   background-repeat: no-repeat;

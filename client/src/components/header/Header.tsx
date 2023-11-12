@@ -30,10 +30,10 @@ const Header: React.FC = () => {
       </Link>
 
       <MiddleButtonContainer>
-        <Link to="/">
+        <Link to="/feeds">
           <MainButtonStyle />
         </Link>
-        <Link to="/">
+        <Link to="/map">
           <MapButtonStyle />
         </Link>
         <Link to="/create">

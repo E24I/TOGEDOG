@@ -29,7 +29,7 @@ const PetFeed: React.FC = () => {
         <PetLeftFoot />
         <PetRightFoot />
         <PetLeftFoot />
-        <Loadings src={loading} />
+        {/* <Loadings src={loading} /> */}
       </LoadingContainer>
     </FeedContainer>
   );

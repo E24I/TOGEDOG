@@ -16,8 +16,12 @@ export const feedLists: feedList[] = [
     address: "멍멍애견카페",
     location: "",
     media: {
-      imgUrl: ["1", "2", "3", "4"],
-      videoUrl: "11",
+      imgUrl: [
+        "https://i.pinimg.com/736x/64/63/40/646340423a648806278bfc51d055f7e6.jpg",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1V1m9J8Vo8-_KIgQIsDacd1S9A5kNg3Br0Q&usqp=CAU",
+        "https://i.ytimg.com/vi/1-84Xtl4WL4/hqdefault.jpg?sqp=-oaymwEcCOADEI4CSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLDlNrvAcsATnHs8Rh3OqFUliJZHZA",
+      ],
+      videoUrl: "11111111111111111111111",
     },
     isLiked: false,
     isMarked: false,
