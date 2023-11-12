@@ -1,5 +1,6 @@
 package togedog.server.domain.pet.entity;
 
+import togedog.server.domain.member.entity.Member;
 import togedog.server.global.entity.BaseEntity;
 
 import javax.persistence.*;
@@ -17,23 +18,27 @@ public class Pet extends BaseEntity {
     @Column(nullable = false)
     private Long age;
 
-    @Column
+    @Column(nullable = true)
     private String type;
 
-    @Column
+    @Column(nullable = true)
     private String personality;
 
-    @Column
+    @Column(nullable = true)
     private String significant;
 
-    @Column
+    @Column(nullable = true)
     private String petIntro;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column
+    @Column(nullable = true)
     @Lob
     private String image;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
 
 }

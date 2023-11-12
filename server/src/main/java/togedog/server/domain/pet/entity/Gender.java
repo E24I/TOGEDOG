@@ -1,8 +1,8 @@
 package togedog.server.domain.pet.entity;
 
 public enum Gender {
-    MALE("남자"),
-    FEMALE("여자");
+    MALE("남"),
+    FEMALE("여");
 
     final private String gender;
 

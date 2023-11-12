@@ -1,5 +1,6 @@
 package togedog.server.domain.memberreport.entity;
 
+import togedog.server.domain.member.entity.Member;
 import togedog.server.global.entity.BaseEntity;
 
 import javax.persistence.*;
@@ -14,5 +15,8 @@ public class MemberReport extends BaseEntity {
     @Column
     private String content;
 
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
 
 }
