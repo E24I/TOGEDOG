@@ -28,5 +28,5 @@ public class ReplyLike extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "reply_id")
-    private Reply feed;
+    private Reply reply;
 }
