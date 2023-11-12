@@ -1,5 +1,7 @@
 package togedog.server.domain.message.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import togedog.server.domain.chatroom.entity.ChatRoom;
 import togedog.server.global.entity.BaseEntity;
 
@@ -7,6 +9,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 public class Message extends BaseEntity {
 
     @Id
@@ -14,8 +18,6 @@ public class Message extends BaseEntity {
     private Long messageId;
 
     private Long memberId;
-
-    private LocalDateTime time;
 
     private String content;
 
