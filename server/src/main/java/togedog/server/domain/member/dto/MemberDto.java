@@ -1,13 +1,28 @@
 package togedog.server.domain.member.dto;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
-public class MemberPostDto {
+public class MemberDto {
 
-    private String email;
-    private String nickname;
-    private String password;
-    private String agree1;
-    private String agree2;
+    @Getter
+    public static class Post{
+
+        private String email;
+        private String nickname;
+        private String password;
+        private String agree1;
+        private String agree2;
+
+    }
+
+    @Getter
+    public static class Patch{
+
+    }
+
+    @Getter
+    public static class Response{
+
+    }
+
 }
