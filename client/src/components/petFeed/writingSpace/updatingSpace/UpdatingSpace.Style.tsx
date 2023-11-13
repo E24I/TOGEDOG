@@ -27,7 +27,7 @@ export const FeedOwner = styled.div`
 export const FeedOwnerImg = styled.img`
   display: block;
   width: 60px;
-  height: 60px;
+  height: 100%;
   border: 2px solid #111111;
   margin-right: 15px;
 `;
