@@ -71,7 +71,7 @@ const CreatingSpace: React.FC = () => {
   return (
     <CreateSpace>
       <ProfileWrap>
-        <ProfileImg>profile image</ProfileImg>
+        <ProfileImg />
         <Username>세계 최강 귀요미 몽자</Username>
       </ProfileWrap>
       <AttachmentSpaceContainer>
