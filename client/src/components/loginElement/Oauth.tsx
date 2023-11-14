@@ -13,6 +13,9 @@ export const OauthContainer = styled.div`
   div {
     margin: 20px 0;
   }
+  p {
+    margin-bottom: 13px;
+  }
 `;
 export const Kakao = styled(KakaoIcon)``;
 export const Google = styled(GoogleIcon)`
