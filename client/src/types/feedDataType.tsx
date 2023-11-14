@@ -20,3 +20,13 @@ export type feedList = {
   likeCount: number;
   replyCount: number;
 };
+
+export type postInformationType = {
+  title: string;
+  image: string;
+  video: string;
+  content: string;
+  state: boolean;
+  map: boolean;
+  address: string;
+};

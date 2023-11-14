@@ -1,31 +1,20 @@
-import React, { ChangeEvent, useState, useEffect } from "react";
-import {
-  CreateTitle,
-  ProfileWrap,
-  ProfileImg,
-  AttachmentSpaceContainer,
-  AttachedImg,
-  AttachedVideo,
-  AttachingButton,
-  AttachingInput,
-  AddButton,
-  AttachmentWrap,
-  DeleteButton,
-  Username,
-  FilesCount,
-  CreateContent,
-  CreateContentWrap,
-  TextCount,
-  CreateSpace,
-} from "./CreatingSpace.Style";
+import React, { ChangeEvent, useState, useEffect, useRef } from "react";
+import * as C from "./CreatingSpace.Style";
 
-const CreatingSpace: React.FC = () => {
+interface CreatingSpaceProps {
+  handleInputChange: (fieldName: string, value: string | boolean) => void;
+}
+
+const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
   const [file, setFile] = useState({
     url: "",
     image: false,
     video: false,
   });
+
   const [files, setFiles] = useState<JSX.Element[]>([]);
+  const contentRef = useRef<any>();
+
   const uploadImage = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files && e.target.files[0];
 
@@ -41,16 +30,24 @@ const CreatingSpace: React.FC = () => {
     }
   };
 
+  const enterToContent = (e: KeyboardEvent): void => {
+    if (e.key === "Enter") {
+      contentRef.current.focus();
+    }
+    console.log(contentRef);
+  };
+
   useEffect(() => {
     if (file.image) {
       setFiles((prev) => [
         ...prev,
-        <AttachedImg key={Date.now()} src={file.url} alt="" />,
+        <C.AttachedImg key={Date.now()} src={file.url} alt="" />,
       ]);
+      handleInputChange("image", file.url);
     } else if (file.video) {
       setFiles((prev) => [
         ...prev,
-        <AttachedVideo
+        <C.AttachedVideo
           key={Date.now()}
           src={file.url}
           controls
@@ -69,36 +66,43 @@ const CreatingSpace: React.FC = () => {
   };
 
   return (
-    <CreateSpace>
-      <ProfileWrap>
-        <ProfileImg />
-        <Username>세계 최강 귀요미 몽자</Username>
-      </ProfileWrap>
-      <AttachmentSpaceContainer>
+    <C.CreateSpace>
+      <C.ProfileWrap>
+        <C.ProfileImg />
+        <C.Username>세계 최강 귀요미 몽자</C.Username>
+      </C.ProfileWrap>
+      <C.AttachmentSpaceContainer>
         {files.map((file, idx) => {
           return (
-            <AttachmentWrap key={idx}>
+            <C.AttachmentWrap key={idx}>
               {file}
-              <DeleteButton onClick={() => deleteImage(idx)} />
-            </AttachmentWrap>
+              <C.DeleteButton onClick={() => deleteImage(idx)} />
+            </C.AttachmentWrap>
           );
         })}
         {files.length < 5 && (
           <>
-            <AttachingButton htmlFor="add_file">
-              <AddButton />
-            </AttachingButton>
-            <AttachingInput id="add_file" type="file" onChange={uploadImage} />
+            <C.AttachingButton htmlFor="add_file">
+              <C.AddButton />
+            </C.AttachingButton>
+            <C.AttachingInput
+              id="add_file"
+              type="file"
+              onChange={uploadImage}
+            />
           </>
         )}
-      </AttachmentSpaceContainer>
-      <FilesCount>{files.length}/6</FilesCount>
-      <CreateTitle placeholder="제목을 입력하세요" />
-      <CreateContentWrap>
-        <CreateContent placeholder="내용을 입력하세요" />
-        <TextCount>글자수 / 200</TextCount>
-      </CreateContentWrap>
-    </CreateSpace>
+      </C.AttachmentSpaceContainer>
+      <C.FilesCount>{files.length}/6</C.FilesCount>
+      <C.CreateTitle
+        placeholder="제목을 입력하세요"
+        onKeyDown={(e) => enterToContent}
+      />
+      <C.CreateContentWrap>
+        <C.CreateContent placeholder="내용을 입력하세요" ref={contentRef} />
+        <C.TextCount>글자수 / 200</C.TextCount>
+      </C.CreateContentWrap>
+    </C.CreateSpace>
   );
 };
 
