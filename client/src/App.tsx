@@ -7,6 +7,8 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import CreateFeed from "./pages/FeedCRUD/CreateFeed";
 import PetFeed from "./pages/PetFeed";
+import UpdateFeed from "./pages/FeedCRUD/UpdateFeed";
+import Chatting from "./pages/Chatting";
 
 const App: React.FC = () => {
   return (
@@ -16,7 +18,9 @@ const App: React.FC = () => {
         <Route path="/" element={<Login />} />
         <Route path="/SignUp" element={<SignUp />} />
         <Route path="/create" element={<CreateFeed />} />
+        <Route path="/edit" element={<UpdateFeed />} />
         <Route path="/feeds" element={<PetFeed />} />
+        <Route path="/chat" element={<Chatting />} />
       </Routes>
       <Footer />
     </BrowserRouter>

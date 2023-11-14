@@ -54,3 +54,13 @@ export type feedDetailType = {
   replyCount: number;
   reply: feedReviewsType[];
 };
+
+export type postInformationType = {
+  title: string;
+  image: string;
+  video: string;
+  content: string;
+  state: boolean;
+  map: boolean;
+  address: string;
+};

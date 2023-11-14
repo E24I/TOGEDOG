@@ -3,3 +3,7 @@
 export const Get = () => {
   return;
 };
+
+export const Post = () => {
+  return;
+};
