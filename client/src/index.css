@@ -40,10 +40,12 @@ body {
 
 textarea {
   resize: none;
+  border: none;
 }
 
 input {
   outline: none;
+  border: none;
 }
 
 body::-webkit-scrollbar {
@@ -70,10 +72,9 @@ td {
   font-weight: 400;
 }
 
-table{
-  padding:0;
-  border:0;
-  border-spacing:0px;
-  border-collapse:collapse;
+table {
+  padding: 0;
+  border: 0;
+  border-spacing: 0px;
+  border-collapse: collapse;
 }
-
