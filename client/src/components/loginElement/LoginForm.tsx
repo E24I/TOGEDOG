@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 import Oauth from "./Oauth";
@@ -73,11 +74,21 @@ const InputContainer = styled.div`
     margin: 40px 0 20px;
   }
 `;
+type Inputs = {
+  email: string;
+  password: string;
+};
 
 const LoginForm: React.FC = () => {
   const [loginInfo, setLoginInfo] = useState<boolean>(false); //아아디,비밀번호가 입력돼었으면 true
   const [id, setId] = useState<string>("");
   const [pw, setPw] = useState<string>("");
+
+  const { register, handleSubmit } = useForm<Inputs>();
+
+  const onSubmit = (data: string) => {
+    console.log(data);
+  };
 
   useEffect(() => {
     if (id && pw) {
@@ -99,10 +110,15 @@ const LoginForm: React.FC = () => {
     <>
       <InputContainer>
         <div className="logoImg">로고</div>
-        <form>
+        <form
+          onSubmit={handleSubmit((data) => {
+            console.log(data);
+          })}
+        >
           <input
             type="text"
             placeholder="이메일을 입력하세요."
+            {...register("email")}
             onChange={(e) => {
               handleId(e.target.value);
             }}
@@ -110,12 +126,16 @@ const LoginForm: React.FC = () => {
           <input
             type="password"
             placeholder="비밀번호를 입력하세요."
+            {...register("password")}
             onChange={(e) => {
               handlePw(e.target.value);
             }}
           />
           <button>비밀번호를 잊으셨나요?</button>
-          <button className={loginInfo ? "buttonOn" : "buttonOff"}>
+          <button
+            className={loginInfo ? "buttonOn" : "buttonOff"}
+            type="submit"
+          >
             로그인
           </button>
         </form>

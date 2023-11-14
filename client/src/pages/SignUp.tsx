@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { styled } from "styled-components";
 import SignUpForm from "../components/signUpElement/SignUpForm";
 
 const SignUpContainer = styled.div`
-  width: 775px;
+  width: 900px;
   margin: 0 auto;
 `;
 
