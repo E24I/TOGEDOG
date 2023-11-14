@@ -1,20 +1,31 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import {
+  AddBox,
+  AddBtn,
+  AddReply,
+  CloseModal,
+  DetailContainer,
   FeedAddress,
   FeedContent,
   FeedContents,
+  FeedDetailImg,
+  FeedDetailImgBox,
+  FeedDetailImgs,
+  FeedDetailMedia,
+  FeedDetailStatus,
   FeedHeader,
   FeedLike,
   FeedMark,
-  FeedReview,
   FeedTitle,
+  LeftDetail,
   LeftScroll,
   LikeBox,
+  ModalBackground,
   PinPoint,
   Profile,
   ProfileBox,
   ProfileImg,
+  RightDetail,
   RightScroll,
   Setting,
   Unknown,
@@ -23,6 +34,7 @@ import {
 } from "./Feed.Style";
 import { feedDetailType } from "../../types/feedDataType";
 import { feedDetailData } from "./FeedDummy";
+import FeedReply from "./FeedReply";
 
 interface OwnProps {
   feedId: number;
@@ -111,79 +123,42 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
             <FeedContent>{isDetail.content}</FeedContent>
           </FeedContents>
           {isDetail.media.imgUrl && isDetail.media.videoUrl && (
-            <FeedMedia>
+            <FeedDetailMedia>
               <LeftScroll onClick={handlePrevImg} />
-              <FeedImgs>
+              <FeedDetailImgs>
                 {isDetail.media.imgUrl?.map((el, idx) => {
                   if (isImg === idx + 1) {
                     return (
-                      <FeedImgBox key={idx}>
-                        <FeedImg src={el} alt={`피드 이미지${idx + 1}`} />
-                      </FeedImgBox>
+                      <FeedDetailImgBox key={idx}>
+                        <FeedDetailImg src={el} alt={`피드 이미지${idx + 1}`} />
+                      </FeedDetailImgBox>
                     );
                   }
                 })}
                 {isDetail.media.videoUrl &&
                   isDetail.media.imgUrl?.length + 1 === isImg && (
-                    <FeedImgBox>{isDetail.media.videoUrl}</FeedImgBox>
+                    <FeedDetailImgBox>
+                      {isDetail.media.videoUrl}
+                    </FeedDetailImgBox>
                   )}
-              </FeedImgs>
+              </FeedDetailImgs>
               <RightScroll onClick={handleNextImg} />
-            </FeedMedia>
+            </FeedDetailMedia>
           )}
-          <FeedStatus>
+          <FeedDetailStatus>
             <LikeBox>
               <FeedLike isLike={isLike} onClick={handleLike} />
               <span>{isDetail.likeCount}</span>
             </LikeBox>
             <FeedMark />
-          </FeedStatus>
+          </FeedDetailStatus>
         </LeftDetail>
         <RightDetail>
-          <FeedReviewBox>
-            <FeedReview onClick={handleMoreReview}>
-              댓글 {isDetail.replyCount}개
-            </FeedReview>
-          </FeedReviewBox>
-          <ul>
-            <li>
-              <div>프로필 사진</div>
-              <div>
-                <div>닉네임</div>
-                <div>
-                  <div>댓글 내용</div>
-                  <div>좋아요 버튼</div>
-                </div>
-                <div>
-                  <span>작성 시간</span>
-                  <span>좋아요 n개</span>
-                  <span>답글달기 버튼</span>
-                  <span>...</span>
-                </div>
-                <div>답글 보기(개수) / 답글 숨기기</div>
-                <ul>
-                  <li>
-                    <div>프로필 사진</div>
-                    <div>
-                      <div>닉네임</div>
-                      <div>
-                        <span>@태그</span>
-                        <span>답글 내용</span>
-                      </div>
-                    </div>
-                    <div>
-                      <input placeholder="답글 달기..." />
-                      <button>게시</button>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <div>
-              <input placeholder="댓글 달기..." />
-              <button>게시</button>
-            </div>
-          </ul>
+          <FeedReply />
+          <AddBox>
+            <AddReply placeholder="댓글 달기..." />
+            <AddBtn>게시</AddBtn>
+          </AddBox>
         </RightDetail>
       </DetailContainer>
     </ModalBackground>
@@ -191,110 +166,3 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
 };
 
 export default FeedDetail;
-
-export const ModalBackground = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgb(215, 215, 215, 50%);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const DetailContainer = styled.div`
-  width: 100%;
-  max-width: 80vw;
-  max-height: 100vh;
-  padding: 50px 0px;
-  aspect-ratio: 1.5/1;
-  background-color: white;
-  border-radius: 20px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const CloseModal = styled.button`
-  position: absolute;
-  top: 2%;
-  right: -10%;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: white;
-  font-size: 50px;
-`;
-
-export const LeftDetail = styled.div`
-  width: 50%;
-  height: 100%;
-  margin: 50px 0px 50px 50px;
-  padding: 30px 0px;
-`;
-
-const FeedMedia = styled.div`
-  width: 100%;
-  max-width: 880px;
-  height: 100%;
-  max-height: 600px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const FeedImgs = styled.div`
-  width: 100%;
-  max-width: 610px;
-  height: 100%;
-  max-height: 600px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-`;
-
-const FeedImgBox = styled.div`
-  width: 610px;
-  height: 600px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const FeedImg = styled.img`
-  border-radius: 15px;
-  width: 610px;
-  height: 600px;
-  background-size: auto 100%;
-  background-repeat: no-repeat;
-  background-position: center;
-  transition: 300ms;
-`;
-
-const FeedStatus = styled.div`
-  width: 100%;
-  padding: 10px 0px;
-  display: flex;
-  justify-content: start;
-  align-items: start;
-`;
-
-export const RightDetail = styled.div`
-  border: 1px solid black;
-  width: 50%;
-  height: 100%;
-  margin: 50px 50px 50px 0px;
-  overflow-y: scroll;
-`;
-
-export const FeedReviewBox = styled.div`
-  margin: 0px 50px;
-  padding: 20px 0px;
-  border-bottom: 1px solid rgb(215, 215, 215);
-`;
