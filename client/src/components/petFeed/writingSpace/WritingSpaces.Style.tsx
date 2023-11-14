@@ -3,7 +3,9 @@ import styled from "styled-components";
 import { ReactComponent as Backspace } from "../../../assets/images/icons/Backspace.svg";
 
 // assets
-export const BackspaceButton = styled(Backspace)``;
+export const BackspaceButton = styled(Backspace)`
+  cursor: pointer;
+`;
 
 // 피드 전체 컨테이너
 export const CreateFeedContainer = styled.div`
