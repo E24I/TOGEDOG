@@ -5,28 +5,17 @@ import { feedLists } from "../components/petFeed/FeedDummy";
 import { ReactComponent as Pets } from "../assets/images/icons/Pets.svg";
 import loading from "../assets/loading/loading.gif";
 import styled from "styled-components";
-import FeedDetail from "../components/petFeed/FeedDetail";
 
 const PetFeed: React.FC = () => {
   const [isFeed, setFeed] = useState<feedListsType[]>(feedLists);
-  const [isDetail, setDetail] = useState<boolean>(false);
-
-  const handleMoreReview = (): void => {
-    setDetail(!isDetail);
-  };
 
   return (
     <FeedContainer>
       <Feeds>
         {isFeed.map((items) => (
-          <FeedList
-            key={items.feedId}
-            items={items}
-            handleMoreReview={handleMoreReview}
-          />
+          <FeedList key={items.feedId} items={items} />
         ))}
       </Feeds>
-      {isDetail && <FeedDetail handleMoreReview={handleMoreReview} />}
       <LoadingContainer>
         <PetLeftFoot />
         <PetRightFoot />
