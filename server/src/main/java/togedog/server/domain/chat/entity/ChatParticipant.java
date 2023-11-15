@@ -1,6 +1,6 @@
-package togedog.server.domain.chatparticipant.entity;
+package togedog.server.domain.chat.entity;
 
-import togedog.server.domain.chatroom.entity.ChatRoom;
+import togedog.server.domain.chat.entity.ChatRoom;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.global.entity.BaseEntity;
 
