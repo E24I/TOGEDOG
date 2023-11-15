@@ -1,0 +1,29 @@
+### 본인 로컬에서 사용하는 DB에 맞춰서 세팅하세요!
+### 귀찮으면 그냥 그대로 사용하면 됩니다.
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test
+    username: hae02y
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create        # DB 초기화 전략 (none, create, create-drop, update, validate)
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true      # 쿼리 로그 포맷 (정렬)
+        show_sql: true        # 쿼리 로그 출력
+

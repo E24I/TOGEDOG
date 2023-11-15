@@ -1,5 +1,9 @@
 package togedog.server.domain.chatroom.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import togedog.server.domain.chatparticipant.entity.ChatParticipant;
+import togedog.server.domain.chatreport.entity.ChatReport;
 import togedog.server.domain.message.entity.Message;
 import togedog.server.global.entity.BaseEntity;
 
@@ -8,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 public class ChatRoom extends BaseEntity {
 
     @Id
@@ -16,4 +22,10 @@ public class ChatRoom extends BaseEntity {
 
     @OneToMany(mappedBy = "chatRoom")
     private List<Message> messages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "chatRoom")
+    private List<ChatParticipant> chatParticipants = new ArrayList<>();
+
+    @OneToMany(mappedBy = "chatRoom")
+    private List<ChatReport> chatReports = new ArrayList<>();
 }
