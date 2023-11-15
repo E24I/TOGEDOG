@@ -27,7 +27,7 @@ import {
   FeedLike,
   FeedMark,
   FeedBottom,
-  FeedReview,
+  ReviewCount,
 } from "./Feed.Style";
 
 interface OwnProps {
@@ -110,9 +110,9 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
         <FeedMark />
       </FeedStatus>
       <FeedBottom>
-        <FeedReview onClick={handleMoreReview}>
+        <ReviewCount onClick={handleMoreReview}>
           댓글 {items.replyCount}개 모두 보기
-        </FeedReview>
+        </ReviewCount>
       </FeedBottom>
       {isDetail && (
         <FeedDetail feedId={items.feedId} handleMoreReview={handleMoreReview} />

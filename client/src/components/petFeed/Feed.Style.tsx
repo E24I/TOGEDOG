@@ -79,8 +79,10 @@ export const UploadTime = styled.div`
 `;
 
 export const Setting = styled(Dots)`
-  width: 20px;
-  height: 20px;
+  width: 100%;
+  max-width: 15px;
+  height: 100%;
+  max-height: 15px;
   margin: 0px 20px;
   cursor: pointer;
   path {
@@ -192,6 +194,223 @@ export const FeedBottom = styled.div`
   padding: 0px 50px;
 `;
 
-export const FeedReview = styled.span`
+export const ReviewCount = styled.span`
   cursor: pointer;
 `;
+
+export const ModalBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(215, 215, 215, 50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const DetailContainer = styled.div`
+  width: 100%;
+  max-width: 80vw;
+  max-height: 100vh;
+  padding: 50px 0px;
+  aspect-ratio: 1.5/1;
+  background-color: white;
+  border-radius: 20px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const CloseModal = styled.button`
+  position: absolute;
+  top: 2%;
+  right: -10%;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: white;
+  font-size: 50px;
+`;
+
+export const LeftDetail = styled.div`
+  width: 50%;
+  height: 100%;
+  margin: 50px 0px 50px 50px;
+  padding: 30px 0px;
+`;
+
+export const FeedDetailMedia = styled.div`
+  width: 100%;
+  max-width: 880px;
+  height: 100%;
+  max-height: 600px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const FeedDetailImgs = styled.div`
+  width: 100%;
+  max-width: 610px;
+  height: 100%;
+  max-height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+`;
+
+export const FeedDetailImgBox = styled.div`
+  width: 610px;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const FeedDetailImg = styled.img`
+  border-radius: 15px;
+  /* width: 610px;
+  height: 600px; */
+  max-width: 100%;
+  max-height: 100%;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: 300ms;
+`;
+
+export const FeedDetailStatus = styled.div`
+  width: 100%;
+  padding: 10px 0px;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+`;
+
+export const RightDetail = styled.div`
+  border-left: 1px solid rgb(215, 215, 215);
+  width: 50%;
+  height: 100%;
+  margin: 50px 50px 50px 0px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const FeedReviewTop = styled.div`
+  width: 90%;
+  margin: 0px 50px;
+  padding: 20px 0px;
+  border-bottom: 1px solid rgb(215, 215, 215);
+`;
+
+export const Replies = styled.ul`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+`;
+
+export const Reply = styled.li`
+  width: 100%;
+  padding: 20px 15px;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+`;
+
+export const ReplyLeft = styled.div`
+  min-width: 50px;
+  min-height: 50px;
+  margin: 0px 10px;
+  border-radius: 50%;
+  background-color: rgb(215, 215, 215);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ReplyProfile = styled.img`
+  width: 30px;
+  height: 30px;
+`;
+
+export const ReplyContents = styled.div`
+  padding: 0px 5px;
+`;
+
+export const ReplyNickname = styled.div`
+  padding: 5px 0px;
+  font-weight: 600;
+`;
+
+export const ReplyContent = styled.div`
+  padding: 5px 0px;
+`;
+
+export const ReplySetting = styled.div`
+  font-size: 12px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+`;
+
+export const Mentions = styled.span`
+  margin-right: 5px;
+  color: #71bddb;
+  font-weight: 600;
+`;
+
+export const ReplyDate = styled.button`
+  padding: 5px 20px 5px 0px;
+`;
+
+export const ReplyLikeCount = styled.button`
+  padding: 5px 20px 5px 0px;
+`;
+
+export const ReplyLike = styled(FeedLike)`
+  width: 18px;
+  height: 18px;
+`;
+
+export const ShowComment = styled.button`
+  padding: 10px 10px;
+  font-size: 14px;
+`;
+
+export const AddBox = styled.div`
+  border-bottom: 1px solid rgb(215, 215, 215);
+  /* border-radius: 12px; */
+  width: 90%;
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+`;
+
+export const AddReply = styled.input`
+  padding: 0px 0px 5px 10px;
+`;
+
+export const AddBtn = styled.button`
+  padding: 5px 15px;
+`;
+
+export const Comments = styled(Replies)``;
+export const Comment = styled(Reply)``;
+export const CommentLeft = styled(ReplyLeft)``;
+export const CommentProfile = styled(ReplyProfile)``;
+export const CommentContents = styled(ReplyContents)``;
+export const CommentNickname = styled(ReplyNickname)``;
+export const CommentContent = styled(ReplyContent)``;
