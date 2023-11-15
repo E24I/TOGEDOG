@@ -1,10 +1,15 @@
 import styled from "styled-components";
 
 import { ReactComponent as Backspace } from "../../../assets/images/icons/Backspace.svg";
+import { ReactComponent as Cancel } from "../../../assets/images/icons/CancelButton.svg";
 
 // assets
 export const BackspaceButton = styled(Backspace)`
   cursor: pointer;
+`;
+export const CancelBtn = styled(Cancel)`
+  cursor: pointer;
+  margin-right: 10px;
 `;
 
 // 피드 전체 컨테이너
@@ -41,7 +46,20 @@ export const FeedBottomContainer = styled.div`
 
 //검색한 주소 컨테이너
 export const AddressContainer = styled.div`
+  display: flex;
+  flex-direction: row;
   flex-grow: 1;
+  height: 100%;
+  margin-left: 5px; // 임시 입니다
+`;
+
+export const SearchLoaction = styled.input`
+  border: 2px solid black; //구분선
+  width: 70px;
+`;
+
+export const SearchResult = styled.div`
+  text-align: center;
 `;
 
 //토글들
@@ -56,23 +74,24 @@ export const ToggleWrap = styled.div`
 `;
 
 //토글배경
-export const ToggleContainer = styled.div<{ data: boolean }>`
+export const ToggleContainer = styled.div<{ data: string }>`
   position: relative;
   width: 45px;
   height: 25px;
   margin-left: 10px;
   border-radius: 50px;
-  background-color: ${(props) => (props.data === true ? "#d7d7d7" : "#79D87C")};
+  background-color: ${(props) =>
+    props.data === "true" ? "#d7d7d7" : "#79D87C"};
 `;
 
 //토글배경
-export const ToggleCircle = styled.div<{ data: boolean }>`
+export const ToggleCircle = styled.div<{ data: string }>`
   position: absolute;
   width: 23px;
   height: 23px;
   top: 1px;
-  left: ${(props) => (props.data === true ? "1px" : "21px")};
+  left: ${(props) => (props.data === "true" ? "1px" : "21px")};
   border-radius: 50px;
   background-color: #ffffff;
-  transition: ${(props) => (props.data === true ? "none" : "0.3s")};
+  transition: ${(props) => (props.data === "true" ? "none" : "0.3s")};
 `;

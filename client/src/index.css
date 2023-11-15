@@ -43,6 +43,10 @@ textarea {
   border: none;
 }
 
+textarea:focus {
+  outline: 0;
+}
+
 input {
   outline: none;
   border: none;
