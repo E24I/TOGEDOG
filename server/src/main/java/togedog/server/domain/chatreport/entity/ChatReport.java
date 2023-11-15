@@ -1,6 +1,6 @@
 package togedog.server.domain.chatreport.entity;
 
-import togedog.server.domain.chatroom.entity.ChatRoom;
+import togedog.server.domain.chat.entity.ChatRoom;
 import togedog.server.global.entity.BaseEntity;
 
 import javax.persistence.*;

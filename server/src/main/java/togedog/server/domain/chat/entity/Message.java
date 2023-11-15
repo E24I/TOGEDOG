@@ -1,12 +1,10 @@
-package togedog.server.domain.message.entity;
+package togedog.server.domain.chat.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import togedog.server.domain.chatroom.entity.ChatRoom;
 import togedog.server.global.entity.BaseEntity;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
