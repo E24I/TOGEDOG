@@ -33,7 +33,7 @@ const Header: React.FC = () => {
         <Link to="/feeds">
           <MainButtonStyle />
         </Link>
-        <Link to="/map">
+        <Link to="/petmap">
           <MapButtonStyle />
         </Link>
         <Link to="/create">
