@@ -12,6 +12,7 @@ import Chatting from "./pages/Chatting";
 import PetMap from "./pages/PetMap";
 import MapDetail from "./pages/MapDetail";
 import MyMap from "./pages/MyMap";
+import MyPage from "./pages/MyPage";
 
 const App: React.FC = () => {
   return (
@@ -19,7 +20,7 @@ const App: React.FC = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/SignUp" element={<SignUp />} />
+        <Route path="/signUp" element={<SignUp />} />
         <Route path="/create" element={<CreateFeed />} />
         <Route path="/edit" element={<UpdateFeed />} />
         <Route path="/feeds" element={<PetFeed />} />
@@ -27,6 +28,7 @@ const App: React.FC = () => {
         <Route path="/petmap" element={<PetMap />} />
         <Route path="/petmap/feed" element={<MapDetail />} />
         <Route path="/member/:memberId/mymap" element={<MyMap />} />
+        <Route path="/myPage" element={<MyPage />} />
       </Routes>
       <Footer />
     </BrowserRouter>

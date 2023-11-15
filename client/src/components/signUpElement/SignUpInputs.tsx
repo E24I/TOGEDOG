@@ -1,69 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { styled } from "styled-components";
 import { ReactComponent as Message } from "../../assets/images/icons/signUpIcons/Message.svg";
 import { ReactComponent as Person } from "../../assets/images/icons/signUpIcons/Person.svg";
 import { ReactComponent as Lock } from "../../assets/images/icons/signUpIcons/Lock.svg";
-
-const InputContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  h2 {
-    margin: 0 0 50px 63px;
-  }
-  form {
-    width: 100%;
-    height: 250px;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    position: relative;
-    align-items: center;
-    margin-bottom: 76px;
-
-    button {
-      width: 100px;
-      height: 36px;
-      padding: 10px 13px;
-      border-radius: 100px;
-      border: 1px solid #d7d7d7;
-      color: #818181;
-      font-size: 10px;
-      font-weight: 400;
-    }
-    .box {
-      border-bottom: 1px solid #d7d7d7;
-      display: flex;
-      width: 320px;
-      flex-direction: row;
-      align-items: center;
-      margin-top: 25px;
-    }
-    p {
-      color: red;
-      font-size: 9px;
-      float: left;
-    }
-    .submitButton {
-      width: 240px;
-      color: black;
-      background: #d7d7d7;
-      position: absolute;
-      bottom: -50px;
-    }
-  }
-`;
+import {
+  InputContainer,
+  CheckBoxContainer,
+  CheckInput,
+  CheckInputBox,
+  ErrorMsg,
+  TextInput,
+  SubmitButton,
+} from "./SignUpInputs.style";
 
 const InputForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    watch,
   } = useForm();
+
+  const [allSelected, setAllSelected] = useState(false);
+
+  //체크 박스 둘중 하나 체크 풀리면 전체선택은 false함수
+  useEffect(() => {
+    if (!watch("checkBox1") || !watch("checkBox2")) {
+      setAllSelected(false);
+    } else if (watch("checkBox1") || watch("checkBox2")) {
+      setAllSelected(true);
+    }
+  }, [[watch("checkBox1"), watch("checkbox2")]]);
+
+  // 전체 선택 누르면 둘다 true or false 함수
+  const handleAllSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = e.target.checked;
+    setAllSelected(isChecked);
+
+    setValue("checkBox1", isChecked);
+    setValue("checkBox2", isChecked);
+  };
 
   const emailRegex =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -79,7 +56,7 @@ const InputForm = () => {
         })}
       >
         <div>
-          <div className="box">
+          <TextInput>
             <Message />
             <input
               type="text"
@@ -87,15 +64,15 @@ const InputForm = () => {
               {...register("email", { required: true, pattern: emailRegex })}
             />
             <button>인증번호 전송</button>
-          </div>
+          </TextInput>
           {errors.email && (
-            <div>
+            <ErrorMsg>
               <p>올바르지 않은 이메일 형식입니다.</p>
-            </div>
+            </ErrorMsg>
           )}
         </div>
         <div>
-          <div className="box">
+          <TextInput>
             <Message />
             <input
               type="text"
@@ -103,54 +80,78 @@ const InputForm = () => {
               {...register("authentication", { required: true })}
             />
             <button>인증하기</button>
-          </div>
+          </TextInput>
         </div>
         <div>
-          <div className="box">
+          <TextInput>
             <Person />
             <input
               type="text"
               placeholder="닉네임을 입력해주세요."
               {...register("nickName", { required: true })}
             />
-          </div>
+          </TextInput>
         </div>
         <div>
-          <div className="box">
+          <TextInput>
             <Lock />
             <input
               type="password"
               placeholder="비밀번호를 입력해주세요."
               {...register("password", { required: true })}
             />
-          </div>
+          </TextInput>
           {errors.password && (
-            <div>
+            <ErrorMsg>
               <p>
                 비밀번호는 숫자 + 문자 + 특수문자 조합 8자 이상이어야 합니다.
               </p>
-            </div>
+            </ErrorMsg>
           )}
         </div>
         <div>
-          <div className="box">
+          <TextInput>
             <Lock />
             <input
               type="password"
               placeholder="비밀번호를 확인해주세요."
-              {...register("reConfirm", { required: true })}
+              {...register("pwConfirm", { required: true })}
             />
-          </div>
-          {errors.reConfirm && (
-            <div>
+          </TextInput>
+          {errors.pwConfirm && (
+            <ErrorMsg>
               <p>비밀번호가 일치하지 않습니다.</p>
-            </div>
+            </ErrorMsg>
           )}
         </div>
-        <div></div>
-        <button type="submit" className="submitButton">
-          가입하기
-        </button>
+        <CheckBoxContainer>
+          <CheckInputBox>
+            <CheckInput
+              type="checkbox"
+              checked={allSelected}
+              onChange={handleAllSelect}
+            />
+            <p>전체선택</p>
+          </CheckInputBox>
+          <CheckInputBox>
+            <CheckInput
+              type="checkbox"
+              {...register("checkBox1", { required: true })}
+            />
+            <p>이용약관 (필수)</p>
+            <CheckInput
+              type="checkbox"
+              {...register("checkBox2", { required: true })}
+            />
+            <p>개인정보 수집 및 이용 동의 (필수)</p>
+          </CheckInputBox>
+          {(errors.checkBox1 || errors.checkBox2) && (
+            <ErrorMsg>
+              <p>이용약관, 개인정보 수집은 필수 항목입니다.</p>
+            </ErrorMsg>
+          )}
+        </CheckBoxContainer>
+        <SubmitButton>가입하기</SubmitButton>
       </form>
     </InputContainer>
   );
