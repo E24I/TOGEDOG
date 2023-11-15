@@ -1,79 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { styled } from "styled-components";
 import Oauth from "./Oauth";
+import {
+  InputContainer,
+  LoginButtonOn,
+  LoginButtonOff,
+  LostPassword,
+  SignUpMove,
+  LoginInput,
+  LogoImg,
+} from "./LoginForm.style";
 
-const InputContainer = styled.div`
-  box-sizing: border-box;
-  width: 514px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  text-align: center;
-  border: 1px solid #a4a4a4;
-  border-left: none;
-  border-radius: 0 30px 30px 0;
-  ul {
-    padding: 0px;
-    display: flex;
-    justify-content: space-between;
-  }
-  li {
-    list-style: none;
-    display: inline;
-  }
-  button {
-    color: #a4a4a4;
-    font-size: 12px;
-    font-weight: 600;
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  p {
-    color: #404040;
-    font-size: 12px;
-    font-style: normal;
-  }
-  input {
-    display: flex;
-    width: 268px;
-    padding: 10px 13px;
-    align-items: center;
-    gap: 10px;
-    border-radius: 100px;
-    border: 1px solid #d7d7d7;
-    margin-bottom: 20px;
-  }
-  .buttonOn {
-    color: black;
-    display: block;
-    width: 268px;
-    padding: 10px 0;
-    border: none;
-    border-radius: 100px;
-    background: #d7d7d7;
-    margin-top: 20px;
-    transition: 1s;
-  }
-  .buttonOff {
-    color: a4a4a4;
-    display: block;
-    width: 268px;
-    padding: 10px 0;
-    border: none;
-    border-radius: 100px;
-    background: #d7d7d7;
-    margin-top: 20px;
-    transition: 1s;
-    cursor: default;
-  }
-  .logoImg {
-    margin: 40px 0 20px;
-  }
-`;
 type Inputs = {
   email: string;
   password: string;
@@ -85,10 +23,6 @@ const LoginForm: React.FC = () => {
   const [pw, setPw] = useState<string>("");
 
   const { register, handleSubmit } = useForm<Inputs>();
-
-  const onSubmit = (data: string) => {
-    console.log(data);
-  };
 
   useEffect(() => {
     if (id && pw) {
@@ -109,13 +43,13 @@ const LoginForm: React.FC = () => {
   return (
     <>
       <InputContainer>
-        <div className="logoImg">로고</div>
+        <LogoImg>로고</LogoImg>
         <form
           onSubmit={handleSubmit((data) => {
             console.log(data);
           })}
         >
-          <input
+          <LoginInput
             type="text"
             placeholder="이메일을 입력하세요."
             {...register("email")}
@@ -123,7 +57,7 @@ const LoginForm: React.FC = () => {
               handleId(e.target.value);
             }}
           />
-          <input
+          <LoginInput
             type="password"
             placeholder="비밀번호를 입력하세요."
             {...register("password")}
@@ -131,20 +65,19 @@ const LoginForm: React.FC = () => {
               handlePw(e.target.value);
             }}
           />
-          <button>비밀번호를 잊으셨나요?</button>
-          <button
-            className={loginInfo ? "buttonOn" : "buttonOff"}
-            type="submit"
-          >
-            로그인
-          </button>
+          <LostPassword>비밀번호를 잊으셨나요?</LostPassword>
+          {loginInfo ? (
+            <LoginButtonOn type="submit">로그인</LoginButtonOn>
+          ) : (
+            <LoginButtonOff>로그인</LoginButtonOff>
+          )}
         </form>
         <div>
           <Oauth />
           <p>
             계정이 없으신가요?{" "}
             <Link to="/SignUp">
-              <button>가입하기</button>
+              <SignUpMove>가입하기</SignUpMove>
             </Link>
           </p>
         </div>
