@@ -23,8 +23,6 @@ export type feedList = {
 
 export type postInformationType = {
   title: string;
-  image: string;
-  video: string;
   content: string;
   state: boolean;
   map: boolean;

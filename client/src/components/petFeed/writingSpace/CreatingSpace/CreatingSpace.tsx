@@ -1,9 +1,22 @@
-import React, { ChangeEvent, useState, useEffect, useRef } from "react";
+import React, {
+  ChangeEvent,
+  useState,
+  useEffect,
+  useRef,
+  KeyboardEvent,
+} from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.bubble.css";
+
 import * as C from "./CreatingSpace.Style";
 
 interface CreatingSpaceProps {
   handleInputChange: (fieldName: string, value: string | boolean) => void;
 }
+
+const modules = {
+  toolbar: false,
+};
 
 const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
   const [file, setFile] = useState({
@@ -13,6 +26,9 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
   });
 
   const [files, setFiles] = useState<JSX.Element[]>([]);
+
+  const [quillValue, setQuillValue] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const contentRef = useRef<any>();
 
   const uploadImage = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,11 +46,10 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
     }
   };
 
-  const enterToContent = (e: KeyboardEvent): void => {
+  const enterToContent = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter") {
       contentRef.current.focus();
     }
-    console.log(contentRef);
   };
 
   useEffect(() => {
@@ -55,6 +70,7 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
         />,
       ]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
 
   const deleteImage = (idx: number) => {
@@ -63,6 +79,16 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
       newFiles.splice(idx, 1);
       return newFiles;
     });
+  };
+
+  const setTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    handleInputChange("title", e.target.value);
+  };
+
+  const setContent = (editor: string) => {
+    handleInputChange("content", editor);
+    setQuillValue(editor);
+    console.log(editor);
   };
 
   return (
@@ -96,10 +122,18 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
       <C.FilesCount>{files.length}/6</C.FilesCount>
       <C.CreateTitle
         placeholder="제목을 입력하세요"
-        onKeyDown={(e) => enterToContent}
+        onKeyDown={(e) => enterToContent(e)}
+        onChange={(e) => setTitle(e)}
       />
       <C.CreateContentWrap>
-        <C.CreateContent placeholder="내용을 입력하세요" ref={contentRef} />
+        <ReactQuill
+          placeholder="내용을 입력하세요"
+          style={{ height: "90px", width: "100%" }}
+          ref={contentRef}
+          value={quillValue}
+          modules={modules}
+          onChange={(editor) => setContent(editor)}
+        />
         <C.TextCount>글자수 / 200</C.TextCount>
       </C.CreateContentWrap>
     </C.CreateSpace>
