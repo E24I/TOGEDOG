@@ -26,6 +26,10 @@ export const ProfileStyle = styled(Profile)`
 
 //component style
 export const HeaderContainer = styled.div`
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 30;
   display: flex;
   flex-direction: row;
   width: 100%;
