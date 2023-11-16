@@ -6,35 +6,16 @@ import {
 } from "./ChattingLists.Style";
 import ChattingList from "./ChattingListForm";
 
-const ChattingLists: React.FC = () => {
+interface ChattingListsProps {
+  setDefaultBack: () => void;
+}
+
+const ChattingLists: React.FC<ChattingListsProps> = ({ setDefaultBack }) => {
   return (
     <ChattingListsContainer>
       <ChattingFlexBox>
         <Message>Message</Message>
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
-        <ChattingList />
+        <ChattingList setDefaultBack={setDefaultBack} />
       </ChattingFlexBox>
     </ChattingListsContainer>
   );
