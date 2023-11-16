@@ -5,17 +5,10 @@ export const SignUpBox = styled.div`
   height: 1024px;
   input {
     border: none;
-    width: 220px;
     padding: 10px;
   }
   h1 {
     margin: 20px 0;
-  }
-  p {
-    color: #404040;
-    font-size: 12px;
-    font-style: normal;
-    text-align: center;
   }
   button {
     color: #a4a4a4;
@@ -32,4 +25,8 @@ export const Head = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 0 0 120px 0;
+`;
+export const BottomText = styled.p`
+  font-size: 12px;
+  text-align: center;
 `;

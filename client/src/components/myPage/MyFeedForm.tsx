@@ -1,8 +1,8 @@
 import React from "react";
-import { styled } from "styled-components";
+import { MyFeedContainer } from "./MyFeedForm.style";
 
 const MyFeedForm = () => {
-  return <></>;
+  return <MyFeedContainer></MyFeedContainer>;
 };
 
 export default MyFeedForm;
