@@ -16,10 +16,12 @@ export const ChattingListsContainer = styled.div`
 export const ChattingFlexBox = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 0 34px 0 49px;
+  margin: 0 34px 0 49px; //임시사이즈
   border: 2px solid #a05555; //구분선 입니다
   height: 100%;
   overflow: scroll;
 `;
 
-export const Message = styled.p``;
+export const Message = styled.p`
+  margin-top: 30px; // 임시사이즈
+`;

@@ -11,6 +11,7 @@ export const SeeMoreButton = styled(SeeMore)`
 
 //components
 export const ChattingListContainer = styled.div`
+  position: relative;
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -32,6 +33,7 @@ export const MiddleWrap = styled.div`
   width: 190px; // 임시 사이징
   height: 60px; //임시 사이징
   border: 2px solid #646f90; // 구분선 입니다
+  cursor: pointer;
   justify-content: center;
 `;
 

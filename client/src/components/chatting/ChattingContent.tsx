@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   BottomFlex,
   ChattingContentContainer,
+  DefaultBack,
   MiddleFlex,
   ProfileWrap,
   SendButton,
@@ -14,8 +15,21 @@ import {
   UserName,
 } from "./ChattingListForm.Style";
 import ContentListForm from "./ContentListForm";
+import Toast from "./Toast";
 
-const ChattingContent: React.FC = () => {
+interface ChattingContentprops {
+  isEntered: boolean;
+}
+
+const ChattingContent: React.FC<ChattingContentprops> = ({ isEntered }) => {
+  const [isOpen, setOpen] = useState<boolean>(false);
+  const openToast = () => {
+    if (isOpen !== false) {
+      setOpen(false);
+    } else {
+      setOpen(true);
+    }
+  };
   return (
     <ChattingContentContainer>
       <TopFlex>
@@ -23,22 +37,18 @@ const ChattingContent: React.FC = () => {
           <ProfileImage />
           <UserName>후추김</UserName>
         </ProfileWrap>
-        <SeeMoreButton />
+        <SeeMoreButton onClick={openToast} />
+        {isOpen && <Toast page="content" />}
       </TopFlex>
       <MiddleFlex>
-        <ContentListForm />
-        <ContentListForm />
-        <ContentListForm />
-        <ContentListForm />
-        <ContentListForm />
-        <ContentListForm />
-        <ContentListForm />
-        <ContentListForm />
+        {!isEntered ? <DefaultBack /> : <ContentListForm />}
       </MiddleFlex>
-      <BottomFlex id="chatting">
-        <TextInput form="chatting" />
-        <SendButton type="submit">보내기</SendButton>
-      </BottomFlex>
+      {isEntered && (
+        <BottomFlex id="chatting">
+          <TextInput form="chatting" />
+          <SendButton type="submit">보내기</SendButton>
+        </BottomFlex>
+      )}
     </ChattingContentContainer>
   );
 };
