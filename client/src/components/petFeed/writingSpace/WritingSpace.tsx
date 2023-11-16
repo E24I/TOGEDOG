@@ -1,9 +1,9 @@
-import React, { KeyboardEvent, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as W from "./WritingSpaces.Style";
 import CreatingSpace from "./CreatingSpace/CreatingSpace";
 import UpdatingSpace from "./updatingSpace/UpdatingSpace";
-import { postFeed } from "../../../services/feedService";
+import { postFeed, updateFeed } from "../../../services/feedService";
 import { postInformationType } from "../../../types/feedDataType";
 
 interface WritingSpaceProps {
@@ -23,6 +23,8 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     map: isMapAssign,
     address: "",
   });
+
+  const [updateInformation, setUpdateInformation] = useState<string>("");
 
   const navigator = useNavigate();
 
@@ -48,8 +50,19 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     handleInputChange("map", isMapAssign);
   };
 
-  const post = () => {
-    postFeed(postInformation);
+  const send = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const targetElement = e.target as HTMLElement;
+
+    if (targetElement instanceof HTMLElement) {
+      if (targetElement.textContent) {
+        const textContent = targetElement.textContent;
+        if (textContent === "게시") {
+          postFeed(postInformation);
+        } else if (textContent === "완료") {
+          updateFeed(updateInformation);
+        }
+      }
+    }
   };
 
   const handleInputChange = (fieldName: string, value: string | boolean) => {
@@ -59,7 +72,11 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     }));
   };
 
-  const enrollLocation = (e: KeyboardEvent<HTMLInputElement>): void => {
+  const handleContentChange = (content: string) => {
+    setUpdateInformation(content);
+  };
+
+  const enrollLocation = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter") {
       setSearch(true);
       handleInputChange("address", location);
@@ -72,6 +89,7 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
   };
 
   console.log(postInformation);
+  console.log(updateInformation);
 
   return (
     <W.CreateFeedContainer>
@@ -80,14 +98,14 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
         <W.PageName>
           {page === "create" ? "새 피드 올리기" : "피드 수정"}
         </W.PageName>
-        <W.CreateButton onClick={post}>
+        <W.CreateButton onClick={send}>
           {page === "create" ? "게시" : "완료"}
         </W.CreateButton>
       </W.FeedTopContainer>
       {page === "create" ? (
         <CreatingSpace handleInputChange={handleInputChange} />
       ) : (
-        <UpdatingSpace />
+        <UpdatingSpace handleContentChange={handleContentChange} />
       )}
       <W.FeedBottomContainer>
         <W.AddressContainer>

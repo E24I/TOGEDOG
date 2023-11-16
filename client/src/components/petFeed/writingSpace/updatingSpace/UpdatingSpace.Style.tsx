@@ -61,6 +61,8 @@ export const FeedContent = styled.div`
   margin: 0 0 10px 75px;
 `;
 
+export const DefaultContent = styled.p``;
+
 //수정 페이지 - 피드 사진컨테이너
 export const FeedImages = styled.div`
   display: flex;

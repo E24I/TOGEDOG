@@ -28,3 +28,20 @@ export const postFeed = async (postInfomation: postInformationType) => {
     .then((res) => console.log(res))
     .catch((err) => console.log(err));
 };
+
+export const updateFeed = async (content: string) => {
+  return await axios
+    .post(
+      `/feed/{feed-id}/reply/{reply-id}`,
+      {
+        content: content,
+      },
+      {
+        headers: {
+          Authorization: "authorizedToken자리",
+        },
+      },
+    )
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err));
+};
