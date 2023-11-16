@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Oauth from "../loginElement/Oauth";
-import InputForm from "./SignUpInputs";
-import { SignUpBox, Head } from "./SignUpForm.style";
+import SignUpInputs from "./SignUpInputs";
+import { SignUpBox, Head, BottomText } from "./SignUpForm.style";
 
 const SignUpForm: React.FC = () => {
   return (
@@ -11,15 +11,15 @@ const SignUpForm: React.FC = () => {
         <h1>Welcome!</h1>
         <div>로고</div>
       </Head>
-      <InputForm />
+      <SignUpInputs />
       <div>
         <Oauth />
-        <p>
+        <BottomText>
           이미 계정이 있으신가요?{" "}
           <Link to="/">
             <button>로그인</button>
           </Link>
-        </p>
+        </BottomText>
       </div>
     </SignUpBox>
   );

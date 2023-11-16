@@ -13,7 +13,7 @@ import {
   SubmitButton,
 } from "./SignUpInputs.style";
 
-const InputForm = () => {
+const SignUpInputs = () => {
   const {
     register,
     handleSubmit,
@@ -157,4 +157,4 @@ const InputForm = () => {
   );
 };
 
-export default InputForm;
+export default SignUpInputs;

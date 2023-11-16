@@ -1,14 +1,24 @@
 import React from "react";
-import { styled } from "styled-components";
-
-const MyInfoContainer = styled.div`
-  width: 100%;
-  height: 100px;
-  background: pink;
-`;
+import {
+  MyInfoContainer,
+  ProFileBox,
+  ProFileImg,
+  NickName,
+  SectionBox,
+  PetList,
+} from "./MyInfoForm.style";
 
 const MyInfoForm = () => {
-  return <MyInfoContainer></MyInfoContainer>;
+  return (
+    <MyInfoContainer>
+      <NickName>김태수</NickName>
+      <ProFileBox>
+        <ProFileImg />
+      </ProFileBox>
+      <SectionBox></SectionBox>
+      <PetList></PetList>
+    </MyInfoContainer>
+  );
 };
 
 export default MyInfoForm;

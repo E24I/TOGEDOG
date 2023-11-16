@@ -38,13 +38,16 @@ export const TextInput = styled.div`
   flex-direction: row;
   align-items: center;
   margin-top: 25px;
+  input {
+    width: 70%;
+  }
 `;
 
 export const ErrorMsg = styled.div`
+  float: left;
   p {
     color: red;
     font-size: 9px;
-    float: left;
   }
 `;
 
@@ -53,14 +56,9 @@ export const CheckBoxContainer = styled.div`
   width: 320px;
   display: flex;
   flex-direction: column;
-  input {
-    width: 13px;
-    height: 13px;
-  }
 `;
 export const CheckInputBox = styled.div`
   margin-top: 10px;
-  color: black;
   display: flex;
   p {
     font-size: 10px;
@@ -68,7 +66,11 @@ export const CheckInputBox = styled.div`
   }
 `;
 
-export const CheckInput = styled.input``;
+export const CheckInput = styled.input`
+  width: 13px;
+  height: 13px;
+  float: left;
+`;
 
 export const SubmitButton = styled.button`
   width: 240px;
