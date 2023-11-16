@@ -33,38 +33,6 @@ public class MemberService {
     private CustomAuthorityUtils customAuthorityUtils;
 
 
-    @Value("${spring.mail.auth-code-expiration-millis}")
-    private long authCodeExpirationMillis;
-
-    public void sendCodeToEmail(String toEmail) {
-        this.checkDuplicatedEmail(toEmail);
-        String title = "Togedog email 인증";
-        String authCode = this.createCode();
-        mailService.sendEmail(toEmail, title, authCode);
-    }
-
-    private void checkDuplicatedEmail(String email) {
-
-    }
-
-    /*
-    이메일 인증 코드를 생성
-     */
-    private String createCode(){
-        int length = 6;
-        try {
-            Random random = SecureRandom.getInstanceStrong();
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < length; i++) {
-                builder.append(random.nextInt(10));
-            }
-            return builder.toString();
-        } catch (NoSuchAlgorithmException e) {
-            log.debug("MemberService.createCode() exception occur");
-            throw new RuntimeException("코드 에러");
-        }
-    }
-
     public Member createMember(Member member){
         verifyExistsEmail(member.getEmail());
 

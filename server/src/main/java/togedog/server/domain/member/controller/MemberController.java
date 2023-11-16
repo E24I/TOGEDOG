@@ -10,6 +10,7 @@ import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.mapper.MemberMapper;
 import togedog.server.domain.member.service.MemberService;
 import togedog.server.global.mail.MailService;
+import togedog.server.global.mail.dto.EmailCheckDto;
 
 import java.net.URI;
 
@@ -48,22 +49,22 @@ public class MemberController {
     }
 
 
-
-
     @PostMapping("/emails/verification-requests")
     public ResponseEntity sendMessage(@RequestParam("email") String email) {
-        memberService.sendCodeToEmail(email);
+        mailService.sendCodeToEmail(email);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    @GetMapping("/emails/verifications")
-//    public ResponseEntity verificationEmail(@RequestParam("email") String email,
-//                                            @RequestParam("code") String authCode) {
-//        EmailVerificationResult response = memberService.verifiedCode(email, authCode);
-//
-//        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
-//    }
+    @PostMapping("/emails/check")
+    public String emailCheck(@RequestBody EmailCheckDto emailCheckDto){
+        Boolean checked = mailService.checkAuthNum(emailCheckDto.getEmail(), emailCheckDto.getAuthNum());
+        if(checked){
+            return "ok";
+        }else{
+            return "틀림";
+        }
+    }
 
 
 

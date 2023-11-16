@@ -27,3 +27,8 @@ spring:
         format_sql: true      # 쿼리 로그 포맷 (정렬)
         show_sql: true        # 쿼리 로그 출력
 
+  cache:
+    type: redis
+  redis:
+    host: 127.0.0.1
+    port: 6379

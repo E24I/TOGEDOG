@@ -1,4 +1,4 @@
-package togedog.server.global.details;
+package togedog.server.global.auth.details;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

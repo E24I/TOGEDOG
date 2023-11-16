@@ -41,8 +41,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'javax.mail:javax.mail-api:1.6.2'
 	implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
-	implementation 'org.mapstruct:mapstruct:1.5.1.Final'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.1.Final'
+	implementation 'org.mapstruct:mapstruct:1.5.1.Final' //mapstuct (1)
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.1.Final' //mapstuct (2)
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis' //redis 추가
 
 }
 
