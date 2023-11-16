@@ -216,7 +216,7 @@ export const DetailContainer = styled.div`
   width: 100%;
   max-width: 80vw;
   max-height: 100vh;
-  padding: 50px 0px;
+  padding: 50px 50px;
   aspect-ratio: 1.5/1;
   background-color: white;
   border-radius: 20px;
@@ -238,9 +238,9 @@ export const CloseModal = styled.button`
 `;
 
 export const LeftDetail = styled.div`
-  width: 50%;
+  width: 100%;
+  max-width: calc(40vw - 70px);
   height: 100%;
-  margin: 50px 0px 50px 50px;
   padding: 30px 0px;
 `;
 
@@ -295,9 +295,9 @@ export const FeedDetailStatus = styled.div`
 
 export const RightDetail = styled.div`
   border-left: 1px solid rgb(215, 215, 215);
-  width: 50%;
+  width: 100%;
+  max-width: calc(40vw - 70px);
   height: 100%;
-  margin: 50px 50px 50px 0px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;

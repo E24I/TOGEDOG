@@ -26,7 +26,7 @@ const App: React.FC = () => {
         <Route path="/feeds" element={<PetFeed />} />
         <Route path="/chat" element={<Chatting />} />
         <Route path="/petmap" element={<PetMap />} />
-        <Route path="/petmap/feed" element={<MapDetail />} />
+        <Route path="/petmap/1" element={<MapDetail />} />
         <Route path="/member/:memberId/mymap" element={<MyMap />} />
         <Route path="/myPage" element={<MyPage />} />
       </Routes>

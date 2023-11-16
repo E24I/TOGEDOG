@@ -1,7 +1,12 @@
 import React from "react";
+import KaKaoMap from "../components/petMap/KaKaoMap";
 
 const PetMap: React.FC = () => {
-  return <>투게독 펫 지도입니다.</>;
+  return (
+    <>
+      <KaKaoMap />
+    </>
+  );
 };
 
 export default PetMap;
