@@ -95,11 +95,6 @@ export const CreateTitle = styled.input`
 //본문 입력 공간 래핑
 export const CreateContentWrap = styled.div``;
 
-export const CreateContent = styled.textarea`
-  width: 100%;
-  padding: 90px 0px;
-`;
-
 export const TextCount = styled.p`
   text-align: right;
   margin-bottom: 30px;

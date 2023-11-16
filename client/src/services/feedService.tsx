@@ -14,12 +14,27 @@ export const postFeed = async (postInfomation: postInformationType) => {
       `/feed`,
       {
         title: postInfomation.title,
-        image: "",
-        video: postInfomation.video,
         content: postInfomation.content,
         state: postInfomation.state,
         map: postInfomation.map,
         address: postInfomation.address,
+      },
+      {
+        headers: {
+          Authorization: "authorizedToken자리",
+        },
+      },
+    )
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err));
+};
+
+export const updateFeed = async (content: string) => {
+  return await axios
+    .post(
+      `/feed/{feed-id}/reply/{reply-id}`,
+      {
+        content: content,
       },
       {
         headers: {
