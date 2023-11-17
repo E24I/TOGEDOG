@@ -7,5 +7,7 @@ import lombok.Getter;
 @Builder
 public class ChatPostRequest {
 
-    private Long memberId;
+    private Long requestMemberId;
+
+    private Long inviteMemberId;
 }

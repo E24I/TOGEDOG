@@ -1,7 +1,6 @@
 package togedog.server.domain.chat.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import togedog.server.domain.chatreport.entity.ChatReport;
 import togedog.server.global.entity.BaseEntity;
 
@@ -12,6 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class ChatRoom extends BaseEntity {
 
     @Id
