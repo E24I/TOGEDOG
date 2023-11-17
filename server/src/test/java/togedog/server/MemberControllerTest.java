@@ -23,6 +23,9 @@ import togedog.server.domain.alarm.dto.AlarmDto;
 import togedog.server.domain.alarm.entity.Alarm;
 import togedog.server.domain.alarm.service.AlarmService;
 import togedog.server.domain.member.controller.MemberController;
+import togedog.server.domain.member.mapper.MemberMapper;
+import togedog.server.domain.member.service.MemberService;
+import togedog.server.global.mail.MailService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -35,6 +38,15 @@ public class MemberControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private MailService mailService;
+
+    @MockBean
+    private MemberService memberService;
+
+    @MockBean
+    private MemberMapper mapper;
 
     @DisplayName("멤버 조회")
     @Test
