@@ -51,6 +51,8 @@ public class Feed extends BaseEntity {
 
     private Integer repliesCount;
 
+    private Boolean openYn;
+
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies = new ArrayList<>();
