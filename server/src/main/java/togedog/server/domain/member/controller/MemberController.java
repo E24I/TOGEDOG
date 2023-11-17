@@ -48,21 +48,26 @@ public class MemberController {
         return "param = par :" + par;
     }
 
-
-    @PostMapping("/emails/verification-requests")
+    /*
+    회원가입 확인 메일 전송
+     */
+    @PostMapping("/emails/send-code")
     public ResponseEntity sendMessage(@RequestParam("email") String email) {
         mailService.sendCodeToEmail(email);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /*
+    회원가입 코드 체크
+     */
     @PostMapping("/emails/check")
     public String emailCheck(@RequestBody EmailCheckDto emailCheckDto){
         Boolean checked = mailService.checkAuthNum(emailCheckDto.getEmail(), emailCheckDto.getAuthNum());
         if(checked){
             return "ok";
         }else{
-            return "틀림";
+            return "not ok";
         }
     }
 

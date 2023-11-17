@@ -25,23 +25,21 @@ import java.util.Random;
 @AllArgsConstructor
 public class MailService {
 
-    private final JavaMailSender emailSender; //메일센더
+    private final JavaMailSender emailSender; //메일센더선언
     private RedisUtil redisUtil;
-
 
     /*
     이메일 보내기 MimeMessage 이용
      */
     public void sendEmail(String toEmail, String title, String text, String authCode) {
         MimeMessage message = emailSender.createMimeMessage();
-        String fromEmail = "godud1118@gmail.com";
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(message,true,"utf-8");//이메일 메시지와 관련된 설정을 수행합니다.
+            MimeMessageHelper messageHelper = new MimeMessageHelper(message,true,"utf-8");//이메일 메시지와 관련된 설정을 수행합니다.
             // true를 전달하여 multipart 형식의 메시지를 지원하고, "utf-8"을 전달하여 문자 인코딩을 설정
-            helper.setFrom(fromEmail);//이메일의 발신자 주소 설정
-            helper.setTo(toEmail);//이메일의 수신자 주소 설정
-            helper.setSubject(title);//이메일의 제목을 설정
-            helper.setText(text,true);//이메일의 내용 설정 두 번째 매개 변수에 true를 설정하여 html 설정으로한다.
+//            helper.setFrom("발신자");//이메일의 발신자 주소 설정 -> EmailConfig에서 설정해줬음.
+            messageHelper.setTo(toEmail);//이메일의 수신자 주소 설정
+            messageHelper.setSubject(title);//이메일의 제목을 설정
+            messageHelper.setText(text,true);//이메일의 내용 설정 두 번째 매개 변수에 true를 설정하여 html 설정으로한다.
             emailSender.send(message);
 
             redisUtil.setDataExpire(authCode,toEmail,60*5L);
