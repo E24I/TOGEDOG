@@ -33,4 +33,9 @@ public class FeedController {
 
         return ResponseEntity.created(uri).build();
     }
+
+    @GetMapping
+    public ResponseEntity<Void> getFeed() {
+        return null;
+    }
 }
