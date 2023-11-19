@@ -26,7 +26,8 @@ public class ReplyController {
     public ResponseEntity<Void> createComment(@PathVariable("reply-id") Long replyId,
                                               @RequestBody @Valid CommentCreateApiRequest request) {
 
-        Long commentId = commentService.createComment(request.toServiceRequest(),replyId)
+//        Long commentId = commentService.createComment(request.toServiceRequest(),replyId)
+        return null;
     }
 
 

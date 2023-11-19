@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import togedog.server.domain.feed.controller.dto.FeedCreateApiRequest;
 import togedog.server.domain.feed.controller.dto.FeedUpdateApiRequest;
 import togedog.server.domain.feed.service.FeedService;
+import togedog.server.domain.feedlike.entity.FeedLike;
+import togedog.server.domain.feedlike.service.FeedLikeService;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -18,6 +20,7 @@ import java.net.URI;
 public class FeedController {
 
     private FeedService feedService;
+    private FeedLikeService feedLikeService;
 
 
     @GetMapping("/")
@@ -58,5 +61,12 @@ public class FeedController {
         feedService.deleteFeed(feedId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{feed-id}/like")
+    public ResponseEntity<Void> likeFeed(@PathVariable("feed-id") Long feedId) {
+
+//        FeedLikeService.likeFeed(feedId);
+        return null;
     }
 }

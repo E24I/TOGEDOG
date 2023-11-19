@@ -1,6 +1,7 @@
 package togedog.server.domain.feed.entity;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import togedog.server.domain.feedimage.entity.FeedImage;
 import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.feedreport.entity.FeedReport;
@@ -34,7 +35,6 @@ public class Feed extends BaseEntity {
     private String content;
 
     @Column(nullable = false)
-
     private String images;
 
     @Column(nullable = false)

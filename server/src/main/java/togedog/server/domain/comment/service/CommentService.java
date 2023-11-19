@@ -8,6 +8,7 @@ import togedog.server.domain.comment.service.dto.CommentCreateServiceRequest;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.reply.entity.Reply;
 import togedog.server.domain.reply.repository.ReplyRepository;
+import togedog.server.global.exception.businessexception.replyexception.ReplyNotFoundException;
 
 import java.util.Optional;
 
@@ -33,5 +34,9 @@ public class CommentService {
 
         return comment.getCommentId();
 
+    }
+
+    private Comment postComment(CommentCreateServiceRequest request, Reply reply) {
+        return null;
     }
 }

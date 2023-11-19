@@ -10,6 +10,7 @@ import togedog.server.domain.feed.repository.FeedRepository;
 import togedog.server.domain.feed.service.dto.request.FeedCreateServiceApiRequest;
 import togedog.server.domain.feed.service.dto.request.FeedUpdateServiceRequest;
 import togedog.server.domain.member.entity.Member;
+import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.global.exception.businessexception.memberexception.MemberAccessDeniedException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
