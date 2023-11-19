@@ -9,6 +9,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 
 import * as C from "./CreatingSpace.Style";
+// import { CityData } from "../../../../services/MapSearchingService";
 
 interface CreatingSpaceProps {
   handleInputChange: (fieldName: string, value: string | boolean) => void;
@@ -24,6 +25,8 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
     image: false,
     video: false,
   });
+
+  // console.log("시티", CityData()); //광역 행정 구역 데이터 받아오는 쿼리 호출
 
   const [files, setFiles] = useState<JSX.Element[]>([]);
 
