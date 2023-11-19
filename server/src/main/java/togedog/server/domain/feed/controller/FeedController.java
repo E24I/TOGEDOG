@@ -5,13 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import togedog.server.domain.feed.controller.dto.FeedCreateApiRequest;
+import togedog.server.domain.feed.controller.dto.FeedUpdateApiRequest;
 import togedog.server.domain.feed.service.FeedService;
 
 import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/feeds")
+@RequestMapping("/feed")
 @Validated
 @RequiredArgsConstructor
 public class FeedController {
@@ -25,11 +26,13 @@ public class FeedController {
     }
 
     @PostMapping
-    public ResponseEntity postFeed(@Valid @RequestBody FeedCreateApiRequest request) {
+    public ResponseEntity<Void> postFeed(@Valid @RequestBody FeedCreateApiRequest request) {
 
+        //로그인 된 사용자 확인 로직
 
+        Long feedId = feedService.createFeed(request.toFeedCreateServiceRequest());
 
-        URI uri = URI.create("/Feeds" ); // + feedId
+        URI uri = URI.create("/Feeds/" + feedId); // + feedId
 
         return ResponseEntity.created(uri).build();
     }
@@ -37,5 +40,23 @@ public class FeedController {
     @GetMapping
     public ResponseEntity<Void> getFeed() {
         return null;
+    }
+
+    @PatchMapping("/{feed-id}")
+    public ResponseEntity<Void> updateFeed(@PathVariable("feed-id") Long feedId,
+                                           @RequestBody @Valid FeedUpdateApiRequest request) {
+
+
+        feedService.updateFeed(feedId, request.toFeedUpdateServiceRequest());
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{feed-id}")
+    public ResponseEntity<Void> deleteFeed(@PathVariable("feed-id") Long feedId) {
+
+        feedService.deleteFeed(feedId);
+
+        return ResponseEntity.noContent().build();
     }
 }
