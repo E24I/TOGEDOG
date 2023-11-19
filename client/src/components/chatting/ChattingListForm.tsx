@@ -8,7 +8,7 @@ import {
   TimeStamp,
   UserName,
 } from "./ChattingListForm.Style";
-import Toast from "./Toast";
+import Toast from "../toast/Toast";
 //list mockData
 
 interface ChattingListProps {
@@ -36,7 +36,7 @@ const ChattingList: React.FC<ChattingListProps> = ({ setDefaultBack }) => {
       </MiddleWrap>
       <TimeStamp>• 11시간 전</TimeStamp>
       <SeeMoreButton onClick={openToast} />
-      {isOpen && <Toast page="list" />}
+      {isOpen && <Toast component="list" />}
     </ChattingListContainer>
   );
 };
