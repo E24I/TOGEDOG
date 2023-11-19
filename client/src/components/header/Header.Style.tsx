@@ -22,6 +22,7 @@ export const ProfileStyle = styled(Profile)`
   border-radius: 100px;
   width: 60px; //임시 사이징 입니다
   height: 60px; //임시 사이징 입니다
+  cursor: pointer;
 `;
 
 //component style
