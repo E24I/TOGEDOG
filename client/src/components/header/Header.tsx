@@ -14,21 +14,26 @@ import {
 
 import { Link } from "react-router-dom";
 import Modal from "../modal/Modal";
+import Alarm from "../alarm/Alarm";
 
 const Header: React.FC = () => {
   const [isRead, setRead] = useState<boolean>(false);
-  const [isOpen, setOpen] = useState<boolean>(false);
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const openModal = () => {
-    if (isOpen !== false) {
-      setOpen(false);
+    if (isModalOpen !== false) {
+      setModalOpen(false);
     } else {
-      setOpen(true);
+      setRead(false);
+      setModalOpen(true);
     }
   };
 
   const convertToRead = () => {
     if (isRead !== true) {
+      setModalOpen(false);
       setRead(true);
+    } else {
+      setRead(false);
     }
   };
 
@@ -54,7 +59,8 @@ const Header: React.FC = () => {
         </NotificationsContainer>
       </MiddleButtonContainer>
       <ProfileStyle onClick={openModal} />
-      {isOpen && <Modal setOpen={setOpen} />}
+      {isModalOpen && <Modal setModalOpen={setModalOpen} />}
+      {isRead && <Alarm setRead={setRead} />}
     </HeaderContainer>
   );
 };
