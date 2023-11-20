@@ -30,13 +30,13 @@ public class FeedController {
 
     @GetMapping("/")
     public ResponseEntity<ApiPageResponse<FeedResponse>> getFeeds(@RequestParam(defaultValue = "1") int page,
-                                                                  @RequestParam(defaultValue = "10") int size) {
+                                                                  @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<FeedResponse> feedsPage = feedService.getFeedsPaged(pageable);
 
         return ResponseEntity.ok(ApiPageResponse.ok(feedsPage));
     }
-    }
+
 
     @PostMapping
     public ResponseEntity<Void> postFeed(@Valid @RequestBody FeedCreateApiRequest request) {

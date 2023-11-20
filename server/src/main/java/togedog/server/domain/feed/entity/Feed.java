@@ -49,8 +49,6 @@ public class Feed extends BaseEntity {
 
     private Integer likeCount = 0;
 
-    private Boolean bookmarkYn;
-
     private String address;
 
     private Boolean replyFix;
