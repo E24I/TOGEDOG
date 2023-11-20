@@ -49,7 +49,7 @@ public class Feed extends BaseEntity {
 
     private Integer likeCount = 0;
 
-    private boolean bookmarkYn;
+    private Boolean bookmarkYn;
 
     private String address;
 
@@ -61,7 +61,10 @@ public class Feed extends BaseEntity {
 
     private Boolean addMap; // 지도 등록 여부
 
-    private boolean deleteYn; //삭제 여부
+    private Boolean deleteYn; //삭제 여부
+
+    // @Transient 붙일 수 있는 엔티티들
+
 
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -101,14 +104,17 @@ public class Feed extends BaseEntity {
                 .build();
     }
 
-    public void updateMyFeed(String title, String content, Boolean openYn) {
+    public void updateMyFeed(String title, String content, boolean openYn) {
         if (title != null) {
             this.title = title;
         }
         if (content != null) {
             this.content = content;
         }
-        this.openYn = openYn; // 이건 널값 안들어오고, 원래 값이 들어올 경우 그 값 유지하게 하는 방식으로 다시 짜자!
+        if (openYn != getOpenYn()) { // 이게 맞을까 ?
+            this.openYn = openYn;
+
+        } // 이건 널값 안들어오고, 원래 값이 들어올 경우 그 값 유지하게 하는 방식으로 다시 짜자!
     }
 
     public void deleteMyFeed() {

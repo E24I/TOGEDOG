@@ -1,14 +1,19 @@
 package togedog.server.domain.feed.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import togedog.server.domain.feed.controller.dto.FeedCreateApiRequest;
 import togedog.server.domain.feed.controller.dto.FeedUpdateApiRequest;
 import togedog.server.domain.feed.service.FeedService;
+import togedog.server.domain.feed.service.dto.response.FeedResponse;
 import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.feedlike.service.FeedLikeService;
+import togedog.server.global.response.ApiPageResponse;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -24,8 +29,13 @@ public class FeedController {
 
 
     @GetMapping("/")
-    public ResponseEntity<Void> getFeeds() {
-        return null;
+    public ResponseEntity<ApiPageResponse<FeedResponse>> getFeeds(@RequestParam(defaultValue = "1") int page,
+                                                                  @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<FeedResponse> feedsPage = feedService.getFeedsPaged(pageable);
+
+        return ResponseEntity.ok(ApiPageResponse.ok(feedsPage));
+    }
     }
 
     @PostMapping

@@ -29,13 +29,13 @@ public class FeedService {
 
     public Long createFeed(FeedCreateServiceApiRequest request) {
 
-        Long memberId = 12313L; // 멤버 확인하는 로그인된 멤버를
+        Long loginMemberId = 12313L; // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
 
-        if (memberId == null) { // 로그인된 사용자를 가져올 때 해영님이
+        if (loginMemberId == null) { // 로그인된 사용자를 가져올 때 해영님이
             throw new MemberNotLoginException();
         }
 
-        Optional<Member> memberOptional = memberRepository.findById(memberId); //로그인된 사용자의 멤버 아이디
+        Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
         Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
 
         Feed feed = postFeed(request, member);
