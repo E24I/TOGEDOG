@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import {
   AlarmButton,
   ChatButton,
@@ -11,12 +11,13 @@ import {
   MypageButton,
   SearchButton,
 } from "./Modal.Style";
+import { useNavigate } from "react-router-dom";
 
 interface ModalProps {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Modal: React.FC<ModalProps> = ({ setOpen }) => {
+const Modal: React.FC<ModalProps> = ({ setModalOpen }) => {
   const modalInfo = [
     { menu: "마이페이지", icon: <MypageButton className="icon" /> },
     { menu: "로그아웃", icon: <LogoutButton className="icon" /> },
@@ -26,8 +27,33 @@ const Modal: React.FC<ModalProps> = ({ setOpen }) => {
     { menu: "모드전환", icon: <ModeButton className="icon" /> },
   ];
 
+  const navigator = useNavigate();
+
   const closeModal = () => {
-    setOpen(false);
+    setModalOpen(false);
+  };
+
+  const route = (index: number) => {
+    switch (index) {
+      case 0:
+        navigator("/mypage");
+        break;
+      case 1:
+        navigator("/");
+        break;
+      case 2:
+        navigator("/chat");
+        break;
+      case 3:
+        navigator("/set/alarm");
+        break;
+      case 4:
+        navigator("/search");
+        break;
+      case 5:
+        "";
+    }
+    setModalOpen(false);
   };
 
   return (
@@ -36,7 +62,7 @@ const Modal: React.FC<ModalProps> = ({ setOpen }) => {
       <ModalMenus>
         {modalInfo.map((info, idx) => {
           return (
-            <ModalMenu key={idx}>
+            <ModalMenu key={idx} onClick={() => route(idx)}>
               {info.menu}
               {info.icon}
             </ModalMenu>
