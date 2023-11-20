@@ -40,6 +40,7 @@ export const TextInput = styled.div`
   margin-top: 25px;
   input {
     width: 70%;
+    background: none;
   }
 `;
 

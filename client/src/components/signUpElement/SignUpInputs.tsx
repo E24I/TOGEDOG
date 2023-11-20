@@ -85,6 +85,7 @@ const SignUpInputs = () => {
             <input
               type="text"
               placeholder="이메일을 입력해주세요."
+              autoComplete="off"
               {...register("email", { required: true, pattern: emailRegex })}
             />
             <button onClick={() => emailAuthentication(email)}>
@@ -103,6 +104,7 @@ const SignUpInputs = () => {
             <input
               type="text"
               placeholder="인증번호를 입력해주세요."
+              autoComplete="off"
               {...register("authentication", { required: true })}
             />
             <button>인증하기</button>
@@ -114,6 +116,7 @@ const SignUpInputs = () => {
             <input
               type="text"
               placeholder="닉네임을 입력해주세요."
+              autoComplete="off"
               {...register("nickName", { required: true })}
             />
             <button>중복확인</button>
@@ -125,6 +128,7 @@ const SignUpInputs = () => {
             <input
               type="password"
               placeholder="비밀번호를 입력해주세요."
+              autoComplete="off"
               {...register("password", {
                 required: true,
                 pattern: passwordRegex,
@@ -145,6 +149,7 @@ const SignUpInputs = () => {
             <input
               type="password"
               placeholder="비밀번호를 확인해주세요."
+              autoComplete="off"
               {...register("pwConfirm", {
                 required: true,
                 validate: (value) =>
