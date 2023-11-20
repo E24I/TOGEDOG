@@ -15,7 +15,7 @@ import {
   UserName,
 } from "./ChattingListForm.Style";
 import ContentListForm from "./ContentListForm";
-import Toast from "./Toast";
+import Toast from "../toast/Toast";
 
 interface ChattingContentprops {
   isEntered: boolean;
@@ -38,7 +38,7 @@ const ChattingContent: React.FC<ChattingContentprops> = ({ isEntered }) => {
           <UserName>후추김</UserName>
         </ProfileWrap>
         <SeeMoreButton onClick={openToast} />
-        {isOpen && <Toast page="content" />}
+        {isOpen && <Toast component="content" />}
       </TopFlex>
       <MiddleFlex>
         {!isEntered ? <DefaultBack /> : <ContentListForm />}

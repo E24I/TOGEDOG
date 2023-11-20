@@ -2,13 +2,13 @@ import React from "react";
 import { Menu, ToastContainer } from "./Toast.Style";
 
 interface ToastProps {
-  page: string;
+  component: string;
 }
 
-const Toast: React.FC<ToastProps> = ({ page }) => {
+const Toast: React.FC<ToastProps> = ({ component }) => {
   const menus = ["읽음 처리", "알림 끄기", "채팅방 신고"];
 
-  if (page === "content") {
+  if (component === "content") {
     menus[0] = "대화방 삭제";
   }
 
