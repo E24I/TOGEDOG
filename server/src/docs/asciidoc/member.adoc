@@ -1,0 +1,16 @@
+= member API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+
+== 알림 가져오기
+
+=== Request
+
+include::{snippets}/member/getMember/http-request.adoc[]
+
+=== Response
+
+include::{snippets}/member/getMember/http-response.adoc[]

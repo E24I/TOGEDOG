@@ -5,4 +5,5 @@ export const MyFeedContainer = styled.div`
   height: 500px;
   margin: 0 auto;
   border: 1px solid red;
+  float: left;
 `;

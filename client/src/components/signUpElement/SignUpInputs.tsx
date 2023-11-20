@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import { ReactComponent as Message } from "../../assets/images/icons/signUpIcons/Message.svg";
 import { ReactComponent as Person } from "../../assets/images/icons/signUpIcons/Person.svg";
 import { ReactComponent as Lock } from "../../assets/images/icons/signUpIcons/Lock.svg";
@@ -13,6 +14,17 @@ import {
   SubmitButton,
 } from "./SignUpInputs.style";
 
+const emailAuthentication = async (email: string) => {
+  try {
+    const request = await axios({
+      method: "post",
+      url: `https://4a75-116-125-236-74.ngrok-free.app/member/emails/send-code?email=${email}`,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const SignUpInputs = () => {
   const {
     register,
@@ -23,27 +35,39 @@ const SignUpInputs = () => {
   } = useForm();
 
   const [allSelected, setAllSelected] = useState(false);
+  const [isAuthentication, setIsAuthentication] = useState(false);
 
   //체크 박스 둘중 하나 체크 풀리면 전체선택은 false함수
   useEffect(() => {
-    if (!watch("checkBox1") || !watch("checkBox2")) {
+    if (!watch("agree1") || !watch("agree2")) {
       setAllSelected(false);
-    } else if (watch("checkBox1") || watch("checkBox2")) {
+    } else if (watch("agree1") || watch("agree2")) {
       setAllSelected(true);
     }
-  }, [[watch("checkBox1"), watch("checkbox2")]]);
+  }, [[watch("agree1"), watch("agree2")]]);
 
   // 전체 선택 누르면 둘다 true or false 함수
   const handleAllSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
     setAllSelected(isChecked);
 
-    setValue("checkBox1", isChecked);
-    setValue("checkBox2", isChecked);
+    setValue("agree1", isChecked);
+    setValue("agree2", isChecked);
   };
 
+  //이메일 유효성
   const emailRegex =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  //비밀번호 유효성
+  const passwordRegex =
+    /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+  //각각 input 태그 value 호출
+  const email = watch("email", "");
+  const nickName = watch("nickName", "");
+  const authentication = watch("authentication", "");
+  const password = watch("password", "");
+  const pwConfirm = watch("pwConfirm", "");
+
   return (
     <InputContainer>
       <h2>
@@ -61,9 +85,12 @@ const SignUpInputs = () => {
             <input
               type="text"
               placeholder="이메일을 입력해주세요."
+              autoComplete="off"
               {...register("email", { required: true, pattern: emailRegex })}
             />
-            <button>인증번호 전송</button>
+            <button onClick={() => emailAuthentication(email)}>
+              인증번호 전송
+            </button>
           </TextInput>
           {errors.email && (
             <ErrorMsg>
@@ -77,6 +104,7 @@ const SignUpInputs = () => {
             <input
               type="text"
               placeholder="인증번호를 입력해주세요."
+              autoComplete="off"
               {...register("authentication", { required: true })}
             />
             <button>인증하기</button>
@@ -88,8 +116,10 @@ const SignUpInputs = () => {
             <input
               type="text"
               placeholder="닉네임을 입력해주세요."
+              autoComplete="off"
               {...register("nickName", { required: true })}
             />
+            <button>중복확인</button>
           </TextInput>
         </div>
         <div>
@@ -98,7 +128,11 @@ const SignUpInputs = () => {
             <input
               type="password"
               placeholder="비밀번호를 입력해주세요."
-              {...register("password", { required: true })}
+              autoComplete="off"
+              {...register("password", {
+                required: true,
+                pattern: passwordRegex,
+              })}
             />
           </TextInput>
           {errors.password && (
@@ -115,7 +149,12 @@ const SignUpInputs = () => {
             <input
               type="password"
               placeholder="비밀번호를 확인해주세요."
-              {...register("pwConfirm", { required: true })}
+              autoComplete="off"
+              {...register("pwConfirm", {
+                required: true,
+                validate: (value) =>
+                  value === password || "비밀번호가 일치하지 않습니다.",
+              })}
             />
           </TextInput>
           {errors.pwConfirm && (
@@ -136,16 +175,16 @@ const SignUpInputs = () => {
           <CheckInputBox>
             <CheckInput
               type="checkbox"
-              {...register("checkBox1", { required: true })}
+              {...register("agree1", { required: true })}
             />
             <p>이용약관 (필수)</p>
             <CheckInput
               type="checkbox"
-              {...register("checkBox2", { required: true })}
+              {...register("agree2", { required: true })}
             />
             <p>개인정보 수집 및 이용 동의 (필수)</p>
           </CheckInputBox>
-          {(errors.checkBox1 || errors.checkBox2) && (
+          {(errors.agree1 || errors.agree2) && (
             <ErrorMsg>
               <p>이용약관, 개인정보 수집은 필수 항목입니다.</p>
             </ErrorMsg>
