@@ -22,7 +22,6 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private static final String AUTH_CODE_PREFIX = "AuthCode ";
     private final MailService mailService;
     private final MemberRepository memberRepository;
 
