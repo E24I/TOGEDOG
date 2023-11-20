@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import Oauth from "./Oauth";
+import PasswordChangeForm from "../signUpElement/PasswordChangeForm";
 import {
   InputContainer,
   LoginButtonOn,
@@ -12,17 +13,13 @@ import {
   LogoImg,
 } from "./LoginForm.style";
 
-type Inputs = {
-  email: string;
-  password: string;
-};
-
 const LoginForm: React.FC = () => {
   const [loginInfo, setLoginInfo] = useState<boolean>(false); //아아디,비밀번호가 입력돼었으면 true
   const [id, setId] = useState<string>("");
   const [pw, setPw] = useState<string>("");
+  const [lostPw, setLostPw] = useState<boolean>(false); //비밀번호 변경 모달
 
-  const { register, handleSubmit } = useForm<Inputs>();
+  const { register, handleSubmit } = useForm();
 
   useEffect(() => {
     if (id && pw) {
@@ -39,6 +36,9 @@ const LoginForm: React.FC = () => {
   const handlePw = (value: string) => {
     const pwValue = value;
     setPw(pwValue);
+  };
+  const handleModal = () => {
+    setLostPw(!lostPw);
   };
   return (
     <>
@@ -65,7 +65,10 @@ const LoginForm: React.FC = () => {
               handlePw(e.target.value);
             }}
           />
-          <LostPassword>비밀번호를 잊으셨나요?</LostPassword>
+          <LostPassword onClick={handleModal}>
+            비밀번호를 잊으셨나요?
+          </LostPassword>
+          {lostPw && <PasswordChangeForm setLostPw={setLostPw} />}
           {loginInfo ? (
             <LoginButtonOn type="submit">로그인</LoginButtonOn>
           ) : (
