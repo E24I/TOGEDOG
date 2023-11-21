@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import {
   AlarmButton,
   ChatButton,
@@ -29,10 +29,6 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen }) => {
 
   const navigator = useNavigate();
 
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
   const route = (index: number) => {
     switch (index) {
       case 0:
@@ -58,7 +54,7 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen }) => {
 
   return (
     <ModalContainer>
-      <ModalBackGround onClick={closeModal} />
+      <ModalBackGround onClick={() => setModalOpen(false)} />
       <ModalMenus>
         {modalInfo.map((info, idx) => {
           return (

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as W from "./WritingSpaces.Style";
 import CreatingSpace from "./CreatingSpace/CreatingSpace";
