@@ -18,6 +18,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import togedog.server.global.auth.filter.JwtAuthenticationFilter;
+import togedog.server.global.auth.handler.MemberAuthenticationFailureHandler;
+import togedog.server.global.auth.handler.MemberAuthenticationSuccessHandler;
 import togedog.server.global.auth.jwt.JWTokenizer;
 
 import java.util.Arrays;
@@ -62,6 +64,8 @@ public class SecurityConfig {
 
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwTokenizer);
             jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
+            jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
             builder.addFilter(jwtAuthenticationFilter);
         }
