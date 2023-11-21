@@ -1,6 +1,8 @@
 package togedog.server.domain.feed.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import togedog.server.domain.feed.controller.dto.FeedCreateApiRequest;
@@ -9,6 +11,7 @@ import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.feed.repository.FeedRepository;
 import togedog.server.domain.feed.service.dto.request.FeedCreateServiceApiRequest;
 import togedog.server.domain.feed.service.dto.request.FeedUpdateServiceRequest;
+import togedog.server.domain.feed.service.dto.response.FeedResponse;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.global.exception.businessexception.memberexception.MemberAccessDeniedException;
@@ -43,6 +46,16 @@ public class FeedService {
 
         return feed.getFeedId();
     }
+
+    public Page<FeedResponse> getFeedsPaged(Pageable pageable) {
+
+        Page<Feed> feedsPage = feedRepository.findByOpenYnTrue(pageable);
+
+
+        return feedsPage.map(FeedResponse::createFeedResponse);
+    }
+
+
 
 
     public void updateFeed(Long feedId, FeedUpdateServiceRequest request) {
