@@ -1,34 +1,32 @@
-package togedog.server.domain.feedlike.service;
+package togedog.server.domain.feedbookmark.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.feed.repository.FeedRepository;
 import togedog.server.domain.feed.service.FeedService;
+import togedog.server.domain.feedbookmark.entity.FeedBookmark;
+import togedog.server.domain.feedbookmark.repository.FeedBookmarkRepository;
 import togedog.server.domain.feedlike.entity.FeedLike;
-import togedog.server.domain.feedlike.repository.FeedLikeRepository;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
-public class FeedLikeService {
+public class FeedBookmarkService {
 
-    private final FeedRepository feedRepository;
+    private final FeedService feedService;
+    private final FeedBookmarkRepository feedBookmarkRepository;
     private final MemberRepository memberRepository;
-    private final FeedLikeRepository feedLikeRepository;
+    private final FeedRepository feedRepository;
 
 
-    public void likeFeed(Long feedId) {
-
-//        Long loginMemberId = SecurityUtil.getCurrentId();
+    public void bookmarkFeed(Long feedId) {
 
         Long loginMemberId = 123L;
 
@@ -42,35 +40,20 @@ public class FeedLikeService {
         Optional<Feed> feedOptional = feedRepository.findById(feedId);
         Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
 
-        Optional<FeedLike> alreadyLike = feedLikeRepository.findByMemberAndFeed(member, feed);
-        // 지금은 연관관계로 조회하지만 성능을 위해 다음 @EmbeddedId나 @IdClass를 알아보자
+        Optional<FeedBookmark> alreadyBookmark = feedBookmarkRepository.findByMemberAndFeed(member, feed);
 
-        if (alreadyLike.isPresent()) { // 현재 로직은 있으면 delete or 객체 생성인데 다음엔 타입으로 받고 내리고 올리자
-            feedLikeRepository.delete(alreadyLike.get());
-            feed.setLikeCount(feed.getLikeCount() - 1);
+
+        if (alreadyBookmark.isPresent()) { // 현재 로직은 있으면 delete or 객체 생성인데 다음엔 타입으로 받고 내리고 올리자
+            feedBookmarkRepository.delete(alreadyBookmark.get());
+
         } else {
-            FeedLike newfeedLike = FeedLike.builder()
+            FeedBookmark newFeedBook = FeedBookmark.builder()
                     .member(member)
                     .feed(feed)
                     .build();
 
-            feedLikeRepository.save(newfeedLike);
-            feed.setLikeCount(feed.getLikeCount() - 1);
+            feedBookmarkRepository.save(newFeedBook);
+
         }
-
-        feedRepository.save(feed);
-
-
-
-
-
     }
-
-    private Feed addLike(Long loginMemberId, Long feedId) {
-        return Feed.builder()
-
-                .build();
-    }
-
-
 }

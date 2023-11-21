@@ -11,6 +11,7 @@ import togedog.server.domain.feed.controller.dto.FeedCreateApiRequest;
 import togedog.server.domain.feed.controller.dto.FeedUpdateApiRequest;
 import togedog.server.domain.feed.service.FeedService;
 import togedog.server.domain.feed.service.dto.response.FeedResponse;
+import togedog.server.domain.feedbookmark.service.FeedBookmarkService;
 import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.feedlike.service.FeedLikeService;
 import togedog.server.global.response.ApiPageResponse;
@@ -24,8 +25,10 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class FeedController {
 
-    private FeedService feedService;
-    private FeedLikeService feedLikeService;
+    private final FeedService feedService;
+    private final FeedLikeService feedLikeService;
+    private final FeedBookmarkService feedBookmarkService;
+
 
 
     @GetMapping("/")
@@ -76,7 +79,15 @@ public class FeedController {
     @PatchMapping("/{feed-id}/like")
     public ResponseEntity<Void> likeFeed(@PathVariable("feed-id") Long feedId) {
 
-//        FeedLikeService.likeFeed(feedId);
-        return null;
+        feedLikeService.likeFeed(feedId);
+
+        return ResponseEntity.noContent().build();
+    }
+    @PatchMapping("/{feed-id}/bookmark")
+    public ResponseEntity<Void> bookmarkFeed(@PathVariable("feed-id") Long feedId) {
+
+        feedBookmarkService.bookmarkFeed(feedId);
+
+        return ResponseEntity.noContent().build();
     }
 }
