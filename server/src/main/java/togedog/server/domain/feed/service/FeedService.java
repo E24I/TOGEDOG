@@ -12,6 +12,10 @@ import togedog.server.domain.feed.repository.FeedRepository;
 import togedog.server.domain.feed.service.dto.request.FeedCreateServiceApiRequest;
 import togedog.server.domain.feed.service.dto.request.FeedUpdateServiceRequest;
 import togedog.server.domain.feed.service.dto.response.FeedResponse;
+import togedog.server.domain.feedbookmark.entity.FeedBookmark;
+import togedog.server.domain.feedbookmark.repository.FeedBookmarkRepository;
+import togedog.server.domain.feedlike.entity.FeedLike;
+import togedog.server.domain.feedlike.repository.FeedLikeRepository;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.global.exception.businessexception.memberexception.MemberAccessDeniedException;
@@ -29,6 +33,9 @@ public class FeedService {
 
     private final FeedRepository feedRepository;
     private final MemberRepository memberRepository;
+    private final FeedBookmarkRepository feedBookmarkRepository;
+    private final FeedLikeRepository feedLikeRepository;
+
 
     public Long createFeed(FeedCreateServiceApiRequest request) {
 
@@ -49,11 +56,33 @@ public class FeedService {
 
     public Page<FeedResponse> getFeedsPaged(Pageable pageable) {
 
+        Long loginMemberId = 12313L; // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
+//         로그인된 사용자와 feedbookmark에서 찾아온 memeberId가 일치한다면, feed에 bookmarkYn을
+//         true로 바꿔주고 피드에 업데이트 하면 될듯 ? 그리고 그 피드를 찾아오자!
+
+        Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
+        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
+
         Page<Feed> feedsPage = feedRepository.findByOpenYnTrue(pageable);
+//        return feedsPage.map(FeedResponse::singleFeedResponse);
 
+        return feedsPage.map(feed -> {
+            boolean isBookmarkedByCurrentUser = isFeedBookmarkedByMember(member.getMemberId(), feed.getFeedId());
 
-        return feedsPage.map(FeedResponse::createFeedResponse);
+            boolean isLikedByCurrentUser = isFeedLikedByMember(member.getMemberId(), feed.getFeedId());
+
+            return FeedResponse.singleFeedResponse(feed, isBookmarkedByCurrentUser, isLikedByCurrentUser);
+        });
     }
+
+        public boolean isFeedBookmarkedByMember(Long memberId, Long feedId) {
+            return feedBookmarkRepository.existBookmarkByMemberIdAndFeedId(memberId, feedId);
+        }
+
+    public boolean isFeedLikedByMember(Long memberId, Long feedId) {
+        return feedLikeRepository.existLikeByMemberIdAndFeedId(memberId, feedId);
+    }
+
 
 
 
