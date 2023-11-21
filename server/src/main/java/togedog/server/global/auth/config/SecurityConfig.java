@@ -1,12 +1,15 @@
 package togedog.server.global.auth.config;
 
 
+import io.jsonwebtoken.Jwt;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,12 +17,20 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import togedog.server.global.auth.filter.JwtAuthenticationFilter;
+import togedog.server.global.auth.jwt.JWTokenizer;
 
 import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity(debug = true)
 public class SecurityConfig {
+
+    private final JWTokenizer jwTokenizer;
+
+    public SecurityConfig(JWTokenizer jwTokenizer) {
+        this.jwTokenizer = jwTokenizer;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -33,6 +44,8 @@ public class SecurityConfig {
                 .and()
                 .formLogin().disable()
                 .httpBasic().disable()
+                .apply(new CustomFilterConfigurer())
+                .and()
                 .exceptionHandling()
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
@@ -40,6 +53,18 @@ public class SecurityConfig {
                 );
 
         return http.build();
+    }
+
+    public class CustomFilterConfigurer extends AbstractHttpConfigurer<CustomFilterConfigurer, HttpSecurity>{
+        @Override
+        public void configure(HttpSecurity builder) throws Exception {
+            AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
+
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwTokenizer);
+            jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
+
+            builder.addFilter(jwtAuthenticationFilter);
+        }
     }
 
     @Bean
