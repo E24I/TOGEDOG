@@ -75,9 +75,9 @@ const SignUpInputs = () => {
         <br /> 정보를 입력해 주세요.
       </h2>
       <form
-        onSubmit={handleSubmit((data) => {
-          console.log(data);
-        })}
+        onSubmit={(e) => {
+          e.preventDefault();
+        }}
       >
         <div>
           <TextInput>
@@ -190,7 +190,14 @@ const SignUpInputs = () => {
             </ErrorMsg>
           )}
         </CheckBoxContainer>
-        <SubmitButton>가입하기</SubmitButton>
+        <SubmitButton
+          type="submit"
+          onClick={handleSubmit((data) => {
+            console.log(data);
+          })}
+        >
+          가입하기
+        </SubmitButton>
       </form>
     </InputContainer>
   );
