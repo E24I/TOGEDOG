@@ -9,19 +9,55 @@ export const ChangeForm = styled.div`
   top: 0;
   left: 0;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+
+  button {
+    width: 100px;
+    height: 36px;
+    padding: 10px 13px;
+    border-radius: 100px;
+    border: 1px solid #d7d7d7;
+    color: #818181;
+    font-size: 10px;
+    font-weight: 400;
+  }
+  form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+
+    button {
+      width: 100px;
+      height: 36px;
+      padding: 10px 13px;
+      border-radius: 100px;
+      border: 1px solid #d7d7d7;
+      color: #818181;
+      font-size: 10px;
+      font-weight: 400;
+    }
+  }
 `;
 
 export const ChangeContainer = styled.div`
   margin: 0 auto;
-  width: 624px;
-  height: 635px;
+  width: 600px;
+  height: 520px;
   background: white;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-around;
+  .submitButton {
+    width: 30%;
+    color: black;
+    background: gray;
+  }
 `;
 
 export const Topbox = styled.div`
@@ -35,6 +71,5 @@ export const BackIcon = styled(Backspace)`
 
 export const MiddleBox = styled.div`
   width: 70%;
-  height: 400px;
-  border: 1px solid red;
+  height: 300px;
 `;

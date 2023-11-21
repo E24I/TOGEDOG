@@ -62,7 +62,7 @@ export const InputContainer = styled.div`
   border: 1px solid #a4a4a4;
   border-left: none;
   border-radius: 0 30px 30px 0;
-  p {
+  & > p {
     color: #404040;
     font-size: 12px;
     font-style: normal;
