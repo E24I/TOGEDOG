@@ -95,3 +95,6 @@ export const ToggleCircle = styled.div<{ data: string }>`
   background-color: #ffffff;
   transition: ${(props) => (props.data === "true" ? "none" : "0.3s")};
 `;
+
+//지도
+export const Map = styled.div``;
