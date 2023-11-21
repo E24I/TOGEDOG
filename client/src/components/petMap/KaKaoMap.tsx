@@ -71,11 +71,11 @@ const KaKaoMap: React.FC = () => {
   // console.log("address", address);
 
   return (
-    <div>
+    <MapContainer>
       {location && (
         <Map
           center={{ lat: location.latitude, lng: location.longitude }} // 지도의 중심 좌표
-          style={{ width: "100vw", height: "100vh" }} // 지도 크기
+          style={{ width: "100vw", height: "calc(100vh - 80px)" }} // 지도 크기
           level={level} // 지도 확대 레벨
           ref={mapRef}
           onClick={(_t, mouseEvent) =>
@@ -89,12 +89,12 @@ const KaKaoMap: React.FC = () => {
           <MapMarker
             position={{ lat: location.latitude, lng: location.longitude }}
           ></MapMarker>
-          <PlusLevel onClick={() => setLevel(level + 1)}>-</PlusLevel>
-          <MinusLevel onClick={() => setLevel(level - 1)}>+</MinusLevel>
-          <button onClick={getCoordinates}>현재 위치 좌표 얻기</button>
-          <button onClick={getAddress}>현재 좌표의 주소 얻기</button>
+          <PlusLevel onClick={() => setLevel(level - 1)}>+</PlusLevel>
+          <MinusLevel onClick={() => setLevel(level + 1)}>-</MinusLevel>
         </Map>
       )}
+      {/* <button onClick={getCoordinates}>현재 위치 좌표 얻기</button>
+      <button onClick={getAddress}>현재 좌표의 주소 얻기</button>
       {coordinates && (
         <div>
           현재 위치의 좌표는..
@@ -119,8 +119,8 @@ const KaKaoMap: React.FC = () => {
             position.lng +
             " 입니다"}
         </p>
-      )}
-    </div>
+      )} */}
+    </MapContainer>
   );
 };
 
@@ -128,13 +128,31 @@ export default KaKaoMap;
 
 // map => key, image{{src, size}}, position, title
 
-export const LevelBtn = styled.button`
-  width: 100px;
-  height: 50px;
-  font-size: 24px;
-  border: 1px solid black;
-  border-radius: 18px;
+export const MapContainer = styled.div`
+  max-width: 100vw;
+  max-height: calc(100vh - 80px);
 `;
 
-export const PlusLevel = styled(LevelBtn)``;
-export const MinusLevel = styled(LevelBtn)``;
+export const LevelBtn = styled.button`
+  background-color: white;
+  border: 1px solid rgb(215, 215, 215);
+  box-shadow: 1px 1px 2px 0.01px rgb(131, 131, 131);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  text-align: center;
+  font-weight: bold;
+  z-index: 35;
+`;
+
+export const PlusLevel = styled(LevelBtn)`
+  position: absolute;
+  top: 15px;
+  left: 10px;
+`;
+export const MinusLevel = styled(LevelBtn)`
+  position: absolute;
+  top: 65px;
+  left: 10px;
+`;

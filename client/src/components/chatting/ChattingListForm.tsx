@@ -8,7 +8,7 @@ import {
   TimeStamp,
   UserName,
 } from "./ChattingListForm.Style";
-import DropDown from "../toast/DropDown";
+import DropDown from "../common/DropDown";
 //list mockData
 
 interface ChattingListProps {

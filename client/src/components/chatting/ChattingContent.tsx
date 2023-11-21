@@ -15,7 +15,7 @@ import {
   UserName,
 } from "./ChattingListForm.Style";
 import ContentListForm from "./ContentListForm";
-import DropDown from "../toast/DropDown";
+import DropDown from "../common/DropDown";
 
 interface ChattingContentprops {
   isEntered: boolean;
