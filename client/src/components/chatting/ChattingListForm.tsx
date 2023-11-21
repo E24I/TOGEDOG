@@ -8,7 +8,7 @@ import {
   TimeStamp,
   UserName,
 } from "./ChattingListForm.Style";
-import Toast from "../common/DropDown";
+import DropDown from "../common/DropDown";
 //list mockData
 
 interface ChattingListProps {
@@ -17,7 +17,7 @@ interface ChattingListProps {
 
 const ChattingList: React.FC<ChattingListProps> = ({ setDefaultBack }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
-  const openToast = () => {
+  const openDropDown = () => {
     if (isOpen !== false) {
       setOpen(false);
     } else {
@@ -26,7 +26,7 @@ const ChattingList: React.FC<ChattingListProps> = ({ setDefaultBack }) => {
   };
 
   return (
-    <ChattingListContainer>
+    <ChattingListContainer onMouseLeave={() => setOpen(false)}>
       <ProfileImage />
       <MiddleWrap onClick={() => setDefaultBack()}>
         <UserName>유저이름</UserName>
@@ -35,8 +35,8 @@ const ChattingList: React.FC<ChattingListProps> = ({ setDefaultBack }) => {
         </RecentConversation>
       </MiddleWrap>
       <TimeStamp>• 11시간 전</TimeStamp>
-      <SeeMoreButton onClick={openToast} />
-      {isOpen && <Toast component="list" />}
+      <SeeMoreButton onClick={openDropDown} />
+      {isOpen && <DropDown component="list" setOpen={setOpen} />}
     </ChattingListContainer>
   );
 };

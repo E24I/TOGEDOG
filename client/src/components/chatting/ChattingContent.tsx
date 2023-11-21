@@ -15,7 +15,7 @@ import {
   UserName,
 } from "./ChattingListForm.Style";
 import ContentListForm from "./ContentListForm";
-import Toast from "../common/DropDown";
+import DropDown from "../common/DropDown";
 
 interface ChattingContentprops {
   isEntered: boolean;
@@ -23,7 +23,7 @@ interface ChattingContentprops {
 
 const ChattingContent: React.FC<ChattingContentprops> = ({ isEntered }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
-  const openToast = () => {
+  const openDropDown = () => {
     if (isOpen !== false) {
       setOpen(false);
     } else {
@@ -32,13 +32,13 @@ const ChattingContent: React.FC<ChattingContentprops> = ({ isEntered }) => {
   };
   return (
     <ChattingContentContainer>
-      <TopFlex>
+      <TopFlex onMouseLeave={() => setOpen(false)}>
         <ProfileWrap>
           <ProfileImage />
           <UserName>후추김</UserName>
         </ProfileWrap>
-        <SeeMoreButton onClick={openToast} />
-        {isOpen && <Toast component="content" />}
+        <SeeMoreButton onClick={openDropDown} />
+        {isOpen && <DropDown component="content" setOpen={setOpen} />}
       </TopFlex>
       <MiddleFlex>
         {!isEntered ? <DefaultBack /> : <ContentListForm />}

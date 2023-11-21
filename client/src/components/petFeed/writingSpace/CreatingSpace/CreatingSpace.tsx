@@ -9,7 +9,8 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 
 import * as C from "./CreatingSpace.Style";
-import { CityData } from "../../../../services/MapSearchingService";
+// import { CityData } from "../../../../services/MapSearchingService";
+import Map from "./Map";
 
 interface CreatingSpaceProps {
   handleInputChange: (fieldName: string, value: string | boolean) => void;
@@ -26,7 +27,7 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
     video: false,
   });
 
-  console.log("시티", CityData()); //광역 행정 구역 데이터 받아오는 쿼리 호출
+  // console.log("시티", CityData()); //광역 행정 구역 데이터 받아오는 쿼리 호출
 
   const [files, setFiles] = useState<JSX.Element[]>([]);
 
@@ -139,6 +140,7 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
         />
         <C.TextCount>글자수 / 200</C.TextCount>
       </C.CreateContentWrap>
+      <Map />
     </C.CreateSpace>
   );
 };
