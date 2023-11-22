@@ -57,7 +57,12 @@ public class FeedService {
 
     public FeedResponse findFeed(Long feedId) {
 
+        Optional<Feed> feedOptional = feedRepository.findById(feedId);
+        Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
 
+        // 댓글도 페이징 처리해서 넘기자 0,5 사이즈로 정하고 리스트말고
+
+        return
     }
 
 

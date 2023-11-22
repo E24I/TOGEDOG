@@ -60,7 +60,7 @@ public class FeedController {
 
         FeedResponse feed = feedService.getFeed(feedId);
 
-        return ResponseEntity.of(ApiSingleResponse.ok(feed));
+        return ResponseEntity.of(ApiSingleResponse.ok(FeedResponse.));
     }
 
     @PatchMapping("/{feed-id}")

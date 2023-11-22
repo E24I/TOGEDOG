@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.member.mapper.MemberInfo;
+import togedog.server.domain.reply.entity.Reply;
+import togedog.server.global.response.PageInformation;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +31,17 @@ public class FeedResponse {
     private String address;
     private Integer repliesCount;
 
+    @Getter
+    @AllArgsConstructor
+    @Builder
+
+    public static class FeedReplies {
+
+        private List<Reply> replies;
+        private PageInformation pageInformation;
+    }
+
+
     public static FeedResponse createFeedResponse(Feed feed) {
 
         return FeedResponse.builder()
@@ -45,13 +58,11 @@ public class FeedResponse {
 
     }
 
-    @Getter
-    @AllArgsConstructor
-    @Builder
-    public static FeedResponse feedDetailResponse() {
 
-        private List<>
-    }
+//    public static FeedResponse feedDetailResponse() {
+//
+//
+//    }
 
 
 }
