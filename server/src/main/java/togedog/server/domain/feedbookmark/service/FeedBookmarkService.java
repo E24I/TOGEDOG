@@ -20,7 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FeedBookmarkService {
 
-    private final FeedService feedService;
+
     private final FeedBookmarkRepository feedBookmarkRepository;
     private final MemberRepository memberRepository;
     private final FeedRepository feedRepository;

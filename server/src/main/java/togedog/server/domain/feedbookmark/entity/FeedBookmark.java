@@ -26,4 +26,6 @@ public class FeedBookmark extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "feed_id")
     private Feed feed;
+
+    private Boolean isBookmarked;
 }

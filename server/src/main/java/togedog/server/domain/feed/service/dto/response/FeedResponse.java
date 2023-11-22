@@ -23,11 +23,12 @@ public class FeedResponse {
 //    private List<image>
     private String images;
     private String videos;
-    private Integer views;
+    private Integer views; //삭제 요망
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
     private Integer likeCount;
-    private Boolean bookmarkYn;
+    private boolean bookmarkYn;
+    private boolean likeYn;
     private String address;
     private Integer repliesCount;
 
@@ -54,6 +55,8 @@ public class FeedResponse {
                 .likeCount(feed.getLikeCount())
                 .repliesCount(feed.getRepliesCount())
                 .address(feed.getAddress())
+                .bookmarkYn(isBookmarkedByCurrentUser)
+                .likeYn(isLikedByCurrentUser)
                 .build();
 
     }
