@@ -7,6 +7,7 @@ import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.member.mapper.MemberInfo;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -43,4 +44,14 @@ public class FeedResponse {
                 .build();
 
     }
+
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    public static FeedResponse feedDetailResponse() {
+
+        private List<>
+    }
+
+
 }

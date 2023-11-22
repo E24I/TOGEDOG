@@ -9,12 +9,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import togedog.server.domain.feed.controller.dto.FeedCreateApiRequest;
 import togedog.server.domain.feed.controller.dto.FeedUpdateApiRequest;
+import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.feed.service.FeedService;
 import togedog.server.domain.feed.service.dto.response.FeedResponse;
 import togedog.server.domain.feedbookmark.service.FeedBookmarkService;
 import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.feedlike.service.FeedLikeService;
 import togedog.server.global.response.ApiPageResponse;
+import togedog.server.global.response.ApiSingleResponse;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -53,9 +55,12 @@ public class FeedController {
         return ResponseEntity.created(uri).build();
     }
 
-    @GetMapping
-    public ResponseEntity<Void> getFeed() {
-        return null;
+    @GetMapping("{feed-id}")
+    public ResponseEntity<ApiSingleResponse<FeedResponse>> getFeed(@PathVariable("feed-id") Long feedId) {
+
+        FeedResponse feed = feedService.getFeed(feedId);
+
+        return ResponseEntity.of(ApiSingleResponse.ok(feed));
     }
 
     @PatchMapping("/{feed-id}")

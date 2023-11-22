@@ -55,6 +55,11 @@ public class FeedService {
         return feedsPage.map(FeedResponse::createFeedResponse);
     }
 
+    public FeedResponse findFeed(Long feedId) {
+
+
+    }
+
 
 
 
