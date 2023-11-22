@@ -43,7 +43,7 @@ public class FeedResponse {
     }
 
 
-    public static FeedResponse createFeedResponse(Feed feed) {
+    public static FeedResponse singleFeedResponse(Feed feed, boolean isBookmarkedByCurrentUser, boolean isLikedByCurrentUser) {
 
         return FeedResponse.builder()
                 .feedId(feed.getFeedId())
