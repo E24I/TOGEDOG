@@ -14,8 +14,6 @@ import {
   FeedDetailMedia,
   FeedDetailStatus,
   FeedHeader,
-  FeedLike,
-  FeedMark,
   FeedTitle,
   LeftDetail,
   LeftScroll,
@@ -35,6 +33,8 @@ import {
 import { feedDetailType } from "../../types/feedDataType";
 import { feedDetailData } from "./FeedDummy";
 import FeedReply from "./FeedReply";
+import Heart from "../common/button/Heart";
+import Bookmark from "../common/button/Bookmark";
 
 interface OwnProps {
   feedId: number;
@@ -44,6 +44,7 @@ interface OwnProps {
 const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
   const [isDetail, setDetail] = useState<feedDetailType>(feedDetailData);
   const [isLike, setLike] = useState<boolean>(false);
+  const [isBookmark, setBookmark] = useState<boolean>(false);
   const [isImg, setImg] = useState<number>(1);
   const today = new Date();
   const createDate = isDetail.createDate;
@@ -52,6 +53,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
   const feedTime = createTime.split(":").map((el) => parseInt(el));
 
   const handleLike = (): void => setLike(!isLike);
+  const handleBookmark = (): void => setBookmark(!isBookmark);
   const handlePrevImg = (): void => {
     if (!isDetail.media.imgUrl || !isDetail.media.videoUrl) return;
     if (isImg !== 1) {
@@ -79,7 +81,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
           e.stopPropagation();
         }}
       >
-        <CloseModal onClick={handleMoreReview}>&times;</CloseModal>
+        <CloseModal onClick={handleMoreReview} />
         <LeftDetail>
           <FeedHeader>
             <Profile>
@@ -147,10 +149,20 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
           )}
           <FeedDetailStatus>
             <LikeBox>
-              <FeedLike isLike={isLike} onClick={handleLike} />
+              <Heart
+                width="30px"
+                height="30px"
+                isLike={isLike}
+                handleCustomEvent={handleLike}
+              />
               <span>{isDetail.likeCount}</span>
             </LikeBox>
-            <FeedMark />
+            <Bookmark
+              width="30px"
+              height="30px"
+              isBookmark={isBookmark}
+              handleCustomEvent={handleBookmark}
+            />
           </FeedDetailStatus>
         </LeftDetail>
         <RightDetail>

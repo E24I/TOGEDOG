@@ -12,7 +12,6 @@ import {
   FeedAddress,
   PinPoint,
   UploadTime,
-  Setting,
   FeedContents,
   FeedTitle,
   FeedContent,
@@ -24,11 +23,12 @@ import {
   RightScroll,
   FeedStatus,
   LikeBox,
-  FeedLike,
-  FeedMark,
   FeedBottom,
   ReviewCount,
+  Setting,
 } from "./Feed.Style";
+import Heart from "../common/button/Heart";
+import Bookmark from "../common/button/Bookmark";
 
 interface OwnProps {
   items: feedListsType;
@@ -37,6 +37,7 @@ interface OwnProps {
 const FeedList: React.FC<OwnProps> = ({ items }) => {
   const [isDetail, setDetail] = useState<boolean>(false);
   const [isLike, setLike] = useState<boolean>(false);
+  const [isBookmark, setBookmark] = useState<boolean>(false);
   const today = new Date();
   const createDate = items.createDate;
   const feedDate = createDate.split("-").map((el) => parseInt(el));
@@ -45,6 +46,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
 
   const handleMoreReview = (): void => setDetail(!isDetail);
   const handleLike = (): void => setLike(!isLike);
+  const handleBookmark = (): void => setBookmark(!isBookmark);
 
   return (
     <Feed>
@@ -104,10 +106,20 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
       )}
       <FeedStatus>
         <LikeBox>
-          <FeedLike isLike={isLike} onClick={handleLike} />
+          <Heart
+            width="30px"
+            height="30px"
+            isLike={isLike}
+            handleCustomEvent={handleLike}
+          />
           <span>{items.likeCount}</span>
         </LikeBox>
-        <FeedMark />
+        <Bookmark
+          width="30px"
+          height="30px"
+          isBookmark={isBookmark}
+          handleCustomEvent={handleBookmark}
+        />
       </FeedStatus>
       <FeedBottom>
         <ReviewCount onClick={handleMoreReview}>
