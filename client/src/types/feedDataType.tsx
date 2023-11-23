@@ -60,5 +60,5 @@ export type postInformationType = {
   content: string;
   state: boolean;
   map: boolean;
-  address: string;
+  address: string[];
 };

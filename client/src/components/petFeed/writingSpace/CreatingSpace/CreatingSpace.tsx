@@ -9,11 +9,13 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 
 import * as C from "./CreatingSpace.Style";
-// import { CityData } from "../../../../services/MapSearchingService";
 import Map from "./Map";
 
 interface CreatingSpaceProps {
-  handleInputChange: (fieldName: string, value: string | boolean) => void;
+  handleInputChange: (
+    fieldName: string,
+    value: string | boolean | string[],
+  ) => void;
 }
 
 const modules = {
@@ -27,13 +29,13 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
     video: false,
   });
 
-  // console.log("시티", CityData()); //광역 행정 구역 데이터 받아오는 쿼리 호출
-
   const [files, setFiles] = useState<JSX.Element[]>([]);
 
   const [quillValue, setQuillValue] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const contentRef = useRef<any>();
+
+  const [contentLength, setContentLength] = useState<number>(0);
 
   const uploadImage = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files && e.target.files[0];
@@ -92,7 +94,14 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
   const setContent = (editor: string) => {
     handleInputChange("content", editor);
     setQuillValue(editor);
-    console.log(editor);
+    // setContentLength(editor.length);
+    const p = "</p>";
+    setContentLength(
+      editor
+        .replace(/<br>/g, "")
+        .replace(/<p>/g, "")
+        .replace(new RegExp(p, "g"), "").length,
+    );
   };
 
   return (
@@ -138,9 +147,9 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
           modules={modules}
           onChange={(editor) => setContent(editor)}
         />
-        <C.TextCount>글자수 / 200</C.TextCount>
+        <C.TextCount>{contentLength} / 200</C.TextCount>
       </C.CreateContentWrap>
-      <Map />
+      <Map handleInputChange={handleInputChange} />
     </C.CreateSpace>
   );
 };
