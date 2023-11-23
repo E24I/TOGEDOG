@@ -1,12 +1,11 @@
 import styled from "styled-components";
 import { ReactComponent as Dots } from "../../assets/images/icons/Dots.svg";
-import { ReactComponent as Like } from "../../assets/images/icons/Heart.svg";
 import { ReactComponent as Person } from "../../assets/images/icons/Person.svg";
 import { ReactComponent as PinMark } from "../../assets/images/icons/PinMark.svg";
-import { ReactComponent as BookMark } from "../../assets/images/icons/BookMark.svg";
 import { ReactComponent as LeftArrow } from "../../assets/images/icons/LeftArrow.svg";
 import { ReactComponent as RightArrow } from "../../assets/images/icons/RightArrow.svg";
 import { ReactComponent as ImageCover } from "../../assets/images/icons/ImageCover.svg";
+import { ReactComponent as Cancel } from "../../assets/images/icons/Cancel.svg";
 
 export const Feed = styled.li`
   border-bottom: 1px solid rgb(215, 215, 215);
@@ -168,28 +167,6 @@ export const LikeBox = styled.div`
   align-items: center;
 `;
 
-export const FeedLike = styled(Like)<{ isLike: boolean }>`
-  width: 30px;
-  height: 30px;
-  margin: 0px 10px;
-  cursor: pointer;
-  path {
-    fill: ${(props) => (props.isLike ? "red" : "rgb(215, 215, 215)")};
-  }
-  &:active {
-    path {
-      fill: red;
-    }
-  }
-`;
-
-export const FeedMark = styled(BookMark)`
-  width: 30px;
-  height: 30px;
-  margin: 0px 10px;
-  cursor: pointer;
-`;
-
 export const FeedBottom = styled.div`
   padding: 0px 50px;
 `;
@@ -202,7 +179,7 @@ export const ModalBackground = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 10;
+  z-index: 40;
   width: 100vw;
   height: 100vh;
   background-color: rgb(215, 215, 215, 50%);
@@ -226,15 +203,16 @@ export const DetailContainer = styled.div`
   align-items: center;
 `;
 
-export const CloseModal = styled.button`
+export const CloseModal = styled(Cancel)`
   position: absolute;
   top: 2%;
   right: -10%;
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: white;
+  background-color: rgb(215, 215, 215);
   font-size: 50px;
+  cursor: pointer;
 `;
 
 export const LeftDetail = styled.div`
@@ -279,7 +257,7 @@ export const FeedDetailImg = styled.img`
   height: 600px; */
   max-width: 100%;
   max-height: 100%;
-  background-size: auto 100%;
+  background-size: auto 100%; // cover
   background-repeat: no-repeat;
   background-position: center;
   transition: 300ms;
@@ -376,11 +354,6 @@ export const ReplyDate = styled.button`
 
 export const ReplyLikeCount = styled.button`
   padding: 5px 20px 5px 0px;
-`;
-
-export const ReplyLike = styled(FeedLike)`
-  width: 18px;
-  height: 18px;
 `;
 
 export const ShowComment = styled.button`
