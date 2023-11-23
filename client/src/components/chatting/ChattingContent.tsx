@@ -32,12 +32,14 @@ const ChattingContent: React.FC<ChattingContentprops> = ({ isEntered }) => {
   };
   return (
     <ChattingContentContainer>
-      <TopFlex onMouseLeave={() => setOpen(false)}>
+      <TopFlex>
         <ProfileWrap>
           <ProfileImage />
           <UserName>후추김</UserName>
         </ProfileWrap>
-        <SeeMoreButton onClick={openDropDown} />
+        <button onBlur={() => setOpen(false)} onClick={openDropDown}>
+          <SeeMoreButton />
+        </button>
         {isOpen && <DropDown component="content" setOpen={setOpen} />}
       </TopFlex>
       <MiddleFlex>

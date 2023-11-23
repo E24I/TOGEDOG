@@ -21,6 +21,7 @@
     "@types",
     "src/components",
     "src/custom.d.ts",
-    "proxyserver/server.js"
+    "proxyserver/server.js",
+    "srx/types"
   ]
 }

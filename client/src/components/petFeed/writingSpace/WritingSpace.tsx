@@ -11,8 +11,8 @@ interface WritingSpaceProps {
 }
 
 const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
-  const [isFeedPublic, setFeedPublic] = useState<boolean>(true);
-  const [isMapAssign, setMapAssign] = useState<boolean>(true);
+  const [isFeedPublic, setFeedPublic] = useState<boolean>(false);
+  const [isMapAssign, setMapAssign] = useState<boolean>(false);
   const [isSearched, setSearch] = useState<boolean>(false);
   const [location, setLocation] = useState<string>("");
 
@@ -21,7 +21,7 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     content: "",
     state: isFeedPublic,
     map: isMapAssign,
-    address: "",
+    address: ["", ""],
   });
 
   const [updateInformation, setUpdateInformation] = useState<string>("");
@@ -65,7 +65,10 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     }
   };
 
-  const handleInputChange = (fieldName: string, value: string | boolean) => {
+  const handleInputChange = (
+    fieldName: string,
+    value: string | boolean | string[],
+  ) => {
     setPostInformation(() => ({
       ...postInformation,
       [fieldName]: value,
@@ -123,13 +126,13 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
         </W.AddressContainer>
         <W.Toggles>
           <W.ToggleWrap onClick={() => feedToggleCheck()}>
-            피드 숨기기
+            피드 공개
             <W.ToggleContainer data={isFeedPublic.toString()}>
               <W.ToggleCircle data={isFeedPublic.toString()} />
             </W.ToggleContainer>
           </W.ToggleWrap>
           <W.ToggleWrap onClick={() => mapToggleCheck()}>
-            마이 펫 지도에서 숨기기
+            지도 연동하기
             <W.ToggleContainer data={isMapAssign.toString()}>
               <W.ToggleCircle data={isMapAssign.toString()} />
             </W.ToggleContainer>

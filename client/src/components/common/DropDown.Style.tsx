@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const DropDownContainer = styled.div`
+export const DropDownContainer = styled.div<{ data: string }>`
   border: 2px solid black; // 채팅 토스트 구분선
   position: absolute;
   top: -40px;
@@ -9,4 +9,5 @@ export const DropDownContainer = styled.div`
 
 export const Menu = styled.div`
   border: 2px solid green; // 구분선
+  cursor: pointer;
 `;
