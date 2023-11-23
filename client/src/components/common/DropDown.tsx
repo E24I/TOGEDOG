@@ -3,9 +3,10 @@ import { Menu, DropDownContainer } from "./DropDown.Style";
 
 interface DropDownProps {
   component: string;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DropDown: React.FC<DropDownProps> = ({ component }) => {
+const DropDown: React.FC<DropDownProps> = ({ component, setOpen }) => {
   const menus = ["읽음 처리", "알림 끄기", "채팅방 신고"];
 
   if (component === "content") {
@@ -13,9 +14,13 @@ const DropDown: React.FC<DropDownProps> = ({ component }) => {
   }
 
   return (
-    <DropDownContainer>
+    <DropDownContainer data={component}>
       {menus.map((menu, idx) => {
-        return <Menu key={idx}>{menu}</Menu>;
+        return (
+          <Menu key={idx} onClick={() => setOpen(false)}>
+            {menu}
+          </Menu>
+        );
       })}
     </DropDownContainer>
   );
