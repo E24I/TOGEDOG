@@ -1,6 +1,5 @@
 package togedog.server.global.auth.utils;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,7 +29,7 @@ public class CustomAuthorityUtils {
     //DB에 저장된 ROLE을 기반으로 권한 정보 생성.
     public List<GrantedAuthority> createAuthorities(List<String> roles){
         List<GrantedAuthority> authorities = roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE" + role))
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());
 
         return authorities;

@@ -12,8 +12,6 @@ import togedog.server.domain.member.service.MemberService;
 import togedog.server.global.mail.MailService;
 import togedog.server.global.mail.dto.EmailCheckDto;
 
-import java.net.URI;
-
 @RestController
 @RequestMapping("/member")
 @Slf4j
@@ -42,7 +40,7 @@ public class MemberController {
     }
 
 
-    @GetMapping()
+    @GetMapping("/kk")
     public String getMember(@RequestParam("par") String par){
 
         return "param = par :" + par;

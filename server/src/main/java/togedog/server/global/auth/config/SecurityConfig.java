@@ -1,7 +1,6 @@
 package togedog.server.global.auth.config;
 
 
-import io.jsonwebtoken.Jwt;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,20 +17,26 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import togedog.server.global.auth.filter.JwtAuthenticationFilter;
+import togedog.server.global.auth.filter.JwtVerificationFilter;
+import togedog.server.global.auth.handler.MemberAccessDeniedHandler;
+import togedog.server.global.auth.handler.MemberAuthenticationEntryPoint;
 import togedog.server.global.auth.handler.MemberAuthenticationFailureHandler;
 import togedog.server.global.auth.handler.MemberAuthenticationSuccessHandler;
 import togedog.server.global.auth.jwt.JWTokenizer;
+import togedog.server.global.auth.utils.CustomAuthorityUtils;
 
 import java.util.Arrays;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity(debug = false)
 public class SecurityConfig {
 
     private final JWTokenizer jwTokenizer;
+    private final CustomAuthorityUtils authorityUtils;
 
-    public SecurityConfig(JWTokenizer jwTokenizer) {
+    public SecurityConfig(JWTokenizer jwTokenizer, CustomAuthorityUtils authorityUtils) {
         this.jwTokenizer = jwTokenizer;
+        this.authorityUtils = authorityUtils;
     }
 
     @Bean
@@ -46,11 +51,15 @@ public class SecurityConfig {
                 .and()
                 .formLogin().disable()
                 .httpBasic().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
+                .accessDeniedHandler(new MemberAccessDeniedHandler())
+                .and()
                 .apply(new CustomFilterConfigurer())
                 .and()
-                .exceptionHandling()
-                .and()
                 .authorizeHttpRequests(authorize -> authorize
+                        .antMatchers(HttpMethod.POST,"/member").permitAll()
+                        .antMatchers(HttpMethod.GET,"/member/**").hasRole("USER")
                         .anyRequest().permitAll()
                 );
 
@@ -67,7 +76,11 @@ public class SecurityConfig {
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
-            builder.addFilter(jwtAuthenticationFilter);
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwTokenizer, authorityUtils);
+
+            builder
+                    .addFilter(jwtAuthenticationFilter)
+                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
         }
     }
 

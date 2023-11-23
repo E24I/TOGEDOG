@@ -3,7 +3,6 @@ package togedog.server.domain.member.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import togedog.server.domain.member.entity.Member;
@@ -11,11 +10,8 @@ import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.global.auth.utils.CustomAuthorityUtils;
 import togedog.server.global.mail.MailService;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @Slf4j
 @Service
@@ -56,6 +52,8 @@ public class MemberService {
             throw new RuntimeException("member exist");
         }
     }
+
+
 
 
 }
