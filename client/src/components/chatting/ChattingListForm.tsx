@@ -26,7 +26,7 @@ const ChattingList: React.FC<ChattingListProps> = ({ setDefaultBack }) => {
   };
 
   return (
-    <ChattingListContainer onMouseLeave={() => setOpen(false)}>
+    <ChattingListContainer>
       <ProfileImage />
       <MiddleWrap onClick={() => setDefaultBack()}>
         <UserName>유저이름</UserName>
@@ -35,7 +35,9 @@ const ChattingList: React.FC<ChattingListProps> = ({ setDefaultBack }) => {
         </RecentConversation>
       </MiddleWrap>
       <TimeStamp>• 11시간 전</TimeStamp>
-      <SeeMoreButton onClick={openDropDown} />
+      <button onBlur={() => setOpen(false)} onClick={openDropDown}>
+        <SeeMoreButton />
+      </button>
       {isOpen && <DropDown component="list" setOpen={setOpen} />}
     </ChattingListContainer>
   );

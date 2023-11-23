@@ -1,22 +1,53 @@
-/* eslint-disable react/no-unescaped-entities */
-import React, { useEffect } from "react";
-import { MapContainer, MapInput, Pin } from "./Map.Style";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 
-const Map: React.FC = () => {
+import React, { useState, useEffect } from "react";
+import { MapContainer, MapInput, Marker } from "./Map.Style";
+
+interface MapProps {
+  handleInputChange: (
+    fieldName: string,
+    value: string | boolean | string[],
+  ) => void;
+}
+
+const Map: React.FC<MapProps> = ({ handleInputChange }) => {
+  const [xcor, setXcor] = useState<string>("");
+  const [ycor, setYcor] = useState<string>("");
+  const [xOffset, setXOffset] = useState<number>(0);
+  const [yOffset, setYOffset] = useState<number>(0);
+
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = `https://sgisapi.kostat.go.kr/OpenAPI3/auth/javascriptAuth?consumer_key=${process.env.REACT_APP_SGIS_ID}`;
-    script.type = "text/javascript";
-    script.async = true;
-    document.body.appendChild(script);
-  });
+    const { sop } = window;
+    const map = sop.map("map");
+    map.setView(sop.utmk(953820, 1953437), 9);
+    map.on("click", function (e: any) {
+      setTimeout(function () {
+        setXcor(e.utmk.x);
+        setYcor(e.utmk.y);
+        setXOffset(e.containerPoint.x);
+        setYOffset(e.containerPoint.y);
+      }, 200);
+    });
+  }, []);
 
-  //   const map = sop.map("map");
+  const sendCord = () => {
+    handleInputChange("address", [xcor, ycor]);
+  };
 
   return (
     <MapContainer>
-      <MapInput id="map"></MapInput>
-      {/* {map.setView(sop.utmk(953820, 1953437), 9)};<Pin id="divcon"></Pin> */}
+      <MapInput
+        id="map"
+        style={{
+          width: "calc(100% - 20px)",
+          height: "480px",
+          margin: "0px auto",
+        }}
+        onClick={sendCord}
+      >
+        <Marker xOffset={xOffset} yOffset={yOffset} />
+        {/* 지도가 렌더링될 위치 */}
+      </MapInput>
     </MapContainer>
   );
 };

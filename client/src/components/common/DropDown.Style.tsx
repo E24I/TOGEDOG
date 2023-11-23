@@ -11,4 +11,5 @@ export const DropDownContainer = styled.div<{ data: string }>`
 
 export const Menu = styled.div`
   border: 2px solid green; // 구분선
+  cursor: pointer;
 `;

@@ -13,11 +13,15 @@ const DropDown: React.FC<DropDownProps> = ({ component, setOpen }) => {
     menus[0] = "대화방 삭제";
   }
 
+  const onClickController = () => {
+    setOpen(false);
+  };
+
   return (
     <DropDownContainer data={component}>
       {menus.map((menu, idx) => {
         return (
-          <Menu key={idx} onClick={() => setOpen(false)}>
+          <Menu key={idx} onClick={onClickController}>
             {menu}
           </Menu>
         );
