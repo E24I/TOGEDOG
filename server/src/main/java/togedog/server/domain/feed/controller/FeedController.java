@@ -9,11 +9,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import togedog.server.domain.feed.controller.dto.FeedCreateApiRequest;
 import togedog.server.domain.feed.controller.dto.FeedUpdateApiRequest;
+import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.feed.service.FeedService;
 import togedog.server.domain.feed.service.dto.response.FeedResponse;
+import togedog.server.domain.feedbookmark.service.FeedBookmarkService;
 import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.feedlike.service.FeedLikeService;
 import togedog.server.global.response.ApiPageResponse;
+import togedog.server.global.response.ApiSingleResponse;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -24,8 +27,10 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class FeedController {
 
-    private FeedService feedService;
-    private FeedLikeService feedLikeService;
+    private final FeedService feedService;
+    private final FeedLikeService feedLikeService;
+    private final FeedBookmarkService feedBookmarkService;
+
 
 
     @GetMapping("/")
@@ -50,9 +55,12 @@ public class FeedController {
         return ResponseEntity.created(uri).build();
     }
 
-    @GetMapping
-    public ResponseEntity<Void> getFeed() {
-        return null;
+    @GetMapping("{feed-id}")
+    public ResponseEntity<ApiSingleResponse<FeedResponse>> getFeed(@PathVariable("feed-id") Long feedId) {
+
+        FeedResponse feed = feedService.getFeed(feedId);
+
+        return ResponseEntity.of(ApiSingleResponse.ok(FeedResponse.));
     }
 
     @PatchMapping("/{feed-id}")
@@ -76,7 +84,15 @@ public class FeedController {
     @PatchMapping("/{feed-id}/like")
     public ResponseEntity<Void> likeFeed(@PathVariable("feed-id") Long feedId) {
 
-//        FeedLikeService.likeFeed(feedId);
-        return null;
+        feedLikeService.likeFeed(feedId);
+
+        return ResponseEntity.noContent().build();
+    }
+    @PatchMapping("/{feed-id}/bookmark")
+    public ResponseEntity<Void> bookmarkFeed(@PathVariable("feed-id") Long feedId) {
+
+        feedBookmarkService.bookmarkFeed(feedId);
+
+        return ResponseEntity.noContent().build();
     }
 }
