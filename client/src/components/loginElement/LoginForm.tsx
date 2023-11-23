@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import Oauth from "./Oauth";
-import PasswordChangeForm from "../signUpElement/PasswordChangeForm";
+import PasswordChangeForm from "../myPage/infoChangeComponent/PasswordChange";
 import {
   InputContainer,
   LoginButtonOn,

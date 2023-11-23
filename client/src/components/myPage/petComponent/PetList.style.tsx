@@ -7,7 +7,6 @@ export const PetListForm = styled.div`
 `;
 
 export const PetImg = styled.div`
-  //img 태그로 바꿔야함
   width: 100%;
   height: 80px;
   border-radius: 50px;
