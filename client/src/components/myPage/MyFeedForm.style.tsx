@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import { ReactComponent as Feeds } from "../../assets/images/icons/Feeds.svg";
-import { ReactComponent as Heart } from "../../assets/images/icons/Heart.svg";
-import { ReactComponent as BookMark } from "../../assets/images/icons/BookMark.svg";
+import { ReactComponent as Heart } from "../../assets/images/icons/HeartFalse.svg";
+import { ReactComponent as BookMark } from "../../assets/images/icons/BookmarkFalse.svg";
 
 export const MyFeedContainer = styled.div`
   width: 100%;

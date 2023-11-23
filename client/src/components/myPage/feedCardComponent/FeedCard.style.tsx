@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
-import { ReactComponent as HeartIcon } from "../../../assets/images/icons/Heart.svg";
-import { ReactComponent as BookMarkIcon } from "../../../assets/images/icons/BookMark.svg";
+import { ReactComponent as HeartIcon } from "../../../assets/images/icons/HeartFalse.svg";
+import { ReactComponent as BookMarkIcon } from "../../../assets/images/icons/BookmarkFalse.svg";
 import ImgCover from "../../../assets/images/icons/ImageCover.svg";
 
 export const CardForm = styled.div<{ thumbnail: string | undefined }>`
