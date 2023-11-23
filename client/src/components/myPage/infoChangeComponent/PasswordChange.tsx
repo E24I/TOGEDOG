@@ -1,16 +1,16 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { TextInput } from "./SignUpInputs.style";
-import { ReactComponent as Lock } from "../../assets/images/icons/signUpIcons/Lock.svg";
-import { ReactComponent as Message } from "../../assets/images/icons/signUpIcons/Message.svg";
-import { ErrorMsg } from "./SignUpInputs.style";
+import { TextInput } from "../../signUpElement/SignUpInputs.style";
+import { ReactComponent as Lock } from "../../../assets/images/icons/signUpIcons/Lock.svg";
+import { ReactComponent as Message } from "../../../assets/images/icons/signUpIcons/Message.svg";
+import { ErrorMsg } from "../../signUpElement/SignUpInputs.style";
 import {
   ChangeForm,
   ChangeContainer,
   Topbox,
   BackIcon,
   MiddleBox,
-} from "./PasswordChangeForm.style";
+} from "./PasswordChange.style";
 
 const PasswordChangeForm: React.FC<{
   setLostPw: React.Dispatch<React.SetStateAction<boolean>>;
