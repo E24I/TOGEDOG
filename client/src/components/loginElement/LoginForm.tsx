@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import Oauth from "./Oauth";
 import PasswordChangeForm from "../myPage/infoChangeComponent/PasswordChange";
@@ -19,6 +21,7 @@ const LoginForm: React.FC = () => {
   const [pw, setPw] = useState<string>("");
   const [lostPw, setLostPw] = useState<boolean>(false); //비밀번호 변경 모달
 
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
 
   useEffect(() => {
@@ -40,6 +43,25 @@ const LoginForm: React.FC = () => {
   const handleModal = () => {
     setLostPw(!lostPw);
   };
+  const TestApiCall = async (data: object) => {
+    try {
+      const headers = {
+        "ngrok-skip-browser-warning": "1",
+      };
+      const response = await axios.post(
+        "https://0709-116-125-236-74.ngrok-free.app/auth/login",
+        data,
+        { headers: headers },
+      );
+      if (response.status === 200) {
+        console.log(console.log("성공"));
+        navigate("/feeds");
+        // response.data.access_token
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
       <InputContainer>
@@ -47,6 +69,7 @@ const LoginForm: React.FC = () => {
         <form
           onSubmit={handleSubmit((data) => {
             console.log(data);
+            TestApiCall(data);
           })}
         >
           <LoginInput
