@@ -27,8 +27,9 @@ import {
   ReviewCount,
   Setting,
 } from "./Feed.Style";
-import Heart from "../common/button/Heart";
-import Bookmark from "../common/button/Bookmark";
+import Heart from "../../atoms/button/Heart";
+import Bookmark from "../../atoms/button/Bookmark";
+import Toggle from "../../atoms/toggle/Toggle";
 
 interface OwnProps {
   items: feedListsType;

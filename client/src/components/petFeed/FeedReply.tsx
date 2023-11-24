@@ -17,7 +17,7 @@ import {
   ShowComment,
   Unknown,
 } from "./Feed.Style";
-import Heart from "../common/button/Heart";
+import Heart from "../../atoms/button/Heart";
 
 const FeedReply: React.FC = () => {
   const [isLike, setLike] = useState<boolean>(false);
