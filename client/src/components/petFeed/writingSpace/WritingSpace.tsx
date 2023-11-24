@@ -5,6 +5,7 @@ import CreatingSpace from "./CreatingSpace/CreatingSpace";
 import UpdatingSpace from "./updatingSpace/UpdatingSpace";
 import { postFeed, updateFeed } from "../../../services/feedService";
 import { postInformationType } from "../../../types/feedDataType";
+import Map from "./Map";
 
 interface WritingSpaceProps {
   page: string;
@@ -13,41 +14,67 @@ interface WritingSpaceProps {
 const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
   const [isFeedPublic, setFeedPublic] = useState<boolean>(false);
   const [isMapAssign, setMapAssign] = useState<boolean>(false);
-  const [isSearched, setSearch] = useState<boolean>(false);
-  const [location, setLocation] = useState<string>("");
+  const [isMarked, setMark] = useState<boolean>(false);
+  // const [location, setLocation] = useState<string>("");
 
   const [postInformation, setPostInformation] = useState<postInformationType>({
     title: "",
     content: "",
-    state: isFeedPublic,
-    map: isMapAssign,
-    address: ["", ""],
+    images: [],
+    videos: [],
+    openYn: isFeedPublic,
+    mapYn: isMapAssign,
+    address: { x: "", y: "" },
   });
 
   const [updateInformation, setUpdateInformation] = useState<string>("");
 
   const navigator = useNavigate();
 
+  const handleInputChange = (
+    fieldName: string,
+    value:
+      | string
+      | boolean
+      | { x: string; y: string }
+      | { file: string; order: number }[],
+  ) => {
+    setPostInformation((prevPostInformation) => {
+      if (
+        (fieldName === "images" && Array.isArray(value)) ||
+        (fieldName === "videos" && Array.isArray(value))
+      ) {
+        return {
+          ...prevPostInformation,
+          [fieldName]: [...prevPostInformation[fieldName], ...value],
+        };
+      } else {
+        return {
+          ...prevPostInformation,
+          [fieldName]: value,
+        };
+      }
+    });
+  };
+
   const backToPrevPage = () => {
     navigator(-1);
   };
 
   const feedToggleCheck = () => {
-    if (isFeedPublic === false) {
-      setFeedPublic(true);
-    } else {
-      setFeedPublic(false);
-    }
-    handleInputChange("state", isFeedPublic);
+    setFeedPublic((prevIsFeedPublic) => {
+      const updatedFeedPublic = !prevIsFeedPublic;
+      handleInputChange("openYn", updatedFeedPublic);
+      return updatedFeedPublic;
+    });
   };
 
   const mapToggleCheck = () => {
-    if (isMapAssign === false) {
-      setMapAssign(true);
-    } else {
-      setMapAssign(false);
-    }
-    handleInputChange("map", isMapAssign);
+    setMapAssign((prevIsMapAssign) => {
+      const updatedMapAssign = !prevIsMapAssign;
+      handleInputChange("mapYn", updatedMapAssign);
+      return updatedMapAssign;
+    });
   };
 
   const send = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -65,33 +92,18 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     }
   };
 
-  const handleInputChange = (
-    fieldName: string,
-    value: string | boolean | string[],
-  ) => {
-    setPostInformation(() => ({
-      ...postInformation,
-      [fieldName]: value,
-    }));
-  };
-
   const handleContentChange = (content: string) => {
     setUpdateInformation(content);
   };
 
-  const enrollLocation = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-    if (e.key === "Enter") {
-      setSearch(true);
-      handleInputChange("address", location);
-    }
-  };
   const deleteLocation = () => {
-    if (isSearched === true) {
-      setSearch(false);
+    if (isMarked === true) {
+      setMark(false);
+      handleInputChange("address", { x: "", y: "" });
     }
   };
 
-  console.log(postInformation);
+  console.log("p", postInformation);
   console.log(updateInformation);
 
   return (
@@ -112,33 +124,35 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
       )}
       <W.FeedBottomContainer>
         <W.AddressContainer>
-          {isSearched === false ? (
-            <W.SearchLoaction
-              onKeyDown={(e) => enrollLocation(e)}
-              onChange={(e) => setLocation(e.target.value)}
-            />
+          {isMarked === false ? (
+            ""
           ) : (
             <>
               <W.CancelBtn onClick={deleteLocation} />
-              <W.SearchResult>{location}</W.SearchResult>
+              <W.MarkResult>마킹장소</W.MarkResult>
             </>
           )}
         </W.AddressContainer>
-        <W.Toggles>
-          <W.ToggleWrap onClick={() => feedToggleCheck()}>
-            피드 공개
-            <W.ToggleContainer data={isFeedPublic.toString()}>
-              <W.ToggleCircle data={isFeedPublic.toString()} />
-            </W.ToggleContainer>
-          </W.ToggleWrap>
-          <W.ToggleWrap onClick={() => mapToggleCheck()}>
-            지도 연동하기
-            <W.ToggleContainer data={isMapAssign.toString()}>
-              <W.ToggleCircle data={isMapAssign.toString()} />
-            </W.ToggleContainer>
-          </W.ToggleWrap>
-        </W.Toggles>
+        {page === "create" && (
+          <W.Toggles>
+            <W.ToggleWrap onClick={() => feedToggleCheck()}>
+              피드 공개
+              <W.ToggleContainer data={isFeedPublic.toString()}>
+                <W.ToggleCircle data={isFeedPublic.toString()} />
+              </W.ToggleContainer>
+            </W.ToggleWrap>
+            <W.ToggleWrap onClick={() => mapToggleCheck()}>
+              지도 연동하기
+              <W.ToggleContainer data={isMapAssign.toString()}>
+                <W.ToggleCircle data={isMapAssign.toString()} />
+              </W.ToggleContainer>
+            </W.ToggleWrap>
+          </W.Toggles>
+        )}
       </W.FeedBottomContainer>
+      {isMapAssign && (
+        <Map handleInputChange={handleInputChange} setMark={setMark} />
+      )}
     </W.CreateFeedContainer>
   );
 };

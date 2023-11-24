@@ -58,7 +58,7 @@ export const SearchLoaction = styled.input`
   width: 70px;
 `;
 
-export const SearchResult = styled.div`
+export const MarkResult = styled.div`
   text-align: center;
 `;
 
@@ -95,6 +95,3 @@ export const ToggleCircle = styled.div<{ data: string }>`
   background-color: #ffffff;
   transition: ${(props) => (props.data === "false" ? "none" : "0.3s")};
 `;
-
-//지도
-export const Map = styled.div``;
