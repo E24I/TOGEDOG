@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Component
 public class CustomAuthorityUtils {
 
-    private String adminMailAdress = "admin@admin.com";
+    private final String adminMailAddress = "admin@admin.com";
 
     private final List<GrantedAuthority> ADMIN_ROLES = AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_USER");
     private final List<GrantedAuthority> USER_ROLES = AuthorityUtils.createAuthorityList("ROLE_USER");
@@ -19,7 +19,7 @@ public class CustomAuthorityUtils {
     private final List<String> USER_ROLE_STRING = List.of("USER");
 
     public List<GrantedAuthority> createAuthorities(String email){
-        if(email.equals(adminMailAdress)){
+        if(email.equals(adminMailAddress)){
             return ADMIN_ROLES;
         }else {
             return USER_ROLES;
@@ -36,7 +36,7 @@ public class CustomAuthorityUtils {
     }
 
     public List<String> createRoles(String email){
-        if(email.equals(adminMailAdress)){
+        if(email.equals(adminMailAddress)){
             return ADMIN_ROLES_STRING;
         }else {
             return USER_ROLE_STRING;

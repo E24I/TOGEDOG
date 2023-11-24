@@ -62,6 +62,9 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
         System.out.println("zz" + claims.get("email"));
         System.out.println("zz" + claims.get("roles"));
+        System.out.println("zz " + claims.get("id"));
+        System.out.println(claims.get("nickname"));
+        System.out.println(claims.get("image"));
         return claims;
     }
 

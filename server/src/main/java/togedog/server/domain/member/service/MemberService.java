@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.global.auth.utils.CustomAuthorityUtils;
+import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.mail.MailService;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class MemberService {
 
     private final MailService mailService;
     private final MemberRepository memberRepository;
+    private final LoginMemberUtil loginMemberUtil;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -51,6 +53,11 @@ public class MemberService {
         if(optionalMember.isPresent()){
             throw new RuntimeException("member exist");
         }
+    }
+
+    public Long findMember(){
+
+        return loginMemberUtil.getLoginMemberId();
     }
 
 

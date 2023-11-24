@@ -43,7 +43,10 @@ public class MemberController {
     @GetMapping("/kk")
     public String getMember(@RequestParam("par") String par){
 
-        return "param = par :" + par;
+        Long findmember = memberService.findMember();
+        System.out.println(findmember);
+
+        return "param = " + par + " \n memberId = " + findmember;
     }
 
     /*
