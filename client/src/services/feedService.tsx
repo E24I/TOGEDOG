@@ -14,9 +14,11 @@ export const postFeed = async (postInfomation: postInformationType) => {
       `/feed`,
       {
         title: postInfomation.title,
+        images: postInfomation.images,
+        videos: postInfomation.videos,
         content: postInfomation.content,
-        state: postInfomation.state,
-        map: postInfomation.map,
+        state: postInfomation.openYn,
+        map: postInfomation.mapYn,
         address: postInfomation.address,
       },
       {

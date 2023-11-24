@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {
   ChangeEvent,
   useState,
@@ -9,12 +10,15 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 
 import * as C from "./CreatingSpace.Style";
-import Map from "./Map";
 
 interface CreatingSpaceProps {
   handleInputChange: (
     fieldName: string,
-    value: string | boolean | string[],
+    value:
+      | string
+      | boolean
+      | { x: string; y: string }
+      | { file: string; order: number }[],
   ) => void;
 }
 
@@ -28,13 +32,10 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
     image: false,
     video: false,
   });
-
   const [files, setFiles] = useState<JSX.Element[]>([]);
-
   const [quillValue, setQuillValue] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const contentRef = useRef<any>();
-
   const [contentLength, setContentLength] = useState<number>(0);
 
   const uploadImage = (e: ChangeEvent<HTMLInputElement>) => {
@@ -64,7 +65,7 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
         ...prev,
         <C.AttachedImg key={Date.now()} src={file.url} alt="" />,
       ]);
-      handleInputChange("image", file.url);
+      // handleInputChange("image", file.url);
     } else if (file.video) {
       setFiles((prev) => [
         ...prev,
@@ -76,6 +77,8 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
         />,
       ]);
     }
+    console.log("files", files);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
 
@@ -149,7 +152,6 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
         />
         <C.TextCount>{contentLength} / 200</C.TextCount>
       </C.CreateContentWrap>
-      <Map handleInputChange={handleInputChange} />
     </C.CreateSpace>
   );
 };
