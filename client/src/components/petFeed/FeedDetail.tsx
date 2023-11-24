@@ -33,8 +33,8 @@ import {
 import { feedDetailType } from "../../types/feedDataType";
 import { feedDetailData } from "./FeedDummy";
 import FeedReply from "./FeedReply";
-import Heart from "../common/button/Heart";
-import Bookmark from "../common/button/Bookmark";
+import Heart from "../../atoms/button/Heart";
+import Bookmark from "../../atoms/button/Bookmark";
 
 interface OwnProps {
   feedId: number;

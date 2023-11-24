@@ -3,7 +3,7 @@ import { postInformationType } from "../types/feedDataType";
 
 export const getFeedLists = () => {
   return axios
-    .get("")
+    .get(``)
     .then((res) => console.log(res))
     .catch((err) => console.log(err));
 };
