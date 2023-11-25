@@ -13,6 +13,8 @@ import togedog.server.global.exception.businessexception.memberexception.MemberP
 import togedog.server.global.mail.MailService;
 import togedog.server.global.mail.dto.EmailCheckDto;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/member")
 @Slf4j
@@ -25,7 +27,7 @@ public class MemberController {
 
     // 회원 가입
     @PostMapping("/signup")
-    public ResponseEntity<Member> signupMember(@RequestBody MemberDto.Post memberPostDto){
+    public ResponseEntity<Member> signupMember(@RequestBody @Valid MemberDto.Post memberPostDto){
 
         Boolean pwCheck = memberService.pwCheck(memberPostDto.getPassword(), memberPostDto.getPwConfirm());
 
