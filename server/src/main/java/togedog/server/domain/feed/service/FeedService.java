@@ -84,14 +84,14 @@ public class FeedService {
     }
 
 
-    public FeedResponse findFeed(Long feedId) {
+    public FeedResponse getFeed(Long feedId) {
 
         Optional<Feed> feedOptional = feedRepository.findById(feedId);
         Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
 
         // 댓글도 페이징 처리해서 넘기자 0,5 사이즈로 정하고 리스트말고
 
-        return
+        return null;
     }
 
 
@@ -142,7 +142,7 @@ public class FeedService {
         return feedOptional.orElseThrow(FeedNotFoundException::new);
     }
 
-    private void checkAccessAuthority(Long AuthorId, Long loginMemberId) {
+    private void checkAccessAuthority(Long AuthorId, Long loginMemberId) { //aop 시키고 싶음
         if (!AuthorId.equals(loginMemberId)) {
             throw new MemberAccessDeniedException();
         }

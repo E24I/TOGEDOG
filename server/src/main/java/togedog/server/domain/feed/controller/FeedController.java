@@ -15,6 +15,8 @@ import togedog.server.domain.feed.service.dto.response.FeedResponse;
 import togedog.server.domain.feedbookmark.service.FeedBookmarkService;
 import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.feedlike.service.FeedLikeService;
+import togedog.server.domain.reply.controller.dto.ReplyCreateApiRequest;
+import togedog.server.domain.reply.service.ReplyService;
 import togedog.server.global.response.ApiPageResponse;
 import togedog.server.global.response.ApiSingleResponse;
 
@@ -30,6 +32,7 @@ public class FeedController {
     private final FeedService feedService;
     private final FeedLikeService feedLikeService;
     private final FeedBookmarkService feedBookmarkService;
+    private final ReplyService replyService;
 
 
 
@@ -50,7 +53,7 @@ public class FeedController {
 
         Long feedId = feedService.createFeed(request.toFeedCreateServiceRequest());
 
-        URI uri = URI.create("/Feeds/" + feedId); // + feedId
+        URI uri = URI.create("/feeds/" + feedId); // + feedId
 
         return ResponseEntity.created(uri).build();
     }
@@ -60,7 +63,8 @@ public class FeedController {
 
         FeedResponse feed = feedService.getFeed(feedId);
 
-        return ResponseEntity.of(ApiSingleResponse.ok(FeedResponse.));
+        return null;
+       // return ResponseEntity.of(ApiSingleResponse.ok(FeedResponse.));
     }
 
     @PatchMapping("/{feed-id}")
@@ -94,5 +98,18 @@ public class FeedController {
         feedBookmarkService.bookmarkFeed(feedId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{feed-id}/replies")
+    public ResponseEntity<Void> postReply(@PathVariable(("feed-id")) Long feedId,
+                                          @Valid @RequestBody ReplyCreateApiRequest request) {
+
+        //로그인 된 사용자 확인 로직
+
+        Long replyId = replyService.createReply(request.toCreateServiceApiRequest(),feedId);
+
+        URI uri = URI.create("/Replies/" + replyId);
+
+        return ResponseEntity.created(uri).build();
     }
 }

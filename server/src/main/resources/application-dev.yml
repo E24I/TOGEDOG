@@ -27,6 +27,21 @@ spring:
         format_sql: true      # 쿼리 로그 포맷 (정렬)
         show_sql: true        # 쿼리 로그 출력
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  cloud:
+    aws:
+      credentials:
+        accessKey: 123456
+        secretKey: 123456
+      s3:
+        bucket: 123456
+      region:
+        static: ap-northeast-2
+      stack:
   cache:
     type: redis
   redis:

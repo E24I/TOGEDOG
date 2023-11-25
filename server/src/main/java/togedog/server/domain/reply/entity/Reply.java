@@ -1,9 +1,6 @@
 package togedog.server.domain.reply.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import togedog.server.domain.comment.entity.Comment;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.feedreport.entity.FeedReport;
@@ -20,6 +17,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Reply extends BaseEntity {
@@ -38,6 +36,8 @@ public class Reply extends BaseEntity {
 
     private Boolean fix;
 
+    private Boolean deleteYn;
+
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
@@ -54,6 +54,25 @@ public class Reply extends BaseEntity {
 
     @OneToMany(mappedBy = "reply", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReplyLike> replyLikes = new ArrayList<>();
+
+
+    public static Reply crateReply(String content, Boolean fix, Member member, Feed feed) {
+        return Reply.builder()
+                .content(content)
+                .fix(fix)
+                .feed(feed)
+                .member(member)
+                .deleteYn(false)
+                .build();
+    }
+
+    public void updateMyReply(String content) {
+        this.content = content;
+    }
+
+    public void deleteMyReply() {
+        this.deleteYn = true;
+    }
 
 
 }
