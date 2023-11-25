@@ -29,6 +29,15 @@ public class MemberService {
     @Autowired
     private CustomAuthorityUtils customAuthorityUtils;
 
+    //비밀번호 체크
+    public Boolean pwCheck(String password, String pwConfirm){
+
+        if(pwConfirm.equals(password)){
+            return true;
+        }
+        return false;
+    }
+
 
     public Member createMember(Member member){
         verifyExistsEmail(member.getEmail());
@@ -60,6 +69,11 @@ public class MemberService {
         return loginMemberUtil.getLoginMemberId();
     }
 
+
+    public Boolean checkNickname(String nickname){
+        Boolean bool = memberRepository.existsMemberByNicknameContaining(nickname);
+        return bool;
+    }
 
 
 

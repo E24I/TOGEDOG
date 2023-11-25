@@ -9,6 +9,7 @@ import togedog.server.domain.member.dto.MemberDto;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.mapper.MemberMapper;
 import togedog.server.domain.member.service.MemberService;
+import togedog.server.global.exception.businessexception.memberexception.MemberPasswordException;
 import togedog.server.global.mail.MailService;
 import togedog.server.global.mail.dto.EmailCheckDto;
 
@@ -26,19 +27,24 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity<Member> signupMember(@RequestBody MemberDto.Post memberPostDto){
 
-        Member member = mapper.memberPostDtoToMember(memberPostDto);
-        Member createdMember = memberService.createMember(member);
+        Boolean pwCheck = memberService.pwCheck(memberPostDto.getPassword(), memberPostDto.getPwConfirm());
 
-        return new ResponseEntity<>(createdMember, HttpStatus.CREATED);
+        if(pwCheck){
+            Member member = mapper.memberPostDtoToMember(memberPostDto);
+            memberService.createMember(member);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }else {
+            throw new MemberPasswordException();
+        }
     }
 
-    // 로그인 => security 에서 처리
-    @PostMapping("/login")
-    public ResponseEntity<?> loginMember(@RequestBody MemberDto memberDto){
+    @PostMapping("/nickname/check")
+    public ResponseEntity<Boolean> nicknameCheck(@RequestParam("n") String nickname){
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Boolean bool = memberService.checkNickname(nickname);
+
+        return new ResponseEntity<>(bool,HttpStatus.ACCEPTED);
     }
-
 
     @GetMapping("/kk")
     public String getMember(@RequestParam("par") String par){
@@ -63,13 +69,14 @@ public class MemberController {
     회원가입 코드 체크
      */
     @PostMapping("/emails/check")
-    public String emailCheck(@RequestBody EmailCheckDto emailCheckDto){
+    public ResponseEntity emailCheck(@RequestBody EmailCheckDto emailCheckDto){
         Boolean checked = mailService.checkAuthNum(emailCheckDto.getEmail(), emailCheckDto.getAuthNum());
+
         if(checked){
-            return "ok";
-        }else{
-            return "not ok";
+            return new ResponseEntity(HttpStatus.OK);
         }
+
+        return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
 
 
