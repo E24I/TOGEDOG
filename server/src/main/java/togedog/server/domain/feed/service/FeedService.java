@@ -67,20 +67,22 @@ public class FeedService {
 //        return feedsPage.map(FeedResponse::singleFeedResponse);
 
         return feedsPage.map(feed -> {
-            boolean isBookmarkedByCurrentUser = isFeedBookmarkedByMember(member.getMemberId(), feed.getFeedId());
+            boolean isBookmarkedByCurrentUser = isFeedBookmarkedByMember(member, feed);
 
-            boolean isLikedByCurrentUser = isFeedLikedByMember(member.getMemberId(), feed.getFeedId());
+            boolean isLikedByCurrentUser = isFeedLikedByMember(member, feed);
 
             return FeedResponse.singleFeedResponse(feed, isBookmarkedByCurrentUser, isLikedByCurrentUser);
         });
     }
 
-        public boolean isFeedBookmarkedByMember(Long memberId, Long feedId) {
-            return feedBookmarkRepository.existBookmarkByMemberIdAndFeedId(memberId, feedId);
+        public boolean isFeedBookmarkedByMember(Member member, Feed feed) {
+            Optional<FeedBookmark> optionalFeedBookmark = feedBookmarkRepository.findByMemberAndFeed(member, feed);
+            return optionalFeedBookmark.isPresent();
         }
 
-    public boolean isFeedLikedByMember(Long memberId, Long feedId) {
-        return feedLikeRepository.existLikeByMemberIdAndFeedId(memberId, feedId);
+    public boolean isFeedLikedByMember(Member member, Feed feed) {
+        Optional<FeedLike> optionalFeedLike = feedLikeRepository.findByMemberAndFeed(member, feed);
+        return optionalFeedLike.isPresent(); // Optional이 값으로 존재하면 true를 반환, 비어있으면 false를 반환
     }
 
 

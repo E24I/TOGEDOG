@@ -1,32 +1,30 @@
-package togedog.server.domain.feedlike.service;
+package togedog.server.domain.replylike.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import togedog.server.domain.feed.entity.Feed;
-import togedog.server.domain.feed.repository.FeedRepository;
-import togedog.server.domain.feed.service.FeedService;
 import togedog.server.domain.feedlike.entity.FeedLike;
-import togedog.server.domain.feedlike.repository.FeedLikeRepository;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
+import togedog.server.domain.reply.entity.Reply;
+import togedog.server.domain.reply.repository.ReplyRepository;
+import togedog.server.domain.replylike.entity.ReplyLike;
+import togedog.server.domain.replylike.repository.ReplyLikeRepository;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
+import togedog.server.global.exception.businessexception.replyexception.ReplyNotFoundException;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
-
 @Service
-@Transactional
 @RequiredArgsConstructor
-public class FeedLikeService {
+public class ReplyLikeService {
 
-    private final FeedRepository feedRepository;
     private final MemberRepository memberRepository;
-    private final FeedLikeRepository feedLikeRepository;
+    private final ReplyRepository replyRepository;
+    private final ReplyLikeRepository replyLikeRepository;
 
-
-    public void likeFeed(Long feedId) {
+    public void likeReply(Long replyId) {
 
 //        Long loginMemberId = SecurityUtil.getCurrentId();
 
@@ -39,34 +37,27 @@ public class FeedLikeService {
         Optional<Member> memberOptional = memberRepository.findById(loginMemberId);
         Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
 
-        Optional<Feed> feedOptional = feedRepository.findById(feedId);
-        Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
+        Optional<Reply> replyOptional = replyRepository.findById(replyId);
+        Reply reply = replyOptional.orElseThrow(ReplyNotFoundException::new);
 
-        Optional<FeedLike> alreadyLike = feedLikeRepository.findByMemberAndFeed(member, feed);
+        Optional<ReplyLike> alreadyLike = replyLikeRepository.findByMemberAndReply(member, reply);
         // 지금은 연관관계로 조회하지만 성능을 위해 다음 @EmbeddedId나 @IdClass를 알아보자
 
         if (alreadyLike.isPresent()) { // 현재 로직은 있으면 delete or 객체 생성인데 다음엔 타입으로 받고 내리고 올리자
-            feedLikeRepository.delete(alreadyLike.get());
-            feed.setLikeCount(feed.getLikeCount() - 1);
+            replyLikeRepository.delete(alreadyLike.get());
+            reply.setLikeCount(reply.getLikeCount() - 1);
         } else {
-            FeedLike newfeedLike = FeedLike.builder()
+            ReplyLike newreplyLike = ReplyLike.builder()
                     .member(member)
-                    .feed(feed)
+                    .reply(reply)
                     .build();
 
-            feedLikeRepository.save(newfeedLike);
-            feed.setLikeCount(feed.getLikeCount() + 1);
+            replyLikeRepository.save(newreplyLike);
+            reply.setLikeCount(reply.getLikeCount() + 1);
         }
 
-        feedRepository.save(feed);
+        replyRepository.save(reply);
+
 
     }
-
-    private Feed addLike(Long loginMemberId, Long feedId) {
-        return Feed.builder()
-
-                .build();
-    }
-
-
 }

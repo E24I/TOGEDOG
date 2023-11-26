@@ -36,7 +36,7 @@ public class FeedController {
 
 
 
-    @GetMapping("/")
+    @GetMapping("/") //전체 피드 반환 이미지 처리 다시하자
     public ResponseEntity<ApiPageResponse<FeedResponse>> getFeeds(@RequestParam(defaultValue = "1") int page,
                                                                   @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
@@ -44,6 +44,17 @@ public class FeedController {
 
         return ResponseEntity.ok(ApiPageResponse.ok(feedsPage));
     }
+
+//    @GetMapping("/{feed-id}") //한 피드에 대한 feply 페이징 조회
+//    public ResponseEntity<ApiPageResponse<ReplyResponse>> getRepliesByFeedId(@PathVariable("feed-id") Long feedId,
+//                                                                               @RequestParam(defaultValue = "1") int page,
+//                                                                               @RequestParam(defaultValue = "3") int size) {
+//
+//        Pageable pageable = PageRequest.of(page - 1, size);
+//        Page<ReplyResponse> repliesPage = replyService.getRepliesPaged(feedId, pageable);
+//
+//        return ResponseEntity.ok(ApiPageResponse.ok(repliesPage));
+//    }
 
 
     @PostMapping
