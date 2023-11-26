@@ -38,6 +38,8 @@ public class Reply extends BaseEntity {
 
     private Boolean deleteYn;
 
+    private Integer likeCount;
+
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;

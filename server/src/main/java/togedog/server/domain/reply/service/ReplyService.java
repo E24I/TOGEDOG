@@ -54,6 +54,8 @@ public class ReplyService {
         Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
         Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
 
+        findByLoginId(loginMemberId);
+
         Optional<Reply> optionalReply = replyRepository.findById(replyId);
         Reply reply = optionalReply.orElseThrow(ReplyNotFoundException::new);
 
@@ -68,8 +70,10 @@ public class ReplyService {
         Long loginMemberId = 12313L; // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
         isLogined(loginMemberId);
 
-        Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
-        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
+//        Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
+//        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
+
+        findByLoginId(loginMemberId);
 
         Optional<Reply> optionalReply = replyRepository.findById(replyId);
         Reply reply = optionalReply.orElseThrow(ReplyNotFoundException::new);

@@ -67,20 +67,20 @@ public class FeedService {
 //        return feedsPage.map(FeedResponse::singleFeedResponse);
 
         return feedsPage.map(feed -> {
-            boolean isBookmarkedByCurrentUser = isFeedBookmarkedByMember(member.getMemberId(), feed.getFeedId());
+            boolean isBookmarkedByCurrentUser = isFeedBookmarkedByMember(member, feed);
 
-            boolean isLikedByCurrentUser = isFeedLikedByMember(member.getMemberId(), feed.getFeedId());
+            boolean isLikedByCurrentUser = isFeedLikedByMember(member, feed);
 
             return FeedResponse.singleFeedResponse(feed, isBookmarkedByCurrentUser, isLikedByCurrentUser);
         });
     }
 
-        public boolean isFeedBookmarkedByMember(Long memberId, Long feedId) {
-            return feedBookmarkRepository.existBookmarkByMemberIdAndFeedId(memberId, feedId);
+        public boolean isFeedBookmarkedByMember(Member member, Feed feed) {
+            return feedBookmarkRepository.existBookmarkByMemberAndFeed(member, feed);
         }
 
-    public boolean isFeedLikedByMember(Long memberId, Long feedId) {
-        return feedLikeRepository.existLikeByMemberIdAndFeedId(memberId, feedId);
+    public boolean isFeedLikedByMember(Member member, Feed feed) {
+        return feedLikeRepository.existLikeByMemberAndFeed(member, feed);
     }
 
 

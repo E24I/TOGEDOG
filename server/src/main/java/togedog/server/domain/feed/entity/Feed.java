@@ -78,7 +78,7 @@ public class Feed extends BaseEntity {
     private List<FeedBookmark> feedBookmarks = new ArrayList<>();
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FeedImage> feedImages = new ArrayList<>(); // 필요 x
+    private List<FeedImage> feedImages = new ArrayList<>();
 
     // 알림이 들어와야 할듯?
 

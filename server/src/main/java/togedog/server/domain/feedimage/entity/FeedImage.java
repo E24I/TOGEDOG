@@ -19,8 +19,10 @@ public class FeedImage extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long feedImageId;
+
     @Column
     private String feedImageUrl;
+
 
     @ManyToOne
     @JoinColumn(name = "feed_id")
