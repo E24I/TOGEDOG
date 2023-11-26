@@ -14,7 +14,7 @@ public class FeedCreateServiceApiRequest {
     private String address;
     //    private String state;
     private Boolean openYn;
-    private Boolean addMap;
+    private Boolean addMap; //
     private String images;
     private String videos;
 
