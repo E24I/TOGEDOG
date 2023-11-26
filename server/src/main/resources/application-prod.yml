@@ -16,6 +16,12 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
 
+    cache:
+      type: redis
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
+
 
 #  cloud:
 #    aws:
