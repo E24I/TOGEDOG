@@ -12,9 +12,9 @@ import java.util.Optional;
 public interface ReplyLikeRepository extends JpaRepository<ReplyLike, Long> {
 
     Optional<ReplyLike> findByMemberAndReply(Member member, Reply reply);
-    Optional<ReplyLike> findbyMemberID(Long memberId, Long replyId);
-
-    boolean existLikeByMemberIdAndReplyId(Long memberId, Long replyId);
+//    Optional<ReplyLike> findByMemberId(Long memberId, Long replyId);
+//
+//    boolean existLikeByMemberIdAndReplyId(Long memberId, Long replyId);
 
 
 }

@@ -11,6 +11,6 @@ public interface FeedBookmarkRepository extends JpaRepository<FeedBookmark, Long
 
     Optional<FeedBookmark> findByMemberAndFeed(Member member, Feed feed);
 
-    boolean existBookmarkByMemberAndFeed(Member member, Feed feed);
+//    boolean existsByMemberAndFeed(Member member, Feed feed);
 
 }

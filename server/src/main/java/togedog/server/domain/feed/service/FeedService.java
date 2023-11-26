@@ -76,11 +76,13 @@ public class FeedService {
     }
 
         public boolean isFeedBookmarkedByMember(Member member, Feed feed) {
-            return feedBookmarkRepository.existBookmarkByMemberAndFeed(member, feed);
+            Optional<FeedBookmark> optionalFeedBookmark = feedBookmarkRepository.findByMemberAndFeed(member, feed);
+            return optionalFeedBookmark.isPresent();
         }
 
     public boolean isFeedLikedByMember(Member member, Feed feed) {
-        return feedLikeRepository.existLikeByMemberAndFeed(member, feed);
+        Optional<FeedLike> optionalFeedLike = feedLikeRepository.findByMemberAndFeed(member, feed);
+        return optionalFeedLike.isPresent(); // Optional이 값으로 존재하면 true를 반환, 비어있으면 false를 반환
     }
 
 
