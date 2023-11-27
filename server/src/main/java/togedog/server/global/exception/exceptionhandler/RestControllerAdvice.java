@@ -10,6 +10,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import togedog.server.global.exception.businessexception.BusinessException;
 import togedog.server.global.exception.businessexception.memberexception.MemberAccessDeniedException;
@@ -23,6 +24,13 @@ import java.util.List;
 @org.springframework.web.bind.annotation.RestControllerAdvice
 @Slf4j
 public class RestControllerAdvice {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiSingleResponse<List<ApiSingleResponse.ErrorResponse>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
+
+        return ResponseEntity.badRequest().body(ApiSingleResponse.fail(e));
+    }
+
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ApiSingleResponse<List<ApiSingleResponse.ErrorResponse>>> handleBindException(
             BindException e) {
