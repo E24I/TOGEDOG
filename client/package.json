@@ -13,6 +13,7 @@
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.60",
     "@types/react": "^18.2.34",
+    "@types/stompjs": "^2.3.9",
     "axios": "^1.6.0",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-prettier": "^5.0.1",

@@ -9,6 +9,7 @@ import {
   UserName,
 } from "./ChattingListForm.Style";
 import DropDown from "../../atoms/dropdown/DropDown";
+import { GetAllRoomsQuery } from "../../services/chatService";
 //list mockData
 
 interface ChattingListProps {
@@ -17,6 +18,7 @@ interface ChattingListProps {
 
 const ChattingList: React.FC<ChattingListProps> = ({ setDefaultBack }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
+  const [rooms, setRooms] = useState<[]>([]);
   const openDropDown = () => {
     if (isOpen !== false) {
       setOpen(false);

@@ -7,6 +7,7 @@ export const SeeMoreButton = styled(SeeMore)`
   cursor: pointer;
   border: 2px solid #576b88;
   margin-left: 27px;
+  z-index: 20px;
 `;
 
 //components
