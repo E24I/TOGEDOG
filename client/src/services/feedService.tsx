@@ -9,43 +9,39 @@ export const getFeedLists = () => {
 };
 
 export const postFeed = async (postInfomation: postInformationType) => {
-  return await axios
-    .post(
-      `/feed`,
-      {
-        title: postInfomation.title,
-        images: postInfomation.images,
-        videos: postInfomation.videos,
-        content: postInfomation.content,
-        state: postInfomation.openYn,
-        map: postInfomation.mapYn,
-        address: postInfomation.address,
+  const res = await axios.post(
+    `/feed`,
+    {
+      title: postInfomation.title,
+      images: postInfomation.images,
+      videos: postInfomation.videos,
+      content: postInfomation.content,
+      state: postInfomation.openYn,
+      map: postInfomation.mapYn,
+      address: postInfomation.address,
+    },
+    {
+      headers: {
+        Authorization: "authorizedToken자리",
       },
-      {
-        headers: {
-          Authorization: "authorizedToken자리",
-        },
-      },
-    )
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
+    },
+  );
+  return res;
 };
 
 export const updateFeed = async (content: string) => {
-  return await axios
-    .post(
-      `/feed/{feed-id}/reply/{reply-id}`,
-      {
-        content: content,
+  const res = await axios.post(
+    `/feed/{feed-id}/reply/{reply-id}`,
+    {
+      content: content,
+    },
+    {
+      headers: {
+        Authorization: "authorizedToken자리",
       },
-      {
-        headers: {
-          Authorization: "authorizedToken자리",
-        },
-      },
-    )
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
+    },
+  );
+  return res;
 };
 
 export const getPresinedUrl = () => {
@@ -58,7 +54,7 @@ export const uploadToS3 = async (
   file: string,
   type: string,
 ) => {
-  const res = axios.put(preSinedURL, {
+  const res = await axios.put(preSinedURL, {
     file,
     Headers: { "Content-type": type },
   });
