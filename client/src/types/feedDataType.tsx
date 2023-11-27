@@ -58,8 +58,8 @@ export type feedDetailType = {
 export type postInformationType = {
   title: string;
   content: string;
-  images: { file: string; order: number }[];
-  videos: { file: string; order: number }[];
+  images: string[];
+  videos: string[];
   openYn: boolean;
   mapYn: boolean;
   address: { x: string; y: string };

@@ -33,11 +33,7 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
 
   const handleInputChange = (
     fieldName: string,
-    value:
-      | string
-      | boolean
-      | { x: string; y: string }
-      | { file: string; order: number }[],
+    value: string | boolean | { x: string; y: string } | string[],
   ) => {
     setPostInformation((prevPostInformation) => {
       if (
