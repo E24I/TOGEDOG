@@ -30,8 +30,8 @@ jwt:
 cloud:
   aws:
     credentials:
-      secret-key: AKIA55PP54W7UO5EICHD
-      access-key: srNYuxm/FV5pGsqli0iuOf2IDWIN4cRxFu6aSA0A
+      secret-key: 123
+      access-key: 123
     s3:
       bucket: togedog-image
     region:
