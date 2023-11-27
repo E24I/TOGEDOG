@@ -6,11 +6,7 @@ import { MapContainer, MapInput, Marker } from "./Map.Style";
 interface MapProps {
   handleInputChange: (
     fieldName: string,
-    value:
-      | string
-      | boolean
-      | { x: string; y: string }
-      | { file: string; order: number }[],
+    value: string | boolean | { x: string; y: string } | string[],
   ) => void;
   setMark: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -33,6 +29,7 @@ const Map: React.FC<MapProps> = ({ handleInputChange, setMark }) => {
       setYcoor(e.utmk.y);
       setXOffset(e.containerPoint.x);
       setYOffset(e.containerPoint.y);
+      console.log(e);
     });
     map.on("drag", function () {
       setDisplay(false);

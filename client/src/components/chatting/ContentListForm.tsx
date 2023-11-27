@@ -13,31 +13,46 @@ import {
   Wrap,
 } from "./ContentListForm.Style";
 
-const ContentListForm: React.FC = () => {
+interface ContentListFormType {
+  messages: {
+    id: number;
+    member_id: number;
+    time: number;
+    content: string[] | string;
+  }[];
+}
+
+const ContentListForm: React.FC<ContentListFormType> = ({ messages }) => {
   return (
     <ContentForm>
-      <Date>23.11.13(월)</Date>
-      <TheOtherPerson>
-        <Image></Image>
-        <Wrap>
-          <UserName>hoi</UserName>
-          <Talks>
-            <Talk>
-              대화 1 <br /> 대화1 문단 나눔
-            </Talk>
-            <Talk>대화2</Talk>
-          </Talks>
-        </Wrap>
-      </TheOtherPerson>
-      <MyTalks>
-        <MyTalk>
-          내가 보낸 메시지하하호호
-          <br />
-          이디야이디야
-        </MyTalk>
-        <MyTalk>내가 보낸 메시지</MyTalk>
-      </MyTalks>
-      <Checking>읽음</Checking>
+      {messages.map((message) => {
+        return (
+          <>
+            <Date>{message.time}</Date>
+            <TheOtherPerson>
+              <Image></Image>
+              <Wrap>
+                <UserName>유저</UserName>
+                <Talks>
+                  {message.member_id === 0 &&
+                    Array.isArray(message.content) &&
+                    message.content.map((content, idx) => {
+                      return <Talk key={idx}>{content}</Talk>;
+                    })}
+                </Talks>
+              </Wrap>
+            </TheOtherPerson>
+            <MyTalks>
+              {message.member_id === 0 &&
+                Array.isArray(message.content) &&
+                message.content.map((content, idx) => {
+                  return <MyTalk key={idx}>{content}</MyTalk>;
+                })}
+            </MyTalks>
+            <Checking>읽음</Checking>
+          </>
+        );
+      })}
     </ContentForm>
   );
 };
