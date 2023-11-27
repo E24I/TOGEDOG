@@ -47,3 +47,25 @@ export const updateFeed = async (content: string) => {
     .then((res) => console.log(res))
     .catch((err) => console.log(err));
 };
+
+export const getPresinedUrl = () => {
+  // const res = axios.get(``, {});
+  // return { presinedUrl: res.data.presinedUrl };
+};
+
+export const uploadToS3 = async (
+  preSinedURL: string,
+  file: string,
+  type: string,
+) => {
+  const res = axios.put(preSinedURL, {
+    file,
+    Headers: { "Content-type": type },
+  });
+  console.log(res);
+  return res;
+};
+
+export const deleteS3 = () => {
+  return;
+};
