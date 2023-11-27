@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AmazonS3Config {
 
-    private String accessKey = "AKIA55PP54W7UO5EICHD";
-    private String secretKey = "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";
+    private String accessKey = "AKIAS6GKCXMUCZ3OVHJD";
+    private String secretKey = "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";
     private String clientRegion = "ap-northeast-2";
     private String bucketName = "togedog-image";
 

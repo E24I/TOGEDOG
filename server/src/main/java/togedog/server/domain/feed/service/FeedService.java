@@ -18,7 +18,6 @@ import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.feedlike.repository.FeedLikeRepository;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
-import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.memberexception.MemberAccessDeniedException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
@@ -36,12 +35,11 @@ public class FeedService {
     private final MemberRepository memberRepository;
     private final FeedBookmarkRepository feedBookmarkRepository;
     private final FeedLikeRepository feedLikeRepository;
-    private final LoginMemberUtil loginMemberUtil;
 
 
     public Long createFeed(FeedCreateServiceApiRequest request) {
 
-        Long loginMemberId = loginMemberUtil.getLoginMemberId(); // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
+        Long loginMemberId = 12313L; // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
 
         if (loginMemberId == null) { // 로그인된 사용자를 가져올 때 해영님이
             throw new MemberNotLoginException();
@@ -58,10 +56,9 @@ public class FeedService {
 
     public Page<FeedResponse> getFeedsPaged(Pageable pageable) {
 
-        // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
+        Long loginMemberId = 12313L; // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
 //         로그인된 사용자와 feedbookmark에서 찾아온 memeberId가 일치한다면, feed에 bookmarkYn을
 //         true로 바꿔주고 피드에 업데이트 하면 될듯 ? 그리고 그 피드를 찾아오자!
-        Long loginMemberId = loginMemberUtil.getLoginMemberId();
 
         Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
         Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
@@ -104,7 +101,7 @@ public class FeedService {
 
     public void updateFeed(Long feedId, FeedUpdateServiceRequest request) {
 
-        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+        Long loginMemberId = 123L;
         if (loginMemberId == null) {
             throw new MemberNotLoginException();
         }
@@ -119,7 +116,7 @@ public class FeedService {
 
     public void deleteFeed(Long feedId) {
 
-        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+        Long loginMemberId = 123L;
         if (loginMemberId == null) {
             throw new MemberNotLoginException();
         }

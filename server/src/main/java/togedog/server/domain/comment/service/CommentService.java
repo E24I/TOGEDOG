@@ -8,7 +8,6 @@ import togedog.server.domain.comment.service.dto.CommentCreateServiceRequest;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.reply.entity.Reply;
 import togedog.server.domain.reply.repository.ReplyRepository;
-import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.replyexception.ReplyNotFoundException;
 
 import java.util.Optional;
@@ -20,11 +19,8 @@ public class CommentService {
     //    private final MemberRepository memberRepository;
     private final ReplyRepository replyRepository;
     private final CommentRepository commentRepository;
-    private final LoginMemberUtil loginMemberUtil;
 
     public Long createComment(CommentCreateServiceRequest request, Long replyId) {
-
-        Long loginMemberId = loginMemberUtil.getLoginMemberId();
 
 //    Optional<Member> memberOptional = memberRepository.findById(memberId);
 //    Member member = memberOptional.orElseThrow(MemberNotFoundException::new);

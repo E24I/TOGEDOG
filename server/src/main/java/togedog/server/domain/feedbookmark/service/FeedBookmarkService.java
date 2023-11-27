@@ -10,7 +10,6 @@ import togedog.server.domain.feedbookmark.repository.FeedBookmarkRepository;
 import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
-import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
@@ -25,12 +24,11 @@ public class FeedBookmarkService {
     private final FeedBookmarkRepository feedBookmarkRepository;
     private final MemberRepository memberRepository;
     private final FeedRepository feedRepository;
-    private final LoginMemberUtil loginMemberUtil;
 
 
     public void bookmarkFeed(Long feedId) {
 
-        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+        Long loginMemberId = 123L;
 
         if (loginMemberId == null) {
             throw new MemberNotLoginException();
