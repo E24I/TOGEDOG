@@ -10,6 +10,7 @@ import togedog.server.domain.reply.entity.Reply;
 import togedog.server.domain.reply.repository.ReplyRepository;
 import togedog.server.domain.reply.service.dto.request.ReplyServiceCreateApiRequest;
 import togedog.server.domain.reply.service.dto.request.ReplyServiceUpdateApiRequest;
+import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberAccessDeniedException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
@@ -25,11 +26,12 @@ public class ReplyService {
     private final ReplyRepository replyRepository;
     private final MemberRepository memberRepository;
     private final FeedRepository feedRepository;
+    private final LoginMemberUtil loginMemberUtil;
 
 
     public Long createReply(ReplyServiceCreateApiRequest request, Long feedId) {
 
-        Long loginMemberId = 12313L; // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
+        Long loginMemberId = loginMemberUtil.getLoginMemberId(); // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
         isLogined(loginMemberId);
 
 
@@ -48,7 +50,7 @@ public class ReplyService {
 
     public void UpdateReply(ReplyServiceUpdateApiRequest request, Long replyId) {
 
-        Long loginMemberId = 12313L; // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
+        Long loginMemberId = loginMemberUtil.getLoginMemberId(); // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
         isLogined(loginMemberId);
 
         Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
@@ -67,7 +69,7 @@ public class ReplyService {
 
     public void deleteReply(Long replyId) {
 
-        Long loginMemberId = 12313L; // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
+        Long loginMemberId = loginMemberUtil.getLoginMemberId(); // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
         isLogined(loginMemberId);
 
 //        Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디

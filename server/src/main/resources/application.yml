@@ -26,11 +26,12 @@ jwt:
   key: ${JWT_SECRET_KEY}
   access-token-expiration-minutes: 15
   refresh-token-expiration-minutes: 420
+
 cloud:
   aws:
     credentials:
-      secret-key: AKIA55PP54W7UO5EICHDsrNYuxm
-      access-key: FV5pGsqli0iuOf2IDWIN4cRxFu6aSA0A
+      secret-key: AKIA55PP54W7UO5EICHD
+      access-key: srNYuxm/FV5pGsqli0iuOf2IDWIN4cRxFu6aSA0A
     s3:
       bucket: togedog-image
     region:

@@ -10,6 +10,7 @@ import togedog.server.domain.reply.entity.Reply;
 import togedog.server.domain.reply.repository.ReplyRepository;
 import togedog.server.domain.replylike.entity.ReplyLike;
 import togedog.server.domain.replylike.repository.ReplyLikeRepository;
+import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
@@ -23,12 +24,13 @@ public class ReplyLikeService {
     private final MemberRepository memberRepository;
     private final ReplyRepository replyRepository;
     private final ReplyLikeRepository replyLikeRepository;
+    private final LoginMemberUtil loginMemberUtil;
 
     public void likeReply(Long replyId) {
 
 //        Long loginMemberId = SecurityUtil.getCurrentId();
 
-        Long loginMemberId = 123L;
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
 
         if (loginMemberId == null) {
             throw new MemberNotLoginException();

@@ -9,6 +9,7 @@ import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.feedlike.repository.FeedLikeRepository;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
+import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
@@ -24,13 +25,14 @@ public class FeedLikeService {
     private final FeedRepository feedRepository;
     private final MemberRepository memberRepository;
     private final FeedLikeRepository feedLikeRepository;
+    private final LoginMemberUtil loginMemberUtil;
 
 
     public void likeFeed(Long feedId) {
 
 //        Long loginMemberId = SecurityUtil.getCurrentId();
 
-        Long loginMemberId = 123L;
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
 
         if (loginMemberId == null) {
             throw new MemberNotLoginException();
