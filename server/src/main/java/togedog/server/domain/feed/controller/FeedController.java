@@ -9,14 +9,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import togedog.server.domain.feed.controller.dto.FeedCreateApiRequest;
 import togedog.server.domain.feed.controller.dto.FeedUpdateApiRequest;
-import togedog.server.domain.feed.entity.Feed;
+import togedog.server.global.image.ImageNameDTO;
 import togedog.server.domain.feed.service.FeedService;
 import togedog.server.domain.feed.service.dto.response.FeedResponse;
 import togedog.server.domain.feedbookmark.service.FeedBookmarkService;
-import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.feedlike.service.FeedLikeService;
 import togedog.server.domain.reply.controller.dto.ReplyCreateApiRequest;
 import togedog.server.domain.reply.service.ReplyService;
+import togedog.server.global.image.PresignedUrlService;
 import togedog.server.global.response.ApiPageResponse;
 import togedog.server.global.response.ApiSingleResponse;
 
@@ -33,6 +33,8 @@ public class FeedController {
     private final FeedLikeService feedLikeService;
     private final FeedBookmarkService feedBookmarkService;
     private final ReplyService replyService;
+    private final PresignedUrlService presignedUrlService;
+    private String path;
 
 
 
@@ -123,4 +125,12 @@ public class FeedController {
 
         return ResponseEntity.created(uri).build();
     }
+
+//    @PostMapping("/presigned")
+//    public String createPresigned(@RequestBody ImageNameDTO imageNameDTO
+//    ) {
+//        path ="contact";  //원하는 경로 지정
+//        String imageName = imageNameDTO.getImageName();
+//        return presignedUrlService.getPreSignedUrl(path, imageName);
+//    }
 }
