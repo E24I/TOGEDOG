@@ -21,6 +21,11 @@ spring:
           writetimeout: 5000
     auth-code-expiration-millis: 1800000
 
+
+jwt:
+  key: ${JWT_SECRET_KEY}
+  access-token-expiration-minutes: 15
+  refresh-token-expiration-minutes: 420
 cloud:
   aws:
     credentials:

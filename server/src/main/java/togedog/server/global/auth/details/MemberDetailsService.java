@@ -1,6 +1,9 @@
 package togedog.server.global.auth.details;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,8 +12,11 @@ import org.springframework.stereotype.Component;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.global.auth.utils.CustomAuthorityUtils;
+import togedog.server.global.exception.businessexception.BusinessException;
+import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /*
@@ -18,26 +24,30 @@ Custom UserDetails 사용
 UserRole을 DB에서 조회한후 HelloAuthorityUtils로 securiy에게 Role 정보를 제공
  */
 
+@Slf4j
 @Component
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class MemberDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
     private final CustomAuthorityUtils customAuthorityUtils;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Member> optionalMember = memberRepository.findByEmail(username);
-        Member findMember = optionalMember.orElseThrow(() -> new RuntimeException("member not found"));
-        return new MemberDetails(findMember);
-    }
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
 
-    private final class MemberDetails extends Member implements UserDetails{
+        Member member = memberRepository.findByEmail(username).orElseThrow(MemberNotFoundException::new);
+
+            return new MemberDetails(member);
+        }
+
+
+    public final class MemberDetails extends Member implements UserDetails{
 
         MemberDetails(Member member){
             setMemberId(member.getMemberId());
             setEmail(member.getEmail());
             setPassword(member.getPassword());
+            setImage(member.getImage());
             setRoles(member.getRoles());
         }
 
