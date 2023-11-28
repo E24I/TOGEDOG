@@ -10,7 +10,7 @@ export const InputContainer = styled.div`
   }
   form {
     width: 100%;
-    height: 230px;
+    height: 240px;
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;

@@ -24,7 +24,7 @@
     "react-hook-form": "^7.48.2",
     "react-kakao-maps-sdk": "^1.1.24",
     "react-quill": "^2.0.0",
-    "react-router-dom": "^6.18.0",
+    "react-router-dom": "^6.20.0",
     "react-scripts": "5.0.1",
     "recoil": "^0.7.7",
     "styled-components": "^6.1.1",
