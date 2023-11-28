@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const DropDownContainer = styled.div<{ data: string }>`
+export const DropDownContainer = styled.div<{ data?: string }>`
   border: 2px solid black; // 채팅 토스트 구분선
   position: absolute;
   top: ${(props) => (props.data === "list" ? "-40px" : "70px")};
@@ -9,7 +9,6 @@ export const DropDownContainer = styled.div<{ data: string }>`
   flex-direction: column;
 `;
 
-export const Menu = styled.div`
+export const Menu = styled.button`
   border: 2px solid green; // 구분선
-  cursor: pointer;
 `;

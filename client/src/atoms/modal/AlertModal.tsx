@@ -1,41 +1,34 @@
 import React from "react";
-import styled from "styled-components";
 import { ModalBackground } from "../layout/Layout.style";
+import { ModalContainer, ModalContents, BtnBox, CheckBtn } from "./Modal.style";
 
-const AlertModal: React.FC = () => {
+interface OwnProps {
+  alertContent: string;
+  checkContent: string;
+  handleFunc: () => void;
+}
+
+const AlertModal: React.FC<OwnProps> = ({
+  alertContent,
+  checkContent,
+  handleFunc,
+}) => {
+  // Modal 창을 열고 닫는 아래 useState를 추가해주세요.
+  // const [isModal, setModal] = useState<boolean>(false);
+  // const handleFunc = () => setModal(false)
+
   return (
     <ModalBackground>
-      <AlertContainer>
-        <div>입력창입니다.</div>
-        <div>
-          <button>예</button>
-          <button>아니오</button>
-        </div>
-      </AlertContainer>
+      <ModalContainer>
+        <ModalContents>
+          <span>{alertContent}</span>
+        </ModalContents>
+        <BtnBox>
+          <CheckBtn onClick={handleFunc}>{checkContent}</CheckBtn>
+        </BtnBox>
+      </ModalContainer>
     </ModalBackground>
   );
 };
 
 export default AlertModal;
-
-export const AlertContainer = styled.div``;
-
-export const AlertContents = styled.div`
-  padding: 10px 0px;
-  text-align: center;
-`;
-
-export const BtnBox = styled.div`
-  width: 100%;
-  /* max-width: px; */
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-export const AlertBtn = styled.button`
-  width: 100%;
-  /* max-width: px; */
-  padding: 10px 0px;
-  text-align: center;
-`;
