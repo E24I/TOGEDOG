@@ -37,3 +37,16 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
+
+---
+cloud:
+  aws:
+    credentials:
+      secret-key: AKIA55PP54W7QXGAVBVK
+      access-key: kYDVgYNSD08DQUiE57XGOUVJ+Opj+VUWVnGw3YYZ
+    s3:
+      bucket: togedog-image
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

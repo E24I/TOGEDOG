@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import togedog.server.domain.feed.controller.dto.FeedCreateApiRequest;
 import togedog.server.domain.feed.controller.dto.FeedUpdateApiRequest;
+import togedog.server.domain.reply.service.dto.response.ReplyResponse;
 import togedog.server.global.image.ImageNameDTO;
 import togedog.server.domain.feed.service.FeedService;
 import togedog.server.domain.feed.service.dto.response.FeedResponse;
@@ -47,16 +48,16 @@ public class FeedController {
         return ResponseEntity.ok(ApiPageResponse.ok(feedsPage));
     }
 
-//    @GetMapping("/{feed-id}") //한 피드에 대한 feply 페이징 조회
-//    public ResponseEntity<ApiPageResponse<ReplyResponse>> getRepliesByFeedId(@PathVariable("feed-id") Long feedId,
-//                                                                               @RequestParam(defaultValue = "1") int page,
-//                                                                               @RequestParam(defaultValue = "3") int size) {
-//
-//        Pageable pageable = PageRequest.of(page - 1, size);
-//        Page<ReplyResponse> repliesPage = replyService.getRepliesPaged(feedId, pageable);
-//
-//        return ResponseEntity.ok(ApiPageResponse.ok(repliesPage));
-//    }
+    @GetMapping("/{feed-id}") //한 피드에 대한 feply 페이징 조회
+    public ResponseEntity<ApiPageResponse<ReplyResponse>> getRepliesByFeedId(@PathVariable("feed-id") Long feedId,
+                                                                             @RequestParam(defaultValue = "1") int page,
+                                                                             @RequestParam(defaultValue = "3") int size) {
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<ReplyResponse> repliesPage = replyService.getRepliesPaged(feedId, pageable);
+
+        return ResponseEntity.ok(ApiPageResponse.ok(repliesPage));
+    }
 
 
     @PostMapping
@@ -71,14 +72,14 @@ public class FeedController {
         return ResponseEntity.created(uri).build();
     }
 
-    @GetMapping("{feed-id}")
-    public ResponseEntity<ApiSingleResponse<FeedResponse>> getFeed(@PathVariable("feed-id") Long feedId) {
-
-        FeedResponse feed = feedService.getFeed(feedId);
-
-        return null;
-       // return ResponseEntity.of(ApiSingleResponse.ok(FeedResponse.));
-    }
+//    @GetMapping("{feed-id}")
+//    public ResponseEntity<ApiSingleResponse<FeedResponse>> getFeed(@PathVariable("feed-id") Long feedId) {
+//
+//        FeedResponse feed = feedService.getFeed(feedId);
+//
+//        return null;
+//       // return ResponseEntity.of(ApiSingleResponse.ok(FeedResponse.));
+//    }
 
     @PatchMapping("/{feed-id}")
     public ResponseEntity<Void> updateFeed(@PathVariable("feed-id") Long feedId,

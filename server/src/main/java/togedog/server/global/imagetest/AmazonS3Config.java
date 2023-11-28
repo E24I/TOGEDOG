@@ -15,10 +15,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AmazonS3Config {
 
-    private String accessKey = "AKIAS6GKCXMUCZ3OVHJD";
-    private String secretKey = "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";
-    private String clientRegion = "ap-northeast-2";
-    private String bucketName = "togedog-image";
+    private String accessKey = "1";
+    private String secretKey = "1";
+    private String clientRegion = "1";
+    private String bucketName = "1";
 
     @Bean
     public AmazonS3 amazonS3() {

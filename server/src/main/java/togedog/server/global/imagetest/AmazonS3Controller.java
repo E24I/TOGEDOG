@@ -13,15 +13,15 @@ import java.util.Map;
 @RequestMapping("/s3")
 public class AmazonS3Controller {
 
-//    private final AmazonS3TestService amazonS3TestService;
-//
-//    @Autowired
-//    public AmazonS3Controller(AmazonS3TestService amazonS3TestService) {
-//        this.amazonS3TestService = amazonS3TestService;
-//    }
-//
-//    @GetMapping("/presigned-url/{fileName}")
-//    public Map<String, Serializable> getPreSignedUrl(@PathVariable String fileName) {
-//        return amazonS3TestService.getPreSignedUrl(fileName);
-//    }
+    private final AmazonS3TestService amazonS3TestService;
+
+    @Autowired
+    public AmazonS3Controller(AmazonS3TestService amazonS3TestService) {
+        this.amazonS3TestService = amazonS3TestService;
+    }
+
+    @GetMapping("/presigned-url/{fileName}")
+    public Map<String, Serializable> getPreSignedUrl(@PathVariable String fileName) {
+        return amazonS3TestService.getPreSignedUrl(fileName);
+    }
 }

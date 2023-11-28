@@ -14,16 +14,20 @@ import togedog.server.domain.feed.service.dto.request.FeedUpdateServiceRequest;
 import togedog.server.domain.feed.service.dto.response.FeedResponse;
 import togedog.server.domain.feedbookmark.entity.FeedBookmark;
 import togedog.server.domain.feedbookmark.repository.FeedBookmarkRepository;
+import togedog.server.domain.feedimage.entity.FeedImage;
 import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.feedlike.repository.FeedLikeRepository;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
+import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.memberexception.MemberAccessDeniedException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -35,11 +39,13 @@ public class FeedService {
     private final MemberRepository memberRepository;
     private final FeedBookmarkRepository feedBookmarkRepository;
     private final FeedLikeRepository feedLikeRepository;
+    private final LoginMemberUtil loginMemberUtil;
 
 
     public Long createFeed(FeedCreateServiceApiRequest request) {
 
-        Long loginMemberId = 12313L; // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
+        Long loginMemberId =  loginMemberUtil.getLoginMemberId(); // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
+
 
         if (loginMemberId == null) { // 로그인된 사용자를 가져올 때 해영님이
             throw new MemberNotLoginException();
@@ -56,14 +62,14 @@ public class FeedService {
 
     public Page<FeedResponse> getFeedsPaged(Pageable pageable) {
 
-        Long loginMemberId = 12313L; // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
+        Long loginMemberId =  loginMemberUtil.getLoginMemberId(); // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
 //         로그인된 사용자와 feedbookmark에서 찾아온 memeberId가 일치한다면, feed에 bookmarkYn을
 //         true로 바꿔주고 피드에 업데이트 하면 될듯 ? 그리고 그 피드를 찾아오자!
 
         Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
         Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
 
-        Page<Feed> feedsPage = feedRepository.findByOpenYnTrue(pageable);
+        Page<Feed> feedsPage = feedRepository.findByOpenYnTrue(pageable); // 여기서 deleteyn 여부도 찾아서 반환
 //        return feedsPage.map(FeedResponse::singleFeedResponse);
 
         return feedsPage.map(feed -> {
@@ -101,7 +107,7 @@ public class FeedService {
 
     public void updateFeed(Long feedId, FeedUpdateServiceRequest request) {
 
-        Long loginMemberId = 123L;
+        Long loginMemberId =  loginMemberUtil.getLoginMemberId();
         if (loginMemberId == null) {
             throw new MemberNotLoginException();
         }
@@ -116,7 +122,7 @@ public class FeedService {
 
     public void deleteFeed(Long feedId) {
 
-        Long loginMemberId = 123L;
+        Long loginMemberId =  loginMemberUtil.getLoginMemberId();
         if (loginMemberId == null) {
             throw new MemberNotLoginException();
         }
@@ -151,17 +157,28 @@ public class FeedService {
     }
 
     private Feed postFeed(FeedCreateServiceApiRequest request, Member member) {
+        List<String> imageUrls = request.getImages();
+        List<FeedImage> feedImages = new ArrayList<>();
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+            for (String imageUrl : imageUrls) {
+                FeedImage feedImage = FeedImage.builder()
+                        .feedImageUrl(imageUrl)
+                        .build();
+                feedImages.add(feedImage);
+            }}
         return Feed.createFeed(
                 request.getTitle(),
                 request.getContent(),
                 request.getAddress(),
                 request.getOpenYn(),
                 request.getAddMap(),
+                feedImages,
                 request.getVideos(),
-                request.getImages(),
                 member
 
         );
     }
 
 }
+
+
