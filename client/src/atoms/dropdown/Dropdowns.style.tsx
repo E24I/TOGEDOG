@@ -8,17 +8,24 @@ type DropdownPosition = {
 };
 
 export const DropDownContainer = styled.div<DropdownPosition>`
-  border: 2px solid black; // 채팅 토스트 구분선
+  background-color: white;
+  border: 1px solid rgb(215, 215, 215);
+  border-radius: 12px;
+  overflow: hidden;
   position: absolute;
-  /* top: 0;
-  left: 0; */
-  right: 0;
-  bottom: 0;
+  top: 30px;
+  left: 0;
+  /* right: 0; */
+  /* bottom: 0; */
+  width: 100px;
   display: flex;
   flex-direction: column;
 `;
 
 export const Menu = styled.button`
-  border: 2px solid green; // 구분선
-  padding: 5px 10px;
+  border-top: 1px solid rgb(215, 215, 215);
+  padding: 10px 10px;
+  &:hover {
+    background-color: rgb(215, 215, 215);
+  }
 `;

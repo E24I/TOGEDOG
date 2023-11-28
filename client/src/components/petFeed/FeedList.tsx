@@ -26,6 +26,7 @@ import {
   FeedBottom,
   ReviewCount,
   Setting,
+  SettingBox,
 } from "./Feed.Style";
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
@@ -49,6 +50,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   const handleMoreReview = (): void => setDetail(!isDetail);
   const handleLike = (): void => setLike(!isLike);
   const handleBookmark = (): void => setBookmark(!isBookmark);
+  const handleSetting = (): void => setSetting(!isSetting);
 
   return (
     <Feed>
@@ -84,13 +86,18 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
             ? `${today.getMinutes() - feedTime[1]}분 전`
             : `${today.getSeconds() - feedTime[2]}초 전`}
         </UploadTime>
-        <Setting />
-        <Dropdown
-          contents={["신고하기1", "신고하기2", "신고하기3"]}
-          handleFunc={(e) => {
-            console.log(e.currentTarget.textContent);
-          }}
-        />
+        <SettingBox onClick={handleSetting} onBlur={() => setSetting(false)}>
+          <Setting />
+          {isSetting && (
+            <Dropdown
+              contents={["신고하기1", "신고하기2", "신고하기3"]}
+              handleFunc={(e) => {
+                console.log(e.currentTarget.textContent);
+                setSetting(false);
+              }}
+            />
+          )}
+        </SettingBox>
       </FeedHeader>
       <FeedContents>
         <FeedTitle>{items.title}</FeedTitle>

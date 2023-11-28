@@ -77,13 +77,16 @@ export const UploadTime = styled.div`
   text-align: right;
 `;
 
-export const Setting = styled(Dots)`
-  width: 100%;
-  max-width: 15px;
-  height: 100%;
-  max-height: 15px;
+export const SettingBox = styled.button`
+  position: relative;
+  width: 25px;
+  height: 20px;
   margin: 0px 20px;
-  cursor: pointer;
+`;
+
+export const Setting = styled(Dots)`
+  width: 25px;
+  height: 20px;
   path {
     fill: rgb(200, 200, 200);
   }

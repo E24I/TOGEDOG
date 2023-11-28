@@ -16,7 +16,7 @@ const Dropdown: React.FC<OwnProps> = ({ contents, handleFunc }) => {
     <DropDownContainer>
       {contents.map((content, idx) => {
         return (
-          <Menu key={idx} onClick={handleFunc}>
+          <Menu key={idx} onMouseDown={handleFunc}>
             {content}
           </Menu>
         );
