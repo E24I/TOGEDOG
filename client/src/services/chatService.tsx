@@ -17,7 +17,7 @@ export const GetAllRoomsQuery = () => {
   const { data } = useQuery({
     queryKey: ["rooms"],
     queryFn: () => getAllRooms(),
-    select: (data) => data.toString(),
+    // select: (data) => data.toString(),
   });
   return data;
 };
@@ -27,6 +27,14 @@ export const getAllMessages = async (roomId: number) => {
     headers: { Authorization: "" },
   });
   return res;
+};
+export const GetAllMessagesQuery = (roomId: number) => {
+  const { data } = useQuery({
+    queryKey: ["messages", roomId],
+    queryFn: () => getAllMessages(roomId),
+    // select: (data) => data.toString(),
+  });
+  return data;
 };
 
 export const exitARoom = async (roomId: number) => {
