@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import KaKaoMap from "../components/petMap/KaKaoMap";
+import Pagination from "../atoms/pagination/Pagination";
 
 type DetailSort = {
   filter: string;
@@ -13,11 +13,16 @@ const MapDetail: React.FC = () => {
     filter: "new",
     sort: "card",
   });
+  const [isPage, setPage] = useState<number>(1);
+  const [totalPage, setTotalPage] = useState<number>(10);
+  const handleChangePage = (page: number) => {
+    setPage(page);
+    console.log(page);
+  };
 
   return (
     <PageContainer>
       <MapDetailContainer>
-        <KaKaoMap />
         <BackBtn>←</BackBtn>
         <MapHeader>
           <MapTitle>산들소리수목원</MapTitle>
@@ -84,7 +89,11 @@ const MapDetail: React.FC = () => {
             ))}
           </DetailLists>
         )}
-        <div>페이지네이션</div>
+        <Pagination
+          isPage={isPage}
+          totalPage={totalPage}
+          handleFunc={handleChangePage}
+        />
       </MapDetailContainer>
     </PageContainer>
   );
