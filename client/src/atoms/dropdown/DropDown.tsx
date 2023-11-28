@@ -29,4 +29,5 @@ const DropDown: React.FC<DropDownProps> = ({ component, setOpen }) => {
     </DropDownContainer>
   );
 };
+
 export default DropDown;

@@ -29,7 +29,7 @@ import {
 } from "./Feed.Style";
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
-import Toggle from "../../atoms/toggle/Toggle";
+import Dropdown from "../../atoms/dropdown/Dropdowns";
 
 interface OwnProps {
   items: feedListsType;
@@ -39,6 +39,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   const [isDetail, setDetail] = useState<boolean>(false);
   const [isLike, setLike] = useState<boolean>(false);
   const [isBookmark, setBookmark] = useState<boolean>(false);
+  const [isSetting, setSetting] = useState<boolean>(false);
   const today = new Date();
   const createDate = items.createDate;
   const feedDate = createDate.split("-").map((el) => parseInt(el));
@@ -84,6 +85,12 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
             : `${today.getSeconds() - feedTime[2]}초 전`}
         </UploadTime>
         <Setting />
+        <Dropdown
+          contents={["신고하기1", "신고하기2", "신고하기3"]}
+          handleFunc={(e) => {
+            console.log(e.currentTarget.textContent);
+          }}
+        />
       </FeedHeader>
       <FeedContents>
         <FeedTitle>{items.title}</FeedTitle>

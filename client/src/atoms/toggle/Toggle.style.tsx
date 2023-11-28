@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+// 토글 배경
 export const ToggleContainer = styled.div`
   background-color: white;
   border: 1px solid rgb(215, 215, 215);
@@ -10,6 +11,7 @@ export const ToggleContainer = styled.div`
   position: relative;
 `;
 
+// 토글 원 버튼
 export const ToggleBtn = styled.button<{ isOn: boolean }>`
   position: absolute;
   top: 1px;

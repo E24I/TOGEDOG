@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import FeedList from "../components/petFeed/FeedList";
 import { feedListsType } from "../types/feedDataType";
 import { feedLists } from "../components/petFeed/FeedDummy";
 import { ReactComponent as Pets } from "../assets/images/icons/Pets.svg";
 import loading from "../assets/loading/loading.gif";
-import styled from "styled-components";
 
 const PetFeed: React.FC = () => {
   const [isFeed, setFeed] = useState<feedListsType[]>(feedLists);
