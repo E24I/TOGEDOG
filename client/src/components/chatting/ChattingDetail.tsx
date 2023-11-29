@@ -80,17 +80,17 @@ const ChattingDetail: React.FC<ChattingDetailprops> = ({
     client.onStompError = (frame) => {
       console.error("Broker reported error: " + frame.headers["message"]);
       console.error("Additional details: " + frame.body);
-      // 연결이 실패하면 여기에 추가 작업을 수행하세요.
+      // 연결이 실패했을 때
     };
 
     client.onWebSocketError = (event) => {
       console.error("WebSocket connection error", event);
-      // 웹소켓 연결에 문제가 발생하면 여기에 추가 작업을 수행하세요.
+      // 웹소켓 연결에 문제가 발생했을 때
     };
 
     client.onDisconnect = () => {
       console.log("Disconnected");
-      // 연결이 끊겼을 때 수행할 작업을 여기에 추가하세요.
+      // 연결이 끊겼을 때
     };
   }, [roomId]);
 
