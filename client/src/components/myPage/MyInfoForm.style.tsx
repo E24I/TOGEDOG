@@ -28,7 +28,7 @@ export const TopContainer = styled.div`
   justify-content: space-between;
 `;
 
-export const ProFileImg = styled.div`
+export const ProFileImg = styled.img`
   width: 150px;
   height: 150px;
   border-radius: 50%;

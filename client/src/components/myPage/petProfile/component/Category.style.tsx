@@ -8,6 +8,7 @@ export const CategoryForm = styled.div`
     margin: 0 15px 0 0px;
   }
   input {
+    width: 85%;
     border: 1px solid #d7d7d7;
     height: 100%;
     border-radius: 5px;

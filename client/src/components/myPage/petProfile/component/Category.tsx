@@ -1,12 +1,6 @@
 import React from "react";
 import { CategoryForm } from "./Category.style";
-
-type CategoryElement = {
-  title: string;
-  isEditing: boolean;
-  value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
-};
+import { CategoryElement } from "../../../../types/myPageType";
 
 export const Category: React.FC<CategoryElement> = ({
   title,
@@ -19,7 +13,9 @@ export const Category: React.FC<CategoryElement> = ({
       <h3>{title}</h3>
       {isEditing ? (
         <input
+          type="text"
           value={value}
+          maxLength={20}
           onChange={(e) => {
             setValue(e.target.value);
           }}

@@ -1,4 +1,5 @@
 import React from "react";
+import { RecoilRoot } from "recoil";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Header from "./components/header/Header";
@@ -16,23 +17,25 @@ import MyPage from "./pages/MyPage";
 import PetProfile from "./pages/PetProfile";
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/signUp" element={<SignUp />} />
-        <Route path="/create" element={<CreateFeed />} />
-        <Route path="/update" element={<UpdateFeed />} />
-        <Route path="/feeds" element={<PetFeed />} />
-        <Route path="/chat" element={<Chatting />} />
-        <Route path="/petmap" element={<PetMap />} />
-        <Route path="/petmap/1" element={<MapDetail />} />
-        <Route path="/member/:memberId/mymap" element={<MyMap />} />
-        <Route path="/myPage" element={<MyPage />} />
-        <Route path="/petProfile" element={<PetProfile />} />
-      </Routes>
-      <Footer />
-    </BrowserRouter>
+    <RecoilRoot>
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/create" element={<CreateFeed />} />
+          <Route path="/update" element={<UpdateFeed />} />
+          <Route path="/feeds" element={<PetFeed />} />
+          <Route path="/chat" element={<Chatting />} />
+          <Route path="/petmap" element={<PetMap />} />
+          <Route path="/petmap/1" element={<MapDetail />} />
+          <Route path="/member/:memberId/mymap" element={<MyMap />} />
+          <Route path="/myPage" element={<MyPage />} />
+          <Route path="/petProfile" element={<PetProfile />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    </RecoilRoot>
   );
 };
 
