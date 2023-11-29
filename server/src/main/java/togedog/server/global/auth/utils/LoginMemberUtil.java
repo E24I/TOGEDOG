@@ -25,7 +25,7 @@ public class LoginMemberUtil {
 
         if(optionalMember.isEmpty()){
             return null;
-        }else
+        }
 
         return optionalMember.get().getMemberId();
     }
