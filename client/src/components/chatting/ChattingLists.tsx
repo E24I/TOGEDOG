@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { MouseEvent, useEffect, useState } from "react";
 import {
   ChattingFlexBox,
   ChattingList,
@@ -25,13 +25,37 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
   setDefaultBack,
   getRoomNumber,
 }) => {
-  const [rooms, setRooms] = useState<{ id: number }[]>([{ id: 0 }]);
+  const [rooms, setRooms] = useState<
+    {
+      id: number;
+      member_id_1: number;
+      member_id_2: number;
+      last_message: string;
+      created_at: string;
+    }[]
+  >([
+    {
+      id: 0,
+      member_id_1: 1,
+      member_id_2: 2,
+      last_message: "마지막 채팅",
+      created_at: "2023-11-29 16:03:01",
+    },
+  ]);
   const [memberId, setMemberId] = useState<number>(0);
   const [isOpen, setOpen] = useState<boolean>(false);
+  const [participants, setParticipants] = useState<{
+    requestMemberId: number;
+    inviteMemberId: number;
+  }>({
+    requestMemberId: 1,
+    inviteMemberId: 2,
+  });
   // GetAllRoomsQuery().then((data) => {
   //   setRooms(data.chat_rooms);
   // });
-  const openDropDown = () => {
+  const openDropDown = (e: MouseEvent) => {
+    e.stopPropagation();
     if (isOpen !== false) {
       setOpen(false);
     } else {
@@ -44,28 +68,54 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
     getRoomNumber(roomId);
   };
 
+  const setTime = (createdAt: string) => {
+    const currentDate = new Date();
+    const createdDate = new Date(createdAt);
+
+    const timeDiff = Math.floor(
+      (currentDate.getTime() - createdDate.getTime()) / 1000,
+    );
+
+    const intervals = {
+      년: 31536000,
+      개월: 2592000,
+      일: 86400,
+      시간: 3600,
+      분: 60,
+      초: 1,
+    };
+
+    for (const [unit, seconds] of Object.entries(intervals)) {
+      const diff = Math.floor(timeDiff / seconds);
+      if (diff >= 1) {
+        return `${diff} ${unit} 전`;
+      }
+    }
+
+    return "";
+  };
+
   return (
     <ChattingListsContainer>
       <ChattingFlexBox>
         <Message>Message</Message>
-        <button onClick={() => createNewChat(memberId)}>+</button>
+        <button onClick={() => createNewChat(participants)}>+</button>
         <ChattingList>
           {rooms &&
             rooms.map((room, idx) => {
               return (
-                <ChattingListContainer key={idx}>
+                <ChattingListContainer
+                  key={idx}
+                  onClick={() => {
+                    sendRoomNumber(1);
+                  }}
+                >
                   <ProfileImage />
-                  <MiddleWrap
-                    onClick={() => {
-                      sendRoomNumber(room.id);
-                    }}
-                  >
+                  <MiddleWrap>
                     <UserName>유저이름</UserName>
-                    <RecentConversation>
-                      어찌구저찌구어찌구저찌구어찌구저찌구어찌구저찌구어찌구저찌구어찌구저찌구어찌구저찌구
-                    </RecentConversation>
+                    <RecentConversation>{room.last_message}</RecentConversation>
                   </MiddleWrap>
-                  <TimeStamp>• 11시간 전</TimeStamp>
+                  <TimeStamp>* {room && setTime(room.created_at)}</TimeStamp>
                   <button onBlur={() => setOpen(false)} onClick={openDropDown}>
                     <SeeMoreButton />
                   </button>

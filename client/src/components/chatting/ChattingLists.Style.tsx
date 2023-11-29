@@ -46,6 +46,7 @@ export const ChattingListContainer = styled.div`
   border: 2px solid #3e802a9f; //구분선 입니다
   align-items: center;
   padding: 17px 0;
+  cursor: pointer;
 `;
 
 export const ProfileImage = styled.img`
@@ -61,7 +62,6 @@ export const MiddleWrap = styled.div`
   width: 190px; // 임시 사이징
   height: 60px; //임시 사이징
   border: 2px solid #646f90; // 구분선 입니다
-  cursor: pointer;
   justify-content: center;
 `;
 
