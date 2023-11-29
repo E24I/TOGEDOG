@@ -16,8 +16,7 @@ const MapDetail: React.FC = () => {
   const [isPage, setPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(10);
   const handleChangePage = (page: number) => {
-    setPage(page);
-    console.log(page);
+    if (page >= 1 && page <= totalPage) setPage(page);
   };
 
   return (
@@ -50,45 +49,47 @@ const MapDetail: React.FC = () => {
             </CardArrangeBtn>
           </CardArrange>
         </CardHeader>
-        {isSort.sort === "card" ? (
-          <DetailCards>
-            {feedData.map((el, idx) => (
-              <DetailCard key={idx}>
-                <DetailCardImg
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1V1m9J8Vo8-_KIgQIsDacd1S9A5kNg3Br0Q&usqp=CAU"
-                  alt="피드 이미지"
-                />
-              </DetailCard>
-            ))}
-          </DetailCards>
-        ) : (
-          <DetailLists>
-            {feedData.map((el, idx) => (
-              <DetailList key={idx}>
-                <DetailListImg
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1V1m9J8Vo8-_KIgQIsDacd1S9A5kNg3Br0Q&usqp=CAU"
-                  alt="피드 이미지"
-                />
-                <DetailListContents>
-                  <DetailListTitle>
-                    산들소리수목원 방문 후기
-                    <DetailListTime>· 35분 전</DetailListTime>
-                  </DetailListTitle>
-                  <DetailListContent>
-                    오늘은~ 산들소리수목원에 방문해보았어요~ 여기 물 좋고 공기
-                    좋고 너무 너무 좋네여~ 나중에 꼭 한번씩 놀러오세요! 여기에
-                    먹거리도 많고, 아이들 놀기에도 좋아서 오기 딱 좋아요! 또
-                    앉아서 쉴 곳도 많아서 편하네요
-                  </DetailListContent>
-                </DetailListContents>
-                <DetailListStatus>
-                  <DetailListLike>좋아요</DetailListLike>
-                  <DetailListMark>북마크</DetailListMark>
-                </DetailListStatus>
-              </DetailList>
-            ))}
-          </DetailLists>
-        )}
+        <DetailBody>
+          {isSort.sort === "card" ? (
+            <DetailCards>
+              {feedData.map((el, idx) => (
+                <DetailCard key={idx}>
+                  <DetailCardImg
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1V1m9J8Vo8-_KIgQIsDacd1S9A5kNg3Br0Q&usqp=CAU"
+                    alt="피드 이미지"
+                  />
+                </DetailCard>
+              ))}
+            </DetailCards>
+          ) : (
+            <DetailLists>
+              {feedData.map((el, idx) => (
+                <DetailList key={idx}>
+                  <DetailListImg
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1V1m9J8Vo8-_KIgQIsDacd1S9A5kNg3Br0Q&usqp=CAU"
+                    alt="피드 이미지"
+                  />
+                  <DetailListContents>
+                    <DetailListTitle>
+                      산들소리수목원 방문 후기
+                      <DetailListTime>· 35분 전</DetailListTime>
+                    </DetailListTitle>
+                    <DetailListContent>
+                      오늘은~ 산들소리수목원에 방문해보았어요~ 여기 물 좋고 공기
+                      좋고 너무 너무 좋네여~ 나중에 꼭 한번씩 놀러오세요! 여기에
+                      먹거리도 많고, 아이들 놀기에도 좋아서 오기 딱 좋아요! 또
+                      앉아서 쉴 곳도 많아서 편하네요
+                    </DetailListContent>
+                  </DetailListContents>
+                  <DetailListStatus>
+                    <DetailListLike>좋아요</DetailListLike>
+                    <DetailListMark>북마크</DetailListMark>
+                  </DetailListStatus>
+                </DetailList>
+              ))}
+            </DetailLists>
+          )}
+        </DetailBody>
         <Pagination
           isPage={isPage}
           totalPage={totalPage}
@@ -111,7 +112,7 @@ export const PageContainer = styled.div`
 export const MapDetailContainer = styled.div`
   width: 100%;
   max-width: 1080px;
-  padding-top: 50px;
+  padding: 50px 0px 30px 0px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -162,6 +163,10 @@ export const CardArrange = styled.div``;
 export const CardArrangeBtn = styled.button`
   border: 1px solid black;
   margin: 0px 10px;
+`;
+
+export const DetailBody = styled.div`
+  padding: 0px 0px 80px 0px;
 `;
 
 export const DetailCards = styled.ul`
