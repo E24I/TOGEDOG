@@ -1,7 +1,6 @@
 package togedog.server.global.auth.utils;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,8 +21,12 @@ public class LoginMemberUtil {
 
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String principalEmail = authentication.getPrincipal().toString();
-        Member findMember = memberRepository.findByEmail(principalEmail).orElseThrow(() -> new RuntimeException("찾기 에러"));
+        Optional<Member> optionalMember = memberRepository.findByEmail(principalEmail);
 
-        return findMember.getMemberId();
+        if(optionalMember.isEmpty()){
+            return null;
+        }else
+
+        return optionalMember.get().getMemberId();
     }
 }
