@@ -1,17 +1,15 @@
-package togedog.server.global.imageS3;
+package togedog.server.global.imageS3x;
 
 //import com.amazonaws.auth.AWSCredentials;
 //import com.amazonaws.auth.AWSStaticCredentialsProvider;
 //import com.amazonaws.auth.BasicAWSCredentials;
 //import com.amazonaws.services.s3.AmazonS3;
 //import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//@Configuration
-//@ConfigurationProperties(prefix = "s3")
+@Configuration
+@ConfigurationProperties(prefix = "s3")
 public class S3Config {
 
 ////    @Value("${cloud.aws.credentials.accessKey}")

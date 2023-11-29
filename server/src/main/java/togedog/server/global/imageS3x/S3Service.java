@@ -1,20 +1,9 @@
-package togedog.server.global.imageS3;
+package togedog.server.global.imageS3x;
 
 //import com.amazonaws.services.s3.AmazonS3Client;
 //import com.amazonaws.services.s3.model.CannedAccessControlList;
 //import com.amazonaws.services.s3.model.PutObjectRequest;
-import lombok.RequiredArgsConstructor;
-import lombok.Value;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Optional;
-import java.util.UUID;
 
 //@RequiredArgsConstructor
 //@Service

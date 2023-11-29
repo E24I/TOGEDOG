@@ -3,11 +3,14 @@ package togedog.server.global.imagetest;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.Headers;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,4 +49,5 @@ public class AmazonS3TestService {
 
         return resultMap;
     }
+
 }
