@@ -26,9 +26,9 @@ const DetailForm: React.FC<DetailFormType> = ({ messages }) => {
   return (
     <ContentForm>
       {messages &&
-        messages.map((message) => {
+        messages.map((message, idx) => {
           return (
-            <>
+            <div key={idx}>
               <Date>{message.time}</Date>
               <TheOtherPerson>
                 <Image></Image>
@@ -51,7 +51,7 @@ const DetailForm: React.FC<DetailFormType> = ({ messages }) => {
                   })}
               </MyTalks>
               <Checking>읽음</Checking>
-            </>
+            </div>
           );
         })}
     </ContentForm>

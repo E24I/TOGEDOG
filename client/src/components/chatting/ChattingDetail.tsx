@@ -44,67 +44,70 @@ const ChattingDetail: React.FC<ChattingDetailprops> = ({
   >([]);
   const [inputMessage, setInputMessage] = useState<string>("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [client, setClient] = useState<Client | null>(null);
+  const [client, setClient] = useState<any>(null);
 
   // GetAllMessagesQuery(roomId).then((data) => setMessages(data));
 
   useEffect(() => {
-    if (roomId && client) {
-      const stompClient = new Client({
-        brokerURL: `ws://15.165.78.7/chat/${roomId}`,
-        connectHeaders: {
-          login: `{memberId}`,
-          passcode: `{password}`,
-        },
-        debug: function (str) {
-          console.log(str);
-        },
-        reconnectDelay: 5000,
-      });
+    // WebSocket 연결 생성
+    const client = new Client({
+      brokerURL: "ws://290c-61-101-53-142.ngrok-free.app/ws", // WebSocket 서버 주소 및 엔드포인트
+      debug: (str) => {
+        console.log(str);
+      },
+    });
+    setClient(client);
 
+    // 연결 시도
+    if (roomId) {
       client.activate();
-      setClient(stompClient);
+    }
 
+    // 연결이 성공했을 때 실행될 콜백
+    client.onConnect = () => {
+      // 구독할 특정 주제(topic)에 대한 구독
       const subscription = client.subscribe(
-        `/chat/${roomId}`,
+        `/sub/chat/${roomId}`,
         (message: { body: any }) => {
-          console.log(`Received message: ${message.body}`);
+          // 메시지가 도착했을 때 실행할 동작
+          console.log("Received message:", message.body);
+          // 여기서 메시지 처리 또는 화면 업데이트 등을 수행할 수 있습니다.
         },
       );
+      return subscription;
+    };
 
-      return () => {
-        subscription.unsubscribe();
-        client.deactivate();
-      };
-    }
-  }, []);
+    client.onStompError = (frame) => {
+      console.error("Broker reported error: " + frame.headers["message"]);
+      console.error("Additional details: " + frame.body);
+      // 연결이 실패했을 때
+    };
+
+    client.onWebSocketError = (event) => {
+      console.error("WebSocket connection error", event);
+      // 웹소켓 연결에 문제가 발생했을 때
+    };
+
+    client.onDisconnect = () => {
+      console.log("Disconnected");
+      // 연결이 끊겼을 때
+    };
+  }, [roomId]);
 
   const sendMessage = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
-    if (client) {
-      // client가 null이 아닌 경우에만 해당 블록을 실행합니다.
-      // 예를 들어, client.publish()와 같은 작업을 수행할 수 있습니다.
+    if (client && client.connected) {
       client.publish({
-        destination: `/chat/${roomId}`,
-        body: inputMessage,
+        destination: `/pub/chat/${roomId}`, // 채팅 메시지를 받을 서버의 엔드포인트
+        body: inputMessage, // 전송할 메시지 본문
       });
       setInputMessage("");
     } else {
       // client가 null인 경우에 대한 처리
       console.error("client is null");
     }
-
-    const newMessage = {
-      id: 0,
-      member_id: 0,
-      time: Date.now(),
-      content: inputMessage,
-    };
-
-    setLiveMessages(() => [...liveMessages, newMessage]);
-    setMessages((prevMessages) => [...prevMessages, ...liveMessages]);
   };
+
   const openDropDown = () => {
     if (isOpen !== false) {
       setOpen(false);
@@ -112,7 +115,6 @@ const ChattingDetail: React.FC<ChattingDetailprops> = ({
       setOpen(true);
     }
   };
-  console.log(liveMessages);
   console.log(messages);
   return (
     <ChattingContentContainer>

@@ -1,16 +1,29 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { createNewChatType } from "../types/chatType";
 
-export const createNewChat = async (memberId: number) => {
-  const res = await axios.post(`/chat`, {
-    memberId: memberId,
-    headers: { Authorization: "" },
-  });
+export const createNewChat = async (memberId: createNewChatType) => {
+  const res = await axios.post(
+    `https://7540-61-101-53-142.ngrok-free.app/chat`,
+    {
+      requestMemberId: memberId.requestMemberId,
+      inviteMemberId: memberId.inviteMemberId,
+    },
+    {
+      headers: {
+        Authorization:
+          "BearereyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlkIjoxLCJlbWFpbCI6Imxqd3cxMjNAbmF2ZXIuY29tIiwic3ViIjoibGp3dzEyM0BuYXZlci5jb20iLCJleHAiOjE3MDExNjQxNDB9.A9s67ninLGOWY49WmturKat99shXVr9JBM9GcStUAQw",
+        "ngrok-skip-browser-warning": 0,
+      },
+    },
+  );
   return res;
 };
 
 export const getAllRooms = async () => {
-  const res = axios.get(`/chat`, { headers: { Authorization: "" } });
+  const res = axios.get(`https://67ca-61-101-53-142.ngrok-free.app/chat`, {
+    headers: { Authorization: "" },
+  });
   return res;
 };
 export const GetAllRoomsQuery = () => {
@@ -23,9 +36,12 @@ export const GetAllRoomsQuery = () => {
 };
 
 export const getAllMessages = async (roomId: number) => {
-  const res = await axios.get(`/chat/${roomId}`, {
-    headers: { Authorization: "" },
-  });
+  const res = await axios.get(
+    `https://67ca-61-101-53-142.ngrok-free.app/chat/${roomId}/message`,
+    {
+      headers: { Authorization: "" },
+    },
+  );
   return res;
 };
 export const GetAllMessagesQuery = (roomId: number) => {
@@ -38,15 +54,21 @@ export const GetAllMessagesQuery = (roomId: number) => {
 };
 
 export const exitARoom = async (roomId: number) => {
-  const res = axios.delete(`/chat/${roomId}`, {
-    headers: { Authorization: "" },
-  });
+  const res = axios.delete(
+    `https://67ca-61-101-53-142.ngrok-free.app/chat/${roomId}`,
+    {
+      headers: { Authorization: "" },
+    },
+  );
   return res;
 };
 
 export const reportAMessage = async (roomId: number) => {
-  const res = axios.post(`/chat/${roomId}`, {
-    headers: { Authorization: "" },
-  });
+  const res = axios.post(
+    `https://67ca-61-101-53-142.ngrok-free.app/chat/${roomId}`,
+    {
+      headers: { Authorization: "" },
+    },
+  );
   return res;
 };
