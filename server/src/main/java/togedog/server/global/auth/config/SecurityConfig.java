@@ -3,9 +3,7 @@ package togedog.server.global.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -59,9 +57,41 @@ public class SecurityConfig {
                 .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers(HttpMethod.POST,"/member").permitAll()
-                        .antMatchers(HttpMethod.GET,"/member/**").hasRole("USER")
-                        .anyRequest().permitAll()
+//                                /** ---------------------------------- member 접근 권한 설정 ---------------------------------- **/
+//                                .antMatchers(HttpMethod.POST, "/member/signup").permitAll()
+//                                .antMatchers(HttpMethod.POST, "/member/signup/**").permitAll()
+//                                .antMatchers(HttpMethod.PATCH, "/member/mypage/edit/**").hasRole("USER")
+//                                .antMatchers(HttpMethod.PATCH, "/member/mypage/**").hasRole("USER")
+//                                .antMatchers(HttpMethod.GET, "/member").hasRole("ADMIN")
+//                                .antMatchers(HttpMethod.GET, "/member/**").hasAnyRole("ADMIN", "USER")
+//                                .antMatchers(HttpMethod.DELETE, "/member/delete/**").hasAnyRole("USER")
+//                                .antMatchers(HttpMethod.PATCH, "/member/mypage/image/upload/**").hasRole("USER")
+//                                .antMatchers(HttpMethod.PATCH, "/member/mypage/image/delete/**").hasRole("USER")
+//                                /** ---------------------------------- feed 접근 권한 설정 ---------------------------------- **/
+//                                .antMatchers(HttpMethod.POST, "/feed").hasAnyRole("ADMIN", "USER")
+//                                .antMatchers(HttpMethod.GET, "/feed").permitAll()
+//                                .antMatchers(HttpMethod.GET, "/feed/**").permitAll()
+//                                .antMatchers(HttpMethod.PATCH, "/feed/**").hasAnyRole("ADMIN", "USER")
+//                                .antMatchers(HttpMethod.DELETE, "/feed/**").hasAnyRole("ADMIN", "USER")
+//                                /** ---------------------------------- reply 접근 권한 설정 ---------------------------------- **/
+//                                .antMatchers(HttpMethod.POST, "/reply").hasAnyRole("ADMIN", "USER")
+//                                .antMatchers(HttpMethod.GET, "/reply").permitAll()
+//                                .antMatchers(HttpMethod.GET, "/reply/**").permitAll()
+//                                .antMatchers(HttpMethod.PATCH, "/reply/**").hasAnyRole("ADMIN", "USER")
+//                                .antMatchers(HttpMethod.DELETE, "/reply/**").hasAnyRole("ADMIN", "USER")
+//                                /** ---------------------------------- comment 접근 권한 설정 ---------------------------------- **/
+//                                .antMatchers(HttpMethod.POST, "/comment").hasAnyRole("ADMIN", "USER")
+//                                .antMatchers(HttpMethod.GET, "/comment").permitAll()
+//                                .antMatchers(HttpMethod.GET, "/comment/**").permitAll()
+//                                .antMatchers(HttpMethod.PATCH, "/comment/**").hasAnyRole("ADMIN", "USER")
+//                                .antMatchers(HttpMethod.DELETE, "/comment/**").hasAnyRole("ADMIN", "USER")
+//                                /** ---------------------------------- map 접근 권한 설정 ---------------------------------- **/
+//                                .antMatchers(HttpMethod.POST, "/map/**").hasAnyRole("ADMIN", "USER")
+//                                /** ---------------------------------- chat 접근 권한 설정 ---------------------------------- **/
+//                                .antMatchers(HttpMethod.PATCH, "/chat/**").hasAnyRole("ADMIN", "USER")
+//                                /** ---------------------------------- admin 접근 권한 설정 ---------------------------------- **/
+//                                .antMatchers(HttpMethod.GET, "/admin/**").hasAnyRole("ADMIN")
+                                .anyRequest().permitAll()
                 );
 
         return http.build();
