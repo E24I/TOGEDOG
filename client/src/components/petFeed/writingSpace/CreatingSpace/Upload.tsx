@@ -65,6 +65,7 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ type }) => {
       {type === "image" ? (
         <>
           <U.AttachmentSpaceContainer>
+            이미지
             {imageFiles &&
               imageFiles.map((file, idx) => (
                 <U.AttachmentWrap key={idx}>
@@ -91,6 +92,7 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ type }) => {
       ) : (
         <>
           <U.AttachmentSpaceContainer>
+            영상
             {videoFile ? (
               <U.AttachmentWrap>
                 <U.AttachedVideo controls src={videoFile}></U.AttachedVideo>

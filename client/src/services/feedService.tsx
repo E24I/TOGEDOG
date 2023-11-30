@@ -1,5 +1,8 @@
 import axios from "axios";
-import { postInformationType } from "../types/feedDataType";
+import {
+  postInformationType,
+  updateInformationType,
+} from "../types/feedDataType";
 
 export const getFeedLists = () => {
   return axios
@@ -29,12 +32,10 @@ export const postFeed = async (postInfomation: postInformationType) => {
   return res;
 };
 
-export const updateFeed = async (content: string) => {
+export const updateFeed = async (updateInformation: updateInformationType) => {
   const res = await axios.post(
     `/feed/{feed-id}/reply/{reply-id}`,
-    {
-      content: content,
-    },
+    { title: updateInformation.title, content: updateInformation.content },
     {
       headers: {
         Authorization: "authorizedToken자리",
