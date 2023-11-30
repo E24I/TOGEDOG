@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { ReactComponent as Message } from "../../assets/images/icons/signUpIcons/Message.svg";
 import { ReactComponent as Person } from "../../assets/images/icons/signUpIcons/Person.svg";
 import { ReactComponent as Lock } from "../../assets/images/icons/signUpIcons/Lock.svg";
@@ -27,13 +28,14 @@ const SignUpInputs = () => {
     setValue,
     watch,
   } = useForm();
+  const navigate = useNavigate();
 
   const [allSelected, setAllSelected] = useState(false);
-  const [isAuthentication, setIsAuthentication] = useState(false); //인증코드상태
+  const [isAuthentication, setIsAuthentication] = useState(true); //인증코드상태
 
   //각각 input 태그 value 호출
   const email = watch("email", "");
-  const nickName = watch("nickName", "");
+  const nickname = watch("nickname", "");
   const authentication = watch("authentication", "");
   const password = watch("password", "");
   const pwConfirm = watch("pwConfirm", "");
@@ -61,6 +63,16 @@ const SignUpInputs = () => {
 
     setValue("agree1", isChecked);
     setValue("agree2", isChecked);
+  };
+
+  const onSubmit = (data: any) => {
+    if (data.authentication) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { authentication, ...rest } = data;
+      SignApiCall(rest);
+      // console.log(rest);
+      // navigate("/");
+    }
   };
 
   return (
@@ -100,6 +112,7 @@ const SignUpInputs = () => {
               type="text"
               placeholder="인증번호를 입력해주세요."
               autoComplete="off"
+              {...register("authentication", { required: true })}
             />
             <button
               onClick={() =>
@@ -119,7 +132,7 @@ const SignUpInputs = () => {
               autoComplete="off"
               {...register("nickname", { required: true })}
             />
-            <button onClick={() => checkNickName(nickName)}>중복확인</button>
+            <button onClick={() => checkNickName(nickname)}>중복확인</button>
           </TextInput>
         </div>
         <div>
@@ -194,7 +207,7 @@ const SignUpInputs = () => {
           onClick={handleSubmit((data) => {
             isAuthentication === false
               ? alert("이메일 인증은 필수입니다.")
-              : SignApiCall(data);
+              : onSubmit(data);
           })}
         >
           가입하기
