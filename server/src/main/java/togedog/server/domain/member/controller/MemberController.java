@@ -50,7 +50,7 @@ public class MemberController {
 
         Boolean bool = memberService.checkNickname(nickname);
 
-        return new ResponseEntity<>(bool,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(bool,HttpStatus.CREATED);
     }
 
     @GetMapping("/kk")
