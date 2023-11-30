@@ -56,6 +56,8 @@ export const FeedTitle = styled.p`
   margin: 10px 0 10px 75px;
 `;
 
+export const EditTitle = styled.input``;
+
 export const FeedContent = styled.div`
   font-size: 16px;
   margin: 0 0 10px 75px;

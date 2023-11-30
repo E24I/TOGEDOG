@@ -64,3 +64,7 @@ export type postInformationType = {
   mapYn: boolean;
   address: { x: string; y: string };
 };
+export type updateInformationType = {
+  title: string;
+  content: string;
+};

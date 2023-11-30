@@ -27,7 +27,10 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     address: { x: "", y: "" },
   });
 
-  const [updateInformation, setUpdateInformation] = useState<string>("");
+  const [updateInformation, setUpdateInformation] = useState<{
+    title: string;
+    content: string;
+  }>({ title: "", content: "" });
 
   const navigator = useNavigate();
 
@@ -88,8 +91,8 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     }
   };
 
-  const handleContentChange = (content: string) => {
-    setUpdateInformation(content);
+  const handleContentChange = (title: string, content: string) => {
+    setUpdateInformation({ title: title, content: content });
   };
 
   const deleteLocation = () => {
