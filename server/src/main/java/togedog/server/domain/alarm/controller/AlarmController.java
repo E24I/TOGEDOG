@@ -1,11 +1,9 @@
 package togedog.server.domain.alarm.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import togedog.server.domain.alarm.dto.AlarmDto;
-import togedog.server.domain.alarm.entity.Alarm;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import togedog.server.domain.alarm.service.AlarmService;
 
 @RestController
@@ -15,14 +13,16 @@ public class AlarmController {
 
     private final AlarmService alarmService;
 
-    @GetMapping("/alarm")
-    public ResponseEntity postAlarm(@RequestBody AlarmDto alarmDto) {
-        Alarm alarm = Alarm.builder()
-                .alarmId(1L)
-                .testContent1("alarmDto.getTestContent1()")
-                .testContent2("alarmDto.getTestContent2()")
-                .build();
+    @GetMapping(value = "/alarm/subscribe/{member-id}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter postAlarm(@PathVariable("member-id") Long memberId) {
 
-        return new ResponseEntity<>(alarmService.createAlarm(alarm), HttpStatus.CREATED);
+        return alarmService.subscribe(memberId);
+    }
+
+    @PostMapping("/send-data/{member-id}")
+    public void sendData(@PathVariable("member-id") Long memberId) {
+
+        System.out.println("요청성공");
+        alarmService.notify(memberId, "test data");
     }
 }

@@ -1,6 +1,5 @@
 package togedog.server;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +17,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import togedog.server.domain.alarm.controller.AlarmController;
-import togedog.server.domain.alarm.dto.AlarmDto;
-import togedog.server.domain.alarm.entity.Alarm;
-import togedog.server.domain.alarm.service.AlarmService;
 import togedog.server.domain.member.controller.MemberController;
 import togedog.server.domain.member.mapper.MemberMapper;
 import togedog.server.domain.member.service.MemberService;
 import togedog.server.global.mail.MailService;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
 @AutoConfigureRestDocs
