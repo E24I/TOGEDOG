@@ -1,33 +1,31 @@
 import axios from "axios";
-import { useNavigate } from "react-router";
 import { isLoginAtom } from "../atoms";
 import { useSetRecoilState } from "recoil";
 
-export const LoginApiCall = async (data?: object) => {
-  const navigate = useNavigate();
+export const LoginApiCall = async (info?: object) => {
   const storeTokenInLocalStorage = (token: string) => {
     localStorage.setItem("token", token); // 토큰을 로컬 스토리지에 저장
   };
 
   //로그인 상태 전환 핸들
-  const setLoginState = useSetRecoilState(isLoginAtom);
-
+  // const setLoginState = useSetRecoilState(isLoginAtom);
   try {
     const headers = {
       "ngrok-skip-browser-warning": "1",
     };
     const response = await axios.post(
-      "https://0709-116-125-236-74.ngrok-free.app/auth/login",
-      data,
+      "https://cb1f-116-125-236-74.ngrok-free.app/auth/login",
+      info,
       { headers: headers },
     );
     if (response.status === 200) {
-      console.log(console.log("성공"));
-      storeTokenInLocalStorage(response.data.access_token);
-      setLoginState(true);
-      navigate("/feeds");
+      console.log("성공");
+      console.log(response.headers.authorization);
+      window.localStorage.clear();
+      storeTokenInLocalStorage(response.headers.authorization);
+      // setLoginState(true);
     }
   } catch (err) {
-    console.log(err);
+    console.log("실패");
   }
 };
