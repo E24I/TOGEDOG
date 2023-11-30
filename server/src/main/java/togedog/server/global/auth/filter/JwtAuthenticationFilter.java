@@ -51,14 +51,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.setHeader("Authorization", "Bearer" + accessToken);
 //        response.setHeader("Refresh", refreshToken);
-        response.setHeader("MemberId", String.valueOf(memberId));
+        response.setHeader("Id", String.valueOf(memberId));
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
 
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        String json = gson.toJson(member);
+//        Gson gson = new GsonBuilder().serializeNulls().create();
+//        String json = gson.toJson(member);
 
-        response.getWriter().write(json);
+//        response.getWriter().write(json);
 
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
