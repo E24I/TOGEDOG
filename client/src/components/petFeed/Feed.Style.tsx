@@ -110,6 +110,7 @@ export const FeedContent = styled.div`
 export const FeedMedia = styled.div`
   border: 1px solid rgb(215, 215, 215);
   border-radius: 15px;
+  /* width: 980px; */
   margin: 0px 0px 5px 0px;
   padding: 15px 5px;
   display: flex;
@@ -179,17 +180,18 @@ export const ReviewCount = styled.span`
 `;
 
 export const ModalBackground = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
+  background-color: rgb(215, 215, 215, 50%);
   z-index: 40;
   width: 100vw;
   height: 100vh;
-  background-color: rgb(215, 215, 215, 50%);
+  overflow: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
 `;
 
 export const DetailContainer = styled.div`
@@ -226,6 +228,7 @@ export const LeftDetail = styled.div`
 `;
 
 export const FeedDetailMedia = styled.div`
+  border: 1px solid black;
   width: 100%;
   max-width: 880px;
   height: 100%;
@@ -247,8 +250,11 @@ export const FeedDetailImgs = styled.div`
 `;
 
 export const FeedDetailImgBox = styled.div`
-  width: 610px;
-  height: 600px;
+  border: 1px solid black;
+  width: 100%;
+  max-width: 610px;
+  height: 100%;
+  max-height: 600px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -256,10 +262,11 @@ export const FeedDetailImgBox = styled.div`
 
 export const FeedDetailImg = styled.img`
   border-radius: 15px;
-  /* width: 610px;
-  height: 600px; */
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  max-width: 610px;
+  height: 100%;
+  max-height: 600px;
+  /* aspect-ratio: 7/6; */
   background-size: auto 100%; // cover
   background-repeat: no-repeat;
   background-position: center;
@@ -268,7 +275,7 @@ export const FeedDetailImg = styled.img`
 
 export const FeedDetailStatus = styled.div`
   width: 100%;
-  padding: 10px 0px;
+  padding: 10px 30px;
   display: flex;
   justify-content: start;
   align-items: start;

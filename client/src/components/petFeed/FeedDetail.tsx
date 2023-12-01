@@ -153,7 +153,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
                 width="30px"
                 height="30px"
                 isLike={isLike}
-                handleCustomEvent={handleLike}
+                handleFunc={handleLike}
               />
               <span>{isDetail.likeCount}</span>
             </LikeBox>
@@ -161,7 +161,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
               width="30px"
               height="30px"
               isBookmark={isBookmark}
-              handleCustomEvent={handleBookmark}
+              handleFunc={handleBookmark}
             />
           </FeedDetailStatus>
         </LeftDetail>

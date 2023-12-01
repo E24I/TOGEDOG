@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Pagination from "../atoms/pagination/Pagination";
+import Heart from "../atoms/button/Heart";
+import Bookmark from "../atoms/button/Bookmark";
+import { ReactComponent as Lists } from "../assets/images/icons/Lists.svg";
+import { ReactComponent as Board } from "../assets/images/icons/Board.svg";
 
 type DetailSort = {
   filter: string;
@@ -19,6 +23,9 @@ const MapDetail: React.FC = () => {
     if (page >= 1 && page <= totalPage) setPage(page);
   };
 
+  const [isLike, setLike] = useState<boolean>(false);
+  const [isBookmark, setBookmark] = useState<boolean>(false);
+
   return (
     <PageContainer>
       <MapDetailContainer>
@@ -27,8 +34,22 @@ const MapDetail: React.FC = () => {
           <MapTitle>산들소리수목원</MapTitle>
           <MapAddress>별내동 불암산로 59번길 48 - 31, Namyangju</MapAddress>
           <MapStatus>
-            <MapLike>좋아요</MapLike>
-            <MapLike>북마크</MapLike>
+            <Heart
+              width="20px"
+              height="20px"
+              isLike={isLike}
+              handleFunc={() => {
+                setLike(!isLike);
+              }}
+            />
+            <Bookmark
+              width="20px"
+              height="20px"
+              isBookmark={isBookmark}
+              handleFunc={() => {
+                setBookmark(!isBookmark);
+              }}
+            />
           </MapStatus>
         </MapHeader>
         <CardHeader>
@@ -40,12 +61,12 @@ const MapDetail: React.FC = () => {
             <CardArrangeBtn
               onClick={() => setSort({ ...isSort, sort: "list" })}
             >
-              리스트
+              <ListStatus />
             </CardArrangeBtn>
             <CardArrangeBtn
               onClick={() => setSort({ ...isSort, sort: "card" })}
             >
-              바둑판
+              <BoardStatus />
             </CardArrangeBtn>
           </CardArrange>
         </CardHeader>
@@ -122,7 +143,7 @@ export const MapDetailContainer = styled.div`
 
 export const BackBtn = styled.button`
   position: absolute;
-  top: 10px;
+  top: 20px;
   left: 10px;
   font-size: 24px;
   font-weight: 600;
@@ -130,6 +151,7 @@ export const BackBtn = styled.button`
 
 export const MapHeader = styled.div`
   width: 100%;
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -152,17 +174,39 @@ export const CardHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30px 0px;
+  padding: 20px 0px;
 `;
 export const CardFilters = styled.div``;
 export const CardFilter = styled.button`
-  border: 1px solid black;
   margin: 0px 10px;
+  font-weight: 600;
 `;
-export const CardArrange = styled.div``;
+export const CardArrange = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+`;
 export const CardArrangeBtn = styled.button`
-  border: 1px solid black;
   margin: 0px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ListStatus = styled(Lists)`
+  width: 20px;
+  height: 20px;
+  path {
+    fill: black;
+  }
+`;
+
+export const BoardStatus = styled(Board)`
+  width: 23px;
+  height: 20px;
+  path {
+    fill: black;
+  }
 `;
 
 export const DetailBody = styled.div`

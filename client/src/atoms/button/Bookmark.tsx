@@ -5,21 +5,21 @@ interface OwnProps {
   width: string;
   height: string;
   isBookmark: boolean;
-  handleCustomEvent: () => void;
+  handleFunc: () => void;
 }
 
 const Bookmark: React.FC<OwnProps> = ({
   width,
   height,
   isBookmark,
-  handleCustomEvent,
+  handleFunc,
 }) => {
   return (
     <>
       {isBookmark ? (
-        <MarkTrue width={width} height={height} onClick={handleCustomEvent} />
+        <MarkTrue width={width} height={height} onClick={handleFunc} />
       ) : (
-        <MarkFalse width={width} height={height} onClick={handleCustomEvent} />
+        <MarkFalse width={width} height={height} onClick={handleFunc} />
       )}
     </>
   );
