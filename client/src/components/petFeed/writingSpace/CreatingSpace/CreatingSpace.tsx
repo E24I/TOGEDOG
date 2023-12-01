@@ -4,6 +4,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 import * as C from "./CreatingSpace.Style";
 import UploadSpace from "./Upload";
+import { title } from "process";
 
 interface CreatingSpaceProps {
   handleInputChange: (
@@ -20,7 +21,8 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
   const [quillValue, setQuillValue] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const contentRef = useRef<any>();
-  const [contentLength, setContentLength] = useState<number>(0);
+  const [contentLength, sendContentLength] = useState<number>(0);
+  const [alert, setAlert] = useState<string>("");
 
   const enterToContent = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter") {
@@ -28,16 +30,23 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
     }
   };
 
-  const setTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    handleInputChange("title", e.target.value);
+  const sendTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    const trimmedValue = e.target.value.trim();
+    const words = trimmedValue.split(/\s+/);
+    if (words.length < 2) {
+      setAlert("제목은 두 단어 이상으로 작성해야 합니다.");
+    } else {
+      setAlert("");
+      handleInputChange("title", e.target.value);
+    }
   };
 
-  const setContent = (editor: string) => {
+  const sendContent = (editor: string) => {
     handleInputChange("content", editor);
     setQuillValue(editor);
-    // setContentLength(editor.length);
+    // sendContentLength(editor.length);
     const p = "</p>";
-    setContentLength(
+    sendContentLength(
       editor
         .replace(/<br>/g, "")
         .replace(/<p>/g, "")
@@ -53,19 +62,21 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
       </C.ProfileWrap>
       <UploadSpace type="video" />
       <UploadSpace type="image" />
-      <C.CreateTitle
-        placeholder="제목을 입력하세요"
-        onKeyDown={(e) => enterToContent(e)}
-        onChange={(e) => setTitle(e)}
-      />
-      <C.CreateContentWrap>
+      <C.CreateTitleWrap>
+        <C.CreateTitle
+          placeholder="제목을 입력하세요"
+          onKeyDown={(e) => enterToContent(e)}
+          onChange={(e) => sendTitle(e)}
+        />
+        {alert && <C.Alert>{alert}</C.Alert>}
+      </C.CreateTitleWrap>
+      <C.CreateContentWrap className="custom-quill-container">
         <ReactQuill
           placeholder="내용을 입력하세요"
-          style={{ height: "90px", width: "100%" }}
           ref={contentRef}
           value={quillValue}
           modules={modules}
-          onChange={(editor) => setContent(editor)}
+          onChange={(editor) => sendContent(editor)}
         />
         <C.TextCount>{contentLength} / 200</C.TextCount>
       </C.CreateContentWrap>

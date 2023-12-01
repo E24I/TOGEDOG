@@ -50,11 +50,12 @@ export const Address = styled.div`
 //수정 페이지 - 본문 컨테이너
 export const FeedItems = styled.div``;
 
-export const FeedTitle = styled.p`
+export const FeedTitle = styled.div`
   font-size: 16px;
   font-weight: 800;
   margin: 10px 0 10px 75px;
 `;
+export const DefaultTitle = styled.p``;
 
 export const EditTitle = styled.input``;
 
