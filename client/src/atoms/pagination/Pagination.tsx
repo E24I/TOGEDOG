@@ -10,9 +10,9 @@ interface OwnProps {
 }
 
 const Pagination: React.FC<OwnProps> = ({ isPage, totalPage, handleFunc }) => {
-  // const [isPage, setPage] = useState<number>(1);
-  // const [totalPage, setTotalPage] = useState<number>(10);
-  // const handleChangePage = (page: number) => {setPage(page);};
+  // const [isPage, setPage] = useState<number>(1); 현재 페이지
+  // const [totalPage, setTotalPage] = useState<number>(10); 전체 페이지 수
+  // const handleChangePage = (page: number) => {if (page >= 1 && page <= totalPage) setPage(page);};
 
   const pageList = [];
   for (let i = isPage - 2; i <= isPage + 2; i++) {
@@ -30,7 +30,7 @@ const Pagination: React.FC<OwnProps> = ({ isPage, totalPage, handleFunc }) => {
             <PaginationBtn
               key={idx}
               onClick={() => handleFunc(el)}
-              Page={isPage === el}
+              page={isPage === el}
             >
               {el}
             </PaginationBtn>
@@ -56,12 +56,12 @@ export const PaginationContainer = styled.div`
   align-items: center;
 `;
 
-export const PaginationBtn = styled.button<{ Page?: boolean }>`
+export const PaginationBtn = styled.button<{ page?: boolean }>`
   width: 30px;
   height: 30px;
   margin: 5px;
   font-size: 16px;
-  font-weight: ${(props) => (props.Page ? "600" : "400")};
+  font-weight: ${(props) => (props.page ? "600" : "400")};
   display: flex;
   justify-content: center;
   align-items: center;

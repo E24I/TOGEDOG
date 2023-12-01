@@ -45,7 +45,7 @@ const FeedReply: React.FC = () => {
               width="18px"
               height="18px"
               isLike={isLike}
-              handleCustomEvent={handleLike}
+              handleFunc={handleLike}
             />
             <ReplyLikeCount>1</ReplyLikeCount>
             <Setting />
