@@ -37,7 +37,7 @@ jobs:
 
       - name: Build and push register app
         run: |
-          docker build -t togedog -f ./server/Dockerfile .
+          docker build --build-arg MYSQL_PASSWORD=${{secrets.MYSQL_PASSWORD}} --build-arg MYSQL_USERNAME=${{secrets.MYSQL_USERNAME}} -t togedog -f ./server/Dockerfile .
           docker tag togedog ${{ secrets.DOCKER_HUB_USERNAME }}/togedog:${GITHUB_SHA::7}
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/togedog:${GITHUB_SHA::7}
 
