@@ -10,7 +10,7 @@ export const InputContainer = styled.div`
   }
   form {
     width: 100%;
-    height: 250px;
+    height: 240px;
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -28,6 +28,9 @@ export const InputContainer = styled.div`
       font-size: 10px;
       font-weight: 400;
     }
+    & > div {
+      margin-bottom: 25px;
+    }
   }
 `;
 
@@ -37,9 +40,10 @@ export const TextInput = styled.div`
   width: 320px;
   flex-direction: row;
   align-items: center;
-  margin-top: 25px;
   input {
     width: 70%;
+    background: none;
+    padding: 10px;
   }
 `;
 
@@ -52,7 +56,6 @@ export const ErrorMsg = styled.div`
 `;
 
 export const CheckBoxContainer = styled.div`
-  margin-top: 25px;
   width: 320px;
   display: flex;
   flex-direction: column;
@@ -73,7 +76,6 @@ export const CheckInput = styled.input`
 `;
 
 export const SubmitButton = styled.button`
-  width: 240px;
   color: black;
   background: #d7d7d7;
   position: absolute;

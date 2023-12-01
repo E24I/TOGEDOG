@@ -58,7 +58,7 @@ export const SearchLoaction = styled.input`
   width: 70px;
 `;
 
-export const SearchResult = styled.div`
+export const MarkResult = styled.div`
   text-align: center;
 `;
 
@@ -81,7 +81,7 @@ export const ToggleContainer = styled.div<{ data: string }>`
   margin-left: 10px;
   border-radius: 50px;
   background-color: ${(props) =>
-    props.data === "true" ? "#d7d7d7" : "#79D87C"};
+    props.data === "false" ? "#d7d7d7" : "#79D87C"};
 `;
 
 //토글배경
@@ -90,8 +90,8 @@ export const ToggleCircle = styled.div<{ data: string }>`
   width: 23px;
   height: 23px;
   top: 1px;
-  left: ${(props) => (props.data === "true" ? "1px" : "21px")};
+  left: ${(props) => (props.data === "false" ? "1px" : "21px")};
   border-radius: 50px;
   background-color: #ffffff;
-  transition: ${(props) => (props.data === "true" ? "none" : "0.3s")};
+  transition: ${(props) => (props.data === "false" ? "none" : "0.3s")};
 `;

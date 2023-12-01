@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import {
   MyInfoContainer,
   NickName,
@@ -18,12 +17,19 @@ import {
 } from "./MyInfoForm.style";
 import PetList from "./petComponent/PetList";
 import ButtonDrop from "./petComponent/ButtonDrop";
+import ProfileChange from "./infoChangeComponent/ProfileChange";
 
 const MyInfoForm: React.FC = () => {
   const [drop, setDrop] = useState<boolean>(false); //드롭다운 ... 버튼
-  const dropdownRef = useRef<HTMLDivElement>(null); //드롭다운 밖클릭시 없어짐
+  const dropdownRef = useRef<HTMLButtonElement>(null); //드롭다운 밖클릭시 없어짐
+  const [changeInfo, setChangeInfo] = useState<boolean>(false); //프로필변경
   const handleDrop = () => {
+    //드롭열기
     setDrop(!drop);
+  };
+  const handleModal = () => {
+    //모달열기
+    setChangeInfo(!changeInfo);
   };
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -64,10 +70,12 @@ const MyInfoForm: React.FC = () => {
               팔로우
             </div>
           </ListSection>
-          <ButtonSection ref={dropdownRef}>
+          <ButtonSection>
             <Button1>???</Button1>
-            <Button2>???</Button2>
-            <MoreButton onClick={handleDrop}>...</MoreButton>
+            <Button2 onClick={handleModal}>???</Button2>
+            <MoreButton onClick={handleDrop} ref={dropdownRef}>
+              ...
+            </MoreButton>
             {drop && <ButtonDrop />}
           </ButtonSection>
         </SectionBox>
@@ -78,6 +86,7 @@ const MyInfoForm: React.FC = () => {
         <PetList />
         <PetAdd />
       </PetListBox>
+      {changeInfo && <ProfileChange setChangeInfo={setChangeInfo} />}
     </MyInfoContainer>
   );
 };

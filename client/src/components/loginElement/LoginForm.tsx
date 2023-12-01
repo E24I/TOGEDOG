@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
 import Oauth from "./Oauth";
+import PasswordChangeForm from "../myPage/infoChangeComponent/PasswordChange";
 import {
   InputContainer,
   LoginButtonOn,
@@ -11,66 +13,54 @@ import {
   LoginInput,
   LogoImg,
 } from "./LoginForm.style";
-
-type Inputs = {
-  email: string;
-  password: string;
-};
+import { LoginApiCall } from "../../services/loginService";
 
 const LoginForm: React.FC = () => {
-  const [loginInfo, setLoginInfo] = useState<boolean>(false); //아아디,비밀번호가 입력돼었으면 true
-  const [id, setId] = useState<string>("");
-  const [pw, setPw] = useState<string>("");
-
-  const { register, handleSubmit } = useForm<Inputs>();
-
-  useEffect(() => {
-    if (id && pw) {
-      setLoginInfo(true);
-    } else {
-      setLoginInfo(false);
-    }
-  }, [id, pw]);
-
-  const handleId = (value: string) => {
-    const idValue = value;
-    setId(idValue);
+  const [lostPw, setLostPw] = useState<boolean>(false); //비밀번호 변경 모달
+  const navigate = useNavigate();
+  const { register, handleSubmit } = useForm();
+  const handleModal = () => {
+    setLostPw(!lostPw);
   };
-  const handlePw = (value: string) => {
-    const pwValue = value;
-    setPw(pwValue);
+
+  const loginButton = (data: object) => {
+    // window.localStorage.clear();
+    LoginApiCall(data);
+    // navigate("/feeds");
   };
+
   return (
     <>
       <InputContainer>
         <LogoImg>로고</LogoImg>
         <form
-          onSubmit={handleSubmit((data) => {
-            console.log(data);
-          })}
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
         >
           <LoginInput
             type="text"
             placeholder="이메일을 입력하세요."
-            {...register("email")}
-            onChange={(e) => {
-              handleId(e.target.value);
-            }}
+            {...register("email", { required: true })}
           />
           <LoginInput
             type="password"
             placeholder="비밀번호를 입력하세요."
-            {...register("password")}
-            onChange={(e) => {
-              handlePw(e.target.value);
-            }}
+            {...register("password", { required: true })}
           />
-          <LostPassword>비밀번호를 잊으셨나요?</LostPassword>
-          {loginInfo ? (
-            <LoginButtonOn type="submit">로그인</LoginButtonOn>
-          ) : (
-            <LoginButtonOff>로그인</LoginButtonOff>
-          )}
+          <LostPassword onClick={handleModal}>
+            비밀번호를 잊으셨나요?
+          </LostPassword>
+          {lostPw && <PasswordChangeForm setLostPw={setLostPw} />}
+          <LoginButtonOn
+            type="submit"
+            onClick={handleSubmit((data) => {
+              LoginApiCall(data);
+              // navigate("/feeds");
+            })}
+          >
+            로그인
+          </LoginButtonOn>
         </form>
         <div>
           <Oauth />

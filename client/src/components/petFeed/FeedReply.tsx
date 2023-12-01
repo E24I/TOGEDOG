@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import FeedComment from "./FeedComment";
 import {
   Comments,
@@ -9,7 +9,6 @@ import {
   ReplyContents,
   ReplyDate,
   ReplyLeft,
-  ReplyLike,
   ReplyLikeCount,
   ReplyNickname,
   ReplySetting,
@@ -18,8 +17,12 @@ import {
   ShowComment,
   Unknown,
 } from "./Feed.Style";
+import Heart from "../../atoms/button/Heart";
 
 const FeedReply: React.FC = () => {
+  const [isLike, setLike] = useState<boolean>(false);
+  const handleLike = (): void => setLike(!isLike);
+
   return (
     <Replies>
       <FeedReviewTop>
@@ -38,7 +41,12 @@ const FeedReply: React.FC = () => {
           </ReplyContent>
           <ReplySetting>
             <ReplyDate>20분 전</ReplyDate>
-            <ReplyLike />
+            <Heart
+              width="18px"
+              height="18px"
+              isLike={isLike}
+              handleCustomEvent={handleLike}
+            />
             <ReplyLikeCount>1</ReplyLikeCount>
             <Setting />
           </ReplySetting>

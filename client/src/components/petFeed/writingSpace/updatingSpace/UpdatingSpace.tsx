@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import * as U from "./UpdatingSpace.Style";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 
 interface UpdatingSpace {
-  handleContentChange: (content: string) => void;
+  handleContentChange: (title: string, content: string) => void;
 }
 
 const modules = {
@@ -15,15 +15,21 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({ handleContentChange }) => {
   const [quillValue, setQuillValue] = useState(
     "저히 몽자 오늘 애견카페가서 아주 신나게 놀다왔답니당 다들 저히 기여운 몽자 보고 가세요",
   );
-  const [isEdit, setEdit] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>("기존제목");
+  const [isContentEdit, setContentEdit] = useState<boolean>(false);
+  const [isTitleEdit, setTitleEdit] = useState<boolean>(false);
 
   const setContent = (editor: string) => {
     setQuillValue(editor);
-    handleContentChange(quillValue);
+  };
+
+  const updateTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
   };
 
   const changeToEdit = () => {
-    setEdit(true);
+    setContentEdit(true);
+    setTitleEdit(true);
   };
 
   return (
@@ -36,13 +42,18 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({ handleContentChange }) => {
         </U.IdAndAddress>
       </U.FeedOwner>
       <U.FeedItems>
-        <U.FeedTitle>애카 가서 신난 몽자</U.FeedTitle>
+        {!isTitleEdit ? (
+          <U.FeedTitle>등록 되었던 제목</U.FeedTitle>
+        ) : (
+          <U.EditTitle
+            defaultValue="등록 되었던 제목"
+            onChange={(e) => updateTitle(e)}
+          ></U.EditTitle>
+        )}
+
         <U.FeedContent onClick={changeToEdit}>
-          {!isEdit ? (
-            <U.DefaultContent>
-              저히 몽자 오늘 애견카페가서 아주 신나게 놀다왔답니당 다들 저히
-              기여운 몽자 보고 가세요
-            </U.DefaultContent>
+          {!isContentEdit ? (
+            <U.DefaultContent>등록되었던 내용</U.DefaultContent>
           ) : (
             <ReactQuill
               placeholder="내용을 입력하세요"
