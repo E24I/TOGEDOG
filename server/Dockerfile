@@ -28,4 +28,4 @@ ARG JAR_FILE=/server/build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 
 # (4) jar 파일 실행
-ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
