@@ -75,7 +75,7 @@ public class ChatService {
 
         List<ChatRoom> chatRooms = chatRoomIds.stream().map(o -> chatRoomRepository.findById(o).orElseThrow(ChatNotFoundException::new)).collect(Collectors.toList());
 
-        return chatMapper.chatRoomsToResponses(chatRooms);
+        return chatMapper.chatRoomsToResponses(chatRooms, memberId);
     }
 
     private Member findMemberById(Long memberId) {

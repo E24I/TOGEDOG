@@ -8,6 +8,7 @@ import togedog.server.domain.chat.entity.ChatRoom;
 import togedog.server.domain.chat.repository.ChatParticipantRepository;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.global.dto.SingleResponseDto;
+import togedog.server.global.exception.businessexception.chatexception.ChatNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,17 +33,17 @@ public class ChatMapper {
         }
     }
 
-    public List<ChatRoomResponse> chatRoomsToResponses(List<ChatRoom> chatRooms) {
+    public List<ChatRoomResponse> chatRoomsToResponses(List<ChatRoom> chatRooms, Long currentMemberId) {
 
         if(chatRooms == null) {
             return null;
         }
         else {
-            return chatRooms.stream().map(this::chatRoomToResponse).collect(Collectors.toList());
+            return chatRooms.stream().map(o -> chatRoomToResponse(o, currentMemberId)).collect(Collectors.toList());
         }
     }
 
-    private ChatRoomResponse chatRoomToResponse(ChatRoom chatRoom) {
+    private ChatRoomResponse chatRoomToResponse(ChatRoom chatRoom, Long requestMemberId) {
 
         if(chatRoom == null) {
             return null;
@@ -50,11 +51,24 @@ public class ChatMapper {
         else {
             List<ChatParticipant> chatParticipants = chatParticipantRepository.findByChatRoomChatRoomId(chatRoom.getChatRoomId());
 
+            Long otherMemberId = 0L;
+
+            for (ChatParticipant chatParticipant : chatParticipants) {
+                Long tempMemberId = chatParticipant.getMember().getMemberId();
+                if (!tempMemberId.equals(requestMemberId)) {
+                    otherMemberId = requestMemberId;
+                    break;
+                }
+            }
+
+            if(otherMemberId == 0L) {
+                throw new ChatNotFoundException();
+            }
+
             return ChatRoomResponse.builder()
                     .chatRoom_id(chatRoom.getChatRoomId())
-                    .participant_member_1(chatParticipants.get(0).getMember().getMemberId())
-                    .participant_member_2(chatParticipants.get(1).getMember().getMemberId())
-                    .latest_message("미구현")
+                    .other_member_id(otherMemberId)
+                    .latest_message(chatRoom.getLatestMessage())
                     .created_at(chatRoom.getCreatedDateTime().toString())
                     .build();
         }

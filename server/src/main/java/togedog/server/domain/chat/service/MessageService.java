@@ -13,7 +13,6 @@ import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class MessageService {
 
@@ -25,11 +24,14 @@ public class MessageService {
 
     private final MessageMapper messageMapper;
 
+    @Transactional
     public Long createMessage(Long roomId, MessageRequest messageRequest) {
 
         Member findMember = findMemberById(messageRequest.getMemberId());
 
         ChatRoom findChatRoom = chatService.findChatRoom(roomId);
+
+        findChatRoom.setLatestMessage(messageRequest.getContent());
 
         Message message = messageMapper.messageRequestToMessage(messageRequest, findMember, findChatRoom);
 
