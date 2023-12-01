@@ -51,7 +51,14 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
     requestMemberId: 1,
     inviteMemberId: 2,
   });
-  // GetAllRoomsQuery()
+  const roomsData = GetAllRoomsQuery();
+
+  useEffect(() => {
+    if (roomsData) {
+      setRooms(roomsData);
+    }
+  }, [roomsData]);
+
   const openDropDown = (e: MouseEvent) => {
     e.stopPropagation();
     if (isOpen !== false) {
