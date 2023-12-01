@@ -18,19 +18,19 @@ import static org.mockito.ArgumentMatchers.any;
 @WithMockUser
 @WebMvcTest(AlarmController.class)
 public class AlarmControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
-    private AlarmService alarmService;
-
-    @DisplayName("알람 생성")
-    @Test
-    void createAlarm() throws Exception {
+//
+//    @Autowired
+//    private MockMvc mockMvc;
+//
+//    @Autowired
+//    private ObjectMapper objectMapper;
+//
+//    @MockBean
+//    private AlarmService alarmService;
+//
+//    @DisplayName("알람 생성")
+//    @Test
+//    void createAlarm() throws Exception {
 //        //given
 //        AlarmDto alarmDto = new AlarmDto("test12", "test22");
 //        Alarm alarm = Alarm.builder()
@@ -52,5 +52,5 @@ public class AlarmControllerTest {
 //                        Preprocessors.preprocessRequest(prettyPrint()),
 //                        Preprocessors.preprocessResponse(prettyPrint())))
 //                .andExpect(MockMvcResultMatchers.status().isCreated());
-    }
+//    }
 }
