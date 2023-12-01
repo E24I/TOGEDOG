@@ -7,12 +7,14 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import togedog.server.domain.chat.dto.MessageRequest;
 import togedog.server.domain.chat.service.MessageService;
 
 @RestController
+@CrossOrigin(allowedHeaders = "*", origins = "*")
 @RequiredArgsConstructor
 public class MessageController {
 
@@ -30,9 +32,9 @@ public class MessageController {
     @SendTo("/sub/chat/{room-id}")     // 받을 때 /sub/chat/{room-id}
     public ResponseEntity sendMessage(@DestinationVariable("room-id") Long roomId, @RequestBody MessageRequest messageRequest) {
 
-        messageService.createMessage(roomId, messageRequest);
+        Long messageId = messageService.createMessage(roomId, messageRequest);
 
-        return new ResponseEntity<>("messageId: 추가예정", HttpStatus.OK);
+        return new ResponseEntity<>("messageId: " + messageId, HttpStatus.OK);
     }
 }
 

@@ -2,6 +2,7 @@ package togedog.server.domain.mapcontent.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import togedog.server.domain.feed.entity.Feed;
 import togedog.server.global.entity.BaseEntity;
 
 import javax.persistence.*;
@@ -16,4 +17,8 @@ public class MapContent extends BaseEntity {
     private Long mapContentId;
 
     private String coordinate;
+
+//    @ManyToOne
+//    @JoinColumn(name = "feed_id")
+//    private Feed feed;
 }

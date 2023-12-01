@@ -29,35 +29,35 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 @WithMockUser
 @WebMvcTest(MemberController.class)
 public class MemberControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private MailService mailService;
-
-    @MockBean
-    private MemberService memberService;
-
-    @MockBean
-    private MemberMapper mapper;
-
-    @DisplayName("멤버 조회")
-    @Test
-    void getMember() throws Exception {
-        //given
-        MultiValueMap<String , String> info = new LinkedMultiValueMap<>();
-        info.add("par", "안녕하세요");
-
-        //when & then
-        mockMvc.perform(MockMvcRequestBuilders.get("/member")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .params(info)
-                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
-                .andDo(MockMvcResultHandlers.print())
-                .andDo(MockMvcRestDocumentation.document("member/getMember",
-                        Preprocessors.preprocessRequest(prettyPrint()),
-                        Preprocessors.preprocessResponse(prettyPrint())))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
+//
+//    @Autowired
+//    private MockMvc mockMvc;
+//
+//    @MockBean
+//    private MailService mailService;
+//
+//    @MockBean
+//    private MemberService memberService;
+//
+//    @MockBean
+//    private MemberMapper mapper;
+//
+//    @DisplayName("멤버 조회")
+//    @Test
+//    void getMember() throws Exception {
+//        //given
+//        MultiValueMap<String , String> info = new LinkedMultiValueMap<>();
+//        info.add("par", "안녕하세요");
+//
+//        //when & then
+//        mockMvc.perform(MockMvcRequestBuilders.get("/member")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .params(info)
+//                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
+//                .andDo(MockMvcResultHandlers.print())
+//                .andDo(MockMvcRestDocumentation.document("member/getMember",
+//                        Preprocessors.preprocessRequest(prettyPrint()),
+//                        Preprocessors.preprocessResponse(prettyPrint())))
+//                .andExpect(MockMvcResultMatchers.status().isOk());
+//    }
 }

@@ -10,6 +10,7 @@ import togedog.server.domain.chat.mapper.MessageMapper;
 import togedog.server.domain.chat.repository.MessageRepository;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
+import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 
 @Service
 @Transactional
@@ -24,7 +25,7 @@ public class MessageService {
 
     private final MessageMapper messageMapper;
 
-    public void createMessage(Long roomId, MessageRequest messageRequest) {
+    public Long createMessage(Long roomId, MessageRequest messageRequest) {
 
         Member findMember = findMemberById(messageRequest.getMemberId());
 
@@ -32,11 +33,11 @@ public class MessageService {
 
         Message message = messageMapper.messageRequestToMessage(messageRequest, findMember, findChatRoom);
 
-        messageRepository.save(message);
+        return messageRepository.save(message).getMessageId();
     }
 
     private Member findMemberById(Long memberId) {
-        //TODO: 예외처리 추가예정
-        return memberRepository.findById(memberId).orElseThrow(RuntimeException::new);
+
+        return memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
     }
 }
