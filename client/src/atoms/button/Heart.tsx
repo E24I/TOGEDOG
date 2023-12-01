@@ -5,21 +5,16 @@ interface OwnProps {
   width: string;
   height: string;
   isLike: boolean;
-  handleCustomEvent: () => void;
+  handleFunc: () => void;
 }
 
-const Heart: React.FC<OwnProps> = ({
-  width,
-  height,
-  isLike,
-  handleCustomEvent,
-}) => {
+const Heart: React.FC<OwnProps> = ({ width, height, isLike, handleFunc }) => {
   return (
     <>
       {isLike ? (
-        <LikeTrue width={width} height={height} onClick={handleCustomEvent} />
+        <LikeTrue width={width} height={height} onClick={handleFunc} />
       ) : (
-        <LikeFalse width={width} height={height} onClick={handleCustomEvent} />
+        <LikeFalse width={width} height={height} onClick={handleFunc} />
       )}
     </>
   );

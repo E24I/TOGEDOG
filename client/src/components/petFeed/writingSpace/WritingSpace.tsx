@@ -94,6 +94,7 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
   const handleContentChange = (title: string, content: string) => {
     setUpdateInformation({ title: title, content: content });
   };
+  console.log(updateInformation);
 
   const deleteLocation = () => {
     if (isMarked === true) {

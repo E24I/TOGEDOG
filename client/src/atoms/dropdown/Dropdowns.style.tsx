@@ -17,14 +17,15 @@ export const DropDownContainer = styled.div<DropdownPosition>`
   left: 0;
   /* right: 0; */
   /* bottom: 0; */
-  width: 100px;
+  width: 90px;
   display: flex;
   flex-direction: column;
 `;
 
 export const Menu = styled.button`
   border-top: 1px solid rgb(215, 215, 215);
-  padding: 10px 10px;
+  padding: 10px 15px;
+  white-space: nowrap;
   &:hover {
     background-color: rgb(215, 215, 215);
   }

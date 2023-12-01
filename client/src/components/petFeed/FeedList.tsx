@@ -90,7 +90,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
           <Setting />
           {isSetting && (
             <Dropdown
-              contents={["신고하기1", "신고하기2", "신고하기3"]}
+              contents={["수정하기", "삭제하기"]}
               handleFunc={(e) => {
                 console.log(e.currentTarget.textContent);
                 setSetting(false);
@@ -125,7 +125,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
             width="30px"
             height="30px"
             isLike={isLike}
-            handleCustomEvent={handleLike}
+            handleFunc={handleLike}
           />
           <span>{items.likeCount}</span>
         </LikeBox>
@@ -133,7 +133,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
           width="30px"
           height="30px"
           isBookmark={isBookmark}
-          handleCustomEvent={handleBookmark}
+          handleFunc={handleBookmark}
         />
       </FeedStatus>
       <FeedBottom>
