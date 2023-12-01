@@ -21,16 +21,23 @@ export const createNewChat = async (memberId: createNewChatType) => {
 };
 
 export const getAllRooms = async () => {
-  const res = axios.get(`https://67ca-61-101-53-142.ngrok-free.app/chat`, {
-    headers: { Authorization: "" },
-  });
-  return res;
+  try {
+    const res = await axios.get(
+      `https://67ca-61-101-53-142.ngrok-free.app/chat`,
+      {
+        headers: { Authorization: "" },
+      },
+    );
+    return res.data;
+  } catch (error) {
+    console.error("데이터 가져오기 실패:", error);
+    throw new Error("데이터 가져오기 실패");
+  }
 };
 export const GetAllRoomsQuery = () => {
   const { data } = useQuery({
     queryKey: ["rooms"],
-    queryFn: () => getAllRooms(),
-    // select: (data) => data.toString(),
+    queryFn: async () => await getAllRooms(),
   });
   return data;
 };
@@ -45,11 +52,14 @@ export const getAllMessages = async (roomId: number) => {
   return res;
 };
 export const GetAllMessagesQuery = (roomId: number) => {
-  const { data } = useQuery({
+  const { data, isError } = useQuery({
     queryKey: ["messages", roomId],
     queryFn: () => getAllMessages(roomId),
     // select: (data) => data.toString(),
   });
+  if (isError) {
+    console.log(isError);
+  }
   return data;
 };
 
