@@ -19,17 +19,20 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({ handleContentChange }) => {
   const [isContentEdit, setContentEdit] = useState<boolean>(false);
   const [isTitleEdit, setTitleEdit] = useState<boolean>(false);
 
-  const setContent = (editor: string) => {
-    setQuillValue(editor);
+  const changeToEditTitle = () => {
+    setTitleEdit(true);
   };
-
+  const changeToEditContent = () => {
+    setContentEdit(true);
+  };
   const updateTitle = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
+    handleContentChange(title, quillValue);
   };
 
-  const changeToEdit = () => {
-    setContentEdit(true);
-    setTitleEdit(true);
+  const setContent = (editor: string) => {
+    setQuillValue(editor);
+    handleContentChange(title, quillValue);
   };
 
   return (
@@ -42,16 +45,17 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({ handleContentChange }) => {
         </U.IdAndAddress>
       </U.FeedOwner>
       <U.FeedItems>
-        {!isTitleEdit ? (
-          <U.FeedTitle>등록 되었던 제목</U.FeedTitle>
-        ) : (
-          <U.EditTitle
-            defaultValue="등록 되었던 제목"
-            onChange={(e) => updateTitle(e)}
-          ></U.EditTitle>
-        )}
-
-        <U.FeedContent onClick={changeToEdit}>
+        <U.FeedTitle id="title" onClick={changeToEditTitle}>
+          {!isTitleEdit ? (
+            <U.DefaultTitle>등록 되었던 제목</U.DefaultTitle>
+          ) : (
+            <U.EditTitle
+              defaultValue="등록 되었던 제목"
+              onChange={(e) => updateTitle(e)}
+            ></U.EditTitle>
+          )}
+        </U.FeedTitle>
+        <U.FeedContent id="content" onClick={changeToEditContent}>
           {!isContentEdit ? (
             <U.DefaultContent>등록되었던 내용</U.DefaultContent>
           ) : (
