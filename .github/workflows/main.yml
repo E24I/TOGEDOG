@@ -37,7 +37,7 @@ jobs:
 
       - name: Build and push register app
         run: |
-          docker build --build-arg MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} --build-arg MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }} --build-arg EMAIL_SENDER=${{ secrets.EMAIL_SENDER }} --build-arg EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }} --build-arg JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} --build-arg REDIS_HOST=${{ secrets.REDIS_HOST }} --build-arg AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} -t togedog -f ./server/Dockerfile .
+          docker build -t togedog -f ./server/Dockerfile .
           docker tag togedog ${{ secrets.DOCKER_HUB_USERNAME }}/togedog:${GITHUB_SHA::7}
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/togedog:${GITHUB_SHA::7}
 
@@ -67,6 +67,6 @@ jobs:
              'fi',
              'sudo docker pull leesaewoo/togedog:${GITHUB_SHA::7}',
              'sudo docker tag leesaewoo/togedog:${GITHUB_SHA::7} togedog',
-             'sudo docker run -e TZ=Asia/Seoul -d --name server -p 8080:8080 togedog'
+             'sudo docker run -e TZ=Asia/Seoul --env-file ./togedog.env -d --name server -p 8080:8080 togedog'
            ]" \
            --output text
