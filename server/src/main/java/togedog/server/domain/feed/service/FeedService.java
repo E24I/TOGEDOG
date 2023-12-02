@@ -96,7 +96,7 @@ public class FeedService {
         } else {
 
             Page<Feed> feedsPage = feedRepository.findByOpenYnTrue(pageable); // 여기서 deleteyn 여부도 찾아서 반환
-//        return feedsPage.map(FeedResponse::singleFeedResponse);
+//        return feedsPage.map(FeedResponse::singleFeedResponse); 11
 
             return feedsPage.map(feed -> {
                 boolean isBookmarkedByCurrentUser = isFeedBookmarkedByMember(null, feed);
@@ -286,7 +286,7 @@ public class FeedService {
 
 //    private boolean isReplyLikedByMember(Member member, Reply reply) {
 //        Optional<ReplyLike> optionalReplyLike = replyLikeRepository.findByMemberAndReply(member, reply);
-//        return optionalReplyLike.isPresent(); // Optional이 값으로 존재하면 true를 반환, 비어있으면 false를 반환
+//        return optionalReplyLike.isPresent(); // Optional이 값으로 존재하면 true를 반환, 비어있으면 false를 반환1
 //    }
 
     private boolean isFeedBookmarkedByMember(Member member, Feed feed) {
