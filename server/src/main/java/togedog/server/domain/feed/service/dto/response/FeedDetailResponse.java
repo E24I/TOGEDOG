@@ -38,11 +38,10 @@ public class FeedDetailResponse {
     @Getter
     @AllArgsConstructor
     @Builder
-
     public static class FeedReplies {
 
         private List<ReplyResponse> replies;
-        private PageInformation pageInformation;
+        private PageInformation pageInformation;}
 
 
         public static FeedDetailResponse feedDetailResponse(Feed feed, boolean isBookmarkedByCurrentUser, boolean isLikedByCurrentUser, FeedReplies replies ) {
@@ -64,9 +63,10 @@ public class FeedDetailResponse {
                     .bookmarkYn(isBookmarkedByCurrentUser)
                     .likeYn(isLikedByCurrentUser)
                     .member(MemberInfo.of(feed.getMember()))
+                    .repliesCount(feed.getRepliesCount())
                     .replies(replies)
                     .build();
         }
 
     }
-}
+

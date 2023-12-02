@@ -46,7 +46,8 @@ public class Feed extends BaseEntity {
 //    @Enumerated(EnumType.STRING)
 //    private State state;
 
-    private Integer likeCount = 0;
+//    private Integer likeCount = 0; 직접 초기화는 안좋대 밑에 createPost 시 만들자
+    private Integer likeCount;
 
     private String address;
 
@@ -100,6 +101,8 @@ public class Feed extends BaseEntity {
                 .videos(videos)
                 .member(member)
                 .deleteYn(false)
+                .likeCount(0)
+                .repliesCount(0)
                 .build();
     }
 
@@ -120,6 +123,10 @@ public class Feed extends BaseEntity {
         this.deleteYn = true;
 
     }
+
+//    public void UpdateRepliesCount() {
+//        this.repliesCount =
+//    }
 
 
 

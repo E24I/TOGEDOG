@@ -14,7 +14,7 @@ public interface ReplyRepository extends JpaRepository<Reply,Long> {
 
 //    Page<Reply> findAllByFeed(Feed feed, Pageable pageable);
 
-    Page<Reply> findByFeed(Optional<Feed> feed, Pageable pageable);
+    Page<Reply> findByFeed(Feed feed, Pageable pageable);
 
 
 

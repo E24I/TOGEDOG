@@ -13,15 +13,13 @@ import togedog.server.domain.reply.service.dto.request.ReplyServiceCreateApiRequ
 public class ReplyCreateApiRequest {
 
 
-    private Long feedId;
     private String content;
-    private Boolean fix;
+
 
 
     public ReplyServiceCreateApiRequest toCreateServiceApiRequest() {
         return ReplyServiceCreateApiRequest.builder()
                 .content(content)
-                .fix(fix)
                 .build();
 
     }

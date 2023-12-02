@@ -29,16 +29,16 @@ public class Reply extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    private Integer replyLike = 0;
-
-    @Enumerated(EnumType.STRING)
-    private State state;
+//    @Enumerated(EnumType.STRING)
+//    private State state;
 
     private Boolean fix;
 
     private Boolean deleteYn;
 
     private Integer likeCount;
+
+    private Integer commentCount;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
@@ -58,18 +58,21 @@ public class Reply extends BaseEntity {
     private List<ReplyLike> replyLikes = new ArrayList<>();
 
 
-    public static Reply crateReply(String content, Boolean fix, Member member, Feed feed) {
+    public static Reply crateReply(String content, Member member, Feed feed) {
         return Reply.builder()
                 .content(content)
-                .fix(fix)
                 .feed(feed)
                 .member(member)
                 .deleteYn(false)
+                .likeCount(0)
+                .commentCount(0)
                 .build();
     }
 
     public void updateMyReply(String content) {
-        this.content = content;
+        if (content != null) {
+            this.content = content;
+        }
     }
 
     public void deleteMyReply() {

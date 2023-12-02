@@ -45,6 +45,8 @@ public class FeedLikeService {
         Optional<FeedLike> alreadyLike = feedLikeRepository.findByMemberAndFeed(member, feed);
         // 지금은 연관관계로 조회하지만 성능을 위해 다음 @EmbeddedId나 @IdClass를 알아보자
 
+        // 오류 옵셔널 문제가 아니라 feed 만들 때 0으로 초기화 안해줘서 그럼
+
         if (alreadyLike.isPresent()) { // 현재 로직은 있으면 delete or 객체 생성인데 다음엔 타입으로 받고 내리고 올리자
             feedLikeRepository.delete(alreadyLike.get());
             feed.setLikeCount(feed.getLikeCount() - 1);
