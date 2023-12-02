@@ -25,7 +25,9 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberMapper mapper;
 
-    // 회원 가입
+    /*
+    회원 가입
+     */
     @PostMapping("/signup")
     public ResponseEntity<Member> signupMember(@RequestBody @Valid MemberDto.Post memberPostDto){
 
@@ -40,12 +42,15 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/nickname/check")
+    /*
+    닉네임 중복 확인
+     */
+    @PostMapping("/signup/nickname/check")
     public ResponseEntity<Boolean> nicknameCheck(@RequestParam("n") String nickname){
 
         Boolean bool = memberService.checkNickname(nickname);
 
-        return new ResponseEntity<>(bool,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(bool,HttpStatus.CREATED);
     }
 
     @GetMapping("/kk")
@@ -60,7 +65,7 @@ public class MemberController {
     /*
     회원가입 확인 메일 전송
      */
-    @PostMapping("/emails/send-code")
+    @PostMapping("/signup/emails/send-code")
     public ResponseEntity sendMessage(@RequestParam("email") String email) {
         mailService.sendCodeToEmail(email);
 
@@ -70,7 +75,7 @@ public class MemberController {
     /*
     회원가입 코드 체크
      */
-    @PostMapping("/emails/check")
+    @PostMapping("/signup/emails/check")
     public ResponseEntity emailCheck(@RequestBody EmailCheckDto emailCheckDto){
         Boolean checked = mailService.checkAuthNum(emailCheckDto.getEmail(), emailCheckDto.getAuthNum());
 

@@ -7,6 +7,7 @@ spring:
     url: jdbc:mysql://togedog-db.cnf4knedrisz.ap-northeast-2.rds.amazonaws.com:3306/togedog_db
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -21,15 +22,3 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: 6379
-
-
-#  cloud:
-#    aws:
-#      credentials:
-#        accessKey: 123456
-#        secretKey: 123456
-#      s3:
-#        bucket: 123456
-#      region:
-#        static: ap-northeast-2
-#      stack:

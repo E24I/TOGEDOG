@@ -1,6 +1,8 @@
 package togedog.server.global.auth.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +19,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Struct;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,12 +44,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         Member member = (Member) authResult.getPrincipal();
 
+        Long memberId = member.getMemberId();
+
         String accessToken = delegateAccessToken(member);
-        String refreshToken = delegateRefreshToken(member);
+//        String refreshToken = delegateRefreshToken(member);
 
 
         response.setHeader("Authorization", "Bearer" + accessToken);
-        response.setHeader("Refresh", refreshToken);
+//        response.setHeader("Refresh", refreshToken);
+        response.setHeader("Id", String.valueOf(memberId));
+        response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
+
+//        Gson gson = new GsonBuilder().serializeNulls().create();
+//        String json = gson.toJson(member);
+
+//        response.getWriter().write(json);
 
 
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
