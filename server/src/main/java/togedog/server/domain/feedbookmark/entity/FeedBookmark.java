@@ -1,9 +1,6 @@
 package togedog.server.domain.feedbookmark.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.global.entity.BaseEntity;
@@ -15,6 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class FeedBookmark extends BaseEntity {
 
     @Id
@@ -28,4 +26,6 @@ public class FeedBookmark extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "feed_id")
     private Feed feed;
+
+    private Boolean isBookmarked;
 }

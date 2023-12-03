@@ -3,28 +3,26 @@ package togedog.server.domain.member.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.global.auth.utils.CustomAuthorityUtils;
+import togedog.server.global.auth.utils.LoginMemberUtil;
+import togedog.server.global.exception.businessexception.memberexception.MemberExistException;
 import togedog.server.global.mail.MailService;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
-    private static final String AUTH_CODE_PREFIX = "AuthCode ";
     private final MailService mailService;
     private final MemberRepository memberRepository;
+    private final LoginMemberUtil loginMemberUtil;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -32,7 +30,16 @@ public class MemberService {
     @Autowired
     private CustomAuthorityUtils customAuthorityUtils;
 
+    //비밀번호 체크 로직
+    public Boolean pwCheck(String password, String pwConfirm){
 
+        if(pwConfirm.equals(password)){
+            return true;
+        }
+        return false;
+    }
+
+    //회원 생성 로직
     public Member createMember(Member member){
         verifyExistsEmail(member.getEmail());
 
@@ -50,13 +57,27 @@ public class MemberService {
         return savedMember;
     }
 
-
+    //이메일 확인 로직
     private void verifyExistsEmail(String email){
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         if(optionalMember.isPresent()){
-            throw new RuntimeException("member exist");
+            throw new MemberExistException();
         }
     }
+
+    //멤버 찾기 로직
+    public Long findMember(){
+
+        return loginMemberUtil.getLoginMemberId();
+    }
+
+
+    //닉네임 확인 로직
+    public Boolean checkNickname(String nickname){
+        Boolean bool = memberRepository.existsMemberByNicknameContaining(nickname);
+        return bool;
+    }
+
 
 
 }

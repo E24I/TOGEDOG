@@ -9,10 +9,11 @@ import togedog.server.domain.member.dto.MemberDto;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.mapper.MemberMapper;
 import togedog.server.domain.member.service.MemberService;
+import togedog.server.global.exception.businessexception.memberexception.MemberPasswordException;
 import togedog.server.global.mail.MailService;
 import togedog.server.global.mail.dto.EmailCheckDto;
 
-import java.net.URI;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/member")
@@ -24,34 +25,47 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberMapper mapper;
 
-    // 회원 가입
+    /*
+    회원 가입
+     */
     @PostMapping("/signup")
-    public ResponseEntity<Member> signupMember(@RequestBody MemberDto.Post memberPostDto){
+    public ResponseEntity<Member> signupMember(@RequestBody @Valid MemberDto.Post memberPostDto){
 
-        Member member = mapper.memberPostDtoToMember(memberPostDto);
-        Member createdMember = memberService.createMember(member);
+        Boolean pwCheck = memberService.pwCheck(memberPostDto.getPassword(), memberPostDto.getPwConfirm());
 
-        return new ResponseEntity<>(createdMember, HttpStatus.CREATED);
+        if(pwCheck){
+            Member member = mapper.memberPostDtoToMember(memberPostDto);
+            memberService.createMember(member);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }else {
+            throw new MemberPasswordException();
+        }
     }
 
-    // 로그인 => security 에서 처리
-    @PostMapping("/login")
-    public ResponseEntity<?> loginMember(@RequestBody MemberDto memberDto){
+    /*
+    닉네임 중복 확인
+     */
+    @PostMapping("/signup/nickname/check")
+    public ResponseEntity<Boolean> nicknameCheck(@RequestParam("n") String nickname){
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Boolean bool = memberService.checkNickname(nickname);
+
+        return new ResponseEntity<>(bool,HttpStatus.CREATED);
     }
 
-
-    @GetMapping()
+    @GetMapping("/kk")
     public String getMember(@RequestParam("par") String par){
 
-        return "param = par :" + par;
+        Long findmember = memberService.findMember();
+        System.out.println(findmember);
+
+        return "param = " + par + " \n memberId = " + findmember;
     }
 
     /*
     회원가입 확인 메일 전송
      */
-    @PostMapping("/emails/send-code")
+    @PostMapping("/signup/emails/send-code")
     public ResponseEntity sendMessage(@RequestParam("email") String email) {
         mailService.sendCodeToEmail(email);
 
@@ -61,14 +75,15 @@ public class MemberController {
     /*
     회원가입 코드 체크
      */
-    @PostMapping("/emails/check")
-    public String emailCheck(@RequestBody EmailCheckDto emailCheckDto){
+    @PostMapping("/signup/emails/check")
+    public ResponseEntity emailCheck(@RequestBody EmailCheckDto emailCheckDto){
         Boolean checked = mailService.checkAuthNum(emailCheckDto.getEmail(), emailCheckDto.getAuthNum());
+
         if(checked){
-            return "ok";
-        }else{
-            return "not ok";
+            return new ResponseEntity(HttpStatus.OK);
         }
+
+        return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
 
 

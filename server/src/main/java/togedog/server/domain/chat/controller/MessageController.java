@@ -6,44 +6,45 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.web.bind.annotation.*;
+import togedog.server.domain.chat.dto.MessagePageResponse;
 import togedog.server.domain.chat.dto.MessageRequest;
-import togedog.server.domain.chat.entity.ChatRoom;
-import togedog.server.domain.chat.entity.Message;
-import togedog.server.domain.chat.mapper.MessageMapper;
-import togedog.server.domain.chat.service.ChatService;
-import togedog.server.domain.member.entity.Member;
-import togedog.server.domain.member.service.MemberService;
+import togedog.server.domain.chat.service.MessageService;
+
+import java.util.List;
 
 @RestController
+@CrossOrigin(allowedHeaders = "*", origins = "*")
 @RequiredArgsConstructor
 public class MessageController {
 
-    private final MemberService memberService;
+    private final MessageService messageService;
 
-    private final ChatService chatService;
-
-    private final MessageMapper messageMapper;
+    private final SimpMessageSendingOperations simpMessageSendingOperations;
 
     //Client(Front) 쪽 코드 예시
     //function sendContent(client) {
     //    // pub prefix를 달고 있고 MessageMapping에 /chat/{room-id}로 되어있는곳에 추가
-    //    client.send("/sub/chat/{room-id}", {}, JSON.stringify({'content': $("#content").val()}));
+    //    client.send("/pub/chat/{room-id}", {}, JSON.stringify({'content': $("#content").val()}));
     //}
 
-    @MessageMapping("/chat/{room-id}")
-    @SendTo("/sub/chat/{room-id}")
-    public ResponseEntity sendMessage(@DestinationVariable("room-id") Long roomId, @RequestBody MessageRequest messageRequest) {
-        //TODO: Member Service에 findMember 메서드 작성 시 주석 해제 예정
+    @MessageMapping("/chat/{room-id}") // 보낼 때 /pub/chat/{room-id}
+    @SendTo("/sub/chat/{room-id}")     // 받을 때 /sub/chat/{room-id}
+    public ResponseEntity<String> sendMessage(@DestinationVariable("room-id") Long roomId, @RequestBody MessageRequest messageRequest) {
 
-        //Member findMember = memberService.findMember(messageRequest.getMemberId());
+        Long messageId = messageService.createMessage(roomId, messageRequest);
 
-        ChatRoom findChatRoom = chatService.findChatRoom(roomId);
+        return new ResponseEntity<>("messageId: " + messageId, HttpStatus.CREATED);
+    }
 
-        //Message message = messageMapper.messageRequestToMessage(messageRequest, findMember, findChatRoom)
+    @GetMapping("/chat/{room-id}/message")
+    public ResponseEntity<MessagePageResponse> getMessages(@PathVariable("room-id") Long chatRoomId,
+                                                             @RequestParam(name = "page_number") int pageNumber,
+                                                             @RequestParam(name = "page_size") int pageSize) {
 
+        MessagePageResponse response = messageService.findMessages(chatRoomId, pageNumber, pageSize);
 
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
