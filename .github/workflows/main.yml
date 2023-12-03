@@ -67,6 +67,6 @@ jobs:
              'fi',
              'sudo docker pull leesaewoo/togedog:${GITHUB_SHA::7}',
              'sudo docker tag leesaewoo/togedog:${GITHUB_SHA::7} togedog',
-             'sudo docker run -e TZ=Asia/Seoul --env-file ./togedog.env -d --name server -p 8080:8080 togedog'
+             'sudo docker run -e TZ=Asia/Seoul --env-file togedog.env -d --name server -p 8080:8080 togedog'
            ]" \
            --output text
