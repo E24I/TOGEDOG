@@ -7,11 +7,11 @@ import lombok.Getter;
 @Builder
 public class ChatRoomResponse {
 
-    private Long chatRoom_id;
+    private Long chatRoomId;
 
-    private Long other_member_id;
+    private Long otherMemberId;
 
-    private String latest_message;
+    private String latestMessage;
 
-    private String created_at;
+    private String createdAt;
 }

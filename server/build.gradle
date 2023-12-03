@@ -52,6 +52,7 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5' //jwt 추가(2)
 	runtimeOnly	'io.jsonwebtoken:jjwt-jackson:0.11.5' //jwt 추가(3)
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation' // valid 추가
+	implementation group: 'org.locationtech.proj4j', name: 'proj4j', version: '1.3.0' // 좌표변환 proj4 추가
 }
 
 ext {

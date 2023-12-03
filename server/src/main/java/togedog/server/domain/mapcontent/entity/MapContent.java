@@ -1,24 +1,27 @@
 package togedog.server.domain.mapcontent.entity;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.global.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
-@Setter
+@Builder
 public class MapContent extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mapContentId;
 
-    private String coordinate;
+    private String wsg84_x;
 
-//    @ManyToOne
-//    @JoinColumn(name = "feed_id")
-//    private Feed feed;
+    private String wsg84_y;
+
+    @OneToMany(mappedBy = "mapContent")
+    private List<Feed> feeds = new ArrayList<>();
 }

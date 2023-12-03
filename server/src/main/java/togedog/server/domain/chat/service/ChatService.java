@@ -1,7 +1,6 @@
 package togedog.server.domain.chat.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import togedog.server.domain.chat.dto.ChatPostRequest;
@@ -32,7 +31,7 @@ public class ChatService {
     private final ChatMapper chatMapper;
 
     @Transactional
-    public void createChatRoom(ChatPostRequest chatPostRequest) {
+    public Long createChatRoom(ChatPostRequest chatPostRequest) {
 
         Member requestMember = findMemberById(chatPostRequest.getRequestMemberId());
         Member inviteMember = findMemberById(chatPostRequest.getInviteMemberId());
@@ -57,11 +56,15 @@ public class ChatService {
 
         chatRoom.getChatParticipants().add(requestParticipant);
         chatRoom.getChatParticipants().add(inviteParticipant);
+
+        return chatRoom.getChatRoomId();
     }
 
-    public ChatRoom findChatRoom(Long chatRoomId) {
+    public ChatRoomResponse findChatRoom(Long memberId, Long chatRoomId) {
 
-        return chatRoomRepository.findById(chatRoomId).orElseThrow(ChatNotFoundException::new);
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(ChatNotFoundException::new);
+
+        return chatMapper.chatRoomToResponse(chatRoom, memberId);
     }
 
     public List<ChatRoomResponse> findChatRooms(Long memberId) {
