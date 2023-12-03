@@ -9,4 +9,7 @@ import togedog.server.domain.feed.entity.Feed;
 public interface FeedRepository extends JpaRepository<Feed, Long> {
 
     Page<Feed> findByOpenYnTrue(Pageable pageable);
+
+
+//    Feed findByOpenYnTrueAndDeleteYnFalse(Long feedId);
 }

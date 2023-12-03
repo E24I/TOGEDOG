@@ -27,7 +27,7 @@ public class ReplyController {
 
     @PatchMapping("/{reply-id}")
     public ResponseEntity<Void> updateReply(@PathVariable("reply-id") Long replyId,
-                                            @Valid @RequestBody ReplyUpdateApiRequest request) {
+                                            @RequestBody @Valid ReplyUpdateApiRequest request) {
 
         replyService.UpdateReply(request.toServiceRequest(),replyId);
 

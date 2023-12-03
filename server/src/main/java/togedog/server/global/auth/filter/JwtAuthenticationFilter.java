@@ -49,6 +49,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String accessToken = delegateAccessToken(member);
 //        String refreshToken = delegateRefreshToken(member);
 
+
         response.setHeader("Authorization", "Bearer" + accessToken);
 //        response.setHeader("Refresh", refreshToken);
         response.setHeader("Id", String.valueOf(memberId));
@@ -59,6 +60,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 //        String json = gson.toJson(member);
 
 //        response.getWriter().write(json);
+
 
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }

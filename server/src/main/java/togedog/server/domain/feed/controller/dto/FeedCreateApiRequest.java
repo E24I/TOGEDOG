@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import togedog.server.domain.feed.service.dto.request.FeedCreateServiceApiRequest;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Getter
 @Builder
@@ -24,7 +26,7 @@ public class FeedCreateApiRequest {
 
     private Boolean addMap;
 
-    private String images;
+    private List<String> images;
     private String videos;
 
     //공개,비공개 여부랑, 지도에 등록하기를 나눠서 받자!

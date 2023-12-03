@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Getter
 @Builder
@@ -15,7 +17,7 @@ public class FeedCreateServiceApiRequest {
     //    private String state;
     private Boolean openYn;
     private Boolean addMap; //
-    private String images;
+    private List<String> images;
     private String videos;
 
 

@@ -10,7 +10,6 @@ import lombok.Getter;
 public class ReplyServiceCreateApiRequest {
 
     private String content;
-    private Boolean fix;
 
 
 }

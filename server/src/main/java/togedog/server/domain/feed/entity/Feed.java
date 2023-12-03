@@ -34,7 +34,6 @@ public class Feed extends BaseEntity {
     @Lob
     private String content;
 
-    @Column(nullable = false)
     private String images;
 
     @Column(nullable = false)
@@ -47,7 +46,8 @@ public class Feed extends BaseEntity {
 //    @Enumerated(EnumType.STRING)
 //    private State state;
 
-    private Integer likeCount = 0;
+//    private Integer likeCount = 0; 직접 초기화는 안좋대 밑에 createPost 시 만들자
+    private Integer likeCount;
 
     private String address;
 
@@ -66,6 +66,7 @@ public class Feed extends BaseEntity {
 
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Reply> replies = new ArrayList<>();
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -78,6 +79,7 @@ public class Feed extends BaseEntity {
     private List<FeedBookmark> feedBookmarks = new ArrayList<>();
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<FeedImage> feedImages = new ArrayList<>();
 
     // 알림이 들어와야 할듯?
@@ -87,7 +89,7 @@ public class Feed extends BaseEntity {
     private Member member;
 
     public static Feed createFeed(String title, String content, String address,
-                                  Boolean openYn, Boolean addMap,String images,
+                                  Boolean openYn, Boolean addMap, List<FeedImage> images,
                                   String videos, Member member) {
         return Feed.builder()
                 .title(title)
@@ -95,10 +97,12 @@ public class Feed extends BaseEntity {
                 .address(address)
                 .openYn(openYn)
                 .addMap(addMap)
-                .images(images)
+                .feedImages(images)
                 .videos(videos)
                 .member(member)
                 .deleteYn(false)
+                .likeCount(0)
+                .repliesCount(0)
                 .build();
     }
 
@@ -119,6 +123,10 @@ public class Feed extends BaseEntity {
         this.deleteYn = true;
 
     }
+
+//    public void UpdateRepliesCount() {
+//        this.repliesCount =
+//    }
 
 
 
