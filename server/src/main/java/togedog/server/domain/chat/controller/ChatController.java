@@ -16,6 +16,7 @@ import togedog.server.global.dto.SingleResponseDto;
 import java.util.List;
 
 @RestController
+@RequestMapping("/chat")
 @CrossOrigin(allowedHeaders = "*", origins = "*")
 @RequiredArgsConstructor
 public class ChatController {
@@ -25,15 +26,16 @@ public class ChatController {
     private final LoginMemberUtil loginMemberUtil;
 
     //채팅방 생성
-    @PostMapping("/chat")
+    @PostMapping
     public ResponseEntity<String> postChatRoom(@RequestBody ChatPostRequest chatPostRequest) {
 
-        chatService.createChatRoom(chatPostRequest);
+        Long chatRoomId = chatService.createChatRoom(chatPostRequest);
 
-        return new ResponseEntity<>("chatRoomId: 추가예정", HttpStatus.CREATED);
+        return new ResponseEntity<>("chatRoomId: " + chatRoomId, HttpStatus.CREATED);
     }
 
-    @GetMapping("/chat")
+    //채팅방 목록 조회
+    @GetMapping
     public ResponseEntity<List<ChatRoomResponse>> getChatRooms(@RequestBody ChatGetRequest chatGetRequest) {
 
 //        Long memberId = loginMemberUtil.getLoginMemberId();
@@ -42,5 +44,14 @@ public class ChatController {
         List<ChatRoomResponse> responses = chatService.findChatRooms(memberId);
 
         return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
+    //채팅방 조회
+    @GetMapping("/{chatroom-id}")
+    public ResponseEntity<ChatRoomResponse> getChatRoom(@PathVariable("chatroom-id") Long chatRoomId, @RequestBody ChatGetRequest chatGetRequest) {
+
+        ChatRoomResponse response = chatService.findChatRoom(chatGetRequest.getMemberId(), chatRoomId);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

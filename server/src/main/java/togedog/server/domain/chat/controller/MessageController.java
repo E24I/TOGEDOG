@@ -7,11 +7,12 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import togedog.server.domain.chat.dto.MessagePageResponse;
 import togedog.server.domain.chat.dto.MessageRequest;
 import togedog.server.domain.chat.service.MessageService;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(allowedHeaders = "*", origins = "*")
@@ -30,11 +31,20 @@ public class MessageController {
 
     @MessageMapping("/chat/{room-id}") // 보낼 때 /pub/chat/{room-id}
     @SendTo("/sub/chat/{room-id}")     // 받을 때 /sub/chat/{room-id}
-    public ResponseEntity sendMessage(@DestinationVariable("room-id") Long roomId, @RequestBody MessageRequest messageRequest) {
+    public ResponseEntity<String> sendMessage(@DestinationVariable("room-id") Long roomId, @RequestBody MessageRequest messageRequest) {
 
         Long messageId = messageService.createMessage(roomId, messageRequest);
 
-        return new ResponseEntity<>("messageId: " + messageId, HttpStatus.OK);
+        return new ResponseEntity<>("messageId: " + messageId, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/chat/{room-id}/message")
+    public ResponseEntity<MessagePageResponse> getMessages(@PathVariable("room-id") Long chatRoomId,
+                                                             @RequestParam(name = "page_number") int pageNumber,
+                                                             @RequestParam(name = "page_size") int pageSize) {
+
+        MessagePageResponse response = messageService.findMessages(chatRoomId, pageNumber, pageSize);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
-
