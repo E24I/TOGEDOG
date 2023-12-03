@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 
 //회원가입 버튼
-export const SignApiCall = async (info: object) => {
+export const SignApiCall = async (info: object): Promise<any> => {
   try {
     const headers = {
       "ngrok-skip-browser-warning": "1",
@@ -13,10 +13,11 @@ export const SignApiCall = async (info: object) => {
       { headers: headers },
     );
     if (response.status === 201) {
-      console.log("회원가입 성공");
+      alert("회원가입 성공");
     }
-  } catch (err: any) {
-    console.log(err.response.data.message);
+    return response;
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -41,7 +42,6 @@ export const sendAuthentication = async (
   authentication: number,
   setIsAuthentication: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
-  // eslint-disable-next-line no-useless-catch
   try {
     const data = {
       email: `${email}`,
@@ -65,7 +65,10 @@ export const sendAuthentication = async (
 };
 
 //닉네임 중복확인 버튼
-export const checkNickName = async (nickname: string) => {
+export const checkNickName = async (
+  nickname: string,
+  setIsNickName: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
   try {
     // const headers = {
     //   "ngrok-skip-browser-warning": "1",
@@ -76,6 +79,7 @@ export const checkNickName = async (nickname: string) => {
     );
     if (response.data === false) {
       console.log("사용가능");
+      setIsNickName(true);
     } else if (response.data === true) {
       console.log("사용불가");
     }

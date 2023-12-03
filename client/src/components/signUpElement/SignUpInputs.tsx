@@ -30,8 +30,9 @@ const SignUpInputs = () => {
   } = useForm();
   const navigate = useNavigate();
 
-  const [allSelected, setAllSelected] = useState(false);
-  const [isAuthentication, setIsAuthentication] = useState(true); //인증코드상태
+  const [allSelected, setAllSelected] = useState<boolean>(false); //agree 상태
+  const [isAuthentication, setIsAuthentication] = useState<boolean>(true); //인증 코드 상태
+  const [isNickName, setIsNickName] = useState<boolean>(true); //닉네임 중복확인 상태
 
   //각각 input 태그 value 호출
   const email = watch("email", "");
@@ -67,11 +68,16 @@ const SignUpInputs = () => {
 
   const onSubmit = (data: any) => {
     if (data.authentication) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { authentication, ...rest } = data;
       SignApiCall(rest);
-      // console.log(rest);
-      // navigate("/");
+      //     .then((response) => {
+      //       if (response.status === 201) {
+      //         navigate("/");
+      //       }
+      //     })
+      //     .catch((response) => {
+      //       console.log(response.response);
+      //     });
     }
   };
 
@@ -132,7 +138,9 @@ const SignUpInputs = () => {
               autoComplete="off"
               {...register("nickname", { required: true })}
             />
-            <button onClick={() => checkNickName(nickname)}>중복확인</button>
+            <button onClick={() => checkNickName(nickname, setIsNickName)}>
+              중복확인
+            </button>
           </TextInput>
         </div>
         <div>
@@ -205,9 +213,16 @@ const SignUpInputs = () => {
         <SubmitButton
           type="submit"
           onClick={handleSubmit((data) => {
-            isAuthentication === false
-              ? alert("이메일 인증은 필수입니다.")
-              : onSubmit(data);
+            if (isAuthentication === false) {
+              return alert("이메일 인증은 필수입니다.");
+            } else if (isNickName === false) {
+              return alert("닉네임 중복확인을 해주세요");
+            } else if (allSelected === false) {
+              return alert("이용약관, 개인정보 수집은 필수입니다.");
+            } else {
+              alert("회원가입이 완료됐습니다.");
+              onSubmit(data);
+            }
           })}
         >
           가입하기
