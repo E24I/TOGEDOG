@@ -15,8 +15,18 @@ const Pagination: React.FC<OwnProps> = ({ isPage, totalPage, handleFunc }) => {
   // const handleChangePage = (page: number) => {if (page >= 1 && page <= totalPage) setPage(page);};
 
   const pageList = [];
-  for (let i = isPage - 2; i <= isPage + 2; i++) {
-    pageList.push(i);
+  if (isPage <= 3) {
+    for (let i = 1; i <= 5; i++) {
+      pageList.push(i);
+    }
+  } else if (3 < isPage && isPage < totalPage - 2) {
+    for (let i = isPage - 2; i <= isPage + 2; i++) {
+      pageList.push(i);
+    }
+  } else {
+    for (let i = totalPage - 4; i <= totalPage; i++) {
+      pageList.push(i);
+    }
   }
 
   return (
