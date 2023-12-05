@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { createRef, useRef, useState } from "react";
 import { feedListsType } from "../../types/feedDataType";
 import FeedDetail from "./FeedDetail";
 import {
@@ -17,7 +17,6 @@ import {
   FeedContent,
   FeedMedia,
   FeedImgs,
-  FeedImgBox,
   FeedImg,
   LeftScroll,
   RightScroll,
@@ -27,6 +26,7 @@ import {
   ReviewCount,
   Setting,
   SettingBox,
+  FeedVideo,
 } from "./Feed.Style";
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
@@ -51,6 +51,34 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   const handleLike = (): void => setLike(!isLike);
   const handleBookmark = (): void => setBookmark(!isBookmark);
   const handleSetting = (): void => setSetting(!isSetting);
+
+  const mediaRef = useRef<any>(null);
+  const imgRef = useRef<any>(items.media.imgUrl?.map(() => createRef()));
+  const [isMedia, setMedia] = useState<number>(0);
+
+  const handleScrollRight = () => {
+    console.log(isMedia);
+    console.log(imgRef.current[isMedia + 1]);
+    if (isMedia >= 0 && imgRef.current[isMedia + 1]) {
+      mediaRef.current.scrollLeft =
+        mediaRef.current.scrollLeft +
+        imgRef.current[isMedia].current.offsetWidth +
+        20;
+      setMedia(isMedia + 1);
+    }
+  };
+
+  const handleScrollLeft = () => {
+    console.log(isMedia);
+    console.log(imgRef.current[isMedia - 1]);
+    if (isMedia >= 0 && imgRef.current[isMedia - 1]) {
+      mediaRef.current.scrollLeft =
+        mediaRef.current.scrollLeft -
+        imgRef.current[isMedia - 1].current.offsetWidth -
+        20;
+      setMedia(isMedia - 1);
+    }
+  };
 
   return (
     <Feed>
@@ -103,22 +131,35 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
         <FeedTitle>{items.title}</FeedTitle>
         <FeedContent>{items.content}</FeedContent>
       </FeedContents>
+
       {items.media.imgUrl && items.media.videoUrl && (
         <FeedMedia>
-          <LeftScroll />
-          <FeedImgs>
-            {items.media.imgUrl?.map((el, idx) => (
-              <FeedImgBox key={idx}>
-                <FeedImg src={el} alt={`피드 이미지${idx + 1}`} />
-              </FeedImgBox>
-            ))}
+          <LeftScroll onClick={() => handleScrollLeft()} />
+          <FeedImgs ref={mediaRef}>
             {items.media.videoUrl && (
-              <FeedImgBox>{items.media.videoUrl}</FeedImgBox>
+              <FeedVideo
+                ref={imgRef.current[0]}
+                onClick={() => {
+                  console.log(items.media.videoUrl);
+                }}
+              />
             )}
+            {items.media.imgUrl?.map((el, idx) => (
+              <FeedImg
+                key={idx}
+                ref={imgRef.current[idx + 1]}
+                src={el}
+                alt={`피드 이미지${idx + 1}`}
+                onClick={() => {
+                  console.log(el);
+                }}
+              />
+            ))}
           </FeedImgs>
-          <RightScroll />
+          <RightScroll onClick={() => handleScrollRight()} />
         </FeedMedia>
       )}
+
       <FeedStatus>
         <LikeBox>
           <Heart

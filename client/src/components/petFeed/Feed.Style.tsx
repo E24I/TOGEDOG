@@ -114,12 +114,13 @@ export const FeedMedia = styled.div`
   margin: 0px 0px 5px 0px;
   padding: 15px 5px;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 `;
 
 export const FeedImgs = styled.div`
-  width: 880px;
+  max-width: 830px;
+  min-width: 830px;
   display: flex;
   justify-content: start;
   align-items: center;
@@ -127,7 +128,7 @@ export const FeedImgs = styled.div`
   overflow-x: auto;
 `;
 
-export const FeedImgBox = styled.div`
+export const FeedVideo = styled.video`
   border: 1px solid rgb(215, 215, 215);
   border-radius: 15px;
   height: 300px;
@@ -136,10 +137,13 @@ export const FeedImgBox = styled.div`
 `;
 
 export const FeedImg = styled.img`
+  border: 1px solid rgb(215, 215, 215);
   border-radius: 15px;
+  height: 300px;
+  margin: 10px;
+  background-color: rgb(215, 215, 215);
   /* aspect-ratio: 7/6; */
   /* min-width: 350px; */
-  height: 100%;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
