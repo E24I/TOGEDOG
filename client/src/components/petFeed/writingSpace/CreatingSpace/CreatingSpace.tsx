@@ -4,20 +4,30 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 import * as C from "./CreatingSpace.Style";
 import UploadSpace from "./Upload";
-import { title } from "process";
 
 interface CreatingSpaceProps {
   handleInputChange: (
     fieldName: string,
     value: string | boolean | { x: string; y: string } | string[],
   ) => void;
+  setAttachments: React.Dispatch<
+    React.SetStateAction<
+      {
+        url: string;
+        type: string;
+      }[]
+    >
+  >;
 }
 
 const modules = {
   toolbar: false,
 };
 
-const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
+const CreatingSpace: React.FC<CreatingSpaceProps> = ({
+  handleInputChange,
+  setAttachments,
+}) => {
   const [quillValue, setQuillValue] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const contentRef = useRef<any>();
@@ -60,8 +70,7 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
         <C.ProfileImg />
         <C.Username>세계 최강 귀요미 몽자</C.Username>
       </C.ProfileWrap>
-      <UploadSpace type="video" />
-      <UploadSpace type="image" />
+      <UploadSpace setAttachments={setAttachments} />
       <C.CreateTitleWrap>
         <C.CreateTitle
           placeholder="제목을 입력하세요"
