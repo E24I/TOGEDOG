@@ -3,8 +3,14 @@ import { useNavigate } from "react-router-dom";
 import * as W from "./WritingSpaces.Style";
 import CreatingSpace from "./CreatingSpace/CreatingSpace";
 import UpdatingSpace from "./updatingSpace/UpdatingSpace";
-import { postFeed, updateFeed } from "../../../services/feedService";
+import {
+  postFeed,
+  updateFeed,
+  getPresinedUrl,
+  uploadToS3,
+} from "../../../services/feedService";
 import { postInformationType } from "../../../types/feedDataType";
+
 import Map from "./Map";
 
 interface WritingSpaceProps {
@@ -21,11 +27,15 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     title: "",
     content: "",
     images: [],
-    videos: [],
+    video: "",
     openYn: isFeedPublic,
     mapYn: isMapAssign,
     address: { x: "", y: "" },
   });
+
+  const [attachments, setAttachments] = useState<
+    { url: string; type: string }[]
+  >([]);
 
   const [updateInformation, setUpdateInformation] = useState<{
     title: string;
@@ -39,14 +49,13 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     value: string | boolean | { x: string; y: string } | string[],
   ) => {
     setPostInformation((prevPostInformation) => {
-      if (
-        (fieldName === "images" && Array.isArray(value)) ||
-        (fieldName === "videos" && Array.isArray(value))
-      ) {
+      if (fieldName === "images" && Array.isArray(value)) {
         return {
           ...prevPostInformation,
           [fieldName]: [...prevPostInformation[fieldName], ...value],
         };
+      } else if (fieldName === "video" && typeof value === "string") {
+        return { ...prevPostInformation, [fieldName]: value };
       } else {
         return {
           ...prevPostInformation,
@@ -83,6 +92,20 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
       if (targetElement.textContent) {
         const textContent = targetElement.textContent;
         if (textContent === "게시") {
+          const images: string[] = [];
+          attachments.map(
+            async (file, idx) =>
+              await getPresinedUrl(file.url).then((data) =>
+                idx !== 0
+                  ? uploadToS3(data, file.url, file.type).then((url) => {
+                      images.push(url);
+                    })
+                  : uploadToS3(data, file.url, file.type).then((url) => {
+                      handleInputChange("video", url);
+                    }),
+              ),
+          );
+          handleInputChange("images", images);
           postFeed(postInformation);
         } else if (textContent === "완료") {
           updateFeed(updateInformation);
@@ -94,7 +117,6 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
   const handleContentChange = (title: string, content: string) => {
     setUpdateInformation({ title: title, content: content });
   };
-  console.log(updateInformation);
 
   const deleteLocation = () => {
     if (isMarked === true) {
@@ -105,6 +127,8 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
 
   console.log("p", postInformation);
   console.log(updateInformation);
+
+  console.log("a", attachments);
 
   return (
     <W.CreateFeedContainer>
@@ -118,7 +142,10 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
         </W.CreateButton>
       </W.FeedTopContainer>
       {page === "create" ? (
-        <CreatingSpace handleInputChange={handleInputChange} />
+        <CreatingSpace
+          handleInputChange={handleInputChange}
+          setAttachments={setAttachments}
+        />
       ) : (
         <UpdatingSpace handleContentChange={handleContentChange} />
       )}

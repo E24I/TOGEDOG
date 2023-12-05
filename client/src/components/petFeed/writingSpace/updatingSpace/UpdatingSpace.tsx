@@ -17,6 +17,8 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({ handleContentChange }) => {
   );
   const [title, setTitle] = useState<string>("기존제목");
   const [isContentEdit, setContentEdit] = useState<boolean>(false);
+  const [defaultTitleValue, setDefaultTitleValue] = useState<string>(""); //피드 디테일 데이터 받아서 저장
+  const [defaultContentValue, setDefaultContentValue] = useState<string>(""); //피드 디테일 데이터 받아서 저장
   const [isTitleEdit, setTitleEdit] = useState<boolean>(false);
 
   const changeToEditTitle = () => {

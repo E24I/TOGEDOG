@@ -59,7 +59,7 @@ export type postInformationType = {
   title: string;
   content: string;
   images: string[];
-  videos: string[];
+  video: string;
   openYn: boolean;
   mapYn: boolean;
   address: { x: string; y: string };

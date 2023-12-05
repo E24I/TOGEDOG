@@ -17,7 +17,7 @@ export const postFeed = async (postInfomation: postInformationType) => {
     {
       title: postInfomation.title,
       images: postInfomation.images,
-      videos: postInfomation.videos,
+      videos: postInfomation.video,
       content: postInfomation.content,
       state: postInfomation.openYn,
       map: postInfomation.mapYn,
@@ -45,9 +45,11 @@ export const updateFeed = async (updateInformation: updateInformationType) => {
   return res;
 };
 
-export const getPresinedUrl = () => {
-  // const res = axios.get(``, {});
-  // return { presinedUrl: res.data.presinedUrl };
+export const getPresinedUrl = async (file: string) => {
+  const res = await axios.post(`/presigned-url/feed `, {
+    imageName: file,
+  });
+  return res.data;
 };
 
 export const uploadToS3 = async (
@@ -57,10 +59,10 @@ export const uploadToS3 = async (
 ) => {
   const res = await axios.put(preSinedURL, {
     file,
-    Headers: { "Content-type": type },
+    headers: { "Content-type": type },
   });
   console.log(res);
-  return res;
+  return res.data;
 };
 
 export const deleteS3 = () => {
