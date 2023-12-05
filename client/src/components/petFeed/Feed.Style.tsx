@@ -17,6 +17,7 @@ export const Feed = styled.li`
 export const FeedHeader = styled.div`
   position: relative;
   width: 100%;
+  max-height: 50px;
   display: flex;
   justify-content: start;
   align-items: center;
@@ -93,6 +94,7 @@ export const Setting = styled(Dots)`
 `;
 
 export const FeedContents = styled.div`
+  max-height: 123px;
   padding: 10px 65px;
 `;
 
@@ -214,7 +216,7 @@ export const DetailContainer = styled.div`
 
 export const CloseModal = styled(Cancel)`
   position: absolute;
-  top: 2%;
+  top: 0;
   right: -10%;
   width: 60px;
   height: 60px;
@@ -226,39 +228,50 @@ export const CloseModal = styled(Cancel)`
 
 export const LeftDetail = styled.div`
   width: 100%;
-  max-width: calc(40vw - 70px);
+  max-width: 40vw;
   height: 100%;
-  padding: 30px 0px;
-`;
-
-export const FeedDetailMedia = styled.div`
-  border: 1px solid black;
-  width: 100%;
-  max-width: 880px;
-  height: 100%;
-  max-height: 600px;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
 `;
 
+export const RightDetail = styled.div`
+  border-left: 1px solid rgb(215, 215, 215);
+  width: 100%;
+  max-width: 40vw;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const FeedDetailMedia = styled.div`
+  width: 100%;
+  max-width: 880px;
+  height: 100%;
+  max-height: calc(100% - 240px);
+  padding: 0px 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+`;
+
 export const FeedDetailImgs = styled.div`
   width: 100%;
-  max-width: 610px;
   height: 100%;
-  max-height: 600px;
+  margin: 0px 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
 `;
 
 export const FeedDetailImgBox = styled.div`
-  border: 1px solid black;
   width: 100%;
-  max-width: 610px;
   height: 100%;
-  max-height: 600px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -267,34 +280,26 @@ export const FeedDetailImgBox = styled.div`
 export const FeedDetailImg = styled.img`
   border-radius: 15px;
   width: 100%;
-  max-width: 610px;
   height: 100%;
-  max-height: 600px;
-  /* aspect-ratio: 7/6; */
   background-size: auto 100%; // cover
   background-repeat: no-repeat;
   background-position: center;
   transition: 300ms;
 `;
 
+export const PaginationImage = styled.div`
+  position: absolute;
+  left: calc(50% - 35px);
+  bottom: 10px;
+  width: 70px;
+`;
+
 export const FeedDetailStatus = styled.div`
   width: 100%;
-  padding: 10px 30px;
+  padding: 10px 40px;
   display: flex;
   justify-content: start;
   align-items: start;
-`;
-
-export const RightDetail = styled.div`
-  border-left: 1px solid rgb(215, 215, 215);
-  width: 100%;
-  max-width: calc(40vw - 70px);
-  height: 100%;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
 `;
 
 export const FeedReviewTop = styled.div`
