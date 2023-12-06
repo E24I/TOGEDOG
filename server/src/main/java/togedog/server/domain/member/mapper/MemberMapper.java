@@ -8,4 +8,6 @@ import togedog.server.domain.member.entity.Member;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MemberMapper {
     Member memberPostDtoToMember(MemberDto.Post memberPostDto);
+
+    MemberDto.ResponseMemberInfo memberToResponseMemberInfo(Member member);
 }

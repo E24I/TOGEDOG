@@ -3,13 +3,18 @@ package togedog.server.domain.member.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import togedog.server.domain.feed.entity.Feed;
+import togedog.server.domain.feed.repository.FeedRepository;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.global.auth.utils.CustomAuthorityUtils;
 import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.memberexception.MemberExistException;
+import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.mail.MailService;
 
 import java.util.List;
@@ -23,6 +28,7 @@ public class MemberService {
     private final MailService mailService;
     private final MemberRepository memberRepository;
     private final LoginMemberUtil loginMemberUtil;
+    private final FeedRepository feedRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -67,9 +73,22 @@ public class MemberService {
 
     //멤버 찾기 로직
     public Long findMember(){
-
         return loginMemberUtil.getLoginMemberId();
     }
+
+
+    //멤버 프로필 조회
+    public Member findMember(Long memberId){
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberNotFoundException());
+        return member;
+    }
+
+    //프로필 게시글 조회
+    public Page<Feed> findFeed(Pageable pageable, Long memberId){
+        Member member = findMember(memberId);
+        return feedRepository.findAllByMember(member, pageable);
+    }
+
 
 
     //닉네임 확인 로직
