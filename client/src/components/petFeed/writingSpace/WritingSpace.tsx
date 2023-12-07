@@ -12,6 +12,7 @@ import {
 import { postInformationType } from "../../../types/feedDataType";
 
 import Map from "./Map";
+import { enrollCoordinate } from "../../../services/mapService";
 
 interface WritingSpaceProps {
   page: string;
@@ -21,8 +22,6 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
   const [isFeedPublic, setFeedPublic] = useState<boolean>(false);
   const [isMapAssign, setMapAssign] = useState<boolean>(false);
   const [isMarked, setMark] = useState<boolean>(false);
-  // const [location, setLocation] = useState<string>("");
-
   const [postInformation, setPostInformation] = useState<postInformationType>({
     title: "",
     content: "",
@@ -36,6 +35,12 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
   const [attachments, setAttachments] = useState<
     { url: string; type: string }[]
   >([]);
+
+  const [enrollMapInfo, setEnrollMapInfo] = useState<{
+    feedId: number;
+    x: string;
+    y: string;
+  }>({ feedId: 0, x: "", y: "" });
 
   const [updateInformation, setUpdateInformation] = useState<{
     title: string;
@@ -106,7 +111,18 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
               ),
           );
           handleInputChange("images", images);
-          postFeed(postInformation);
+          postFeed(postInformation)
+            .then(
+              (data) =>
+                data &&
+                setEnrollMapInfo({
+                  feedId: data.feedId,
+                  x: postInformation.address.x,
+                  y: postInformation.address.y,
+                }),
+            )
+            .then(() => enrollCoordinate(enrollMapInfo))
+            .then((data) => data && navigator(`feeds/${data.mapContentId}`));
         } else if (textContent === "완료") {
           updateFeed(updateInformation);
         }

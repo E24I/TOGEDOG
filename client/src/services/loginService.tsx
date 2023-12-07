@@ -10,13 +10,9 @@ export const LoginApiCall = async (info?: object) => {
   //로그인 상태 전환 핸들
   // const setLoginState = useSetRecoilState(isLoginAtom);
   try {
-    const headers = {
-      "ngrok-skip-browser-warning": "1",
-    };
     const response = await axios.post(
       "http://15.165.78.7:8080/auth/login",
       info,
-      { headers: headers },
     );
     if (response.status === 200) {
       console.log("성공");

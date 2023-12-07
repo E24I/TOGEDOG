@@ -4,7 +4,7 @@ import { createNewChatType } from "../types/chatType";
 
 export const createNewChat = async (memberId: createNewChatType) => {
   const res = await axios.post(
-    `https://7540-61-101-53-142.ngrok-free.app/chat`,
+    `http://15.165.78.7:8080/chat`,
     {
       requestMemberId: memberId.requestMemberId,
       inviteMemberId: memberId.inviteMemberId,
@@ -22,18 +22,16 @@ export const createNewChat = async (memberId: createNewChatType) => {
 
 export const getAllRooms = async () => {
   try {
-    const res = await axios.get(
-      `https://67ca-61-101-53-142.ngrok-free.app/chat`,
-      {
-        headers: { Authorization: "" },
-      },
-    );
+    const res = await axios.get(`http://15.165.78.7:8080/chat`, {
+      headers: { Authorization: "" },
+    });
     return res.data;
   } catch (error) {
     console.error("데이터 가져오기 실패:", error);
     throw new Error("데이터 가져오기 실패");
   }
 };
+
 export const GetAllRoomsQuery = () => {
   const { data } = useQuery({
     queryKey: ["rooms"],
@@ -44,7 +42,7 @@ export const GetAllRoomsQuery = () => {
 
 export const getAllMessages = async (roomId: number) => {
   const res = await axios.get(
-    `https://67ca-61-101-53-142.ngrok-free.app/chat/${roomId}/message`,
+    `http://15.165.78.7:8080/chat/${roomId}/message`,
     {
       headers: { Authorization: "" },
     },
@@ -64,21 +62,15 @@ export const GetAllMessagesQuery = (roomId: number) => {
 };
 
 export const exitARoom = async (roomId: number) => {
-  const res = axios.delete(
-    `https://67ca-61-101-53-142.ngrok-free.app/chat/${roomId}`,
-    {
-      headers: { Authorization: "" },
-    },
-  );
+  const res = axios.delete(`http://15.165.78.7:8080/chat/${roomId}`, {
+    headers: { Authorization: "" },
+  });
   return res;
 };
 
 export const reportAMessage = async (roomId: number) => {
-  const res = axios.post(
-    `https://67ca-61-101-53-142.ngrok-free.app/chat/${roomId}`,
-    {
-      headers: { Authorization: "" },
-    },
-  );
+  const res = axios.post(`http://15.165.78.7:8080/chat/${roomId}`, {
+    headers: { Authorization: "" },
+  });
   return res;
 };

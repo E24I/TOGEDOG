@@ -51,7 +51,7 @@ const ChattingDetail: React.FC<ChattingDetailprops> = ({
   useEffect(() => {
     // WebSocket 연결 생성
     const client = new Client({
-      brokerURL: "ws://290c-61-101-53-142.ngrok-free.app/ws", // WebSocket 서버 주소 및 엔드포인트
+      brokerURL: "http://15.165.78.7:8080/ws", // WebSocket 서버 주소 및 엔드포인트
       debug: (str) => {
         console.log(str);
       },
