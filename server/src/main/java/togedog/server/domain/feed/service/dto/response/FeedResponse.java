@@ -54,7 +54,7 @@ public class FeedResponse {
                 .title(feed.getTitle())
                 .content(feed.getContent())
                 .member(MemberInfo.of(feed.getMember()))
-                .images(feedImagesUrls)
+                .images(feedImagesUrls)// 객체로 받으니까 에러뜬다..
                 .videos(feed.getVideos())
                 .updatedDate(feed.getModifiedDateTime())
                 .createdDate(feed.getCreatedDateTime())

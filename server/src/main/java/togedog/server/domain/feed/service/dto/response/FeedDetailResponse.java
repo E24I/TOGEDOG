@@ -58,6 +58,7 @@ public class FeedDetailResponse {
                     .updatedDate(feed.getModifiedDateTime())
                     .address(feed.getAddress())
                     .images(feedImagesUrls)
+//                    .images(feed.getFeedImages())
                     .videos(feed.getVideos())
                     .likeCount(feed.getLikeCount())
                     .bookmarkYn(isBookmarkedByCurrentUser)

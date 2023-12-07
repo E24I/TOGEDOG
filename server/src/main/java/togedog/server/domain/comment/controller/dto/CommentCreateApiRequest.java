@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import togedog.server.domain.comment.service.dto.CommentCreateServiceRequest;
+import togedog.server.domain.comment.service.dto.request.CommentCreateServiceRequest;
 
 import javax.validation.constraints.NotBlank;
 

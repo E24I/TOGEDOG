@@ -89,7 +89,7 @@ public class Feed extends BaseEntity {
     private Member member;
 
     public static Feed createFeed(String title, String content, String address,
-                                  Boolean openYn, Boolean addMap, List<FeedImage> images,
+                                  Boolean openYn, Boolean addMap,
                                   String videos, Member member) {
         return Feed.builder()
                 .title(title)
@@ -97,7 +97,6 @@ public class Feed extends BaseEntity {
                 .address(address)
                 .openYn(openYn)
                 .addMap(addMap)
-                .feedImages(images)
                 .videos(videos)
                 .member(member)
                 .deleteYn(false)

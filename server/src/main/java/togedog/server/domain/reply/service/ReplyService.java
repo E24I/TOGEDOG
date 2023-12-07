@@ -3,6 +3,7 @@ package togedog.server.domain.reply.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.feed.repository.FeedRepository;
@@ -153,6 +154,20 @@ public class ReplyService {
 //
 //        return replyResponses;
 //    }
+
+    public void fixReply(Long replyId) {
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+
+        Optional<Reply> replyOptional = replyRepository.findById(replyId);
+        Reply reply = replyOptional.orElseThrow(ReplyNotFoundException::new);
+
+        Long feedId = reply.getFeed().getFeedId();
+        Optional<Feed> feedOptional = feedRepository.findById(feedId);
+        Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
+        if (feed.getMember().getMemberId() == loginMemberId) {
+
+        }
+    }
 
     private Long isLogined(Long loginMemberId) {
         if (loginMemberId == null) {

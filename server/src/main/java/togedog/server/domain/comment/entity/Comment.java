@@ -1,9 +1,6 @@
 package togedog.server.domain.comment.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import togedog.server.domain.commentreport.entity.CommentReport;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.feedreport.entity.FeedReport;
@@ -19,6 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment extends BaseEntity {
@@ -42,4 +40,15 @@ public class Comment extends BaseEntity {
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentReport> commentReports = new ArrayList<>();
+
+
+    public static Comment createComment(String content, Reply reply, Member member) {
+        return Comment.builder()
+                .content(content)
+                .member(member)
+                .reply(reply)
+                .build();
+
+
+    }
 }
