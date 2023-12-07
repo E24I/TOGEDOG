@@ -90,6 +90,42 @@ public class MemberController {
         return new ResponseEntity<>(new MultiResponseDto<>(memberFeedDtos,pageFeed), HttpStatus.OK);
     }
 
+//    /*
+//    본인이 좋아요 한 게시글 조회
+//     */
+//    @GetMapping("/{member-id}/feed-like")
+//    public ResponseEntity<?> findMemberFeedLike(@PathVariable("member-id")Long memberId,
+//                                            @RequestParam(defaultValue = "1") int page,
+//                                            @RequestParam(defaultValue = "10")int size){
+//
+//        Pageable pageable = PageRequest.of(page -1 , size);
+//        Page<Feed> pageFeed = memberService.findFeed(pageable, memberId);
+//        List<MemberFeedDto> memberFeedDtos = new ArrayList<>();
+//
+//        for(Feed feed : pageFeed.getContent()){
+//            memberFeedDtos.add(MemberFeedDto.of(feed));
+//        }
+//        return new ResponseEntity<>(new MultiResponseDto<>(memberFeedDtos,pageFeed), HttpStatus.OK);
+//    }
+//
+//    /*
+// 본인이 북마크 한 게시글 조회
+//  */
+//    @GetMapping("/{member-id}/feed-bookmark")
+//    public ResponseEntity<?> findMemberFeedBookmark(@PathVariable("member-id")Long memberId,
+//                                                @RequestParam(defaultValue = "1") int page,
+//                                                @RequestParam(defaultValue = "10")int size){
+//
+//        Pageable pageable = PageRequest.of(page -1 , size);
+//        Page<Feed> pageFeed = memberService.findFeed(pageable, memberId);
+//        List<MemberFeedDto> memberFeedDtos = new ArrayList<>();
+//
+//        for(Feed feed : pageFeed.getContent()){
+//            memberFeedDtos.add(MemberFeedDto.of(feed));
+//        }
+//        return new ResponseEntity<>(new MultiResponseDto<>(memberFeedDtos,pageFeed), HttpStatus.OK);
+//    }
+
 
     @GetMapping("/kk")
     public String getMember(@RequestParam("par") String par){
