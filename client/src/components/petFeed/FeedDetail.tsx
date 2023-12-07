@@ -9,16 +9,17 @@ import {
   FeedContent,
   FeedContents,
   FeedDetailImg,
-  FeedDetailImgBox,
   FeedDetailImgs,
   FeedDetailMedia,
   FeedDetailStatus,
+  FeedDetailVideo,
   FeedHeader,
   FeedTitle,
   LeftDetail,
   LeftScroll,
   LikeBox,
   ModalBackground,
+  PaginationImage,
   PinPoint,
   Profile,
   ProfileBox,
@@ -26,6 +27,7 @@ import {
   RightDetail,
   RightScroll,
   Setting,
+  SettingBox,
   Unknown,
   UploadTime,
   UserName,
@@ -35,6 +37,8 @@ import { feedDetailData } from "./FeedDummy";
 import FeedReply from "./FeedReply";
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
+import Dropdown from "../../atoms/dropdown/Dropdowns";
+import PaginationCircle from "../../atoms/pagination/PaginationCircle";
 
 interface OwnProps {
   feedId: number;
@@ -46,6 +50,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
   const [isLike, setLike] = useState<boolean>(false);
   const [isBookmark, setBookmark] = useState<boolean>(false);
   const [isImg, setImg] = useState<number>(1);
+  const [isSetting, setSetting] = useState<boolean>(false);
   const today = new Date();
   const createDate = isDetail.createDate;
   const feedDate = createDate.split("-").map((el) => parseInt(el));
@@ -54,6 +59,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
 
   const handleLike = (): void => setLike(!isLike);
   const handleBookmark = (): void => setBookmark(!isBookmark);
+  const handleSetting = (): void => setSetting(!isSetting);
   const handlePrevImg = (): void => {
     if (!isDetail.media.imgUrl || !isDetail.media.videoUrl) return;
     if (isImg !== 1) {
@@ -118,7 +124,21 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
                 ? `${today.getMinutes() - feedTime[1]}분 전`
                 : `${today.getSeconds() - feedTime[2]}초 전`}
             </UploadTime>
-            <Setting />
+            <SettingBox
+              onClick={handleSetting}
+              onBlur={() => setSetting(false)}
+            >
+              <Setting />
+              {isSetting && (
+                <Dropdown
+                  contents={["수정하기", "삭제하기"]}
+                  handleFunc={(e) => {
+                    console.log(e.currentTarget.textContent);
+                    setSetting(false);
+                  }}
+                />
+              )}
+            </SettingBox>
           </FeedHeader>
           <FeedContents>
             <FeedTitle>{isDetail.title}</FeedTitle>
@@ -131,20 +151,33 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
                 {isDetail.media.imgUrl?.map((el, idx) => {
                   if (isImg === idx + 1) {
                     return (
-                      <FeedDetailImgBox key={idx}>
-                        <FeedDetailImg src={el} alt={`피드 이미지${idx + 1}`} />
-                      </FeedDetailImgBox>
+                      <FeedDetailImg
+                        key={idx}
+                        src={el}
+                        alt={`피드 이미지${idx + 1}`}
+                      />
                     );
                   }
                 })}
                 {isDetail.media.videoUrl &&
                   isDetail.media.imgUrl?.length + 1 === isImg && (
-                    <FeedDetailImgBox>
-                      {isDetail.media.videoUrl}
-                    </FeedDetailImgBox>
+                    <FeedDetailVideo src={isDetail.media.videoUrl} />
                   )}
               </FeedDetailImgs>
               <RightScroll onClick={handleNextImg} />
+              <PaginationImage>
+                <PaginationCircle
+                  isPage={isImg}
+                  totalPage={
+                    isDetail.media.videoUrl
+                      ? 1 + isDetail.media.imgUrl?.length
+                      : isDetail.media.imgUrl?.length
+                  }
+                  handleFunc={(el) => {
+                    setImg(el);
+                  }}
+                />
+              </PaginationImage>
             </FeedDetailMedia>
           )}
           <FeedDetailStatus>
