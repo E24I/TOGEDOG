@@ -6,6 +6,7 @@ import togedog.server.domain.feedimage.entity.FeedImage;
 import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.feedreport.entity.FeedReport;
 import togedog.server.domain.feedbookmark.entity.FeedBookmark;
+import togedog.server.domain.mapcontent.entity.MapContent;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.reply.entity.Reply;
 import togedog.server.global.entity.BaseEntity;
@@ -87,6 +88,10 @@ public class Feed extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @ManyToOne
+    @JoinColumn(name = "map_content_id")
+    private MapContent mapContent;
 
     public static Feed createFeed(String title, String content, String address,
                                   Boolean openYn, Boolean addMap,

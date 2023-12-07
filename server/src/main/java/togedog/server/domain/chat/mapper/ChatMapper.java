@@ -43,7 +43,7 @@ public class ChatMapper {
         }
     }
 
-    private ChatRoomResponse chatRoomToResponse(ChatRoom chatRoom, Long requestMemberId) {
+    public ChatRoomResponse chatRoomToResponse(ChatRoom chatRoom, Long requestMemberId) {
 
         if(chatRoom == null) {
             return null;
@@ -66,10 +66,10 @@ public class ChatMapper {
             }
 
             return ChatRoomResponse.builder()
-                    .chatRoom_id(chatRoom.getChatRoomId())
-                    .other_member_id(otherMemberId)
-                    .latest_message(chatRoom.getLatestMessage())
-                    .created_at(chatRoom.getCreatedDateTime().toString())
+                    .chatRoomId(chatRoom.getChatRoomId())
+                    .otherMemberId(otherMemberId)
+                    .latestMessage(chatRoom.getLatestMessage())
+                    .createdAt(chatRoom.getCreatedDateTime().toString())
                     .build();
         }
     }
