@@ -11,30 +11,22 @@ export const getFeedLists = () => {
     .catch((err) => console.log(err));
 };
 
-export const postFeed = async (postInfomation: postInformationType) => {
+export const postFeed = async (postInformation: postInformationType) => {
   const res = await axios.post(
-    `/feed`,
-    {
-      title: postInfomation.title,
-      images: postInfomation.images,
-      videos: postInfomation.video,
-      content: postInfomation.content,
-      state: postInfomation.openYn,
-      map: postInfomation.mapYn,
-      address: postInfomation.address,
-    },
+    `http://15.165.78.7:8080/feed`,
+    postInformation,
     {
       headers: {
         Authorization: "authorizedToken자리",
       },
     },
   );
-  return res;
+  return res.data;
 };
 
 export const updateFeed = async (updateInformation: updateInformationType) => {
   const res = await axios.post(
-    `/feed/{feed-id}/reply/{reply-id}`,
+    `http://15.165.78.7:8080/feed/{feed-id}/reply/{reply-id}`,
     { title: updateInformation.title, content: updateInformation.content },
     {
       headers: {
@@ -46,7 +38,7 @@ export const updateFeed = async (updateInformation: updateInformationType) => {
 };
 
 export const getPresinedUrl = async (file: string) => {
-  const res = await axios.post(`/presigned-url/feed `, {
+  const res = await axios.post(`http://15.165.78.7:8080/presigned-url/feed `, {
     imageName: file,
   });
   return res.data;
