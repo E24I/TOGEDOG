@@ -14,14 +14,21 @@ import {
   ReplySetting,
   ReviewCount,
   Setting,
+  SettingBox,
   ShowComment,
   Unknown,
 } from "./Feed.Style";
 import Heart from "../../atoms/button/Heart";
+import Dropdown from "../../atoms/dropdown/Dropdowns";
 
 const FeedReply: React.FC = () => {
   const [isLike, setLike] = useState<boolean>(false);
+  const [isSetting, setSetting] = useState<boolean>(false);
+  const [isComment, setComment] = useState<boolean>(false);
+
   const handleLike = (): void => setLike(!isLike);
+  const handleSetting = (): void => setSetting(!isSetting);
+  const handleComment = (): void => setComment(!isComment);
 
   return (
     <Replies>
@@ -48,12 +55,32 @@ const FeedReply: React.FC = () => {
               handleFunc={handleLike}
             />
             <ReplyLikeCount>1</ReplyLikeCount>
-            <Setting />
+            <SettingBox
+              onClick={handleSetting}
+              onBlur={() => setSetting(false)}
+            >
+              <Setting />
+              {isSetting && (
+                <Dropdown
+                  contents={["수정하기", "삭제하기"]}
+                  handleFunc={(e) => {
+                    console.log(e.currentTarget.textContent);
+                    setSetting(false);
+                  }}
+                />
+              )}
+            </SettingBox>
           </ReplySetting>
-          <ShowComment>└ 답글 보기(1)</ShowComment>
-          <Comments>
-            <FeedComment />
-          </Comments>
+          <ShowComment onClick={handleComment}>
+            {isComment ? "└ 답글 닫기" : "└ 답글 보기(1)"}
+          </ShowComment>
+          {isComment && (
+            <>
+              <Comments>
+                <FeedComment />
+              </Comments>
+            </>
+          )}
         </ReplyContents>
       </Reply>
     </Replies>

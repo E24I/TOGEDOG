@@ -14,7 +14,7 @@ export const LoginApiCall = async (info?: object) => {
       "ngrok-skip-browser-warning": "1",
     };
     const response = await axios.post(
-      "https://cb1f-116-125-236-74.ngrok-free.app/auth/login",
+      "http://15.165.78.7:8080/auth/login",
       info,
       { headers: headers },
     );

@@ -1,4 +1,4 @@
-import React, { createRef, useRef, useState } from "react";
+import React, { createRef, useEffect, useRef, useState } from "react";
 import { feedListsType } from "../../types/feedDataType";
 import FeedDetail from "./FeedDetail";
 import {
@@ -31,6 +31,7 @@ import {
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
+import { getFeedLists } from "../../services/feedService";
 
 interface OwnProps {
   items: feedListsType;
@@ -79,6 +80,10 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
       setMedia(isMedia - 1);
     }
   };
+
+  useEffect(() => {
+    getFeedLists();
+  }, []);
 
   return (
     <Feed>

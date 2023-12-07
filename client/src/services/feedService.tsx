@@ -6,7 +6,7 @@ import {
 
 export const getFeedLists = () => {
   return axios
-    .get(``)
+    .get(`http://15.165.78.7:8080/feed`)
     .then((res) => console.log(res))
     .catch((err) => console.log(err));
 };

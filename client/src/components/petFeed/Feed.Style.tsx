@@ -86,7 +86,7 @@ export const SettingBox = styled.button`
 `;
 
 export const Setting = styled(Dots)`
-  width: 25px;
+  width: 20px;
   height: 20px;
   path {
     fill: rgb(200, 200, 200);
@@ -251,8 +251,8 @@ export const RightDetail = styled.div`
 export const FeedDetailMedia = styled.div`
   width: 100%;
   max-width: 880px;
-  height: 100%;
   max-height: calc(100% - 240px);
+  min-height: calc(100% - 240px);
   padding: 0px 5px;
   display: flex;
   justify-content: space-between;
@@ -269,14 +269,6 @@ export const FeedDetailImgs = styled.div`
   align-items: center;
 `;
 
-export const FeedDetailImgBox = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 export const FeedDetailImg = styled.img`
   border-radius: 15px;
   width: 100%;
@@ -284,7 +276,15 @@ export const FeedDetailImg = styled.img`
   background-size: auto 100%; // cover
   background-repeat: no-repeat;
   background-position: center;
-  transition: 300ms;
+`;
+
+export const FeedDetailVideo = styled.video`
+  border-radius: 15px;
+  width: 100%;
+  height: 100%;
+  background-size: auto 100%; // cover
+  background-repeat: no-repeat;
+  background-position: center;
 `;
 
 export const PaginationImage = styled.div`
@@ -296,7 +296,7 @@ export const PaginationImage = styled.div`
 
 export const FeedDetailStatus = styled.div`
   width: 100%;
-  padding: 10px 40px;
+  padding: 10px 55px;
   display: flex;
   justify-content: start;
   align-items: start;
@@ -367,12 +367,12 @@ export const Mentions = styled.span`
   font-weight: 600;
 `;
 
-export const ReplyDate = styled.button`
-  padding: 5px 20px 5px 0px;
+export const ReplyDate = styled.span`
+  padding: 5px 10px 5px 0px;
 `;
 
-export const ReplyLikeCount = styled.button`
-  padding: 5px 20px 5px 0px;
+export const ReplyLikeCount = styled.span`
+  padding: 5px 10px 5px 0px;
 `;
 
 export const ShowComment = styled.button`

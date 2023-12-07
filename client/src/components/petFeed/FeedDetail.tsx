@@ -9,10 +9,10 @@ import {
   FeedContent,
   FeedContents,
   FeedDetailImg,
-  FeedDetailImgBox,
   FeedDetailImgs,
   FeedDetailMedia,
   FeedDetailStatus,
+  FeedDetailVideo,
   FeedHeader,
   FeedTitle,
   LeftDetail,
@@ -151,17 +151,17 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
                 {isDetail.media.imgUrl?.map((el, idx) => {
                   if (isImg === idx + 1) {
                     return (
-                      <FeedDetailImgBox key={idx}>
-                        <FeedDetailImg src={el} alt={`피드 이미지${idx + 1}`} />
-                      </FeedDetailImgBox>
+                      <FeedDetailImg
+                        key={idx}
+                        src={el}
+                        alt={`피드 이미지${idx + 1}`}
+                      />
                     );
                   }
                 })}
                 {isDetail.media.videoUrl &&
                   isDetail.media.imgUrl?.length + 1 === isImg && (
-                    <FeedDetailImgBox>
-                      {isDetail.media.videoUrl}
-                    </FeedDetailImgBox>
+                    <FeedDetailVideo src={isDetail.media.videoUrl} />
                   )}
               </FeedDetailImgs>
               <RightScroll onClick={handleNextImg} />
