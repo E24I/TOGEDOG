@@ -7,6 +7,7 @@ spring:
     url: jdbc:mysql://togedog-db.cnf4knedrisz.ap-northeast-2.rds.amazonaws.com:3306/togedog_db
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -15,3 +16,9 @@ spring:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
+
+    cache:
+      type: redis
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379

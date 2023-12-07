@@ -6,6 +6,7 @@ import togedog.server.domain.feedimage.entity.FeedImage;
 import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.feedreport.entity.FeedReport;
 import togedog.server.domain.feedbookmark.entity.FeedBookmark;
+import togedog.server.domain.mapcontent.entity.MapContent;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.reply.entity.Reply;
 import togedog.server.global.entity.BaseEntity;
@@ -34,7 +35,6 @@ public class Feed extends BaseEntity {
     @Lob
     private String content;
 
-    @Column(nullable = false)
     private String images;
 
     @Column(nullable = false)
@@ -47,7 +47,8 @@ public class Feed extends BaseEntity {
 //    @Enumerated(EnumType.STRING)
 //    private State state;
 
-    private Integer likeCount = 0;
+//    private Integer likeCount = 0; 직접 초기화는 안좋대 밑에 createPost 시 만들자
+    private Integer likeCount;
 
     private String address;
 
@@ -66,6 +67,7 @@ public class Feed extends BaseEntity {
 
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Reply> replies = new ArrayList<>();
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -78,7 +80,8 @@ public class Feed extends BaseEntity {
     private List<FeedBookmark> feedBookmarks = new ArrayList<>();
 
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FeedImage> feedImages = new ArrayList<>(); // 필요 x
+//    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<FeedImage> feedImages = new ArrayList<>();
 
     // 알림이 들어와야 할듯?
 
@@ -86,8 +89,12 @@ public class Feed extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @ManyToOne
+    @JoinColumn(name = "map_content_id")
+    private MapContent mapContent;
+
     public static Feed createFeed(String title, String content, String address,
-                                  Boolean openYn, Boolean addMap,String images,
+                                  Boolean openYn, Boolean addMap, List<FeedImage> images,
                                   String videos, Member member) {
         return Feed.builder()
                 .title(title)
@@ -95,10 +102,12 @@ public class Feed extends BaseEntity {
                 .address(address)
                 .openYn(openYn)
                 .addMap(addMap)
-                .images(images)
+                .feedImages(images)
                 .videos(videos)
                 .member(member)
                 .deleteYn(false)
+                .likeCount(0)
+                .repliesCount(0)
                 .build();
     }
 
@@ -119,6 +128,10 @@ public class Feed extends BaseEntity {
         this.deleteYn = true;
 
     }
+
+//    public void UpdateRepliesCount() {
+//        this.repliesCount =
+//    }
 
 
 

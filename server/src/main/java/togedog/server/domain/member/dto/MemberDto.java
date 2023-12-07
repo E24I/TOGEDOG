@@ -1,5 +1,6 @@
 package togedog.server.domain.member.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
@@ -40,8 +41,14 @@ public class MemberDto {
     }
 
     @Getter
-    public static class Response{
+    @Builder
+    public static class ResponseMemberInfo{
 
+        private Long memberId;
+        private String email;
+        private String nickname;
+        private String image;
+        private String myIntro;
     }
 
 }

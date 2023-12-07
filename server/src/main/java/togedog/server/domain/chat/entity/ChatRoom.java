@@ -18,6 +18,8 @@ public class ChatRoom extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatRoomId;
 
+    private String latestMessage = "not exist";
+
     @OneToMany(mappedBy = "chatRoom")
     private List<Message> messages = new ArrayList<>();
 

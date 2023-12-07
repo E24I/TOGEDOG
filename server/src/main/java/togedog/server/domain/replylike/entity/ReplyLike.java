@@ -1,9 +1,6 @@
 package togedog.server.domain.replylike.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.reply.entity.Reply;
@@ -16,6 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class ReplyLike extends BaseEntity {
 
     @Id
