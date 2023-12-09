@@ -8,6 +8,7 @@ import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.reply.entity.Reply;
 import togedog.server.global.entity.BaseEntity;
 import togedog.server.global.entity.State;
+import togedog.server.global.exception.businessexception.commentexception.CommentAlreadyDeleteException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,8 +28,10 @@ public class Comment extends BaseEntity {
 
     private String content;
 
-    @Enumerated(EnumType.STRING)
-    private State state;
+    private Boolean deleteYn;
+
+//    @Enumerated(EnumType.STRING)
+//    private State state;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
@@ -45,10 +48,21 @@ public class Comment extends BaseEntity {
     public static Comment createComment(String content, Reply reply, Member member) {
         return Comment.builder()
                 .content(content)
+                .deleteYn(false)
                 .member(member)
                 .reply(reply)
                 .build();
+    }
 
+    public void updateNewContent(String content) {
+        if (content != null) {
+            this.content = content;
+        }
+    }
 
+    public void deleteMyComment() {
+        if(this.deleteYn == false) {
+        this.deleteYn = true;
+        } else throw new CommentAlreadyDeleteException();
     }
 }

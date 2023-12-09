@@ -57,8 +57,7 @@ public class ReplyController {
 
         replyService.fixReply(replyId);
 
-        return ResponseEntity.noContent().build();
-    }
+        return ResponseEntity.noContent().build();}
 
 
     @PostMapping("{reply-id}/comment") //리플에 대한 코멘트 생성

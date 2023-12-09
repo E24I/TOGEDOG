@@ -29,6 +29,7 @@ public class FeedResponse {
     private Integer likeCount;
     private boolean bookmarkYn;
     private boolean likeYn;
+    private Boolean replyFix;
     private String address;
     private Integer repliesCount;
 
@@ -59,10 +60,11 @@ public class FeedResponse {
                 .updatedDate(feed.getModifiedDateTime())
                 .createdDate(feed.getCreatedDateTime())
                 .likeCount(feed.getLikeCount())
-                .repliesCount(feed.getReplies().size())
-//                .repliesCount(feed.getRepliesCount())
+//                .repliesCount(feed.getReplies().size()) // 사이즈로 반환하면 안됨 삭제 시 줄여주니까 실제 삭제가 아니라서
+                .repliesCount(feed.getRepliesCount())
                 .address(feed.getAddress())
                 .bookmarkYn(isBookmarkedByCurrentUser)
+                .replyFix(feed.getReplyFix())
                 .likeYn(isLikedByCurrentUser)
                 .build();
 

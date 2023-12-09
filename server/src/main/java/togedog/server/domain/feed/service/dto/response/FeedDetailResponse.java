@@ -31,6 +31,7 @@ public class FeedDetailResponse {
     private Integer likeCount;
     private boolean bookmarkYn;
     private boolean likeYn;
+    private Boolean replyFix;
     private String address;
     private Integer repliesCount;
     private FeedReplies replies;
@@ -63,6 +64,7 @@ public class FeedDetailResponse {
                     .likeCount(feed.getLikeCount())
                     .bookmarkYn(isBookmarkedByCurrentUser)
                     .likeYn(isLikedByCurrentUser)
+                    .replyFix(feed.getReplyFix())
                     .member(MemberInfo.of(feed.getMember()))
                     .repliesCount(feed.getRepliesCount())
                     .replies(replies)

@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import togedog.server.domain.comment.controller.dto.CommentUpdateApiRequest;
 import togedog.server.domain.comment.entity.Comment;
 import togedog.server.domain.comment.repository.CommentRepository;
 import togedog.server.domain.comment.service.dto.request.CommentCreateServiceRequest;
+import togedog.server.domain.comment.service.dto.request.CommentUpdateServiceRequest;
 import togedog.server.domain.comment.service.dto.response.CommentResponse;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
@@ -14,6 +16,7 @@ import togedog.server.domain.reply.entity.Reply;
 import togedog.server.domain.reply.repository.ReplyRepository;
 import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.commentexception.CommentNotFoundException;
+import togedog.server.global.exception.businessexception.memberexception.MemberAccessDeniedException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
 import togedog.server.global.exception.businessexception.replyexception.ReplyNotFoundException;
@@ -66,8 +69,54 @@ public class CommentService {
         Reply reply = optionalReply.orElseThrow(CommentNotFoundException::new);
 
 
-        Page<Comment> commentPage = commentRepository.findByReply(reply, pageable);
+        Page<Comment> commentPage = commentRepository.findByReplyAndDeleteYnIsFalse(reply, pageable);
         return commentPage.map(comment -> CommentResponse.commentSingleResponse(comment)); // CommentResponse로 변환하여 반환
+    }
+
+    public void updateComment(Long commentId, CommentUpdateServiceRequest request) {
+
+        Long loginMemberId =  loginMemberUtil.getLoginMemberId();
+
+        if (loginMemberId == null) {
+            throw new MemberNotLoginException();}
+
+        Optional<Member> memberOptional = memberRepository.findById(loginMemberId);
+        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
+
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        Comment comment = optionalComment.orElseThrow(CommentNotFoundException::new);
+
+
+        checkAccessAuthority(comment.getMember().getMemberId(), loginMemberId);
+
+        comment.updateNewContent(request.getContent());
+
+
+    }
+
+    public void deleteComment(Long commentId) {
+
+        Long loginMemberId =  loginMemberUtil.getLoginMemberId();
+
+        if (loginMemberId == null) {
+            throw new MemberNotLoginException();}
+
+        Optional<Member> memberOptional = memberRepository.findById(loginMemberId);
+        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
+
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        Comment comment = optionalComment.orElseThrow(CommentNotFoundException::new);
+
+        checkAccessAuthority(comment.getMember().getMemberId(), loginMemberId);
+
+        Optional<Reply> optionalReply = replyRepository.findById(comment.getReply().getReplyId());
+        Reply reply = optionalReply.orElseThrow(ReplyNotFoundException::new);
+
+        comment.deleteMyComment();
+
+        reply.setCommentCount(reply.getCommentCount() - 1);
+
+
     }
 
     private Comment postComment(CommentCreateServiceRequest request, Reply reply, Member member) {
@@ -77,5 +126,11 @@ public class CommentService {
                 member
         );
 
+    }
+
+    private void checkAccessAuthority(Long AuthorId, Long loginMemberId) {
+        if (!AuthorId.equals(loginMemberId)) {
+            throw new MemberAccessDeniedException();
+        }
     }
 }
