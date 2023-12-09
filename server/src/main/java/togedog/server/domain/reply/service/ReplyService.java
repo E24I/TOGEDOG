@@ -2,7 +2,10 @@ package togedog.server.domain.reply.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.feed.repository.FeedRepository;
@@ -18,13 +21,16 @@ import togedog.server.domain.reply.service.dto.response.ReplyResponse;
 import togedog.server.domain.replylike.entity.ReplyLike;
 import togedog.server.domain.replylike.repository.ReplyLikeRepository;
 import togedog.server.global.auth.utils.LoginMemberUtil;
+import togedog.server.global.exception.businessexception.feedexception.FeedAlreadyDeleteException;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberAccessDeniedException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
+import togedog.server.global.exception.businessexception.replyexception.ReplyDontDeleteAboutFixException;
 import togedog.server.global.exception.businessexception.replyexception.ReplyNotFoundException;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -42,7 +48,7 @@ public class ReplyService {
     public Long createReply(ReplyServiceCreateApiRequest request, Long feedId) {
 
         Long loginMemberId =  loginMemberUtil.getLoginMemberId(); // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
-        isLogined(loginMemberId);
+        isLogin(loginMemberId);
 
 
         Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
@@ -64,7 +70,7 @@ public class ReplyService {
     public void UpdateReply(ReplyServiceUpdateApiRequest request, Long replyId) {
 
         Long loginMemberId =  loginMemberUtil.getLoginMemberId(); // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
-        isLogined(loginMemberId);
+        isLogin(loginMemberId);
 
         Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
         Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
@@ -83,7 +89,7 @@ public class ReplyService {
     public void deleteReply(Long replyId) {
 
         Long loginMemberId =  loginMemberUtil.getLoginMemberId(); // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
-        isLogined(loginMemberId);
+        isLogin(loginMemberId);
 
 //        Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
 //        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
@@ -93,16 +99,27 @@ public class ReplyService {
         Optional<Reply> optionalReply = replyRepository.findById(replyId);
         Reply reply = optionalReply.orElseThrow(ReplyNotFoundException::new);
 
+        if(reply.getFix()) { //고정 되어 있으면 삭제 불가능
+            throw new ReplyDontDeleteAboutFixException();
+        }
+
+        Optional<Feed> optionalFeed = feedRepository.findById(reply.getFeed().getFeedId());
+        Feed feed = optionalFeed.orElseThrow(FeedNotFoundException::new);
+
         checkAccessAuthority(reply.getMember().getMemberId(), loginMemberId);
 
-        //삭제 시 feed count 자체를 하나 줄여야 하는데 어떻게 찾을까 ?
 
         reply.deleteMyReply();
+
+        feed.setRepliesCount(feed.getRepliesCount() - 1);
+
 
     }
 
     public Page<ReplyResponse> getRepliesPaged(Long feedId, Pageable pageable,  Long loginMemberId) {
 
+        Pageable pageable1 = PageRequest.of(0,3, Sort.by("createdDateTime").descending());
+        // 받아서 넘기니까 왠진 모르겠는데 안넘온다;; 그냐 여기서 만들어서 주자!
         if (loginMemberId != null) {
             Optional<Member> optionalMember = memberRepository.findById(loginMemberId);
 
@@ -111,8 +128,12 @@ public class ReplyService {
 
 
                 Optional<Feed> feedOptional = feedRepository.findById(feedId);
+
                 Feed feed = feedOptional.get();
-                Page<Reply> repliesPage = replyRepository.findByFeed(feed, pageable);
+                if (feed.getDeleteYn() == true) {
+                    throw new FeedAlreadyDeleteException();
+                }
+                Page<Reply> repliesPage = replyRepository.findByFeedAndDeleteYnFalse(feed, pageable1);
 
                 Page<ReplyResponse> replyResponses = repliesPage.map(reply -> {
                     boolean isLikedByCurrentUser = isReplyLikedByMember(member, reply); // 사용자에 따른 좋아요 여부 확인
@@ -129,7 +150,11 @@ public class ReplyService {
             Optional<Feed> feedOptional = feedRepository.findById(feedId);
             Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
 
-            Page<Reply> repliesPage = replyRepository.findByFeed(feed, pageable);
+            if (feed.getDeleteYn() == true) {
+                throw new FeedAlreadyDeleteException();
+            }
+
+            Page<Reply> repliesPage = replyRepository.findByFeedAndDeleteYnFalse(feed, pageable1);
 
             Page<ReplyResponse> replyResponses = repliesPage.map(reply ->
                     ReplyResponse.singReplyResponse(reply, false) // 로그인되지 않은 상태에서는 좋아요가 없는 상태로 가정
@@ -154,7 +179,58 @@ public class ReplyService {
 //        return replyResponses;
 //    }
 
-    private Long isLogined(Long loginMemberId) {
+    public void fixReply(Long replyId) {
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+
+        // ㄷ따로 리플 찾을 때 나중에 막기
+
+        Optional<Reply> replyOptional = replyRepository.findById(replyId);
+        Reply reply = replyOptional.orElseThrow(ReplyNotFoundException::new);
+
+        Long feedId = reply.getFeed().getFeedId();
+        Optional<Feed> feedOptional = feedRepository.findById(feedId);
+        Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
+
+        checkAccessAuthority(feed.getFeedId(), loginMemberId);
+        boolean foundMatchingReply = false;
+
+        if (!feed.getReplyFix()) {
+            // 피드의 replyFix가 false인 경우
+            // 주어진 replyId를 가진 댓글을 고정합니다.
+            reply.setFix(true);
+            feed.setReplyFix(true);
+        } else {
+
+            for (Reply feedReply : feed.getReplies()) {
+                if (feedReply.getFix()) {
+                    if (feedReply.getReplyId().equals(replyId)) {
+                        // 이미 고정된 댓글이 주어진 replyId와 일치하는 경우
+                        feedReply.setFix(false); // 댓글의 고정을 취소합니다.
+                        foundMatchingReply = true;
+                        feed.setReplyFix(false);
+
+                    } else {
+                        feedReply.setFix(false); // 다른 댓글이 이미 고정된 경우 취소합니다.
+                    }
+                }
+            }
+
+            if (!foundMatchingReply) {
+                // 주어진 replyId를 가진 댓글을 고정합니다.
+                reply.setFix(true);
+                feed.setReplyFix(true);
+            }
+        }
+
+        replyRepository.save(reply);
+        feedRepository.save(feed);
+
+    }
+
+
+
+
+    private Long isLogin(Long loginMemberId) {
         if (loginMemberId == null) {
             throw new MemberNotLoginException();
         }
@@ -213,4 +289,8 @@ public class ReplyService {
 //            }
 //        }
 //    }
+
+
 }
+
+

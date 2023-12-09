@@ -52,30 +52,22 @@ public class ReplyController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{reply-id}/fix")
+    private ResponseEntity<Void> fixReply(@PathVariable("reply-id") Long replyId) {
+
+        replyService.fixReply(replyId);
+
+        return ResponseEntity.noContent().build();}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @PostMapping("{reply-id}/comments") //리플에 대한 코멘트 생성
+    @PostMapping("{reply-id}/comment") //리플에 대한 코멘트 생성
     public ResponseEntity<Void> createComment(@PathVariable("reply-id") Long replyId,
                                               @RequestBody @Valid CommentCreateApiRequest request) {
 
-//        Long commentId = commentService.createComment(request.toServiceRequest(),replyId)
-        return null;
+        Long commentId = commentService.createComment(request.toServiceRequest(), replyId);
+        URI uri = URI.create("/comment/" + commentId);
+
+        return ResponseEntity.created(uri).build();
     }
 
 

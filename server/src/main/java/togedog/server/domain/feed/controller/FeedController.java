@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -40,10 +41,10 @@ public class FeedController {
 
 
 
-    @GetMapping("/") //전체 피드 반환 이미지 처리 다시하자
+    @GetMapping //전체 피드 반환 이미지 처리 다시하자
     public ResponseEntity<ApiPageResponse<FeedResponse>> getFeeds(@RequestParam(defaultValue = "1") int page,
                                                                   @RequestParam(defaultValue = "5") int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdDateTime").descending());
         Page<FeedResponse> feedsPage = feedService.getFeedsPaged(pageable);
 
         return ResponseEntity.ok(ApiPageResponse.ok(feedsPage));

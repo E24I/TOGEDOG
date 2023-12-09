@@ -11,6 +11,7 @@ import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.reply.entity.Reply;
 import togedog.server.global.entity.BaseEntity;
 import togedog.server.global.entity.State;
+import togedog.server.global.exception.businessexception.feedexception.FeedAlreadyDeleteException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -31,13 +32,11 @@ public class Feed extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
     @Lob
     private String content;
 
     private String images;
 
-    @Column(nullable = false)
     private String videos;
 
     private Integer views = 0;
@@ -94,20 +93,20 @@ public class Feed extends BaseEntity {
     private MapContent mapContent;
 
     public static Feed createFeed(String title, String content, String address,
-                                  Boolean openYn, Boolean addMap, List<FeedImage> images,
+                                  Boolean openYn, Boolean addMap,
                                   String videos, Member member) {
         return Feed.builder()
                 .title(title)
                 .content(content)
                 .address(address)
                 .openYn(openYn)
-                .addMap(addMap)
-                .feedImages(images)
+                .addMap(addMap) //
                 .videos(videos)
                 .member(member)
                 .deleteYn(false)
                 .likeCount(0)
                 .repliesCount(0)
+                .replyFix(false)
                 .build();
     }
 
@@ -125,7 +124,11 @@ public class Feed extends BaseEntity {
     }
 
     public void deleteMyFeed() {
-        this.deleteYn = true;
+        if(this.deleteYn == false) {
+
+
+        this.deleteYn = true;}
+        else throw new FeedAlreadyDeleteException();
 
     }
 
