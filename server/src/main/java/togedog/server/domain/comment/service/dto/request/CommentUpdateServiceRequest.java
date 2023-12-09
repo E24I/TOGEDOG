@@ -1,4 +1,4 @@
-package togedog.server.domain.comment.service.dto;
+package togedog.server.domain.comment.service.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @NoArgsConstructor
-public class CommentCreateServiceRequest {
+public class CommentUpdateServiceRequest {
 
     private String content;
 }

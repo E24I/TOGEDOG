@@ -1,26 +1,27 @@
-package togedog.server.domain.comment.Controller.dto;
-
+package togedog.server.domain.comment.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import togedog.server.domain.comment.service.dto.request.CommentCreateServiceRequest;
+import togedog.server.domain.comment.service.dto.request.CommentUpdateServiceRequest;
 
 import javax.validation.constraints.NotBlank;
 
-@Getter
 @Builder
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
-public class CommentCreateApiRequest {
+@AllArgsConstructor
+public class CommentUpdateApiRequest {
 
     @NotBlank(message = "댓글의 내용을 입력해주세요.")
     private String content;
 
-    public CommentCreateServiceRequest toServiceRequest() {
-        return CommentCreateServiceRequest.builder()
+
+    public CommentUpdateServiceRequest ToCommentUpdateService() {
+        return CommentUpdateServiceRequest.builder()
                 .content(content)
                 .build();
     }
+
 }

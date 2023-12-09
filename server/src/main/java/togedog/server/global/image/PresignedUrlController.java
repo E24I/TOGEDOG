@@ -16,7 +16,7 @@ public class PresignedUrlController {
 
     private final PresignedUrlService presignedUrlService;
 
-    @PostMapping("/feed")
+    @PostMapping()
     public ResponseEntity<String> generatePresignedUrl(@RequestBody ImageNameDTO imageNameDTO) {
         String generatedUrl = presignedUrlService.getPreSignedUrl("", imageNameDTO.getImageName());
         return ResponseEntity.ok(generatedUrl);
