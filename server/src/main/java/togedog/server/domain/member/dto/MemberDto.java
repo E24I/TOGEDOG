@@ -42,8 +42,7 @@ public class MemberDto {
 
     @Getter
     @Builder
-    public static class ResponseMemberInfo{
-
+    public static class ResponseMemberInfo {
         private Long memberId;
         private String email;
         private String nickname;
