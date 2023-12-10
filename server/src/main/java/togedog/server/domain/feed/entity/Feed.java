@@ -35,7 +35,8 @@ public class Feed extends BaseEntity {
     @Lob
     private String content;
 
-    private String images;
+    @ElementCollection
+    private List<String> images = new ArrayList<>();
 
     private String videos;
 
