@@ -191,7 +191,7 @@ public class ReplyService {
         Optional<Feed> feedOptional = feedRepository.findById(feedId);
         Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
 
-        checkAccessAuthority(feed.getFeedId(), loginMemberId);
+        checkAccessAuthority(feed.getMember().getMemberId(), loginMemberId);
         boolean foundMatchingReply = false;
 
         if (!feed.getReplyFix()) {
