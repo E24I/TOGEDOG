@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import togedog.server.domain.feed.controller.dto.FeedCreateApiRequest;
@@ -67,6 +68,18 @@ public class FeedService {
         Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
 
         Feed feed = postFeed(request, member);
+        List<FeedImage> feedImages = createFeedImages(request.getImages(), feed);
+
+        feed.setFeedImages(feedImages);
+//        List<FeedImage> feedImages = new ArrayList<>();
+//        if (imageUrls != null && !imageUrls.isEmpty()) {
+//            for (String imageUrl : imageUrls) {
+//                FeedImage feedImage = FeedImage.builder()
+//                        .feedImageUrl(imageUrl)
+//                        .build();
+//                feedImages.add(feedImage);
+//            }}
+
         feedRepository.save(feed);
 
         return feed.getFeedId();
@@ -83,7 +96,7 @@ public class FeedService {
         Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
         Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
 
-        Page<Feed> feedsPage = feedRepository.findByOpenYnTrue(pageable); // 여기서 deleteyn 여부도 찾아서 반환
+        Page<Feed> feedsPage = feedRepository.findByOpenYnTrueAndDeleteYnIsFalse(pageable); // 여기서 deleteyn 여부도 찾아서 반환
 //        return feedsPage.map(FeedResponse::singleFeedResponse);
 
         return feedsPage.map(feed -> {
@@ -95,7 +108,7 @@ public class FeedService {
         });
         } else {
 
-            Page<Feed> feedsPage = feedRepository.findByOpenYnTrue(pageable); // 여기서 deleteyn 여부도 찾아서 반환
+            Page<Feed> feedsPage = feedRepository.findByOpenYnTrueAndDeleteYnIsFalse(pageable); // 여기서 deleteyn 여부도 찾아서 반환
 //        return feedsPage.map(FeedResponse::singleFeedResponse); 11
 
             return feedsPage.map(feed -> {
@@ -123,7 +136,9 @@ public class FeedService {
         Optional<Feed> feedOptional = feedRepository.findById(feedId);
         Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
 
-        Page<ReplyResponse> pagedReplies = replyService.getRepliesPaged(feedId, PageRequest.of(0, 3), loginMemberId);
+        Page<ReplyResponse> pagedReplies = replyService.getRepliesPaged(feedId,
+                PageRequest.of(0, 3, Sort.by("createdDateTime").descending()), loginMemberId);
+
         List<ReplyResponse> replyResponses = pagedReplies.getContent();
 
         FeedDetailResponse.FeedReplies feedReplies = FeedDetailResponse.FeedReplies
@@ -141,7 +156,9 @@ public class FeedService {
             Optional<Feed> feedOptional = feedRepository.findById(feedId);
             Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
 
-            Page<ReplyResponse> pagedReplies = replyService.getRepliesPaged(feedId, PageRequest.of(0, 3), loginMemberId);
+            Page<ReplyResponse> pagedReplies = replyService.getRepliesPaged(feedId,
+                    PageRequest.of(0, 3, Sort.by("createdDateTime").descending()), loginMemberId);
+
             List<ReplyResponse> replyResponses = pagedReplies.getContent();
 
             FeedDetailResponse.FeedReplies feedReplies = FeedDetailResponse.FeedReplies
@@ -262,26 +279,41 @@ public class FeedService {
     }
 
     private Feed postFeed(FeedCreateServiceApiRequest request, Member member) {
-        List<String> imageUrls = request.getImages();
-        List<FeedImage> feedImages = new ArrayList<>();
-        if (imageUrls != null && !imageUrls.isEmpty()) {
-            for (String imageUrl : imageUrls) {
-                FeedImage feedImage = FeedImage.builder()
-                        .feedImageUrl(imageUrl)
-                        .build();
-                feedImages.add(feedImage);
-            }}
+//        List<String> imageUrls = request.getImages();
+//        List<FeedImage> feedImages = new ArrayList<>();
+//        if (imageUrls != null && !imageUrls.isEmpty()) {
+//            for (String imageUrl : imageUrls) {
+//                FeedImage feedImage = FeedImage.builder()
+//                        .feedImageUrl(imageUrl)
+//                        .build();
+//                feedImages.add(feedImage);
+//            }}
         return Feed.createFeed(
                 request.getTitle(),
                 request.getContent(),
                 request.getAddress(),
                 request.getOpenYn(),
                 request.getAddMap(),
-                feedImages,
                 request.getVideos(),
                 member
 
         );
+    }
+
+    private List<FeedImage> createFeedImages(List<String> imageUrls, Feed feed) {
+        List<FeedImage> feedImages = new ArrayList<>();
+
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+            for (String imageUrl : imageUrls) {
+                FeedImage feedImage = FeedImage.builder()
+                        .feedImageUrl(imageUrl)
+                        .feed(feed)
+                        .build();
+                feedImages.add(feedImage);
+            }
+        }
+
+        return feedImages;
     }
 
 //    private boolean isReplyLikedByMember(Member member, Reply reply) {

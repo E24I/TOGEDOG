@@ -9,6 +9,7 @@ import togedog.server.domain.replylike.entity.ReplyLike;
 import togedog.server.domain.replyreport.entity.ReplyReport;
 import togedog.server.global.entity.BaseEntity;
 import togedog.server.global.entity.State;
+import togedog.server.global.exception.businessexception.replyexception.ReplyAlreadyDeleteException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -66,6 +67,7 @@ public class Reply extends BaseEntity {
                 .deleteYn(false)
                 .likeCount(0)
                 .commentCount(0)
+                .fix(false)
                 .build();
     }
 
@@ -76,8 +78,11 @@ public class Reply extends BaseEntity {
     }
 
     public void deleteMyReply() {
-        this.deleteYn = true;
+        if (this.deleteYn == false) {
+            this.deleteYn = true;
+        } else throw new ReplyAlreadyDeleteException();
     }
+
 
 
 }
