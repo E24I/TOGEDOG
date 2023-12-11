@@ -1,32 +1,34 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router";
 import Oauth from "./Oauth";
 import PasswordChangeForm from "../myPage/infoChangeComponent/PasswordChange";
 import {
   InputContainer,
   LoginButtonOn,
-  LoginButtonOff,
   LostPassword,
   SignUpMove,
   LoginInput,
   LogoImg,
 } from "./LoginForm.style";
-import { LoginApiCall } from "../../services/loginService";
+import { usePostLogin } from "../../hooks/memberHook";
 
 const LoginForm: React.FC = () => {
   const [lostPw, setLostPw] = useState<boolean>(false); //비밀번호 변경 모달
-  const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
+  const { register, watch } = useForm();
   const handleModal = () => {
     setLostPw(!lostPw);
   };
+  const email = watch("email", "");
+  const password = watch("password", "");
+  const { mutate } = usePostLogin({ email, password });
 
-  const loginButton = (data: object) => {
-    // window.localStorage.clear();
-    LoginApiCall(data);
-    // navigate("/feeds");
+  const handleLogin = () => {
+    if (!email || !password) {
+      alert("이메일과 비밀번호를 입력하세요.");
+      return;
+    }
+    mutate();
   };
 
   return (
@@ -52,15 +54,7 @@ const LoginForm: React.FC = () => {
             비밀번호를 잊으셨나요?
           </LostPassword>
           {lostPw && <PasswordChangeForm setLostPw={setLostPw} />}
-          <LoginButtonOn
-            type="submit"
-            onClick={handleSubmit((data) => {
-              LoginApiCall(data);
-              // navigate("/feeds");
-            })}
-          >
-            로그인
-          </LoginButtonOn>
+          <LoginButtonOn onClick={handleLogin}>로그인</LoginButtonOn>
         </form>
         <div>
           <Oauth />
