@@ -7,7 +7,7 @@ import togedog.server.domain.member.entity.Member;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-12-06T16:17:43+0900",
+    date = "2023-12-11T15:43:15+0900",
     comments = "version: 1.5.1.Final, compiler: javac, environment: Java 11.0.20 (Azul Systems, Inc.)"
 )
 @Component
@@ -32,22 +32,5 @@ public class MemberMapperImpl implements MemberMapper {
         }
 
         return member;
-    }
-
-    @Override
-    public MemberDto.ResponseMemberInfo memberToResponseMemberInfo(Member member) {
-        if ( member == null ) {
-            return null;
-        }
-
-        MemberDto.ResponseMemberInfo.ResponseMemberInfoBuilder responseMemberInfo = MemberDto.ResponseMemberInfo.builder();
-
-        responseMemberInfo.memberId( member.getMemberId() );
-        responseMemberInfo.email( member.getEmail() );
-        responseMemberInfo.nickname( member.getNickname() );
-        responseMemberInfo.image( member.getImage() );
-        responseMemberInfo.myIntro( member.getMyIntro() );
-
-        return responseMemberInfo.build();
     }
 }

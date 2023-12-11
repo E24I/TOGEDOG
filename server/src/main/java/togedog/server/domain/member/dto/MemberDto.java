@@ -2,9 +2,11 @@ package togedog.server.domain.member.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import togedog.server.domain.pet.entity.Pet;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.List;
 
 public class MemberDto {
 
@@ -48,6 +50,7 @@ public class MemberDto {
         private String nickname;
         private String image;
         private String myIntro;
+        private List<Pet> pet;
     }
 
 }

@@ -9,5 +9,18 @@ import togedog.server.domain.member.entity.Member;
 public interface MemberMapper {
     Member memberPostDtoToMember(MemberDto.Post memberPostDto);
 
-    MemberDto.ResponseMemberInfo memberToResponseMemberInfo(Member member);
+    default MemberDto.ResponseMemberInfo memberToResponseMemberInfo(Member member){
+        if (member == null) {
+            return null;
+        } else {
+            MemberDto.ResponseMemberInfo.ResponseMemberInfoBuilder responseMemberInfo = MemberDto.ResponseMemberInfo.builder();
+            responseMemberInfo.memberId(member.getMemberId());
+            responseMemberInfo.email(member.getEmail());
+            responseMemberInfo.nickname(member.getNickname());
+            responseMemberInfo.image(member.getImage());
+            responseMemberInfo.myIntro(member.getMyIntro());
+            responseMemberInfo.pet(member.getPet());
+            return responseMemberInfo.build();
+        }
+    };
 }

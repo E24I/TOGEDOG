@@ -2,7 +2,7 @@ package togedog.server.domain.pet.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import togedog.server.domain.member.dto.MemberDto;
+import togedog.server.domain.member.mapper.MemberInfo;
 import togedog.server.domain.pet.entity.Gender;
 
 public class PetDto {
@@ -24,7 +24,7 @@ public class PetDto {
     @Getter
     public static class Response{
         private String petId;
-        private MemberDto.ResponseMemberInfo memberInfo;
+        private MemberInfo memberInfo;
         private String name;
         private Long age;
         private String type;

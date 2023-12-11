@@ -30,7 +30,7 @@ public class PetController {
         Pet createdPet = petService.createPet(pet);
 
         URI location = UriCreator.createUri("/pet", createdPet.getPetId());
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).build(); //location 으로 return
     }
 
     @GetMapping("/{pet-id}")
