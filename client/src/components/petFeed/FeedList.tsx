@@ -31,7 +31,7 @@ import {
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
-import { getFeedLists } from "../../services/feedService";
+import { useGetFeeds } from "../../hooks/FeedHook";
 
 interface OwnProps {
   items: feedListsType;
@@ -81,9 +81,8 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
     }
   };
 
-  useEffect(() => {
-    getFeedLists();
-  }, []);
+  const { data } = useGetFeeds();
+  console.log(data?.data);
 
   return (
     <Feed>

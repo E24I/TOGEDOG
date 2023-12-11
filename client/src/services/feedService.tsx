@@ -1,14 +1,20 @@
 import axios from "axios";
+import { ROOT_URL } from "./api";
 import {
   postInformationType,
   updateInformationType,
 } from "../types/feedDataType";
 
-export const getFeedLists = () => {
-  return axios
-    .get(`http://15.165.78.7:8080/feed`)
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
+// 피드 전체 조회
+export const getFeeds = async () => {
+  const { data } = await axios.get(`${ROOT_URL}/feed`);
+  return data;
+};
+
+// 피드 단일 조회
+export const getFeed = async (feedId: number) => {
+  const { data } = await axios.get(`${ROOT_URL}/feed/${feedId}`);
+  return data;
 };
 
 export const postFeed = async (postInformation: postInformationType) => {
