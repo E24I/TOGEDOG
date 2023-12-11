@@ -11,13 +11,13 @@ import java.util.stream.Collectors;
 
 @Getter
 public class ErrorResponse {
-    private int status;
+    private String status;
     private String message;
     private List<FieldError> fieldErrors;
     private List<ConstraintViolationError> violationErrors;
 
     private ErrorResponse(int status, String message) {
-        this.status = status;
+        this.status = "SECURITY-" + status;
         this.message = message;
     }
 
