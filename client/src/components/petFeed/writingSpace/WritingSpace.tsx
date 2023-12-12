@@ -10,9 +10,10 @@ import {
   uploadToS3,
 } from "../../../services/feedService";
 import { postInformationType } from "../../../types/feedDataType";
-
 import Map from "./Map";
-import { enrollMap } from "../../../services/mapService";
+import { postMap } from "../../../services/mapService";
+import { useRecoilValue } from "recoil";
+import { tokenAtom } from "../../../atoms";
 
 interface WritingSpaceProps {
   page: string;
@@ -42,6 +43,7 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     title: string;
     content: string;
   }>({ title: "", content: "" });
+  const token = useRecoilValue(tokenAtom);
 
   const navigator = useNavigate();
   const handleInputChange = (
@@ -134,29 +136,21 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
 
           handleInputChange("images", images);
 
-          postFeed(postInformation)
-            .then(
-              (data) =>
-                data &&
-                enrollCoordinate(
-                  "feedId",
-                  Number(data.headers.location.substr(7)),
-                ),
+          postFeed(postInformation, token)
+            .then((data) =>
+              enrollCoordinate(
+                "feedId",
+                Number(data.headers.location.substr(7)),
+              ),
             )
             .then(() =>
-              enrollMap(enrollMapInfo)
-                .then((data) => data && navigator(`feeds/${data.mapContentId}`))
+              postMap(enrollMapInfo)
+                .then((data) => data && navigator(`/feeds`))
                 .catch(() => alert("map등록 요청 실패")),
             )
-            .catch((err) =>
-              alert(
-                err.response.data.message +
-                  " " +
-                  err.response.data.data[0].reason,
-              ),
-            );
+            .catch((err) => alert(err.response.data.message));
         } else if (textContent === "완료") {
-          updateFeed(updateInformation);
+          updateFeed(updateInformation, token);
         }
       }
     }
