@@ -88,7 +88,7 @@ public class ChatService {
 
     private void verifyExistParticipant(Long memberId, Long chatRoomId) {
 
-        if(chatParticipantRepository.findByMemberMemberIdAndChatRoomChatRoomId(memberId, chatRoomId).isEmpty()) {
+        if(!chatParticipantRepository.findByMemberMemberIdAndChatRoomChatRoomId(memberId, chatRoomId).isEmpty()) {
             throw new ChatNotFoundException();
         }
     }
