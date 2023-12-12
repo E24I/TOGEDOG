@@ -2,18 +2,26 @@ package togedog.server.domain.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.member.dto.MemberDto;
+import togedog.server.domain.member.dto.MemberFeedDto;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.mapper.MemberMapper;
 import togedog.server.domain.member.service.MemberService;
+import togedog.server.global.dto.MultiResponseDto;
 import togedog.server.global.exception.businessexception.memberexception.MemberPasswordException;
 import togedog.server.global.mail.MailService;
 import togedog.server.global.mail.dto.EmailCheckDto;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/member")
@@ -52,6 +60,72 @@ public class MemberController {
 
         return new ResponseEntity<>(bool,HttpStatus.CREATED);
     }
+
+    /*
+    프로필 조회
+     */
+    @GetMapping("/{member-id}")
+    public ResponseEntity<MemberDto.ResponseMemberInfo> findMemberInfo(@PathVariable("member-id")Long memberId){
+
+        Member member = memberService.findMember(memberId);
+        MemberDto.ResponseMemberInfo response = mapper.memberToResponseMemberInfo(member);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    /*
+    프로필 게시글 조회
+     */
+    @GetMapping("/{member-id}/feed")
+    public ResponseEntity<?> findMemberFeed(@PathVariable("member-id")Long memberId,
+                                            @RequestParam(defaultValue = "1") int page,
+                                            @RequestParam(defaultValue = "10")int size){
+
+        Pageable pageable = PageRequest.of(page -1 , size);
+        Page<Feed> pageFeed = memberService.findFeed(pageable, memberId);
+        List<MemberFeedDto> memberFeedDtos = new ArrayList<>();
+
+        for(Feed feed : pageFeed.getContent()){
+            memberFeedDtos.add(MemberFeedDto.of(feed));
+        }
+        return new ResponseEntity<>(new MultiResponseDto<>(memberFeedDtos,pageFeed), HttpStatus.OK);
+    }
+
+//    /*
+//    본인이 좋아요 한 게시글 조회
+//     */
+//    @GetMapping("/{member-id}/feed-like")
+//    public ResponseEntity<?> findMemberFeedLike(@PathVariable("member-id")Long memberId,
+//                                            @RequestParam(defaultValue = "1") int page,
+//                                            @RequestParam(defaultValue = "10")int size){
+//
+//        Pageable pageable = PageRequest.of(page -1 , size);
+//        Page<Feed> pageFeed = memberService.findFeed(pageable, memberId);
+//        List<MemberFeedDto> memberFeedDtos = new ArrayList<>();
+//
+//        for(Feed feed : pageFeed.getContent()){
+//            memberFeedDtos.add(MemberFeedDto.of(feed));
+//        }
+//        return new ResponseEntity<>(new MultiResponseDto<>(memberFeedDtos,pageFeed), HttpStatus.OK);
+//    }
+//
+//    /*
+// 본인이 북마크 한 게시글 조회
+//  */
+//    @GetMapping("/{member-id}/feed-bookmark")
+//    public ResponseEntity<?> findMemberFeedBookmark(@PathVariable("member-id")Long memberId,
+//                                                @RequestParam(defaultValue = "1") int page,
+//                                                @RequestParam(defaultValue = "10")int size){
+//
+//        Pageable pageable = PageRequest.of(page -1 , size);
+//        Page<Feed> pageFeed = memberService.findFeed(pageable, memberId);
+//        List<MemberFeedDto> memberFeedDtos = new ArrayList<>();
+//
+//        for(Feed feed : pageFeed.getContent()){
+//            memberFeedDtos.add(MemberFeedDto.of(feed));
+//        }
+//        return new ResponseEntity<>(new MultiResponseDto<>(memberFeedDtos,pageFeed), HttpStatus.OK);
+//    }
+
 
     @GetMapping("/kk")
     public String getMember(@RequestParam("par") String par){
