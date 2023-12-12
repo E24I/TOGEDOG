@@ -19,7 +19,7 @@ public class MemberAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
       Exception exception = (Exception) request.getAttribute("exception");
 
-        ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED);
+        ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, "권한이 없습니다.");
 
         logExceptionMessage(authException, exception);
     }

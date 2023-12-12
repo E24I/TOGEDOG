@@ -1,11 +1,16 @@
 package togedog.server.domain.pet.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.global.entity.BaseEntity;
 
 import javax.persistence.*;
 
 @Entity
+@Setter
+@Getter
 public class Pet extends BaseEntity {
 
     @Id
@@ -39,6 +44,7 @@ public class Pet extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "member_id")
+    @JsonIgnore
     private Member member;
 
 }
