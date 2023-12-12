@@ -8,13 +8,14 @@ import UploadSpace from "./Upload";
 interface CreatingSpaceProps {
   handleInputChange: (
     fieldName: string,
-    value: string | boolean | { x: string; y: string } | string[],
+    value: string | boolean | string[],
   ) => void;
   setAttachments: React.Dispatch<
     React.SetStateAction<
       {
-        url: string;
         type: string;
+        url: string;
+        file: File | null;
       }[]
     >
   >;

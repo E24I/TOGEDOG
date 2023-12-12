@@ -4,14 +4,11 @@ import React, { useState, useEffect } from "react";
 import { MapContainer, MapInput, Marker } from "./Map.Style";
 
 interface MapProps {
-  handleInputChange: (
-    fieldName: string,
-    value: string | boolean | { x: string; y: string } | string[],
-  ) => void;
   setMark: React.Dispatch<React.SetStateAction<boolean>>;
+  enrollCoordinate: (key: string, value: string) => void;
 }
 
-const Map: React.FC<MapProps> = ({ handleInputChange, setMark }) => {
+const Map: React.FC<MapProps> = ({ setMark, enrollCoordinate }) => {
   const [xcoor, setXcoor] = useState<string>("");
   const [ycoor, setYcoor] = useState<string>("");
   const [xOffset, setXOffset] = useState<number>(0);
@@ -39,7 +36,8 @@ const Map: React.FC<MapProps> = ({ handleInputChange, setMark }) => {
   }, []);
 
   const sendCord = () => {
-    handleInputChange("address", { x: xcoor, y: ycoor });
+    enrollCoordinate("x", xcoor);
+    enrollCoordinate("x", ycoor);
     setMark(true);
   };
 
