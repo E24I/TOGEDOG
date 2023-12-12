@@ -1,4 +1,5 @@
 import axios from "axios";
+const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
 // 펫 프로필 조회
 export const getInfo = async (petid: number) => {
@@ -9,7 +10,7 @@ export const getInfo = async (petid: number) => {
       Authorization: `${token}`,
     };
     const response = await axios.get(
-      `http://15.165.78.7:8080/member/${memberId}/pet/${petid}`,
+      `${ROOT_URL}/member/${memberId}/pet/${petid}`,
       { headers: headers },
     );
     const data = response.data;

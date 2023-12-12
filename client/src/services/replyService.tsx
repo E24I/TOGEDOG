@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ROOT_URL } from "./api";
+const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
 // 댓글 조회 // 현재 존재 x
 export const getReplies = async (feedId: number) => {
