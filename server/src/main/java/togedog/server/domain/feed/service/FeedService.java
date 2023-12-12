@@ -20,6 +20,7 @@ import togedog.server.domain.feedbookmark.repository.FeedBookmarkRepository;
 import togedog.server.domain.feedimage.entity.FeedImage;
 import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.feedlike.repository.FeedLikeRepository;
+import togedog.server.domain.feedreport.service.FeedReportService;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.domain.reply.entity.Reply;
