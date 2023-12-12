@@ -1,6 +1,6 @@
 import axios from "axios";
 import { enrollMapType } from "../types/mapType";
-import { ROOT_URL } from "./api";
+const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
 export const postMap = async (enrollMap: enrollMapType) => {
   const res = await axios.post(`${ROOT_URL}/map/content`, enrollMap);

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createNewChatType } from "../types/chatType";
-import { ROOT_URL } from "./api";
+
+const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
 export const createNewChat = async (
   participants: createNewChatType,
