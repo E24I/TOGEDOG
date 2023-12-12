@@ -14,7 +14,6 @@ import {
 import DetailForm from "./DetailForm";
 import DropDown from "../../atoms/dropdown/DropDown";
 import { ProfileImage, SeeMoreButton, UserName } from "./ChattingLists.Style";
-import { GetAllMessagesQuery } from "../../services/chatService";
 
 interface ChattingDetailprops {
   isEntered: boolean;

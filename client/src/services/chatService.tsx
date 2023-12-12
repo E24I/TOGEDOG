@@ -1,76 +1,49 @@
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { createNewChatType } from "../types/chatType";
+import { ROOT_URL } from "./api";
 
-export const createNewChat = async (memberId: createNewChatType) => {
-  const res = await axios.post(
-    `http://15.165.78.7:8080/chat`,
-    {
-      requestMemberId: memberId.requestMemberId,
-      inviteMemberId: memberId.inviteMemberId,
+export const createNewChat = async (
+  participants: createNewChatType,
+  token: string | undefined,
+) => {
+  const res = await axios.post(`${ROOT_URL}/chat`, participants, {
+    headers: {
+      Authorization: token,
     },
-    {
-      headers: {
-        Authorization:
-          "BearereyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlkIjoxLCJlbWFpbCI6Imxqd3cxMjNAbmF2ZXIuY29tIiwic3ViIjoibGp3dzEyM0BuYXZlci5jb20iLCJleHAiOjE3MDExNjQxNDB9.A9s67ninLGOWY49WmturKat99shXVr9JBM9GcStUAQw",
-        "ngrok-skip-browser-warning": 0,
-      },
-    },
-  );
-  return res;
-};
-
-export const getAllRooms = async () => {
-  try {
-    const res = await axios.get(`http://15.165.78.7:8080/chat`, {
-      headers: { Authorization: "" },
-    });
-    return res.data;
-  } catch (error) {
-    console.error("데이터 가져오기 실패:", error);
-    throw new Error("데이터 가져오기 실패");
-  }
-};
-
-export const GetAllRoomsQuery = () => {
-  const { data } = useQuery({
-    queryKey: ["rooms"],
-    queryFn: async () => await getAllRooms(),
-  });
-  return data;
-};
-
-export const getAllMessages = async (roomId: number) => {
-  const res = await axios.get(
-    `http://15.165.78.7:8080/chat/${roomId}/message`,
-    {
-      headers: { Authorization: "" },
-    },
-  );
-  return res;
-};
-export const GetAllMessagesQuery = (roomId: number) => {
-  const { data, isError } = useQuery({
-    queryKey: ["messages", roomId],
-    queryFn: () => getAllMessages(roomId),
-    // select: (data) => data.toString(),
-  });
-  if (isError) {
-    console.log(isError);
-  }
-  return data;
-};
-
-export const exitARoom = async (roomId: number) => {
-  const res = axios.delete(`http://15.165.78.7:8080/chat/${roomId}`, {
-    headers: { Authorization: "" },
   });
   return res;
 };
 
-export const reportAMessage = async (roomId: number) => {
-  const res = axios.post(`http://15.165.78.7:8080/chat/${roomId}`, {
-    headers: { Authorization: "" },
+export const getAllRooms = async (token: string | undefined) => {
+  const res = await axios.get(`${ROOT_URL}/chat`, {
+    headers: { Authorization: token },
+  });
+  return res.data;
+};
+
+export const getAllMessages = async (
+  roomId: number,
+  token: string | undefined,
+) => {
+  const res = await axios.get(`${ROOT_URL}/chat/${roomId}/message`, {
+    headers: { Authorization: token },
+  });
+  return res;
+};
+
+export const exitARoom = async (roomId: number, token: string | undefined) => {
+  const res = axios.delete(`${ROOT_URL}/chat/${roomId}`, {
+    headers: { Authorization: token },
+  });
+  return res;
+};
+
+export const reportAMessage = async (
+  roomId: number,
+  token: string | undefined,
+) => {
+  const res = axios.post(`${ROOT_URL}/chat/${roomId}`, {
+    headers: { Authorization: token },
   });
   return res;
 };

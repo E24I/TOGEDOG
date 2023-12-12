@@ -1,15 +1,8 @@
 import axios from "axios";
 import { enrollMapType } from "../types/mapType";
+import { ROOT_URL } from "./api";
 
-export const enrollMap = async (enrollMap: enrollMapType) => {
-  try {
-    const res = await axios.post(
-      `http://15.165.78.7:8080/map/content`,
-      enrollMap,
-    );
-    return res.data;
-  } catch (error) {
-    console.error("데이터 가져오기 실패:", error);
-    throw new Error("데이터 가져오기 실패");
-  }
+export const postMap = async (enrollMap: enrollMapType) => {
+  const res = await axios.post(`${ROOT_URL}/map/content`, enrollMap);
+  return res.data;
 };

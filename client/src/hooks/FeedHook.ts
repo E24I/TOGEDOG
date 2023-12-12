@@ -6,8 +6,12 @@ import {
   feedLike,
   feedBookmark,
   feedReport,
+  updateFeed,
 } from "../services/feedService";
-import { postInformationType } from "../types/feedDataType";
+import {
+  postInformationType,
+  updateInformationType,
+} from "../types/feedDataType";
 
 // 피드 전체 조회
 export const useGetFeeds = () => {
@@ -23,10 +27,33 @@ export const useGetFeed = (feedId: number) => {
 };
 
 // 피드 등록
-export const usePostFeed = (postInformation: postInformationType) => {
+export const usePostFeed = (
+  postInformation: postInformationType,
+  token: string | undefined,
+) => {
   return useMutation({
     mutationFn: async () => {
-      postFeed(postInformation);
+      postFeed(postInformation, token);
+    },
+    onSuccess: (res) => {
+      console.log("성공", res);
+      return;
+    },
+    onError: (err) => {
+      console.log("실패", err);
+      return;
+    },
+  });
+};
+
+// 피드 수정
+export const useUpdateFeed = (
+  updateInformation: updateInformationType,
+  token: string | undefined,
+) => {
+  return useMutation({
+    mutationFn: async () => {
+      updateFeed(updateInformation, token);
     },
     onSuccess: (res) => {
       console.log("성공", res);
