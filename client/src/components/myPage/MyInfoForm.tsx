@@ -7,7 +7,7 @@ import {
   ProFileImg,
   Introduction,
   SectionBox,
-  ListSection,
+  // ListSection,
   ButtonSection,
   Button1,
   Button2,
@@ -56,7 +56,7 @@ const MyInfoForm: React.FC = () => {
           <Introduction>저는 김태수입니다.</Introduction>
         </ProFileBox>
         <SectionBox>
-          <ListSection>
+          {/* <ListSection>
             <div>
               <p>11</p>
               게시물
@@ -69,7 +69,7 @@ const MyInfoForm: React.FC = () => {
               <p>11</p>
               팔로우
             </div>
-          </ListSection>
+          </ListSection> */}
           <ButtonSection>
             <Button1>???</Button1>
             <Button2 onClick={handleModal}>???</Button2>

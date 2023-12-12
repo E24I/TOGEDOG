@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
 import { ReactComponent as Message } from "../../assets/images/icons/signUpIcons/Message.svg";
 import { ReactComponent as Person } from "../../assets/images/icons/signUpIcons/Person.svg";
 import { ReactComponent as Lock } from "../../assets/images/icons/signUpIcons/Lock.svg";
@@ -14,24 +13,23 @@ import {
   SubmitButton,
 } from "./SignUpInputs.style";
 import {
-  SignApiCall,
-  getAuthentication,
-  sendAuthentication,
-  checkNickName,
-} from "../../services/signUpService";
+  usePostSignUp,
+  usePostEmail,
+  usePostCode,
+  usePostNickname,
+} from "../../hooks/memberHook";
 
 const SignUpInputs = () => {
   const {
     register,
-    handleSubmit,
     formState: { errors },
     setValue,
     watch,
   } = useForm();
-  const navigate = useNavigate();
 
-  const [allSelected, setAllSelected] = useState(false);
-  const [isAuthentication, setIsAuthentication] = useState(true); //인증코드상태
+  const [allSelected, setAllSelected] = useState<boolean>(false); //agree 상태
+  const [isAuthentication, setIsAuthentication] = useState<boolean>(false); //인증 코드 상태
+  const [isNickName, setIsNickName] = useState<boolean>(false); //닉네임 중복확인 상태
 
   //각각 input 태그 value 호출
   const email = watch("email", "");
@@ -39,15 +37,26 @@ const SignUpInputs = () => {
   const authentication = watch("authentication", "");
   const password = watch("password", "");
   const pwConfirm = watch("pwConfirm", "");
+  const agree1 = watch("agree1", "");
+  const agree2 = watch("agree2", "");
+  const signUpInfo = { email, nickname, password, pwConfirm, agree1, agree2 };
 
   //체크 박스 둘중 하나 체크 풀리면 전체선택은 false함수
   useEffect(() => {
-    if (!watch("agree1") || !watch("agree2")) {
+    if (!agree1 || !agree2) {
       setAllSelected(false);
-    } else if (watch("agree1") || watch("agree2")) {
+    } else if (agree1 || agree2) {
       setAllSelected(true);
     }
-  }, [[watch("agree1"), watch("agree2")]]);
+  }, [[agree1, agree2]]);
+
+  // 체크박스 전체 선택 누르면 둘다 true or false 함수
+  const handleAllSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = e.target.checked;
+    setAllSelected(isChecked);
+    setValue("agree1", isChecked);
+    setValue("agree2", isChecked);
+  };
 
   //이메일 유효성
   const emailRegex =
@@ -56,22 +65,26 @@ const SignUpInputs = () => {
   const passwordRegex =
     /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 
-  // 체크박스 전체 선택 누르면 둘다 true or false 함수
-  const handleAllSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const isChecked = e.target.checked;
-    setAllSelected(isChecked);
-
-    setValue("agree1", isChecked);
-    setValue("agree2", isChecked);
-  };
-
-  const onSubmit = (data: any) => {
-    if (data.authentication) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { authentication, ...rest } = data;
-      SignApiCall(rest);
-      // console.log(rest);
-      // navigate("/");
+  const { mutate: signUpMutate } = usePostSignUp(signUpInfo);
+  const { mutate: emailMutate } = usePostEmail(email);
+  const { mutate: codeMutate } = usePostCode({
+    email,
+    authentication,
+    setIsAuthentication,
+  });
+  const { mutate: nicknameMutate } = usePostNickname({
+    nickname,
+    setIsNickName,
+  });
+  const onSubmit = () => {
+    if (!isAuthentication) {
+      return alert("이메일 인증은 필수입니다.");
+    } else if (!isNickName) {
+      return alert("닉네임 중복확인을 해주세요");
+    } else if (!allSelected) {
+      return alert("이용약관, 개인정보 수집은 필수입니다.");
+    } else {
+      signUpMutate();
     }
   };
 
@@ -95,9 +108,7 @@ const SignUpInputs = () => {
               autoComplete="off"
               {...register("email", { required: true, pattern: emailRegex })}
             />
-            <button onClick={() => getAuthentication(email)}>
-              인증번호 전송
-            </button>
+            <button onClick={() => emailMutate()}>인증번호 전송</button>
           </TextInput>
           {errors.email && (
             <ErrorMsg>
@@ -114,13 +125,7 @@ const SignUpInputs = () => {
               autoComplete="off"
               {...register("authentication", { required: true })}
             />
-            <button
-              onClick={() =>
-                sendAuthentication(email, authentication, setIsAuthentication)
-              }
-            >
-              인증하기
-            </button>
+            <button onClick={() => codeMutate()}>인증하기</button>
           </TextInput>
         </div>
         <div>
@@ -132,7 +137,7 @@ const SignUpInputs = () => {
               autoComplete="off"
               {...register("nickname", { required: true })}
             />
-            <button onClick={() => checkNickName(nickname)}>중복확인</button>
+            <button onClick={() => nicknameMutate()}>중복확인</button>
           </TextInput>
         </div>
         <div>
@@ -202,14 +207,7 @@ const SignUpInputs = () => {
             </ErrorMsg>
           )}
         </CheckBoxContainer>
-        <SubmitButton
-          type="submit"
-          onClick={handleSubmit((data) => {
-            isAuthentication === false
-              ? alert("이메일 인증은 필수입니다.")
-              : onSubmit(data);
-          })}
-        >
+        <SubmitButton type="submit" onClick={onSubmit}>
           가입하기
         </SubmitButton>
       </form>
