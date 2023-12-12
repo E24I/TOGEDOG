@@ -1,32 +1,25 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  getFeeds,
-  getFeed,
-  postFeed,
-  feedLike,
-  feedBookmark,
-  feedReport,
-} from "../services/feedService";
-import { postInformationType } from "../types/feedDataType";
+  deleteReply,
+  getReplies,
+  patchReply,
+  postReply,
+  reportReply,
+} from "../services/replyService";
 
-// 피드 전체 조회
-export const useGetFeeds = () => {
-  return useQuery({ queryKey: ["feeds"], queryFn: async () => getFeeds() });
-};
-
-// 피드 단일 조회
-export const useGetFeed = (feedId: number) => {
+// 대댓글 조회
+export const useGetReplies = (feedId: number) => {
   return useQuery({
-    queryKey: ["feed", feedId],
-    queryFn: async () => getFeed(feedId),
+    queryKey: ["reply", feedId],
+    queryFn: async () => getReplies(feedId),
   });
 };
 
-// 피드 등록
-export const usePostFeed = (postInformation: postInformationType) => {
+// 대댓글 등록
+export const usePostReply = (feedId: number, content: string) => {
   return useMutation({
     mutationFn: async () => {
-      postFeed(postInformation);
+      return postReply(feedId, content);
     },
     onSuccess: (res) => {
       console.log("성공", res);
@@ -39,11 +32,11 @@ export const usePostFeed = (postInformation: postInformationType) => {
   });
 };
 
-// 피드 좋아요
-export const useFeedLike = (feedId: number) => {
+// 대댓글 수정
+export const usePatchReply = (replyId: number, content: string) => {
   return useMutation({
     mutationFn: async () => {
-      feedLike(feedId);
+      return patchReply(replyId, content);
     },
     onSuccess: (res) => {
       console.log("성공", res);
@@ -56,11 +49,11 @@ export const useFeedLike = (feedId: number) => {
   });
 };
 
-// 피드 북마크
-export const useFeedBookmark = (feedId: number) => {
+// 대댓글 삭제
+export const useDeleteReply = (replyId: number) => {
   return useMutation({
     mutationFn: async () => {
-      feedBookmark(feedId);
+      return deleteReply(replyId);
     },
     onSuccess: (res) => {
       console.log("성공", res);
@@ -73,11 +66,11 @@ export const useFeedBookmark = (feedId: number) => {
   });
 };
 
-// 피드 신고
-export const useFeedReport = (feedId: number) => {
+// 대댓글 신고
+export const useReportReply = (replyId: number) => {
   return useMutation({
     mutationFn: async () => {
-      feedReport(feedId);
+      return reportReply(replyId);
     },
     onSuccess: (res) => {
       console.log("성공", res);
