@@ -57,12 +57,11 @@ export type feedDetailType = {
 
 export type postInformationType = {
   title: string;
-  content: string;
   images: string[];
-  video: string;
+  videos: string;
+  content: string;
+  addMap: boolean;
   openYn: boolean;
-  mapYn: boolean;
-  address: { x: string; y: string };
 };
 export type updateInformationType = {
   title: string;

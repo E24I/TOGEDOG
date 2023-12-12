@@ -12,7 +12,7 @@ import {
 import { postInformationType } from "../../../types/feedDataType";
 
 import Map from "./Map";
-import { enrollCoordinate } from "../../../services/mapService";
+import { enrollMap } from "../../../services/mapService";
 
 interface WritingSpaceProps {
   page: string;
@@ -24,23 +24,27 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
   const [isMarked, setMark] = useState<boolean>(false);
   const [postInformation, setPostInformation] = useState<postInformationType>({
     title: "",
-    content: "",
     images: [],
-    video: "",
+    videos: "",
+    content: "",
+    addMap: isMapAssign,
     openYn: isFeedPublic,
-    mapYn: isMapAssign,
-    address: { x: "", y: "" },
+  });
+
+  const [coordinate, setCoordinate] = useState<{ x: string; y: string }>({
+    x: "",
+    y: "",
   });
 
   const [attachments, setAttachments] = useState<
-    { url: string; type: string }[]
+    { type: string; url: string; file: File | null }[]
   >([]);
 
   const [enrollMapInfo, setEnrollMapInfo] = useState<{
     feedId: number;
-    x: string;
-    y: string;
-  }>({ feedId: 0, x: "", y: "" });
+    utm_k_x: string;
+    utm_k_y: string;
+  }>({ feedId: 0, utm_k_x: "", utm_k_y: "" });
 
   const [updateInformation, setUpdateInformation] = useState<{
     title: string;
@@ -51,15 +55,15 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
 
   const handleInputChange = (
     fieldName: string,
-    value: string | boolean | { x: string; y: string } | string[],
+    value: string | boolean | string[],
   ) => {
     setPostInformation((prevPostInformation) => {
       if (fieldName === "images" && Array.isArray(value)) {
         return {
           ...prevPostInformation,
-          [fieldName]: [...prevPostInformation[fieldName], ...value],
+          [fieldName]: [...value],
         };
-      } else if (fieldName === "video" && typeof value === "string") {
+      } else if (fieldName === "videos" && typeof value === "string") {
         return { ...prevPostInformation, [fieldName]: value };
       } else {
         return {
@@ -67,6 +71,12 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
           [fieldName]: value,
         };
       }
+    });
+  };
+
+  const enrollCoordinate = (key: string, value: string) => {
+    setCoordinate((prev) => {
+      return { ...prev, [key]: value };
     });
   };
 
@@ -90,7 +100,9 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     });
   };
 
-  const send = (e: React.MouseEvent<HTMLButtonElement>) => {
+  console.log(attachments);
+
+  const send = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElement = e.target as HTMLElement;
 
     if (targetElement instanceof HTMLElement) {
@@ -98,30 +110,51 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
         const textContent = targetElement.textContent;
         if (textContent === "게시") {
           const images: string[] = [];
-          attachments.map(
-            async (file, idx) =>
-              await getPresinedUrl(file.url).then((data) =>
-                idx !== 0
-                  ? uploadToS3(data, file.url, file.type).then((url) => {
-                      images.push(url);
-                    })
-                  : uploadToS3(data, file.url, file.type).then((url) => {
-                      handleInputChange("video", url);
-                    }),
-              ),
+          await Promise.all(
+            attachments.map(async (file) => {
+              if (file.url !== "") {
+                const presignedUrl = await getPresinedUrl(
+                  file.url.substring(27),
+                );
+                const response = await uploadToS3(
+                  presignedUrl,
+                  file.file,
+                  file.type,
+                );
+
+                if (file.type.includes("image") && response.config.url) {
+                  images.push(
+                    response.config.url.substring(
+                      0,
+                      response.config.url.indexOf("?"),
+                    ),
+                  );
+                } else if (response.config.url) {
+                  handleInputChange(
+                    "videos",
+                    response.config.url.substring(
+                      0,
+                      response.config.url.indexOf("?"),
+                    ),
+                  );
+                }
+              }
+            }),
           );
+
           handleInputChange("images", images);
+
           postFeed(postInformation)
             .then(
               (data) =>
                 data &&
                 setEnrollMapInfo({
-                  feedId: data.feedId,
-                  x: postInformation.address.x,
-                  y: postInformation.address.y,
+                  feedId: Number(data.headers.location.substr(7)),
+                  utm_k_x: coordinate.x,
+                  utm_k_y: coordinate.y,
                 }),
             )
-            .then(() => enrollCoordinate(enrollMapInfo))
+            .then(() => enrollMap(enrollMapInfo))
             .then((data) => data && navigator(`feeds/${data.mapContentId}`));
         } else if (textContent === "완료") {
           updateFeed(updateInformation);
@@ -137,7 +170,8 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
   const deleteLocation = () => {
     if (isMarked === true) {
       setMark(false);
-      handleInputChange("address", { x: "", y: "" });
+      enrollCoordinate("x", "");
+      enrollCoordinate("y", "");
     }
   };
 
@@ -194,7 +228,7 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
         )}
       </W.FeedBottomContainer>
       {isMapAssign && (
-        <Map handleInputChange={handleInputChange} setMark={setMark} />
+        <Map enrollCoordinate={enrollCoordinate} setMark={setMark} />
       )}
     </W.CreateFeedContainer>
   );
