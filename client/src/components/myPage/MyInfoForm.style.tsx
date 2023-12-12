@@ -41,20 +41,23 @@ export const Introduction = styled.p`
 
 export const SectionBox = styled.div`
   width: 400px;
-  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
-export const ListSection = styled.div`
-  margin: 20px 0;
-  display: flex;
-  justify-content: space-around;
-  div {
-    text-align: center;
-    p {
-      font-weight: bold;
-    }
-  }
-`;
+//추후 어드벤스드
+// export const ListSection = styled.div`
+//   margin: 20px 0;
+//   display: flex;
+//   justify-content: space-around;
+//   div {
+//     text-align: center;
+//     p {
+//       font-weight: bold;
+//     }
+//   }
+// `;
 
 export const ButtonSection = styled.div`
   width: 100%;

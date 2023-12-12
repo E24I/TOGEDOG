@@ -1,8 +1,26 @@
 import { atom } from "recoil";
+import { recoilPersist } from "recoil-persist";
+
+const { persistAtom } = recoilPersist({
+  key: "TOGEDOG",
+  storage: sessionStorage,
+});
 
 export const isLoginAtom = atom<boolean>({
   key: "isLogin",
   default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const tokenAtom = atom<string>({
+  key: "token",
+  default: "",
+  effects_UNSTABLE: [persistAtom],
+});
+export const memberIdAtom = atom<number | undefined>({
+  key: "memberId",
+  default: undefined,
+  effects_UNSTABLE: [persistAtom],
 });
 // 다른 컴포넌트에서 로그인 비로그인을 따질때는
 // import { useRecoilValue } from "recoil";
@@ -14,9 +32,9 @@ export const isLoginAtom = atom<boolean>({
 //     return (
 //       <div>
 //         {isLogin ? (
-//           <div>로그인되었습니다</div>
+//           <p>로그인 되었습니다</p>
 //         ) : (
-//           <span>로그인이 필요합니다</span>
+//           <p>로그인이 필요합니다</p>
 //         )}
 //       </div>
 //     );
