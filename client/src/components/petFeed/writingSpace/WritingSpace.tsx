@@ -12,7 +12,7 @@ import {
 import { postInformationType } from "../../../types/feedDataType";
 
 import Map from "./Map";
-import { enrollCoordinate } from "../../../services/mapService";
+import { enrollMap } from "../../../services/mapService";
 
 interface WritingSpaceProps {
   page: string;
@@ -24,43 +24,36 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
   const [isMarked, setMark] = useState<boolean>(false);
   const [postInformation, setPostInformation] = useState<postInformationType>({
     title: "",
-    content: "",
     images: [],
-    video: "",
+    videos: "",
+    content: "",
+    addMap: isMapAssign,
     openYn: isFeedPublic,
-    mapYn: isMapAssign,
-    address: { x: "", y: "" },
   });
-
   const [attachments, setAttachments] = useState<
-    { url: string; type: string }[]
+    { type: string; url: string; file: File | null }[]
   >([]);
-
   const [enrollMapInfo, setEnrollMapInfo] = useState<{
     feedId: number;
-    x: string;
-    y: string;
-  }>({ feedId: 0, x: "", y: "" });
-
+    utm_k_x: string;
+    utm_k_y: string;
+  }>({ feedId: 0, utm_k_x: "", utm_k_y: "" });
   const [updateInformation, setUpdateInformation] = useState<{
     title: string;
     content: string;
   }>({ title: "", content: "" });
 
   const navigator = useNavigate();
-
   const handleInputChange = (
     fieldName: string,
-    value: string | boolean | { x: string; y: string } | string[],
+    value: string | boolean | string[],
   ) => {
     setPostInformation((prevPostInformation) => {
-      if (fieldName === "images" && Array.isArray(value)) {
+      if (Array.isArray(value)) {
         return {
           ...prevPostInformation,
-          [fieldName]: [...prevPostInformation[fieldName], ...value],
+          [fieldName]: [...value],
         };
-      } else if (fieldName === "video" && typeof value === "string") {
-        return { ...prevPostInformation, [fieldName]: value };
       } else {
         return {
           ...prevPostInformation,
@@ -69,11 +62,11 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
       }
     });
   };
-
-  const backToPrevPage = () => {
-    navigator(-1);
+  const enrollCoordinate = (key: string, value: string | number) => {
+    setEnrollMapInfo((prev) => {
+      return { ...prev, [key]: value };
+    });
   };
-
   const feedToggleCheck = () => {
     setFeedPublic((prevIsFeedPublic) => {
       const updatedFeedPublic = !prevIsFeedPublic;
@@ -81,7 +74,6 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
       return updatedFeedPublic;
     });
   };
-
   const mapToggleCheck = () => {
     setMapAssign((prevIsMapAssign) => {
       const updatedMapAssign = !prevIsMapAssign;
@@ -89,8 +81,18 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
       return updatedMapAssign;
     });
   };
-
-  const send = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleContentChange = (title: string, content: string) => {
+    setUpdateInformation({ title: title, content: content });
+  };
+  const deleteLocation = () => {
+    if (isMarked === true) {
+      setMark(false);
+      enrollCoordinate("x", "");
+      enrollCoordinate("y", "");
+    }
+  };
+  //게시 버튼 눌렀을 때
+  const send = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElement = e.target as HTMLElement;
 
     if (targetElement instanceof HTMLElement) {
@@ -98,31 +100,61 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
         const textContent = targetElement.textContent;
         if (textContent === "게시") {
           const images: string[] = [];
-          attachments.map(
-            async (file, idx) =>
-              await getPresinedUrl(file.url).then((data) =>
-                idx !== 0
-                  ? uploadToS3(data, file.url, file.type).then((url) => {
-                      images.push(url);
-                    })
-                  : uploadToS3(data, file.url, file.type).then((url) => {
-                      handleInputChange("video", url);
-                    }),
-              ),
+          await Promise.all(
+            attachments.map(async (file) => {
+              if (file.url !== "") {
+                const presignedUrl = await getPresinedUrl(
+                  file.url.substring(27),
+                );
+                const response = await uploadToS3(
+                  presignedUrl,
+                  file.file,
+                  file.type,
+                );
+
+                if (file.type.includes("image") && response.config.url) {
+                  images.unshift(
+                    response.config.url.substring(
+                      0,
+                      response.config.url.indexOf("?"),
+                    ),
+                  );
+                } else if (file.type.includes("video") && response.config.url) {
+                  handleInputChange(
+                    "videos",
+                    response.config.url.substring(
+                      0,
+                      response.config.url.indexOf("?"),
+                    ),
+                  );
+                }
+              }
+            }),
           );
+
           handleInputChange("images", images);
+
           postFeed(postInformation)
             .then(
               (data) =>
                 data &&
-                setEnrollMapInfo({
-                  feedId: data.feedId,
-                  x: postInformation.address.x,
-                  y: postInformation.address.y,
-                }),
+                enrollCoordinate(
+                  "feedId",
+                  Number(data.headers.location.substr(7)),
+                ),
             )
-            .then(() => enrollCoordinate(enrollMapInfo))
-            .then((data) => data && navigator(`feeds/${data.mapContentId}`));
+            .then(() =>
+              enrollMap(enrollMapInfo)
+                .then((data) => data && navigator(`feeds/${data.mapContentId}`))
+                .catch(() => alert("map등록 요청 실패")),
+            )
+            .catch((err) =>
+              alert(
+                err.response.data.message +
+                  " " +
+                  err.response.data.data[0].reason,
+              ),
+            );
         } else if (textContent === "완료") {
           updateFeed(updateInformation);
         }
@@ -130,26 +162,10 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     }
   };
 
-  const handleContentChange = (title: string, content: string) => {
-    setUpdateInformation({ title: title, content: content });
-  };
-
-  const deleteLocation = () => {
-    if (isMarked === true) {
-      setMark(false);
-      handleInputChange("address", { x: "", y: "" });
-    }
-  };
-
-  console.log("p", postInformation);
-  console.log(updateInformation);
-
-  console.log("a", attachments);
-
   return (
     <W.CreateFeedContainer>
       <W.FeedTopContainer>
-        <W.BackspaceButton onClick={backToPrevPage} />
+        <W.BackspaceButton onClick={() => navigator(-1)} />
         <W.PageName>
           {page === "create" ? "새 피드 올리기" : "피드 수정"}
         </W.PageName>
@@ -194,7 +210,7 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
         )}
       </W.FeedBottomContainer>
       {isMapAssign && (
-        <Map handleInputChange={handleInputChange} setMark={setMark} />
+        <Map enrollCoordinate={enrollCoordinate} setMark={setMark} />
       )}
     </W.CreateFeedContainer>
   );

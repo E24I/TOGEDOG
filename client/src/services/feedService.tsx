@@ -35,7 +35,8 @@ export const postFeed = async (postInformation: postInformationType) => {
     postInformation,
     {
       headers: {
-        Authorization: "authorizedToken자리",
+        Authorization: localStorage.getItem("token"),
+        "Content-Type": `application/json`,
       },
     },
   );
@@ -56,23 +57,26 @@ export const updateFeed = async (updateInformation: updateInformationType) => {
 };
 
 export const getPresinedUrl = async (file: string) => {
-  const res = await axios.post(`http://15.165.78.7:8080/presigned-url/feed `, {
-    imageName: file,
-  });
-  return res.data;
+  const res = await axios
+    .post(`http://15.165.78.7:8080/presigned-url`, {
+      imageName: file,
+    })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => console.log(err));
+  return res;
 };
 
 export const uploadToS3 = async (
   preSinedURL: string,
-  file: string,
+  file: File | null,
   type: string,
 ) => {
-  const res = await axios.put(preSinedURL, {
-    file,
+  const res = await axios.put(preSinedURL, file, {
     headers: { "Content-type": type },
   });
-  console.log(res);
-  return res.data;
+  return res;
 };
 
 export const deleteS3 = () => {
