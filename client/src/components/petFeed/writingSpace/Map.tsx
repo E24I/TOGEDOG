@@ -36,8 +36,8 @@ const Map: React.FC<MapProps> = ({ setMark, enrollCoordinate }) => {
   }, []);
 
   const sendCord = () => {
-    enrollCoordinate("x", xcoor);
-    enrollCoordinate("x", ycoor);
+    enrollCoordinate("utm_k_x", xcoor);
+    enrollCoordinate("utm_k_y", ycoor);
     setMark(true);
   };
 

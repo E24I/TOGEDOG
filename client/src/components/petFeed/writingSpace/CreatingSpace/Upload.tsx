@@ -41,13 +41,13 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
     url: "",
     file: null,
   });
+
   const uploadImage = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files && e.target.files[0];
     const imgLimitedSize = 10 * 1024 * 1024;
     const videoLimitedSize = 100 * 1024 * 1024;
     if (selectedFile) {
       const fileSize = selectedFile.size;
-      console.log(e.target.value);
 
       const imageType = selectedFile.type.includes("image");
       const videoType = selectedFile.type.includes("video");
@@ -73,7 +73,6 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
       }
     }
   };
-
   useEffect(() => {
     if (file.image) {
       setImageFiles((prev) => [
@@ -84,12 +83,10 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
       setVideoFile({ type: file.type, url: file.url, file: file.selectedFile });
     }
   }, [file]);
-
   useEffect(() => {
     const videoAndImages = [videoFile, ...imageFiles];
     setAttachments(videoAndImages);
   }, [videoFile, imageFiles]);
-
   const deleteImageFile = (idx?: number) => {
     if (idx !== undefined) {
       setImageFiles((prevFiles) => {
@@ -99,10 +96,10 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
       });
     }
   };
-
   const deleteVideoFile = () => {
     setVideoFile({ type: "", url: "", file: null });
   };
+
   return (
     <>
       <U.AttachmentSpaceContainer>
