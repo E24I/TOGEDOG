@@ -156,7 +156,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
                 src={el}
                 alt={`피드 이미지${idx + 1}`}
                 onClick={() => {
-                  console.log(el);
+                  handleMoreReview();
                 }}
               />
             ))}

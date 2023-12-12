@@ -39,6 +39,7 @@ import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
 import PaginationCircle from "../../atoms/pagination/PaginationCircle";
+import FeedImage from "./FeedImage";
 
 interface OwnProps {
   feedId: number;
@@ -51,6 +52,8 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
   const [isBookmark, setBookmark] = useState<boolean>(false);
   const [isImg, setImg] = useState<number>(1);
   const [isSetting, setSetting] = useState<boolean>(false);
+  const [bigImage, setBigImage] = useState<boolean>(false);
+  const [imgUrl, setImgUrl] = useState<string>("");
   const today = new Date();
   const createDate = isDetail.createDate;
   const feedDate = createDate.split("-").map((el) => parseInt(el));
@@ -60,6 +63,10 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
   const handleLike = (): void => setLike(!isLike);
   const handleBookmark = (): void => setBookmark(!isBookmark);
   const handleSetting = (): void => setSetting(!isSetting);
+  const handleBigImg = (url = ""): void => {
+    setBigImage(!bigImage);
+    setImgUrl(url);
+  };
   const handlePrevImg = (): void => {
     if (!isDetail.media.imgUrl || !isDetail.media.videoUrl) return;
     if (isImg !== 1) {
@@ -155,6 +162,9 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
                         key={idx}
                         src={el}
                         alt={`피드 이미지${idx + 1}`}
+                        onClick={() => {
+                          handleBigImg(el);
+                        }}
                       />
                     );
                   }
@@ -206,6 +216,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
           </AddBox>
         </RightDetail>
       </DetailContainer>
+      {bigImage && <FeedImage url={imgUrl} handleFunc={handleBigImg} />}
     </ModalBackground>
   );
 };
