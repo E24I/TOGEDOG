@@ -29,13 +29,8 @@ public class MapContentService {
         double utm_y = Double.parseDouble(mapContentRequest.getUtm_k_y());
 
         CRSFactory crsFactory = new CRSFactory();
-        //EPSG(WGS84):4166, 4326
         String wgs84Proj = "+proj=longlat +datum=WGS84 +no_defs";
-        //EPSG(UTM-K):5178
         String utmkProj = "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs";
-
-//        CoordinateReferenceSystem WGS84 = crsFactory.createFromName("epsg:4326");
-//        CoordinateReferenceSystem UTM_K = crsFactory.createFromName("epsg:5178");
 
         CoordinateReferenceSystem WGS84 = crsFactory.createFromParameters("WGS84", wgs84Proj);
         CoordinateReferenceSystem UTM_K = crsFactory.createFromParameters("UTMK", utmkProj);
