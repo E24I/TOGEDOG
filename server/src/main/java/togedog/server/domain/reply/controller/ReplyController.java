@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
-import togedog.server.domain.comment.Controller.dto.CommentCreateApiRequest;
+import togedog.server.domain.comment.controller.dto.CommentCreateApiRequest;
 import togedog.server.domain.comment.entity.Comment;
 import togedog.server.domain.comment.service.CommentService;
 import togedog.server.domain.reply.controller.dto.ReplyUpdateApiRequest;

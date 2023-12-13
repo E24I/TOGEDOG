@@ -26,4 +26,7 @@ public class MapContent extends BaseEntity {
 
     @OneToMany(mappedBy = "mapContent")
     private List<Feed> feeds = new ArrayList<>();
+
+    MapContent() {
+    }
 }

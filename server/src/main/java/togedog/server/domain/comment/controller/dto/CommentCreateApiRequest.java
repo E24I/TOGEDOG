@@ -1,4 +1,4 @@
-package togedog.server.domain.comment.Controller.dto;
+package togedog.server.domain.comment.controller.dto;
 
 
 import lombok.AllArgsConstructor;
