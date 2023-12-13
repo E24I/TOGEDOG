@@ -1,5 +1,6 @@
 package togedog.server.domain.mapcontent.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import togedog.server.domain.feed.entity.Feed;
@@ -12,6 +13,7 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
+@AllArgsConstructor
 public class MapContent extends BaseEntity {
 
     @Id
