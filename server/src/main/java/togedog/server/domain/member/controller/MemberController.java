@@ -15,6 +15,7 @@ import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.member.dto.MemberDto;
 import togedog.server.domain.member.dto.MemberFeedDto;
 import togedog.server.domain.member.entity.Member;
+import togedog.server.domain.member.mapper.MemberInfo;
 import togedog.server.domain.member.mapper.MemberMapper;
 import togedog.server.domain.member.service.MemberService;
 import togedog.server.global.dto.MultiResponseDto;
@@ -62,6 +63,16 @@ public class MemberController {
         Boolean bool = memberService.checkNickname(nickname);
 
         return new ResponseEntity<>(bool,HttpStatus.CREATED);
+    }
+
+    /*
+    닉네임으로 회원을 조회
+     */
+    @GetMapping("/find")
+    public ResponseEntity<?> findnickname(@RequestParam("n") String nickname){
+        Member member = memberService.findNickname(nickname);
+        MemberInfo memberInfo = MemberInfo.of(member);
+        return new ResponseEntity<>(memberInfo, HttpStatus.OK);
     }
 
     /*

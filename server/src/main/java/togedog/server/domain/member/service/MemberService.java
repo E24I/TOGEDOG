@@ -105,6 +105,19 @@ public class MemberService {
         return feedBookmarkRepository.findAllByMember(pageable, member);
     }
 
+    public Member findNickname(String nickname){
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+
+        Member member = memberRepository.findMemberByNickname(nickname)
+                .orElseThrow(() -> new MemberNotFoundException());
+
+        if(member.getMemberId() == loginMemberId){
+            throw new MemberNotFoundException();
+        }
+
+        return member;
+    }
+
 
 
 
