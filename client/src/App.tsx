@@ -13,7 +13,7 @@ import Chatting from "./pages/Chatting";
 import PetMap from "./pages/PetMap";
 import MapDetail from "./pages/MapDetail";
 import MyMap from "./pages/MyMap";
-import MyPage from "./pages/MyPage";
+import UserInfo from "./pages/UserInfo";
 import PetProfile from "./pages/PetProfile";
 const App: React.FC = () => {
   return (
@@ -30,7 +30,7 @@ const App: React.FC = () => {
           <Route path="/petmap" element={<PetMap />} />
           <Route path="/petmap/1" element={<MapDetail />} />
           <Route path="/member/:memberId/mymap" element={<MyMap />} />
-          <Route path="/myPage" element={<MyPage />} />
+          <Route path="/user" element={<UserInfo />} />
           <Route path="/petProfile" element={<PetProfile />} />
         </Routes>
         <Footer />

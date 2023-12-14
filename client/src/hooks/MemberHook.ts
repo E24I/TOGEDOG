@@ -31,13 +31,12 @@ export const usePostLogin = (requestObj: InfoProps) => {
     onSuccess: (res: AxiosResponse) => {
       setLoginState(true);
       setToken(res.headers.authorization);
-      setMemberId(res.headers.id);
-      console.log(res); //테스트 지울예정
+      setMemberId(Number(res.headers.id));
       alert("로그인 완료");
       navigate("/feeds");
     },
-    onError: (err: AxiosResponse) => {
-      console.log(err);
+    onError: () => {
+      alert("이메일과 비밀번호를 확인하세요.");
     },
   });
 };

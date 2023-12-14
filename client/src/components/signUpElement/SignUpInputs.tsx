@@ -17,7 +17,7 @@ import {
   usePostEmail,
   usePostCode,
   usePostNickname,
-} from "../../hooks/memberHook";
+} from "../../hooks/MemberHook";
 
 const SignUpInputs = () => {
   const {

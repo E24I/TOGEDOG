@@ -11,6 +11,8 @@ import {
   MypageButton,
   SearchButton,
 } from "./Modal.Style";
+import { isLoginAtom, tokenAtom, memberIdAtom } from "../../atoms";
+import { useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 interface ModalProps {
@@ -26,15 +28,23 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen }) => {
     { menu: "검색", icon: <SearchButton className="icon" /> },
     { menu: "모드전환", icon: <ModeButton className="icon" /> },
   ];
-
+  const setLoginState = useSetRecoilState(isLoginAtom);
+  const setToken = useSetRecoilState(tokenAtom);
+  const setMemberId = useSetRecoilState(memberIdAtom);
+  const Logout = () => {
+    setLoginState(false);
+    setToken(undefined);
+    setMemberId(undefined);
+  };
   const navigator = useNavigate();
 
   const route = (index: number) => {
     switch (index) {
       case 0:
-        navigator("/mypage");
+        navigator("/user");
         break;
       case 1:
+        Logout();
         navigator("/");
         break;
       case 2:

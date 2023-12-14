@@ -8,10 +8,10 @@ import {
   Hearts,
   BookMarks,
   FeedContainer,
-} from "./MyFeedForm.style";
+} from "./UserFeedForm.style";
 import FeedCard from "./feedCardComponent/FeedCard";
 
-const MyFeedForm = () => {
+const UserFeedForm = () => {
   const [tap, setTap] = useState<number>(0);
   const tapMenu = ["게시글", "좋아요", "북마크"];
 
@@ -69,4 +69,4 @@ const MyFeedForm = () => {
   );
 };
 
-export default MyFeedForm;
+export default UserFeedForm;

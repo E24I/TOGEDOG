@@ -1,28 +1,36 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useRecoilValue } from "recoil";
+import { memberIdAtom } from "../../atoms";
 import {
   MyInfoContainer,
   NickName,
   TopContainer,
-  ProFileBox,
-  ProFileImg,
   Introduction,
   SectionBox,
-  // ListSection,
   ButtonSection,
   Button1,
   Button2,
   MoreButton,
   PetListBox,
   PetAdd,
-} from "./MyInfoForm.style";
+} from "./UserInfoForm.style";
 import PetList from "./petComponent/PetList";
 import ButtonDrop from "./petComponent/ButtonDrop";
 import ProfileChange from "./infoChangeComponent/ProfileChange";
+import { useGetUserInfo } from "../../hooks/UserInfoHook";
+import { infoType, petDataType } from "../../types/userInfoType";
+import { UserImgForm } from "../../atoms/imgForm/ImgForm";
 
 const MyInfoForm: React.FC = () => {
   const [drop, setDrop] = useState<boolean>(false); //드롭다운 ... 버튼
   const dropdownRef = useRef<HTMLButtonElement>(null); //드롭다운 밖클릭시 없어짐
   const [changeInfo, setChangeInfo] = useState<boolean>(false); //프로필변경
+  const [userData, setUserData] = useState<infoType | undefined>(undefined);
+  const memberId = useRecoilValue(memberIdAtom);
+  const { mutate: getInfoMutate } = useGetUserInfo(
+    Number(memberId),
+    setUserData,
+  );
   const handleDrop = () => {
     //드롭열기
     setDrop(!drop);
@@ -39,8 +47,9 @@ const MyInfoForm: React.FC = () => {
       setDrop(false);
     }
   };
-
   useEffect(() => {
+    getInfoMutate();
+    console.log(userData);
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -49,30 +58,20 @@ const MyInfoForm: React.FC = () => {
 
   return (
     <MyInfoContainer>
-      <NickName>NickName</NickName>
+      <NickName>{userData?.nickname}</NickName>
       <TopContainer>
-        <ProFileBox>
-          <ProFileImg />
-          <Introduction>저는 김태수입니다.</Introduction>
-        </ProFileBox>
+        <UserImgForm
+          width={150}
+          height={150}
+          radius={50}
+          URL={
+            "https://i.pinimg.com/736x/64/63/40/646340423a648806278bfc51d055f7e6.jpg"
+          }
+        />
         <SectionBox>
-          {/* <ListSection>
-            <div>
-              <p>11</p>
-              게시물
-            </div>
-            <div>
-              <p>11</p>
-              필로워
-            </div>
-            <div>
-              <p>11</p>
-              팔로우
-            </div>
-          </ListSection> */}
           <ButtonSection>
-            <Button1>???</Button1>
-            <Button2 onClick={handleModal}>???</Button2>
+            <Button1>팔로잉</Button1>
+            <Button2 onClick={handleModal}>메세지</Button2>
             <MoreButton onClick={handleDrop} ref={dropdownRef}>
               ...
             </MoreButton>
@@ -80,10 +79,16 @@ const MyInfoForm: React.FC = () => {
           </ButtonSection>
         </SectionBox>
       </TopContainer>
+      <Introduction>
+        {userData?.myIntro !== null
+          ? userData?.myIntro
+          : "자기소개 글이 없습니다."}
+      </Introduction>
       <PetListBox>
-        <PetList />
-        <PetList />
-        <PetList />
+        {Array.isArray(userData?.pet) &&
+          userData?.pet.map((el: petDataType) => (
+            <PetList name={el.name} image={el.image} key={el.petId} />
+          ))}
         <PetAdd />
       </PetListBox>
       {changeInfo && <ProfileChange setChangeInfo={setChangeInfo} />}
