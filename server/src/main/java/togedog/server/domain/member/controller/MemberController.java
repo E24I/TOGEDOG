@@ -5,10 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import togedog.server.domain.feed.entity.Feed;
+import togedog.server.domain.feedbookmark.entity.FeedBookmark;
+import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.member.dto.MemberDto;
 import togedog.server.domain.member.dto.MemberFeedDto;
 import togedog.server.domain.member.entity.Member;
@@ -80,7 +83,7 @@ public class MemberController {
                                             @RequestParam(defaultValue = "1") int page,
                                             @RequestParam(defaultValue = "10")int size){
 
-        Pageable pageable = PageRequest.of(page -1 , size);
+        Pageable pageable = PageRequest.of(page -1 , size, Sort.by("createdDateTime").descending());
         Page<Feed> pageFeed = memberService.findFeed(pageable, memberId);
         List<MemberFeedDto> memberFeedDtos = new ArrayList<>();
 
@@ -90,51 +93,46 @@ public class MemberController {
         return new ResponseEntity<>(new MultiResponseDto<>(memberFeedDtos,pageFeed), HttpStatus.OK);
     }
 
-//    /*
-//    본인이 좋아요 한 게시글 조회
-//     */
-//    @GetMapping("/{member-id}/feed-like")
-//    public ResponseEntity<?> findMemberFeedLike(@PathVariable("member-id")Long memberId,
-//                                            @RequestParam(defaultValue = "1") int page,
-//                                            @RequestParam(defaultValue = "10")int size){
-//
-//        Pageable pageable = PageRequest.of(page -1 , size);
-//        Page<Feed> pageFeed = memberService.findFeed(pageable, memberId);
-//        List<MemberFeedDto> memberFeedDtos = new ArrayList<>();
-//
-//        for(Feed feed : pageFeed.getContent()){
-//            memberFeedDtos.add(MemberFeedDto.of(feed));
-//        }
-//        return new ResponseEntity<>(new MultiResponseDto<>(memberFeedDtos,pageFeed), HttpStatus.OK);
-//    }
-//
-//    /*
-// 본인이 북마크 한 게시글 조회
-//  */
-//    @GetMapping("/{member-id}/feed-bookmark")
-//    public ResponseEntity<?> findMemberFeedBookmark(@PathVariable("member-id")Long memberId,
-//                                                @RequestParam(defaultValue = "1") int page,
-//                                                @RequestParam(defaultValue = "10")int size){
-//
-//        Pageable pageable = PageRequest.of(page -1 , size);
-//        Page<Feed> pageFeed = memberService.findFeed(pageable, memberId);
-//        List<MemberFeedDto> memberFeedDtos = new ArrayList<>();
-//
-//        for(Feed feed : pageFeed.getContent()){
-//            memberFeedDtos.add(MemberFeedDto.of(feed));
-//        }
-//        return new ResponseEntity<>(new MultiResponseDto<>(memberFeedDtos,pageFeed), HttpStatus.OK);
-//    }
+    /*
+    본인이 좋아요 한 게시글 조회
+     */
+    @GetMapping("/{member-id}/feed-like")
+    public ResponseEntity<?> findMemberFeedLike(@PathVariable("member-id")Long memberId,
+                                            @RequestParam(defaultValue = "1") int page,
+                                            @RequestParam(defaultValue = "10")int size){
 
+        Pageable pageable = PageRequest.of(page -1 , size, Sort.by("createdDateTime").descending());
+        Page<FeedLike> pageFeedLike = memberService.findFeedLike(pageable, memberId);
 
-    @GetMapping("/kk")
-    public String getMember(@RequestParam("par") String par){
+        List<FeedLike> content = pageFeedLike.getContent(); //feedLike List를 받아온다.
+        List<Feed> feedList = new ArrayList<>();
+        List<MemberFeedDto> memberFeedDtos = new ArrayList<>();
+        content.stream().forEach(x -> feedList.add(x.getFeed()));
+        feedList.stream().forEach(x -> memberFeedDtos.add(MemberFeedDto.of(x)));
 
-        Long findmember = memberService.findMember();
-        System.out.println(findmember);
-
-        return "param = " + par + " \n memberId = " + findmember;
+        return new ResponseEntity<>(new MultiResponseDto<>(memberFeedDtos,pageFeedLike), HttpStatus.OK);
     }
+
+    /*
+본인이 북마크 한 게시글 조회
+ */
+    @GetMapping("/{member-id}/feed-bookmark")
+    public ResponseEntity<?> findMemberFeedBookmark(@PathVariable("member-id")Long memberId,
+                                                @RequestParam(defaultValue = "1") int page,
+                                                @RequestParam(defaultValue = "10")int size){
+
+        Pageable pageable = PageRequest.of(page -1 , size, Sort.by("createdDateTime").descending());
+        Page<FeedBookmark> pageFeedBookmark = memberService.findFeedBookmark(pageable, memberId);
+
+        List<FeedBookmark> content = pageFeedBookmark.getContent(); //feedLike List를 받아온다.
+        List<Feed> feedList = new ArrayList<>();
+        List<MemberFeedDto> memberFeedDtos = new ArrayList<>();
+        content.stream().forEach(x -> feedList.add(x.getFeed()));
+        feedList.stream().forEach(x -> memberFeedDtos.add(MemberFeedDto.of(x)));
+
+        return new ResponseEntity<>(new MultiResponseDto<>(memberFeedDtos,pageFeedBookmark), HttpStatus.OK);
+    }
+
 
     /*
     회원가입 확인 메일 전송

@@ -9,13 +9,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.feed.repository.FeedRepository;
+import togedog.server.domain.feedbookmark.entity.FeedBookmark;
+import togedog.server.domain.feedbookmark.repository.FeedBookmarkRepository;
+import togedog.server.domain.feedlike.entity.FeedLike;
+import togedog.server.domain.feedlike.repository.FeedLikeRepository;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.global.auth.utils.CustomAuthorityUtils;
 import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.memberexception.MemberExistException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
-import togedog.server.global.mail.MailService;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,10 +28,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final MailService mailService;
     private final MemberRepository memberRepository;
     private final LoginMemberUtil loginMemberUtil;
     private final FeedRepository feedRepository;
+    private final FeedLikeRepository feedLikeRepository;
+    private final FeedBookmarkRepository feedBookmarkRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -39,9 +43,7 @@ public class MemberService {
     //비밀번호 체크 로직
     public Boolean pwCheck(String password, String pwConfirm){
 
-        if(pwConfirm.equals(password)){
-            return true;
-        }
+        if(pwConfirm.equals(password)) return true;
         return false;
     }
 
@@ -86,8 +88,23 @@ public class MemberService {
     //프로필 게시글 조회
     public Page<Feed> findFeed(Pageable pageable, Long memberId){
         Member member = findMember(memberId);
-        return feedRepository.findAllByMember(member, pageable);
+        return feedRepository.findAllByMemberAndDeleteYnIsFalse(member, pageable);
     }
+
+    //프로필-좋아요 게시글 조회
+    public Page<FeedLike> findFeedLike(Pageable pageable, Long memberId){
+        Member member = findMember(memberId);
+
+        return feedLikeRepository.findAllByMember(pageable,member);
+    }
+
+    //프로필-북마크 게시글 조회
+    public Page<FeedBookmark> findFeedBookmark(Pageable pageable, Long memberId){
+        Member member = findMember(memberId);
+
+        return feedBookmarkRepository.findAllByMember(pageable, member);
+    }
+
 
 
 

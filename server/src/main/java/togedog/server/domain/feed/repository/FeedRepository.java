@@ -10,7 +10,7 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
 
     Page<Feed> findByOpenYnTrueAndDeleteYnIsFalse(Pageable pageable);
 
-    Page<Feed> findAllByMember(Member member, Pageable pageable);
+    Page<Feed> findAllByMemberAndDeleteYnIsFalse(Member member, Pageable pageable);
 
 //    Feed findByOpenYnTrueAndDeleteYnFalse(Long feedId);
 }
