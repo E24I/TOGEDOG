@@ -114,8 +114,8 @@ public class MemberController {
     }
 
     /*
-본인이 북마크 한 게시글 조회
- */
+    본인이 북마크 한 게시글 조회
+    */
     @GetMapping("/{member-id}/feed-bookmark")
     public ResponseEntity<?> findMemberFeedBookmark(@PathVariable("member-id")Long memberId,
                                                 @RequestParam(defaultValue = "1") int page,
@@ -133,14 +133,12 @@ public class MemberController {
         return new ResponseEntity<>(new MultiResponseDto<>(memberFeedDtos,pageFeedBookmark), HttpStatus.OK);
     }
 
-
     /*
     회원가입 확인 메일 전송
      */
     @PostMapping("/signup/emails/send-code")
     public ResponseEntity sendMessage(@RequestParam("email") String email) {
         mailService.sendCodeToEmail(email);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -154,7 +152,6 @@ public class MemberController {
         if(checked){
             return new ResponseEntity(HttpStatus.OK);
         }
-
         return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
 
