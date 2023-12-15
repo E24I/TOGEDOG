@@ -17,9 +17,12 @@ import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.global.auth.utils.CustomAuthorityUtils;
 import togedog.server.global.auth.utils.LoginMemberUtil;
+import togedog.server.global.exception.businessexception.dbexception.DbException;
 import togedog.server.global.exception.businessexception.memberexception.MemberExistException;
+import togedog.server.global.exception.businessexception.memberexception.MemberNicknameException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,11 +76,6 @@ public class MemberService {
         }
     }
 
-    //멤버 찾기 로직
-    public Long findMember(){
-        return loginMemberUtil.getLoginMemberId();
-    }
-
 
     //멤버 프로필 조회
     public Member findMember(Long memberId){
@@ -105,6 +103,8 @@ public class MemberService {
         return feedBookmarkRepository.findAllByMember(pageable, member);
     }
 
+
+    //닉네임으로 멤버 조회
     public Member findNickname(String nickname){
         Long loginMemberId = loginMemberUtil.getLoginMemberId();
 
@@ -118,6 +118,40 @@ public class MemberService {
         return member;
     }
 
+    //닉네임 변경
+    @Transactional
+    public void updateNickname(String nickname){
+
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+
+        if(loginMemberId == null){
+            throw new MemberNotFoundException();
+        }
+
+        try {
+            memberRepository.updateMemberByMemberIdEqualsForNickname(loginMemberId, nickname);
+        }catch (Exception e){
+            throw new MemberNicknameException();
+        }
+    }
+
+
+    //소개글 변경
+    @Transactional
+    public void updateMyintro(String myintro){
+
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+
+        if(loginMemberId == null){
+            throw new MemberNotFoundException();
+        }
+
+        try {
+            memberRepository.updateMemberByMemberIdEqualsForMyIntro(loginMemberId, myintro);
+        }catch (Exception e){
+            throw new DbException();
+        }
+    }
 
 
 

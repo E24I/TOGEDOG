@@ -33,7 +33,7 @@ public class Member extends BaseEntity {
     @Column(nullable = true)
     private String image;
 
-    @Column(nullable = true)
+    @Column(nullable = true, length = 1000)
     private String myIntro;
 
     @Column(nullable = false)

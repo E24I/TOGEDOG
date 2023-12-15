@@ -59,9 +59,7 @@ public class MemberController {
      */
     @PostMapping("/signup/nickname/check")
     public ResponseEntity<Boolean> nicknameCheck(@RequestParam("n") String nickname){
-
         Boolean bool = memberService.checkNickname(nickname);
-
         return new ResponseEntity<>(bool,HttpStatus.CREATED);
     }
 
@@ -148,7 +146,7 @@ public class MemberController {
     회원가입 확인 메일 전송
      */
     @PostMapping("/signup/emails/send-code")
-    public ResponseEntity sendMessage(@RequestParam("email") String email) {
+    public ResponseEntity sendSingnupMessage(@RequestParam("email") String email) {
         mailService.sendCodeToEmail(email);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -166,6 +164,48 @@ public class MemberController {
         return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
 
+    /*
+    비밀번호 변경 메일 전송
+     */
+    @PostMapping("/find/emails/send-code")
+    public ResponseEntity<?> sendPasswordMessage(@RequestParam("email") String email){
+        mailService.sendPasswordCodeToEmail(email);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /*
+    비밀번호 변경 코드 체크
+    */
+    @PostMapping("/find/emails/check")
+    public ResponseEntity emailPasswordCheck(@RequestBody EmailCheckDto emailCheckDto){
+        Boolean checked = mailService.checkAuthNum(emailCheckDto.getEmail(), emailCheckDto.getAuthNum());
+
+        if(checked){
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.FORBIDDEN);
+    }
+
+    /*
+    닉네임(nickname) 수정
+     */
+    @PatchMapping("/update/nickname")
+    public ResponseEntity<?> updateNickname(@Valid @RequestBody MemberDto.PatchNickname nicknameDto){
+        memberService.updateNickname(nicknameDto.getNickname());
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    /*
+    소개글(myintro) 수정
+     */
+    @PatchMapping("/update/myintro")
+    public ResponseEntity<?> updateMyintro(@RequestBody MemberDto.PatchIntro myintroDto){
+
+        memberService.updateMyintro(myintroDto.getMyIntro());
+
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
 
 
 }
