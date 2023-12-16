@@ -12,6 +12,8 @@ import togedog.server.domain.mapcontent.entity.MapContent;
 import togedog.server.domain.mapcontent.repository.MapContentRepository;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
 
+import java.util.ArrayList;
+
 @Service
 @RequiredArgsConstructor
 public class MapContentService {
@@ -27,10 +29,11 @@ public class MapContentService {
         double utm_y = Double.parseDouble(mapContentRequest.getUtm_k_y());
 
         CRSFactory crsFactory = new CRSFactory();
-        //EPSG(WGS84):4166, 4326
-        //EPSG(UTM-K):5178
-        CoordinateReferenceSystem WGS84 = crsFactory.createFromName("epsg:4326");
-        CoordinateReferenceSystem UTM_K = crsFactory.createFromName("epsg:5178");
+        String wgs84Proj = "+proj=longlat +datum=WGS84 +no_defs";
+        String utmkProj = "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs";
+
+        CoordinateReferenceSystem WGS84 = crsFactory.createFromParameters("WGS84", wgs84Proj);
+        CoordinateReferenceSystem UTM_K = crsFactory.createFromParameters("UTMK", utmkProj);
 
         CoordinateTransformFactory ctFactory = new CoordinateTransformFactory();
         CoordinateTransform utm_kToWgs = ctFactory.createTransform(UTM_K, WGS84);
@@ -40,6 +43,7 @@ public class MapContentService {
         MapContent mapContent = MapContent.builder()
                 .wsg84_x(Double.toString(result.x))
                 .wsg84_y(Double.toString(result.y))
+                .feeds(new ArrayList<>())
                 .build();
 
         Feed feed = feedRepository.findById(mapContentRequest.getFeedId()).orElseThrow(FeedNotFoundException::new);
