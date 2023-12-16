@@ -4,6 +4,7 @@ import lombok.*;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.global.entity.BaseEntity;
+import togedog.server.global.entity.ReportState;
 
 import javax.persistence.*;
 
@@ -21,6 +22,10 @@ public class FeedReport extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReportState feedReportState;
+
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
@@ -35,7 +40,11 @@ public class FeedReport extends BaseEntity {
         return FeedReport.builder()
                 .content(content)
                 .member(member)
+                .feedReportState(ReportState.PROCEEDING)
                 .feed(feed)
                 .build();
     }
+
+
+
 }

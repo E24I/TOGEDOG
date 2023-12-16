@@ -13,6 +13,7 @@ import togedog.server.domain.feed.controller.dto.FeedReportApiRequest;
 import togedog.server.domain.feed.controller.dto.FeedUpdateApiRequest;
 import togedog.server.domain.feed.service.dto.response.FeedDetailResponse;
 import togedog.server.domain.feedreport.service.FeedReportService;
+import togedog.server.domain.feedreport.service.dto.response.FeedReportResponse;
 import togedog.server.domain.reply.service.dto.response.ReplyResponse;
 import togedog.server.global.image.ImageNameDTO;
 import togedog.server.domain.feed.service.FeedService;
@@ -70,7 +71,7 @@ public class FeedController {
 
         Long feedId = feedService.createFeed(request.toFeedCreateServiceRequest());
 
-        URI uri = URI.create("/feeds/" + feedId); // + feedId
+        URI uri = URI.create("/feed/" + feedId); // + feedId
 
         return ResponseEntity.created(uri).build();
     }
@@ -90,6 +91,14 @@ public class FeedController {
     public ResponseEntity<Void> deleteFeed(@PathVariable("feed-id") Long feedId) {
 
         feedService.deleteFeed(feedId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{feed-id}/report")
+    public ResponseEntity<Void> deleteFeedByReport(@PathVariable("feed-id") Long feedId) {
+
+        feedService.deleteFeedByReport(feedId);
 
         return ResponseEntity.noContent().build();
     }
@@ -118,23 +127,42 @@ public class FeedController {
 
         Long replyId = replyService.createReply(request.toCreateServiceApiRequest(), feedId);
 
-        URI uri = URI.create("/Replies/" + replyId);
+        URI uri = URI.create("/replies/" + replyId);
 
         return ResponseEntity.created(uri).build();
     }
 
     @PostMapping("/{feed-id}/report")
     public ResponseEntity<Void> reportFeed(@PathVariable("feed-id") Long feedId,
-                                           @Valid @RequestBody FeedReportApiRequest reqeust) {
+                                           @Valid @RequestBody FeedReportApiRequest request) {
 
 
-        feedReportService.reportFeed(reqeust.feedReportApiToService(), feedId);
+        Long feedReportId = feedReportService.reportFeed(request.feedReportApiToService(), feedId);
 
-        URI uri = URI.create("/" +feedId + "/report");
+        URI uri = URI.create("/feed/report/" + feedReportId);
+        // uri 반환이 필요한가 ?
+
         return ResponseEntity.created(uri).build();
 
-
     }
 
+    @GetMapping("/report")
+    public ResponseEntity<ApiPageResponse<FeedReportResponse>> reportFeedGet(@RequestParam(defaultValue = "1") int page,
+                                                                             @RequestParam(defaultValue = "5") int size) {
+
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdDateTime").descending());
+        Page<FeedReportResponse> feedReportsPage = feedReportService.getFeedReportPaged(pageable);
+
+        return ResponseEntity.ok(ApiPageResponse.ok(feedReportsPage));
     }
+
+    @PatchMapping("/report/{feed-report-id}")
+    public ResponseEntity<Void> reportUpdate(@PathVariable("feed-report-id") Long feedReportId) {
+
+        feedReportService.updateReportState(feedReportId);
+
+        return ResponseEntity.noContent().build();
+    }
+}
 

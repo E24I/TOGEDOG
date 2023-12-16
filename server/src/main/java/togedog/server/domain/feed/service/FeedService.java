@@ -35,6 +35,7 @@ import togedog.server.global.exception.businessexception.memberexception.MemberA
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
+import togedog.server.global.exception.businessexception.memberexception.MemberRolesNotMatchException;
 import togedog.server.global.response.PageInformation;
 
 import javax.validation.Valid;
@@ -65,8 +66,9 @@ public class FeedService {
             throw new MemberNotLoginException();
         }
 
-        Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
-        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
+//        Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
+//        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
+        Member member =findMember(loginMemberId);
 
         Feed feed = postFeed(request, member);
         List<FeedImage> feedImages = createFeedImages(request.getImages(), feed);
@@ -94,8 +96,7 @@ public class FeedService {
         if(loginMemberId != null) {
         // 여기서 로그인 안하고 볼 시랑 하고 볼 시 따로 처리
 
-        Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
-        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
+            Member member =findMember(loginMemberId);
 
         Page<Feed> feedsPage = feedRepository.findByOpenYnTrueAndDeleteYnIsFalse(pageable); // 여기서 deleteyn 여부도 찾아서 반환
 //        return feedsPage.map(FeedResponse::singleFeedResponse);
@@ -129,13 +130,9 @@ public class FeedService {
 
         if (loginMemberId != null) { // 있거나 or 빈 값이라도 들어올 때
 
+            Member member = findMember(loginMemberId);
 
-        Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
-        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
-
-
-        Optional<Feed> feedOptional = feedRepository.findById(feedId);
-        Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
+            Feed feed = findFeedRepository(feedId);
 
         Page<ReplyResponse> pagedReplies = replyService.getRepliesPaged(feedId,
                 PageRequest.of(0, 3, Sort.by("createdDateTime").descending()), loginMemberId);
@@ -154,8 +151,7 @@ public class FeedService {
         return FeedDetailResponse.feedDetailResponse(feed, isBookmarkedByCurrentUser, isLikedByCurrentUser, feedReplies);
 
         } else {
-            Optional<Feed> feedOptional = feedRepository.findById(feedId);
-            Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
+            Feed feed = findFeedRepository(feedId);
 
             Page<ReplyResponse> pagedReplies = replyService.getRepliesPaged(feedId,
                     PageRequest.of(0, 3, Sort.by("createdDateTime").descending()), loginMemberId);
@@ -235,6 +231,8 @@ public class FeedService {
             throw new MemberNotLoginException();
         }
 
+        findMember(loginMemberId);
+
         Feed feedUpdate = findFeedRepository(feedId);
 
         checkAccessAuthority(feedUpdate.getMember().getMemberId(), loginMemberId);
@@ -243,18 +241,48 @@ public class FeedService {
 
     }
 
+
+
     public void deleteFeed(Long feedId) {
 
         Long loginMemberId =  loginMemberUtil.getLoginMemberId();
         if (loginMemberId == null) {
             throw new MemberNotLoginException();
         }
+        findMember(loginMemberId);
 
         Feed feedDelete = findFeedRepository(feedId);
 
         checkAccessAuthority(feedDelete.getMember().getMemberId(), loginMemberId);
 
         feedDelete.deleteMyFeed();
+    }
+
+    public void deleteFeedByReport(Long feedId) {
+
+        Long loginMemberId =  loginMemberUtil.getLoginMemberId();
+        if (loginMemberId == null) {
+            throw new MemberNotLoginException();
+        }
+        Member member = findMember(loginMemberId);
+
+        memberRolesCheck(member);
+
+        Feed feedDelete = findFeedRepository(feedId);
+
+        feedDelete.deleteMyFeed();
+
+    }
+
+    private Member findMember(Long loginMemberId) {
+
+        Optional<Member> memberOptional = memberRepository.findById(loginMemberId);
+        return memberOptional.orElseThrow(MemberNotFoundException::new);
+    }
+    private void memberRolesCheck(Member member) {
+
+        if (!member.getEmail().equals("admin@admin.com"))
+            throw new MemberRolesNotMatchException();
     }
 
     private void updateFeed(Feed feedUpdate, FeedUpdateServiceRequest request) {
@@ -268,8 +296,8 @@ public class FeedService {
 
     private Feed findFeedRepository(Long feedId) {
 
-        Optional<Feed> feedOptional = feedRepository.findById(feedId);
-//        Feed findInfeed = feedOptional.orElseThrow(FeedNotFoundException::new); 이렇게 리턴할까 ?
+        Optional<Feed> feedOptional = feedRepository.findByFeedIdAndDeleteYnIsFalse(feedId);
+
         return feedOptional.orElseThrow(FeedNotFoundException::new);
     }
 
