@@ -48,6 +48,7 @@ public class MemberService {
         return false;
     }
 
+    //비밀번호 변경 로직
     public void updatePassword(MemberDto.PatchPassword passwordDto){
 
         Boolean pwCheck = pwCheck(passwordDto.getPassword(), passwordDto.getPwConfirm());
@@ -55,29 +56,20 @@ public class MemberService {
         if(!pwCheck){
             throw new MemberPasswordException();
         }
-
         String newPassword = passwordDto.getPassword();
-
         Long loginMemberId = loginMemberUtil.getLoginMemberId();
 
         if(loginMemberId == null){
             throw new MemberNotFoundException();
         }
-
         Member member = memberRepository.findById(loginMemberId).orElseThrow(() -> new MemberNotFoundException());
         String password = member.getPassword();
-
-        log.info("password 1 = {} , password 2 = {}", password, newPassword);
-
         if(passwordEncoder.matches(newPassword, password)){
             throw new MemberPasswordSameException();
         }
-
         member.setPassword(passwordEncoder.encode(newPassword));
-
         memberRepository.save(member);
     }
-
 
 
     //회원 생성 로직
