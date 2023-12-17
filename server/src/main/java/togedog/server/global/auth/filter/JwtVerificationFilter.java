@@ -60,11 +60,6 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         String base64EncodedSecretKey = jwTokenizer.encodeBase64SecretKey(jwTokenizer.getSecretKey());
         Map<String, Object> claims = jwTokenizer.getClaims(jws, base64EncodedSecretKey).getBody();
 
-        System.out.println("zz" + claims.get("email"));
-        System.out.println("zz" + claims.get("roles"));
-        System.out.println("zz " + claims.get("id"));
-        System.out.println(claims.get("nickname"));
-        System.out.println(claims.get("image"));
         return claims;
     }
 
@@ -72,7 +67,6 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         String email = (String) claims.get("email");
         List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List)claims.get("roles"));
 
-        log.info("email = {}, authorities={}", email, authorities);
         Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, authorities);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
