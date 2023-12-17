@@ -10,10 +10,12 @@ import togedog.server.domain.feedbookmark.repository.FeedBookmarkRepository;
 import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
+import togedog.server.domain.reply.entity.Reply;
 import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
+import togedog.server.global.exception.businessexception.replyexception.ReplyNotFoundException;
 
 import java.util.Optional;
 
@@ -36,11 +38,10 @@ public class FeedBookmarkService {
             throw new MemberNotLoginException();
         }
 
-        Optional<Member> memberOptional = memberRepository.findById(loginMemberId);
-        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
 
-        Optional<Feed> feedOptional = feedRepository.findById(feedId);
-        Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
+        Member member = findByLoginId(loginMemberId);
+
+        Feed feed = findFeedRepository(feedId);
 
         Optional<FeedBookmark> alreadyBookmark = feedBookmarkRepository.findByMemberAndFeed(member, feed);
 
@@ -58,4 +59,24 @@ public class FeedBookmarkService {
 
         }
     }
+
+    private Feed findFeedRepository(Long feedId) {
+
+        Optional<Feed> feedOptional = feedRepository.findByFeedIdAndDeleteYnIsFalse(feedId);
+
+        return feedOptional.orElseThrow(FeedNotFoundException::new);
+    }
+
+    private Member findByLoginId(Long loginMemberId) {
+        Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
+        return memberOptional.orElseThrow(MemberNotFoundException::new);
+
+    }
+
+//    private Reply findReplyRepository(Long replyId) {
+//
+//        Optional<Reply> replyOptional = replyRepository.findByReplyIdAndDeleteYnFalse(replyId);
+//
+//        return replyOptional.orElseThrow(ReplyNotFoundException::new);
+//    }
 }

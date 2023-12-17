@@ -26,6 +26,7 @@ import togedog.server.global.exception.businessexception.feedexception.FeedNotFo
 import togedog.server.global.exception.businessexception.memberexception.MemberAccessDeniedException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
+import togedog.server.global.exception.businessexception.memberexception.MemberRolesNotMatchException;
 import togedog.server.global.exception.businessexception.replyexception.ReplyDontDeleteAboutFixException;
 import togedog.server.global.exception.businessexception.replyexception.ReplyNotFoundException;
 
@@ -51,11 +52,9 @@ public class ReplyService {
         isLogin(loginMemberId);
 
 
-        Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
-        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
+        Member member = findByLoginId(loginMemberId);
 
-        Optional<Feed> feedOptional = feedRepository.findById(feedId);
-        Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
+        Feed feed = findFeedRepository(feedId);
 
         Reply reply = postReply(request, member, feed);
         replyRepository.save(reply);
@@ -72,13 +71,11 @@ public class ReplyService {
         Long loginMemberId =  loginMemberUtil.getLoginMemberId(); // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
         isLogin(loginMemberId);
 
-        Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
-        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
+
 
         findByLoginId(loginMemberId);
 
-        Optional<Reply> optionalReply = replyRepository.findById(replyId);
-        Reply reply = optionalReply.orElseThrow(ReplyNotFoundException::new);
+        Reply reply = findReplyRepository(replyId);
 
         checkAccessAuthority(reply.getMember().getMemberId(), loginMemberId);
 
@@ -91,20 +88,15 @@ public class ReplyService {
         Long loginMemberId =  loginMemberUtil.getLoginMemberId(); // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
         isLogin(loginMemberId);
 
-//        Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
-//        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
-
         findByLoginId(loginMemberId);
 
-        Optional<Reply> optionalReply = replyRepository.findById(replyId);
-        Reply reply = optionalReply.orElseThrow(ReplyNotFoundException::new);
+        Reply reply = findReplyRepository(replyId);
 
         if(reply.getFix()) { //고정 되어 있으면 삭제 불가능
             throw new ReplyDontDeleteAboutFixException();
         }
 
-        Optional<Feed> optionalFeed = feedRepository.findById(reply.getFeed().getFeedId());
-        Feed feed = optionalFeed.orElseThrow(FeedNotFoundException::new);
+        Feed feed = findFeedRepository(reply.getFeed().getFeedId());
 
         checkAccessAuthority(reply.getMember().getMemberId(), loginMemberId);
 
@@ -113,6 +105,31 @@ public class ReplyService {
 
         feed.setRepliesCount(feed.getRepliesCount() - 1);
 
+
+    }
+
+    public void deleteReplyByReport(Long replyId) {
+
+        Long loginMemberId =  loginMemberUtil.getLoginMemberId(); // 멤버 확인하는 로그인된 멤버를 로그인된 사용자 가정
+        isLogin(loginMemberId);
+
+        Member member = findByLoginId(loginMemberId);
+
+
+        Reply reply = findReplyRepository(replyId);
+
+        Feed feed = findFeedRepository(reply.getFeed().getFeedId());
+
+        if(reply.getFix()) { //고정 되어 있으면 고정 풀어주고 삭제
+            reply.setFix(false);
+            feed.setReplyFix(false);
+        }
+
+        memberRolesCheck(member);
+
+        reply.deleteMyReply();
+
+        feed.setRepliesCount(feed.getRepliesCount() - 1);
 
     }
 
@@ -127,7 +144,7 @@ public class ReplyService {
                 Member member = optionalMember.get();
 
 
-                Optional<Feed> feedOptional = feedRepository.findById(feedId);
+                Optional<Feed> feedOptional = feedRepository.findByFeedIdAndDeleteYnIsFalse(feedId);
 
                 Feed feed = feedOptional.get();
                 if (feed.getDeleteYn() == true) {
@@ -147,8 +164,7 @@ public class ReplyService {
                 throw new MemberNotLoginException();
             }
         } else { // null 값이 들어오면 똑같이 작동하는데 isLikeCurrentUser 유저에 fals로 반환
-            Optional<Feed> feedOptional = feedRepository.findById(feedId);
-            Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
+            Feed feed = findFeedRepository(feedId);
 
             if (feed.getDeleteYn() == true) {
                 throw new FeedAlreadyDeleteException();
@@ -164,39 +180,25 @@ public class ReplyService {
         }
     }
 
-//    public Page<ReplyResponse> getRepliesPaged(Long feedId, Pageable pageable) {
-//        Long loginMemberId = loginMemberUtil.getLoginMemberId();
-//
-//        Optional<Feed> feedOptional = feedRepository.findById(feedId);
-//        Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
-//
-//        Page<Reply> repliesPage = replyRepository.findByFeed(feed, pageable);
-//
-//        Page<ReplyResponse> replyResponses = repliesPage.map(reply ->
-//                ReplyResponse.singReplyResponse(reply, isReplyLikedByMember(loginMemberId, reply))
-//        );
-//
-//        return replyResponses;
-//    }
+
 
     public void fixReply(Long replyId) {
         Long loginMemberId = loginMemberUtil.getLoginMemberId();
 
         // ㄷ따로 리플 찾을 때 나중에 막기
 
-        Optional<Reply> replyOptional = replyRepository.findById(replyId);
-        Reply reply = replyOptional.orElseThrow(ReplyNotFoundException::new);
+        Reply reply = findReplyRepository(replyId);
 
         Long feedId = reply.getFeed().getFeedId();
-        Optional<Feed> feedOptional = feedRepository.findById(feedId);
-        Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
+
+        Feed feed = findFeedRepository(feedId);
 
         checkAccessAuthority(feed.getMember().getMemberId(), loginMemberId);
         boolean foundMatchingReply = false;
 
         if (!feed.getReplyFix()) {
             // 피드의 replyFix가 false인 경우
-            // 주어진 replyId를 가진 댓글을 고정합니다.
+            // 주어진 replyId를 가진 댓글을 고정
             reply.setFix(true);
             feed.setReplyFix(true);
         } else {
@@ -240,10 +242,22 @@ public class ReplyService {
 
     private Member findByLoginId(Long loginMemberId) {
         Optional<Member> memberOptional = memberRepository.findById(loginMemberId); //로그인된 사용자의 멤버 아이디
-        Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
+        return memberOptional.orElseThrow(MemberNotFoundException::new);
 
-        return member;
+    }
 
+    private Feed findFeedRepository(Long feedId) {
+
+        Optional<Feed> feedOptional = feedRepository.findByFeedIdAndDeleteYnIsFalse(feedId);
+
+        return feedOptional.orElseThrow(FeedNotFoundException::new);
+    }
+
+    private Reply findReplyRepository(Long replyId) {
+
+        Optional<Reply> replyOptional = replyRepository.findByReplyIdAndDeleteYnFalse(replyId);
+
+        return replyOptional.orElseThrow(ReplyNotFoundException::new);
     }
     private void checkAccessAuthority(Long AuthorId, Long loginMemberId) {
         if (!AuthorId.equals(loginMemberId)) {
@@ -274,21 +288,13 @@ public class ReplyService {
         return optionalReplyLike.isPresent(); // Optional이 값으로 존재하면 true를 반환, 비어있으면 false를 반환
     }
 
-//    public boolean isReplyLikedByMember(Long memberId, Reply reply) {
-//        if (memberId == null) {
-//            // 만약 로그인되지 않은 경우, 좋아요 여부를 false로 반환하거나 다른 동작을 수행할 수 있습니다.
-//            return false; // 현재 예제에서는 로그인되지 않은 상태에서는 좋아요가 되지 않은 상태로 가정합니다.
-//        } else {
-//            // 로그인된 경우, 회원 ID를 이용하여 현재 사용자가 해당 댓글에 좋아요를 눌렀는지 여부를 확인합니다.
-//            Optional<Member> optionalMember = memberRepository.findById(memberId);
-//            if (optionalMember.isPresent()) {
-//                Member member = optionalMember.get();
-//                return isReplyLikedByMember(member, reply); // 해당 회원이 댓글을 좋아했는지 여부 반환
-//            } else {
-//                throw new MemberNotFoundException();
-//            }
-//        }
-//    }
+    private void memberRolesCheck(Member member) {
+
+        if (!member.getEmail().equals("admin@admin.com"))
+            throw new MemberRolesNotMatchException();
+    }
+
+
 
 
 }
