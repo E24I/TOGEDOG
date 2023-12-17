@@ -37,3 +37,17 @@ export type petlistDataType = {
   image: string | null;
   key: number;
 };
+
+// 유저 피드 데이터
+export type feedDataType = {
+  content: string;
+  createdDate: string;
+  feedId: number;
+  images: string[];
+  likeCount: number;
+  repliesCount: number;
+  updatedDate: string;
+  title: string;
+  videos: string;
+  views: null | number;
+};

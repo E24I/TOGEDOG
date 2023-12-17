@@ -13,36 +13,38 @@ import {
   ProfileImg,
   ChangeImgButton,
 } from "./ProfileChange.style";
-
-const ProfileChange: React.FC<{
+import { usePatchUserNickname } from "../../../hooks/UserInfoHook";
+type ChageData = {
   setChangeInfo: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ setChangeInfo }) => {
+  nickname?: string;
+  intro?: string | null;
+};
+
+const ProfileChange: React.FC<ChageData> = ({
+  setChangeInfo,
+  nickname,
+  intro,
+}) => {
   const {
     register,
-    handleSubmit,
     formState: { errors },
     watch,
   } = useForm();
-
   //각각 input 태그 value 호출
-  const NickName = watch("NickName", "");
+  const newNickname = watch("NickName", "");
   const introduction = watch("introduction", "");
-
   const handleModal = () => {
     setChangeInfo(false);
+    window.location.reload();
   };
+  const { mutate: patchNicknameMutate } = usePatchUserNickname(newNickname);
   return (
     <ChangeForm>
       <ChangeContainer>
         <Topbox>
           <BackIcon onClick={handleModal} />
           <h3>프로필 설정</h3>
-          <button
-            className="submitButton"
-            onClick={handleSubmit((data) => {
-              console.log(data);
-            })}
-          >
+          <button className="submitButton" onClick={handleModal}>
             완료
           </button>
         </Topbox>
@@ -55,18 +57,22 @@ const ProfileChange: React.FC<{
           <ChangeImgButton>프로필사진 바꾸기</ChangeImgButton>
         </ProfileBox>
         <InputBox>
-          <form>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+          >
             <div>
               <TextInput>
                 <p>닉네임 변경</p>
                 <PersonIcon />
                 <input
                   type="text"
-                  placeholder="기존닉네임."
+                  placeholder={nickname}
                   autoComplete="off"
                   {...register("NickName")}
                 />
-                <button>중복확인</button>
+                <button onClick={() => patchNicknameMutate()}>변경하기</button>
               </TextInput>
               {/*추후 중복확인 후 오류 메세지 띄어줄거임 */}
               {/* {errors.email && (
@@ -85,6 +91,7 @@ const ProfileChange: React.FC<{
                   autoComplete="off"
                   {...register("introduction")}
                 />
+                <button>변경하기</button>
               </TextInput>
             </div>
           </form>

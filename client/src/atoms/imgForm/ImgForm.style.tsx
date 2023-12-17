@@ -1,8 +1,8 @@
 import { styled } from "styled-components";
 import { ProFileBoxProps } from "../atomsType";
 import { ReactComponent as Person } from "../../assets/images/icons/Person.svg";
-import { ReactComponent as ImgaeCover } from "../../assets/images/icons/Person.svg";
-import { ReactComponent as ChattingDefaultBackground } from "../../assets/images/icons/Person.svg";
+import { ReactComponent as ImageCover } from "../../assets/images/icons/ImageCover.svg";
+import { ReactComponent as ChattingDefaultBackground } from "../../assets/images/icons/ChattingDefaultBackground.svg";
 
 export const ProFileBox = styled.div<ProFileBoxProps>`
   width: ${(props) => props.width}px;
@@ -40,7 +40,7 @@ export const PetUnknown = styled(ChattingDefaultBackground)`
     fill: white;
   }
 `;
-export const FeedUnknown = styled(ImgaeCover)`
+export const FeedUnknown = styled(ImageCover)`
   width: 50%;
   height: 50%;
   path {

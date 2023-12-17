@@ -12,7 +12,7 @@ import {
   SearchButton,
 } from "./Modal.Style";
 import { isLoginAtom, tokenAtom, memberIdAtom } from "../../atoms";
-import { useSetRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 interface ModalProps {
@@ -31,6 +31,7 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen }) => {
   const setLoginState = useSetRecoilState(isLoginAtom);
   const setToken = useSetRecoilState(tokenAtom);
   const setMemberId = useSetRecoilState(memberIdAtom);
+  const loginState = useRecoilValue(isLoginAtom);
   const Logout = () => {
     setLoginState(false);
     setToken(undefined);
@@ -41,7 +42,12 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen }) => {
   const route = (index: number) => {
     switch (index) {
       case 0:
-        navigator("/user");
+        if (loginState) {
+          navigator("/user");
+        } else {
+          alert("로그인이 필요합니다.");
+          navigator("/");
+        }
         break;
       case 1:
         Logout();

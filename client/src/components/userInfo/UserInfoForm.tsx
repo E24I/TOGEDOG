@@ -25,7 +25,7 @@ const MyInfoForm: React.FC = () => {
   const [drop, setDrop] = useState<boolean>(false); //드롭다운 ... 버튼
   const dropdownRef = useRef<HTMLButtonElement>(null); //드롭다운 밖클릭시 없어짐
   const [changeInfo, setChangeInfo] = useState<boolean>(false); //프로필변경
-  const [userData, setUserData] = useState<infoType | undefined>(undefined);
+  const [userData, setUserData] = useState<infoType | undefined>(undefined); //유저 데이터담기
   const memberId = useRecoilValue(memberIdAtom);
   const { mutate: getInfoMutate } = useGetUserInfo(
     Number(memberId),
@@ -49,7 +49,6 @@ const MyInfoForm: React.FC = () => {
   };
   useEffect(() => {
     getInfoMutate();
-    console.log(userData);
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -64,14 +63,14 @@ const MyInfoForm: React.FC = () => {
           width={150}
           height={150}
           radius={50}
-          URL={
-            "https://i.pinimg.com/736x/64/63/40/646340423a648806278bfc51d055f7e6.jpg"
-          }
+          // URL={
+          //   "https://i.pinimg.com/736x/64/63/40/646340423a648806278bfc51d055f7e6.jpg"
+          // }
         />
         <SectionBox>
           <ButtonSection>
-            <Button1>팔로잉</Button1>
-            <Button2 onClick={handleModal}>메세지</Button2>
+            <Button1>비밀번호 변경</Button1>
+            <Button2 onClick={handleModal}>프로필 수정</Button2>
             <MoreButton onClick={handleDrop} ref={dropdownRef}>
               ...
             </MoreButton>
@@ -91,7 +90,13 @@ const MyInfoForm: React.FC = () => {
           ))}
         <PetAdd />
       </PetListBox>
-      {changeInfo && <ProfileChange setChangeInfo={setChangeInfo} />}
+      {changeInfo && (
+        <ProfileChange
+          setChangeInfo={setChangeInfo}
+          nickname={userData?.nickname}
+          intro={userData?.myIntro}
+        />
+      )}
     </MyInfoContainer>
   );
 };

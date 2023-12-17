@@ -1,5 +1,9 @@
-import { AxiosResponse } from "axios";
-import { getUserInfo } from "../services/userInfoService";
+import { AxiosResponse, AxiosError } from "axios";
+import {
+  getUserInfo,
+  getUserFeed,
+  patchUserNickname,
+} from "../services/userInfoService";
 import { useMutation } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 import { tokenAtom } from "../atoms";
@@ -9,7 +13,7 @@ import {
   authenticationProps,
   nicknameProps,
 } from "../types/memberType";
-import { infoType } from "../types/userInfoType";
+import { feedDataType, infoType } from "../types/userInfoType";
 
 // 유저 정보 가져오기
 export const useGetUserInfo = (
@@ -26,6 +30,45 @@ export const useGetUserInfo = (
     },
     onError: (err: AxiosResponse) => {
       console.log(err);
+    },
+  });
+};
+
+// 유저 피드 가져오기
+export const useGetUserFeed = (
+  memberId: number,
+  endPoint: string,
+  setFeedData: React.Dispatch<React.SetStateAction<feedDataType[] | undefined>>,
+) => {
+  const token = useRecoilValue(tokenAtom);
+  return useMutation({
+    mutationFn: async () => {
+      return getUserFeed(memberId, endPoint, token);
+    },
+    onSuccess: (res: AxiosResponse) => {
+      setFeedData(res.data.data);
+    },
+    onError: (err: AxiosResponse) => {
+      console.log(err);
+    },
+  });
+};
+
+// 닉네임 변경
+export const usePatchUserNickname = (newNickname: string) => {
+  const token = useRecoilValue(tokenAtom);
+  return useMutation({
+    mutationFn: async () => {
+      return patchUserNickname(newNickname, token);
+    },
+    onSuccess: () => {
+      alert("닉네임 변경완료");
+    },
+    onError: (err: AxiosError<any>) => {
+      if (err.response !== undefined) {
+        alert(err.response.data.message);
+        console.log(err.response.data);
+      }
     },
   });
 };
