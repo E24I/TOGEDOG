@@ -153,6 +153,17 @@ public class MemberService {
         }
     }
 
+    //멤버 삭제
+    public void deleteMember(){
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+
+        if(loginMemberId == null){
+            throw new MemberNotFoundException();
+        }
+
+        memberRepository.deleteById(loginMemberId);
+    }
+
 
 
     //닉네임 확인 로직

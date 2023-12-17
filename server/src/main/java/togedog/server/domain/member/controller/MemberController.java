@@ -55,6 +55,15 @@ public class MemberController {
     }
 
     /*
+    회원 삭제
+     */
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteMember(){
+        memberService.deleteMember();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /*
     닉네임 중복 확인
      */
     @PostMapping("/signup/nickname/check")
