@@ -39,7 +39,7 @@ public class FeedLikeService {
         Optional<Member> memberOptional = memberRepository.findById(loginMemberId);
         Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
 
-        Optional<Feed> feedOptional = feedRepository.findById(feedId);
+        Optional<Feed> feedOptional = feedRepository.findByFeedIdAndDeleteYnIsFalse(feedId);
         Feed feed = feedOptional.orElseThrow(FeedNotFoundException::new);
 
         Optional<FeedLike> alreadyLike = feedLikeRepository.findByMemberAndFeed(member, feed);

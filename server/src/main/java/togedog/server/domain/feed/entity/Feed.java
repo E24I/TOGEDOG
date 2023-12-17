@@ -127,7 +127,6 @@ public class Feed extends BaseEntity {
     public void deleteMyFeed() {
         if(this.deleteYn == false) {
 
-
         this.deleteYn = true;}
         else throw new FeedAlreadyDeleteException();
 

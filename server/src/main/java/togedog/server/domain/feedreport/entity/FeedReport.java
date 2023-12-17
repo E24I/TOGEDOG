@@ -1,17 +1,16 @@
 package togedog.server.domain.feedreport.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.global.entity.BaseEntity;
+import togedog.server.global.entity.ReportState;
 
 import javax.persistence.*;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -20,8 +19,12 @@ public class FeedReport extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long feedReportId;
 
-    @Column
+    @Column(nullable = false)
     private String content;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReportState feedReportState;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
@@ -30,4 +33,18 @@ public class FeedReport extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "feed_id")
     private Feed feed;
+
+
+    public static FeedReport CreateFeedReport(String content, Member member, Feed feed) {
+
+        return FeedReport.builder()
+                .content(content)
+                .member(member)
+                .feedReportState(ReportState.PROCEEDING)
+                .feed(feed)
+                .build();
+    }
+
+
+
 }
