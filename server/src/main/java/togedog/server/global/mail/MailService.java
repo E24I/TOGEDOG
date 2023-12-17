@@ -1,21 +1,15 @@
 package togedog.server.global.mail;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.spring5.SpringTemplateEngine;
 import togedog.server.global.redis.RedisUtil;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.transaction.Transactional;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
@@ -47,6 +41,18 @@ public class MailService {
             // 이러한 경우 MessagingException이 발생
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public void sendPasswordCodeToEmail(String toEmail) {
+        String title = "Togedog 비밀번호변경 인증 번호입니다.";
+        String authCode = this.createCode();
+        String text = "본메일은 Togedog 인증 전용 메일입니다." + 	//html 형식으로 작성 !
+                "<br><br>" +
+                "하단의 6자리숫자가 인증번호입니다. <h3>" + authCode + "</h3>" +
+                "<br>" +
+                "인증 페이지로 돌아가서 인증코드를 정확히 입력해주세요.";
+
+        this.sendEmail(toEmail, title, text, authCode);
     }
 
 

@@ -1,8 +1,6 @@
 package togedog.server.global.auth.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -58,9 +56,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 //        Gson gson = new GsonBuilder().serializeNulls().create();
 //        String json = gson.toJson(member);
-
 //        response.getWriter().write(json);
-
 
         this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
     }
