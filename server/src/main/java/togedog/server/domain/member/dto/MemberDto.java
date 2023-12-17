@@ -53,6 +53,17 @@ public class MemberDto {
     }
 
     @Getter
+    public static class PatchPassword{
+        @NotBlank(message = "패스워드 필드를 작성해주세요.")
+        @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "패스워드는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
+        private String password;
+
+        @NotBlank(message = "패스워드 확인 필드를 작성해주세요.")
+        @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "패스워드 확인 필드는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
+        private String pwConfirm;
+    }
+
+    @Getter
     @Builder
     public static class ResponseMemberInfo {
         private Long memberId;

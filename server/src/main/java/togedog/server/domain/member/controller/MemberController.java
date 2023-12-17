@@ -63,6 +63,14 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PatchMapping("/update/password")
+    public ResponseEntity<?> updatePassword(@RequestBody MemberDto.PatchPassword passwordDto){
+
+        memberService.updatePassword(passwordDto);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     /*
     닉네임 중복 확인
      */

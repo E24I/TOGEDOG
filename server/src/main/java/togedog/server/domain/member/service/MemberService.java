@@ -13,14 +13,13 @@ import togedog.server.domain.feedbookmark.entity.FeedBookmark;
 import togedog.server.domain.feedbookmark.repository.FeedBookmarkRepository;
 import togedog.server.domain.feedlike.entity.FeedLike;
 import togedog.server.domain.feedlike.repository.FeedLikeRepository;
+import togedog.server.domain.member.dto.MemberDto;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.global.auth.utils.CustomAuthorityUtils;
 import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.dbexception.DbException;
-import togedog.server.global.exception.businessexception.memberexception.MemberExistException;
-import togedog.server.global.exception.businessexception.memberexception.MemberNicknameException;
-import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
+import togedog.server.global.exception.businessexception.memberexception.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -45,10 +44,41 @@ public class MemberService {
 
     //비밀번호 체크 로직
     public Boolean pwCheck(String password, String pwConfirm){
-
         if(pwConfirm.equals(password)) return true;
         return false;
     }
+
+    public void updatePassword(MemberDto.PatchPassword passwordDto){
+
+        Boolean pwCheck = pwCheck(passwordDto.getPassword(), passwordDto.getPwConfirm());
+
+        if(!pwCheck){
+            throw new MemberPasswordException();
+        }
+
+        String newPassword = passwordDto.getPassword();
+
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+
+        if(loginMemberId == null){
+            throw new MemberNotFoundException();
+        }
+
+        Member member = memberRepository.findById(loginMemberId).orElseThrow(() -> new MemberNotFoundException());
+        String password = member.getPassword();
+
+        log.info("password 1 = {} , password 2 = {}", password, newPassword);
+
+        if(passwordEncoder.matches(newPassword, password)){
+            throw new MemberPasswordSameException();
+        }
+
+        member.setPassword(passwordEncoder.encode(newPassword));
+
+        memberRepository.save(member);
+    }
+
+
 
     //회원 생성 로직
     public Member createMember(Member member){
@@ -110,11 +140,9 @@ public class MemberService {
 
         Member member = memberRepository.findMemberByNickname(nickname)
                 .orElseThrow(() -> new MemberNotFoundException());
-
         if(member.getMemberId() == loginMemberId){
             throw new MemberNotFoundException();
         }
-
         return member;
     }
 
@@ -127,7 +155,6 @@ public class MemberService {
         if(loginMemberId == null){
             throw new MemberNotFoundException();
         }
-
         try {
             memberRepository.updateMemberByMemberIdEqualsForNickname(loginMemberId, nickname);
         }catch (Exception e){
@@ -145,7 +172,6 @@ public class MemberService {
         if(loginMemberId == null){
             throw new MemberNotFoundException();
         }
-
         try {
             memberRepository.updateMemberByMemberIdEqualsForMyIntro(loginMemberId, myintro);
         }catch (Exception e){
