@@ -3,6 +3,7 @@ package togedog.server.domain.member.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.pet.entity.Pet;
 import togedog.server.global.entity.BaseEntity;
 
@@ -47,6 +48,9 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pet> pet = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Feed> feed = new ArrayList<>();
 
 
     //단방향 매핑만 진행해놓고 추후에 필요시 양방향 추가 예정

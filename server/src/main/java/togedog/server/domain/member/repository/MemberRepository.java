@@ -16,6 +16,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findMemberByNickname(String nickname);
 
+    void deleteMemberByMemberId(Long memberId);
+
     @Modifying
     @Query("UPDATE Member m SET m.nickname = :nickname WHERE m.memberId = :memberId")
     int updateMemberByMemberIdEqualsForNickname(@Param("memberId") Long memberId, @Param("nickname") String nickname);

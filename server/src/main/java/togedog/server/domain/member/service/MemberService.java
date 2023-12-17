@@ -154,14 +154,14 @@ public class MemberService {
     }
 
     //멤버 삭제
+    @Transactional
     public void deleteMember(){
         Long loginMemberId = loginMemberUtil.getLoginMemberId();
 
         if(loginMemberId == null){
             throw new MemberNotFoundException();
         }
-
-        memberRepository.deleteById(loginMemberId);
+        memberRepository.deleteMemberByMemberId(loginMemberId);
     }
 
 
