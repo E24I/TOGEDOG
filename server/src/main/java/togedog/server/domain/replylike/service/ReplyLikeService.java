@@ -38,7 +38,7 @@ public class ReplyLikeService {
         Optional<Member> memberOptional = memberRepository.findById(loginMemberId);
         Member member = memberOptional.orElseThrow(MemberNotFoundException::new);
 
-        Optional<Reply> replyOptional = replyRepository.findById(replyId);
+        Optional<Reply> replyOptional = replyRepository.findByReplyIdAndDeleteYnFalse(replyId);
         Reply reply = replyOptional.orElseThrow(ReplyNotFoundException::new);
 
         Optional<ReplyLike> alreadyLike = replyLikeRepository.findByMemberAndReply(member, reply);
