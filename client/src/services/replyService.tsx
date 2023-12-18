@@ -1,5 +1,6 @@
 import axios from "axios";
-import { ROOT_URL } from "./api";
+
+const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
 // 댓글 조회 // 현재 존재 x
 export const getReplies = async (feedId: number) => {
@@ -8,22 +9,44 @@ export const getReplies = async (feedId: number) => {
 };
 
 // 댓글 등록
-export const postReply = async (feedId: number, content: string) => {
-  const { data } = await axios.post(`${ROOT_URL}/${feedId}/reply`, { content });
+export const postReply = async (
+  feedId: number,
+  content: string,
+  accesstoken: string,
+) => {
+  const { data } = await axios.post(
+    `${ROOT_URL}/feed/${feedId}/replies`,
+    { content },
+    {
+      headers: { Authorization: accesstoken },
+    },
+  );
   return data;
 };
 
 // 댓글 수정
-export const patchReply = async (replyId: number, content: string) => {
-  const { data } = await axios.patch(`${ROOT_URL}/replies/${replyId}`, {
-    content,
-  });
+export const patchReply = async (
+  replyId: number,
+  content: string,
+  accesstoken: string,
+) => {
+  const { data } = await axios.patch(
+    `${ROOT_URL}/replies/${replyId}`,
+    {
+      content,
+    },
+    {
+      headers: { Authorization: accesstoken },
+    },
+  );
   return data;
 };
 
 // 댓글 삭제
-export const deleteReply = async (replyId: number) => {
-  const { data } = await axios.delete(`${ROOT_URL}/replies/${replyId}`);
+export const deleteReply = async (replyId: number, accesstoken: string) => {
+  const { data } = await axios.delete(`${ROOT_URL}/replies/${replyId}`, {
+    headers: { Authorization: accesstoken },
+  });
   return data;
 };
 

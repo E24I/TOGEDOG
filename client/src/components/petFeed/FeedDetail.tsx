@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   AddBox,
   AddBtn,
@@ -14,6 +14,7 @@ import {
   FeedDetailStatus,
   FeedDetailVideo,
   FeedHeader,
+  FeedReviewTop,
   FeedTitle,
   LeftDetail,
   LeftScroll,
@@ -24,6 +25,8 @@ import {
   Profile,
   ProfileBox,
   ProfileImg,
+  Replies,
+  ReviewCount,
   RightDetail,
   RightScroll,
   Setting,
@@ -32,14 +35,16 @@ import {
   UploadTime,
   UserName,
 } from "./Feed.Style";
-import { feedDetailType } from "../../types/feedDataType";
-import { feedDetailData } from "./FeedDummy";
 import FeedReply from "./FeedReply";
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
 import PaginationCircle from "../../atoms/pagination/PaginationCircle";
 import FeedImage from "./FeedImage";
+import { useFeedBookmark, useFeedLike, useGetFeed } from "../../hooks/FeedHook";
+import { useRecoilValue } from "recoil";
+import { tokenAtom } from "../../atoms";
+import { usePostReply } from "../../hooks/ReplyHook";
 
 interface OwnProps {
   feedId: number;
@@ -47,46 +52,78 @@ interface OwnProps {
 }
 
 const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
-  const [isDetail, setDetail] = useState<feedDetailType>(feedDetailData);
-  const [isLike, setLike] = useState<boolean>(false);
-  const [isBookmark, setBookmark] = useState<boolean>(false);
+  const accesstoken = useRecoilValue(tokenAtom);
+  const { data, error, isLoading } = useGetFeed(feedId, accesstoken);
+  const { mutate: feedLike } = useFeedLike(feedId, accesstoken);
+  const { mutate: feedBookmark } = useFeedBookmark(feedId, accesstoken);
+  console.log("feedDetail", data);
+
   const [isImg, setImg] = useState<number>(1);
   const [isSetting, setSetting] = useState<boolean>(false);
   const [bigImage, setBigImage] = useState<boolean>(false);
   const [imgUrl, setImgUrl] = useState<string>("");
-  const today = new Date();
-  const createDate = isDetail.createDate;
-  const feedDate = createDate.split("-").map((el) => parseInt(el));
-  const createTime = isDetail.createTime;
-  const feedTime = createTime.split(":").map((el) => parseInt(el));
 
-  const handleLike = (): void => setLike(!isLike);
-  const handleBookmark = (): void => setBookmark(!isBookmark);
-  const handleSetting = (): void => setSetting(!isSetting);
+  const handleOpenDropdown = () => setSetting(!isSetting);
+  const handleCloseDropdown = () => setSetting(false);
   const handleBigImg = (url = ""): void => {
     setBigImage(!bigImage);
     setImgUrl(url);
   };
+
+  const today = new Date();
+  const createDate = data?.createdDate.split("T")[0];
+  const feedDate = createDate?.split("-").map((el: string) => parseInt(el));
+  const createTime = data?.createdDate.split("T")[1];
+  const feedTime = createTime?.split(":").map((el: string) => parseInt(el));
+
   const handlePrevImg = (): void => {
-    if (!isDetail.media.imgUrl || !isDetail.media.videoUrl) return;
+    if (!data.images || !data.videos) return;
     if (isImg !== 1) {
       setImg(isImg - 1);
     }
   };
   const handleNextImg = (): void => {
-    if (!isDetail.media.imgUrl || !isDetail.media.videoUrl) return;
-    if (
-      isImg !==
-      isDetail.media.imgUrl.length + isDetail.media.videoUrl.length
-    ) {
+    if (!data.images || !data.videos) return;
+    if (isImg !== data.images.length + data.videos.length) {
       setImg(isImg + 1);
     }
   };
 
-  useEffect(() => {
-    setDetail(feedDetailData);
-  }, []);
+  const [isInput, setInput] = useState("");
+  const handleChangeReply = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+  const successFunc = () => setInput("");
+  const { mutate: postReply } = usePostReply(
+    feedId,
+    isInput,
+    accesstoken,
+    successFunc,
+  );
+  const handleEnterReply = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      console.log(e.key);
+      postReply();
+    }
+  };
 
+  const handleReplyPatch = () => {
+    return;
+  };
+  const handleReplyDelete = () => {
+    return;
+  };
+  const settingContent = {
+    수정하기: handleReplyPatch,
+    삭제하기: handleReplyDelete,
+  };
+
+  if (isLoading) {
+    return <>로딩중</>;
+  }
+  if (error) {
+    return <>오류 발생</>;
+  }
   return (
     <ModalBackground onClick={handleMoreReview}>
       <DetailContainer
@@ -99,21 +136,18 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
           <FeedHeader>
             <Profile>
               <ProfileBox>
-                {isDetail.member.profileUrl ? (
-                  <ProfileImg
-                    src={isDetail.member.profileUrl}
-                    alt="프로필 사진"
-                  />
+                {data.member?.imageUrl ? (
+                  <ProfileImg src={data.member?.imageUrl} alt="프로필 사진" />
                 ) : (
                   <Unknown />
                 )}
               </ProfileBox>
               <div>
-                <UserName>{isDetail.member.nickname}</UserName>
-                {isDetail.address && (
+                <UserName>{data.member?.nickname}</UserName>
+                {data.address && (
                   <FeedAddress>
                     <PinPoint />
-                    {isDetail.address}
+                    {data.address}
                   </FeedAddress>
                 )}
               </div>
@@ -132,30 +166,27 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
                 : `${today.getSeconds() - feedTime[2]}초 전`}
             </UploadTime>
             <SettingBox
-              onClick={handleSetting}
-              onBlur={() => setSetting(false)}
+              onClick={handleOpenDropdown}
+              onBlur={handleCloseDropdown}
             >
               <Setting />
               {isSetting && (
                 <Dropdown
-                  contents={["수정하기", "삭제하기"]}
-                  handleFunc={(e) => {
-                    console.log(e.currentTarget.textContent);
-                    setSetting(false);
-                  }}
+                  setting={settingContent}
+                  handleCloseDropdown={handleCloseDropdown}
                 />
               )}
             </SettingBox>
           </FeedHeader>
           <FeedContents>
-            <FeedTitle>{isDetail.title}</FeedTitle>
-            <FeedContent>{isDetail.content}</FeedContent>
+            <FeedTitle>{data.title}</FeedTitle>
+            <FeedContent>{data.content}</FeedContent>
           </FeedContents>
-          {isDetail.media.imgUrl && isDetail.media.videoUrl && (
+          {data.images && data.videos && (
             <FeedDetailMedia>
               <LeftScroll onClick={handlePrevImg} />
               <FeedDetailImgs>
-                {isDetail.media.imgUrl?.map((el, idx) => {
+                {data.images?.map((el: string, idx: number) => {
                   if (isImg === idx + 1) {
                     return (
                       <FeedDetailImg
@@ -169,19 +200,16 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
                     );
                   }
                 })}
-                {isDetail.media.videoUrl &&
-                  isDetail.media.imgUrl?.length + 1 === isImg && (
-                    <FeedDetailVideo src={isDetail.media.videoUrl} />
-                  )}
+                {data.videos && data.images.length + 1 === isImg && (
+                  <FeedDetailVideo src={data.videos} />
+                )}
               </FeedDetailImgs>
               <RightScroll onClick={handleNextImg} />
               <PaginationImage>
                 <PaginationCircle
                   isPage={isImg}
                   totalPage={
-                    isDetail.media.videoUrl
-                      ? 1 + isDetail.media.imgUrl?.length
-                      : isDetail.media.imgUrl?.length
+                    data.videos ? 1 + data.images.length : data.images.length
                   }
                   handleFunc={(el) => {
                     setImg(el);
@@ -195,24 +223,38 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
               <Heart
                 width="30px"
                 height="30px"
-                isLike={isLike}
-                handleFunc={handleLike}
+                isLike={data.likeYn}
+                handleFunc={feedLike}
               />
-              <span>{isDetail.likeCount}</span>
+              <span>{data.likeCount}</span>
             </LikeBox>
             <Bookmark
               width="30px"
               height="30px"
-              isBookmark={isBookmark}
-              handleFunc={handleBookmark}
+              isBookmark={data.bookmarkYn}
+              handleFunc={feedBookmark}
             />
           </FeedDetailStatus>
         </LeftDetail>
         <RightDetail>
-          <FeedReply />
+          <FeedReviewTop>
+            <ReviewCount>
+              댓글 {data.replies.pageInformation.totalSize}개
+            </ReviewCount>
+          </FeedReviewTop>
+          <Replies>
+            {data.replies.replies.map((reply: any) => (
+              <FeedReply key={reply.replyId} reply={reply} />
+            ))}
+          </Replies>
           <AddBox>
-            <AddReply placeholder="댓글 달기..." />
-            <AddBtn>게시</AddBtn>
+            <AddReply
+              placeholder="댓글 달기..."
+              value={isInput}
+              onChange={handleChangeReply}
+              onKeyUp={handleEnterReply}
+            />
+            <AddBtn onClick={() => postReply()}>게시</AddBtn>
           </AddBox>
         </RightDetail>
       </DetailContainer>
