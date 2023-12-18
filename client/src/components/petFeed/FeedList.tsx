@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useRef, useState } from "react";
+import React, { createRef, useRef, useState } from "react";
 import { feedListsType } from "../../types/feedDataType";
 import FeedDetail from "./FeedDetail";
 import {
@@ -31,7 +31,6 @@ import {
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
-import { useGetFeeds } from "../../hooks/FeedHook";
 
 interface OwnProps {
   items: feedListsType;
@@ -43,23 +42,22 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   const [isBookmark, setBookmark] = useState<boolean>(false);
   const [isSetting, setSetting] = useState<boolean>(false);
   const today = new Date();
-  const createDate = items.createDate;
+  const createDate = items.createdDate.split("T")[0];
   const feedDate = createDate.split("-").map((el) => parseInt(el));
-  const createTime = items.createTime;
+  const createTime = items.createdDate.split("T")[1];
   const feedTime = createTime.split(":").map((el) => parseInt(el));
 
   const handleMoreReview = (): void => setDetail(!isDetail);
   const handleLike = (): void => setLike(!isLike);
   const handleBookmark = (): void => setBookmark(!isBookmark);
   const handleSetting = (): void => setSetting(!isSetting);
+  const handleCloseDropdown = () => setSetting(false);
 
   const mediaRef = useRef<any>(null);
-  const imgRef = useRef<any>(items.media.imgUrl?.map(() => createRef()));
+  const imgRef = useRef<any>(items.images?.map(() => createRef()));
   const [isMedia, setMedia] = useState<number>(0);
 
   const handleScrollRight = () => {
-    console.log(isMedia);
-    console.log(imgRef.current[isMedia + 1]);
     if (isMedia >= 0 && imgRef.current[isMedia + 1]) {
       mediaRef.current.scrollLeft =
         mediaRef.current.scrollLeft +
@@ -70,8 +68,6 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   };
 
   const handleScrollLeft = () => {
-    console.log(isMedia);
-    console.log(imgRef.current[isMedia - 1]);
     if (isMedia >= 0 && imgRef.current[isMedia - 1]) {
       mediaRef.current.scrollLeft =
         mediaRef.current.scrollLeft -
@@ -81,16 +77,24 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
     }
   };
 
-  const { data } = useGetFeeds();
-  console.log(data?.data);
+  const handleReplyPatch = () => {
+    return;
+  };
+  const handleReplyDelete = () => {
+    return;
+  };
+  const settingContent = {
+    수정하기: handleReplyPatch,
+    삭제하기: handleReplyDelete,
+  };
 
   return (
     <Feed>
       <FeedHeader>
         <Profile>
           <ProfileBox>
-            {items.member.profileUrl ? (
-              <ProfileImg src={items.member.profileUrl} alt="프로필 사진" />
+            {items.member.imageUrl ? (
+              <ProfileImg src={items.member.imageUrl} alt="프로필 사진" />
             ) : (
               <Unknown />
             )}
@@ -122,11 +126,8 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
           <Setting />
           {isSetting && (
             <Dropdown
-              contents={["수정하기", "삭제하기"]}
-              handleFunc={(e) => {
-                console.log(e.currentTarget.textContent);
-                setSetting(false);
-              }}
+              setting={settingContent}
+              handleCloseDropdown={handleCloseDropdown}
             />
           )}
         </SettingBox>
@@ -136,19 +137,19 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
         <FeedContent>{items.content}</FeedContent>
       </FeedContents>
 
-      {items.media.imgUrl && items.media.videoUrl && (
+      {items.images && items.videos && (
         <FeedMedia>
           <LeftScroll onClick={() => handleScrollLeft()} />
           <FeedImgs ref={mediaRef}>
-            {items.media.videoUrl && (
+            {items.videos && (
               <FeedVideo
                 ref={imgRef.current[0]}
                 onClick={() => {
-                  console.log(items.media.videoUrl);
+                  console.log(items.videos);
                 }}
               />
             )}
-            {items.media.imgUrl?.map((el, idx) => (
+            {items.images?.map((el, idx) => (
               <FeedImg
                 key={idx}
                 ref={imgRef.current[idx + 1]}
@@ -183,7 +184,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
       </FeedStatus>
       <FeedBottom>
         <ReviewCount onClick={handleMoreReview}>
-          댓글 {items.replyCount}개 모두 보기
+          댓글 {items.repliesCount}개 모두 보기
         </ReviewCount>
       </FeedBottom>
       {isDetail && (

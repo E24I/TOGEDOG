@@ -1,17 +1,17 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  deleteReply,
-  getReplies,
-  patchReply,
-  postReply,
-  reportReply,
-} from "../services/replyService";
+  getComments,
+  postComment,
+  patchComment,
+  deleteComment,
+  reportComment,
+} from "../services/commentService";
 
 // 대댓글 조회
 export const useGetReplies = (feedId: number) => {
   return useQuery({
-    queryKey: ["reply", feedId],
-    queryFn: async () => getReplies(feedId),
+    queryKey: ["comment", feedId],
+    queryFn: async () => getComments(feedId),
   });
 };
 
@@ -19,7 +19,7 @@ export const useGetReplies = (feedId: number) => {
 export const usePostReply = (feedId: number, content: string) => {
   return useMutation({
     mutationFn: async () => {
-      return postReply(feedId, content);
+      return postComment(feedId, content);
     },
     onSuccess: (res) => {
       console.log("성공", res);
@@ -36,7 +36,7 @@ export const usePostReply = (feedId: number, content: string) => {
 export const usePatchReply = (replyId: number, content: string) => {
   return useMutation({
     mutationFn: async () => {
-      return patchReply(replyId, content);
+      return patchComment(replyId, content);
     },
     onSuccess: (res) => {
       console.log("성공", res);
@@ -53,7 +53,7 @@ export const usePatchReply = (replyId: number, content: string) => {
 export const useDeleteReply = (replyId: number) => {
   return useMutation({
     mutationFn: async () => {
-      return deleteReply(replyId);
+      return deleteComment(replyId);
     },
     onSuccess: (res) => {
       console.log("성공", res);
@@ -70,7 +70,7 @@ export const useDeleteReply = (replyId: number) => {
 export const useReportReply = (replyId: number) => {
   return useMutation({
     mutationFn: async () => {
-      return reportReply(replyId);
+      return reportComment(replyId);
     },
     onSuccess: (res) => {
       console.log("성공", res);

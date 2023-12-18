@@ -15,6 +15,7 @@ import MapDetail from "./pages/MapDetail";
 import MyMap from "./pages/MyMap";
 import MyPage from "./pages/MyPage";
 import PetProfile from "./pages/PetProfile";
+
 const App: React.FC = () => {
   return (
     <RecoilRoot>
