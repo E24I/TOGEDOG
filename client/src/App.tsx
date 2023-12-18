@@ -1,5 +1,4 @@
 import React from "react";
-import { RecoilRoot } from "recoil";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Header from "./components/header/Header";
@@ -15,27 +14,28 @@ import MapDetail from "./pages/MapDetail";
 import MyMap from "./pages/MyMap";
 import UserInfo from "./pages/UserInfo";
 import PetProfile from "./pages/PetProfile";
+import PetAdd from "./pages/PetAdd";
 const App: React.FC = () => {
   return (
-    <RecoilRoot>
-      <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/signUp" element={<SignUp />} />
-          <Route path="/create" element={<CreateFeed />} />
-          <Route path="/update" element={<UpdateFeed />} />
-          <Route path="/feeds" element={<PetFeed />} />
-          <Route path="/chat" element={<Chatting />} />
-          <Route path="/petmap" element={<PetMap />} />
-          <Route path="/petmap/1" element={<MapDetail />} />
-          <Route path="/member/:memberId/mymap" element={<MyMap />} />
-          <Route path="/user" element={<UserInfo />} />
-          <Route path="/petProfile" element={<PetProfile />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
-    </RecoilRoot>
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/signUp" element={<SignUp />} />
+        <Route path="/create" element={<CreateFeed />} />
+        <Route path="/update" element={<UpdateFeed />} />
+        <Route path="/feeds" element={<PetFeed />} />
+        <Route path="/chat" element={<Chatting />} />
+        <Route path="/petmap" element={<PetMap />} />
+        <Route path="/petmap/1" element={<MapDetail />} />
+        <Route path="/member/:memberId/mymap" element={<MyMap />} />
+        <Route path="/user" element={<UserInfo />} />
+        <Route path="/petProfile/:id" element={<PetProfile />} />
+        <Route path="/petProfile/:id" element={<PetProfile />} />
+        <Route path="/petAdd" element={<PetAdd />} />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
   );
 };
 

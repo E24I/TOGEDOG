@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { TextInput } from "../../signUpElement/SignUpInputs.style";
 import { ReactComponent as Lock } from "../../../assets/images/icons/signUpIcons/Lock.svg";
@@ -11,16 +11,36 @@ import {
   BackIcon,
   MiddleBox,
 } from "./PasswordChange.style";
+import {
+  usePostUserEmail,
+  usePostUserCode,
+  usePatchUserPassword,
+} from "../../../hooks/UserInfoHook";
 
 const PasswordChangeForm: React.FC<{
   setLostPw: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ setLostPw }) => {
   const {
     register,
-    handleSubmit,
     formState: { errors },
     watch,
   } = useForm();
+  //각각 input 태그 value 호출
+  const email = watch("email", "");
+  const authentication = watch("authentication", "");
+  const password = watch("password", "");
+  const pwConfirm = watch("pwConfirm", "");
+  const [codeCheck, setCodeCheck] = useState<boolean>(false);
+  const { mutate: postEmailMutate } = usePostUserEmail(email);
+  const { mutate: postCodeMutate } = usePostUserCode(
+    email,
+    authentication,
+    setCodeCheck,
+  );
+  const { mutate: patchPasswordMutate } = usePatchUserPassword(
+    password,
+    pwConfirm,
+  );
 
   //이메일 유효성
   const emailRegex =
@@ -28,11 +48,6 @@ const PasswordChangeForm: React.FC<{
   //비밀번호 유효성
   const passwordRegex =
     /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
-  //각각 input 태그 value 호출
-  const email = watch("email", "");
-  const authentication = watch("authentication", "");
-  const password = watch("password", "");
-  const pwConfirm = watch("pwConfirm", "");
 
   const handleModal = () => {
     setLostPw(false);
@@ -46,9 +61,9 @@ const PasswordChangeForm: React.FC<{
         </Topbox>
         <MiddleBox>
           <form
-            onSubmit={handleSubmit((data) => {
-              console.log(data);
-            })}
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
           >
             <div>
               <TextInput>
@@ -62,7 +77,7 @@ const PasswordChangeForm: React.FC<{
                     pattern: emailRegex,
                   })}
                 />
-                <button>인증번호 전송</button>
+                <button onClick={() => postEmailMutate()}>인증번호 전송</button>
               </TextInput>
               {errors.email && (
                 <ErrorMsg>
@@ -79,7 +94,7 @@ const PasswordChangeForm: React.FC<{
                   autoComplete="off"
                   {...register("authentication", { required: true })}
                 />
-                <button>인증하기</button>
+                <button onClick={() => postCodeMutate()}>인증하기</button>
               </TextInput>
             </div>
             <div>
@@ -128,9 +143,7 @@ const PasswordChangeForm: React.FC<{
         </MiddleBox>
         <button
           className="submitButton"
-          onClick={handleSubmit((data) => {
-            console.log(data);
-          })}
+          onClick={codeCheck ? () => patchPasswordMutate() : undefined}
         >
           비밀번호 변경하기
         </button>

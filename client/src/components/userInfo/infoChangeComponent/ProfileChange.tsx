@@ -13,38 +13,37 @@ import {
   ProfileImg,
   ChangeImgButton,
 } from "./ProfileChange.style";
-import { usePatchUserNickname } from "../../../hooks/UserInfoHook";
-type ChageData = {
-  setChangeInfo: React.Dispatch<React.SetStateAction<boolean>>;
-  nickname?: string;
-  intro?: string | null;
-};
+import {
+  usePatchUserNickname,
+  usePatchUserIntro,
+} from "../../../hooks/UserInfoHook";
+import { ChageData } from "../../../types/userInfoType";
 
 const ProfileChange: React.FC<ChageData> = ({
   setChangeInfo,
   nickname,
   intro,
 }) => {
-  const {
-    register,
-    formState: { errors },
-    watch,
-  } = useForm();
+  const { register, watch } = useForm();
   //각각 input 태그 value 호출
   const newNickname = watch("NickName", "");
   const introduction = watch("introduction", "");
   const handleModal = () => {
     setChangeInfo(false);
+  };
+  const handelCahnge = () => {
+    setChangeInfo(false);
     window.location.reload();
   };
   const { mutate: patchNicknameMutate } = usePatchUserNickname(newNickname);
+  const { mutate: patchIntroMutate } = usePatchUserIntro(introduction);
   return (
     <ChangeForm>
       <ChangeContainer>
         <Topbox>
           <BackIcon onClick={handleModal} />
           <h3>프로필 설정</h3>
-          <button className="submitButton" onClick={handleModal}>
+          <button className="submitButton" onClick={handelCahnge}>
             완료
           </button>
         </Topbox>
@@ -74,12 +73,6 @@ const ProfileChange: React.FC<ChageData> = ({
                 />
                 <button onClick={() => patchNicknameMutate()}>변경하기</button>
               </TextInput>
-              {/*추후 중복확인 후 오류 메세지 띄어줄거임 */}
-              {/* {errors.email && (
-                <ErrorMsg>
-                  <p></p>
-                </ErrorMsg>
-              )} */}
             </div>
             <div>
               <TextInput>
@@ -87,11 +80,11 @@ const ProfileChange: React.FC<ChageData> = ({
                 <PersonIcon />
                 <input
                   type="text"
-                  placeholder="기존 소개글."
+                  placeholder={intro ? intro : "소개글을 입력해주세요"}
                   autoComplete="off"
                   {...register("introduction")}
                 />
-                <button>변경하기</button>
+                <button onClick={() => patchIntroMutate()}>변경하기</button>
               </TextInput>
             </div>
           </form>

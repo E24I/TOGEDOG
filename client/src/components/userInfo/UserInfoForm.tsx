@@ -20,11 +20,13 @@ import ProfileChange from "./infoChangeComponent/ProfileChange";
 import { useGetUserInfo } from "../../hooks/UserInfoHook";
 import { infoType, petDataType } from "../../types/userInfoType";
 import { UserImgForm } from "../../atoms/imgForm/ImgForm";
+import PasswordChangeForm from "./infoChangeComponent/PasswordChange";
 
 const MyInfoForm: React.FC = () => {
   const [drop, setDrop] = useState<boolean>(false); //드롭다운 ... 버튼
   const dropdownRef = useRef<HTMLButtonElement>(null); //드롭다운 밖클릭시 없어짐
   const [changeInfo, setChangeInfo] = useState<boolean>(false); //프로필변경
+  const [lostPw, setLostPw] = useState<boolean>(false); //비번변경
   const [userData, setUserData] = useState<infoType | undefined>(undefined); //유저 데이터담기
   const memberId = useRecoilValue(memberIdAtom);
   const { mutate: getInfoMutate } = useGetUserInfo(
@@ -35,9 +37,13 @@ const MyInfoForm: React.FC = () => {
     //드롭열기
     setDrop(!drop);
   };
-  const handleModal = () => {
+  const handleInfoModal = () => {
     //모달열기
     setChangeInfo(!changeInfo);
+  };
+  const handlePasswordModal = () => {
+    //모달열기
+    setLostPw(!lostPw);
   };
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -69,8 +75,8 @@ const MyInfoForm: React.FC = () => {
         />
         <SectionBox>
           <ButtonSection>
-            <Button1>비밀번호 변경</Button1>
-            <Button2 onClick={handleModal}>프로필 수정</Button2>
+            <Button1 onClick={handlePasswordModal}>비밀번호 변경</Button1>
+            <Button2 onClick={handleInfoModal}>프로필 수정</Button2>
             <MoreButton onClick={handleDrop} ref={dropdownRef}>
               ...
             </MoreButton>
@@ -86,7 +92,12 @@ const MyInfoForm: React.FC = () => {
       <PetListBox>
         {Array.isArray(userData?.pet) &&
           userData?.pet.map((el: petDataType) => (
-            <PetList name={el.name} image={el.image} key={el.petId} />
+            <PetList
+              name={el.name}
+              image={el.image}
+              id={el.petId}
+              key={el.petId}
+            />
           ))}
         <PetAdd />
       </PetListBox>
@@ -97,6 +108,7 @@ const MyInfoForm: React.FC = () => {
           intro={userData?.myIntro}
         />
       )}
+      {lostPw && <PasswordChangeForm setLostPw={setLostPw} />}
     </MyInfoContainer>
   );
 };

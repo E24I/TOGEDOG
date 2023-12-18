@@ -35,6 +35,7 @@ export type petDataType = {
 export type petlistDataType = {
   name: string;
   image: string | null;
+  id: number;
   key: number;
 };
 
@@ -50,4 +51,11 @@ export type feedDataType = {
   title: string;
   videos: string;
   views: null | number;
+};
+
+// 프로필 변경 모달
+export type ChageData = {
+  setChangeInfo: React.Dispatch<React.SetStateAction<boolean>>;
+  nickname?: string;
+  intro?: string | null;
 };

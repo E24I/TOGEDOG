@@ -7,7 +7,7 @@ import { PetImgForm } from "../../../atoms/imgForm/ImgForm";
 const PetList = (propsdata: petlistDataType) => {
   return (
     <PetListForm>
-      <Link to="/petProfile">
+      <Link to={`/petProfile/${propsdata.id}`}>
         <PetImgForm width={80} height={80} radius={50} URL={propsdata.image} />
         <PetName>{propsdata.name}</PetName>
       </Link>
