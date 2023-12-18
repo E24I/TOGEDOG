@@ -1,5 +1,6 @@
 import axios from "axios";
-import { ROOT_URL } from "./api";
+
+const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
 // 대댓글 조회
 export const getComments = async (replyId: number) => {

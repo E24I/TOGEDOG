@@ -13,11 +13,9 @@ export const DropDownContainer = styled.div<DropdownPosition>`
   border-radius: 12px;
   overflow: hidden;
   position: absolute;
-  top: 30px;
-  left: 0;
-  /* right: 0; */
-  /* bottom: 0; */
-  width: 90px;
+  top: 5px;
+  left: 35px;
+  min-width: 90px;
   display: flex;
   flex-direction: column;
 `;

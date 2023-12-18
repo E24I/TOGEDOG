@@ -1,23 +1,31 @@
 import React from "react";
 import { Menu, DropDownContainer } from "./Dropdowns.style";
 
+type Setting = {
+  수정하기?: () => void;
+  삭제하기?: () => void;
+  댓글고정?: () => void;
+};
+
 interface OwnProps {
-  contents: string[];
-  handleFunc: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  setting: Setting;
+  handleCloseDropdown: () => void;
 }
 
-const Dropdown: React.FC<OwnProps> = ({ contents, handleFunc }) => {
-  // <Dropdown contents={contents} handleFunc={handleFunc} /> 의 형태로 props 설정하면 됩니다.
-  // 해당 props 타입은 위에 OwnProps를 확인해주세요.
-  // handleFunc 함수는 switch 문을 사용해서 실행하면 될 것 같습니다.
-  // ex) const handleFunc = (e) => {switch(e.currentTarget.textContent) {case "신고하기" : console.log("신고 되었습니다.") return;}}
+const Dropdown: React.FC<OwnProps> = ({ setting, handleCloseDropdown }) => {
+  // <Dropdown setting={setting} handleCloseDropdown={handleCloseDropdown} /> 의 형태로 props 설정하면 됩니다.
+  // 위 Setting 타입설정에 추가할 목록이 있다면 추가해주세요.
+  // ex) const settingContent = {수정하기: handleReplyPatch, 삭제하기: handleReplyDelete};
+  // ex) const handleCloseDropdown = () => setDropdown(false);
+
+  const contents = Object.entries(setting);
 
   return (
-    <DropDownContainer>
+    <DropDownContainer onClick={handleCloseDropdown}>
       {contents.map((content, idx) => {
         return (
-          <Menu key={idx} onMouseDown={handleFunc}>
-            {content}
+          <Menu key={idx} onMouseDown={content[1]}>
+            {content[0]}
           </Menu>
         );
       })}
