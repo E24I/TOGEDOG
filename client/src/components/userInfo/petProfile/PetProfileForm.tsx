@@ -24,6 +24,7 @@ import { useDeletePetInfo } from "../../../hooks/UserInfoHook";
 import { memberIdAtom, tokenAtom } from "../../../atoms";
 import { getPetInfo } from "../../../services/userInfoService";
 import ConfirmModal from "../../../atoms/modal/ConfirmModal";
+import { queryClient } from "../../..";
 
 const PetProfileForm = () => {
   const navigate = useNavigate();
@@ -41,9 +42,21 @@ const PetProfileForm = () => {
   const [birthday, setBirthday] = useState("2023년 9월 5일"); // 생일 vlaue
   const [gender, setGender] = useState("여"); // 성별 vlaue
   const [character, setCharacter] = useState("발랄"); // 성격 vlaue
-  const query = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["petInfo", petId, memberId, token],
     queryFn: () => getPetInfo(petId, memberId, token),
+  });
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      "postAPI"; //ex.포스트요청
+    },
+    onSuccess: (res) => {
+      console.log(res);
+      queryClient.invalidateQueries({ queryKey: ["petInfo"] });
+    },
+    onError: (err) => {
+      console.log(err);
+    },
   });
 
   const goBack = () => {
@@ -55,6 +68,13 @@ const PetProfileForm = () => {
   };
 
   const { mutate: deletePet } = useDeletePetInfo(petId);
+  if (error) {
+    return <div>404페이지 예정</div>;
+  }
+  if (isLoading) {
+    return <div>Loading..... 로딩페이지 예정</div>;
+  }
+
   return (
     <ProfileForm>
       <TopBox>
@@ -79,7 +99,7 @@ const PetProfileForm = () => {
               value={introduction}
               onChange={(e) => {
                 setIntroduction(e.target.value);
-                console.log(query.data);
+                console.log(data);
               }}
             />
           ) : (

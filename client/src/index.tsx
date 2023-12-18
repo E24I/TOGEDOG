@@ -11,7 +11,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RecoilRoot } from "recoil";
 import { isAxiosError } from "axios";
 
-
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
