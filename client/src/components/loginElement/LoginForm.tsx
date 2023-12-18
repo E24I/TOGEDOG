@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import Oauth from "./Oauth";
-import PasswordChangeForm from "../myPage/infoChangeComponent/PasswordChange";
+import PasswordChangeForm from "../userInfo/infoChangeComponent/PasswordChange";
 import {
   InputContainer,
   LoginButtonOn,
@@ -11,7 +11,7 @@ import {
   LoginInput,
   LogoImg,
 } from "./LoginForm.style";
-import { usePostLogin } from "../../hooks/memberHook";
+import { usePostLogin } from "../../hooks/MemberHook";
 
 const LoginForm: React.FC = () => {
   const [lostPw, setLostPw] = useState<boolean>(false); //비밀번호 변경 모달

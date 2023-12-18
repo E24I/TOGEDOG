@@ -12,9 +12,9 @@ export const isLoginAtom = atom<boolean>({
   effects_UNSTABLE: [persistAtom],
 });
 
-export const tokenAtom = atom<string>({
+export const tokenAtom = atom<string | undefined>({
   key: "token",
-  default: "",
+  default: undefined,
   effects_UNSTABLE: [persistAtom],
 });
 export const memberIdAtom = atom<number | undefined>({
