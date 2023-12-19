@@ -12,6 +12,7 @@ import {
   postInformationType,
   updateInformationType,
 } from "../types/feedDataType";
+import { queryClient } from "..";
 
 // 피드 전체 조회
 export const useGetFeeds = () => {
@@ -37,6 +38,7 @@ export const usePostFeed = (
     },
     onSuccess: (res) => {
       console.log("성공", res);
+      queryClient.invalidateQueries({ queryKey: ["Feeds"] });
       return;
     },
     onError: (err) => {

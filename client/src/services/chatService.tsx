@@ -15,8 +15,11 @@ export const createNewChat = async (
   return res;
 };
 
-export const getAllRooms = async (token: string | undefined) => {
-  const res = await axios.get(`${ROOT_URL}/chat`, {
+export const getAllRooms = async (memberId: number, token: string) => {
+  const res = await axios({
+    method: "get",
+    url: `${ROOT_URL}/chat`,
+    data: { memberId: memberId },
     headers: { Authorization: token },
   });
   return res.data;

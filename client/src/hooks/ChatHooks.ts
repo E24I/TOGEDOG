@@ -8,14 +8,15 @@ import {
 } from "../services/chatService";
 import { createNewChatType } from "../types/chatType";
 import { useRecoilValue } from "recoil";
-import { tokenAtom } from "../atoms";
+import { memberIdAtom, tokenAtom } from "../atoms";
 
 //채팅 리스트 조회
 export const GetAllRoomsQuery = () => {
   const token = useRecoilValue(tokenAtom);
+  const memberId = useRecoilValue(memberIdAtom);
   const { data } = useQuery({
-    queryKey: ["rooms", token],
-    queryFn: async () => await getAllRooms(token),
+    queryKey: ["rooms", token, memberId],
+    queryFn: async () => memberId && (await getAllRooms(memberId, token)),
   });
   return data;
 };

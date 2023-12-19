@@ -61,7 +61,7 @@ export const updateFeed = async (
 };
 
 //s3 업로드 경로 요청
-export const getPresinedUrl = async (file: string) => {
+export const getPresignedUrl = async (file: string) => {
   const res = await axios
     .post(`${ROOT_URL}/presigned-url`, {
       imageName: file,
