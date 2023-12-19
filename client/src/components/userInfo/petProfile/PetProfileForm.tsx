@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import {
   ProfileForm,
   TopBox,
@@ -13,19 +15,49 @@ import {
   NameText,
   Introduction,
   CategoryBox,
-  IssueListForm,
-  Issues,
+  DeleteButton,
+  // IssueListForm,
+  // Issues,
 } from "./PetProfileForm.style";
 import { Category } from "./component/Category";
+import { useDeletePetInfo } from "../../../hooks/UserInfoHook";
+import { memberIdAtom, tokenAtom } from "../../../atoms";
+import { getPetInfo } from "../../../services/userInfoService";
+import ConfirmModal from "../../../atoms/modal/ConfirmModal";
+import { queryClient } from "../../..";
 
 const PetProfileForm = () => {
   const navigate = useNavigate();
+
+  const { id } = useParams<{ id: string }>();
+  const petId = id ? id : "";
+  const memberId: number = useRecoilValue(memberIdAtom) || 0;
+  const token = useRecoilValue(tokenAtom);
+
+  const [isModal, setIsModal] = useState<boolean>(false);
+
   const [isEditing, setIsEditing] = useState(false); // 수정 상태
   const [introduction, setIntroduction] = useState("나는야 퉁퉁이"); // 소개 value
   const [kind, setKind] = useState("푸들"); // 견종 vlaue
   const [birthday, setBirthday] = useState("2023년 9월 5일"); // 생일 vlaue
   const [gender, setGender] = useState("여"); // 성별 vlaue
   const [character, setCharacter] = useState("발랄"); // 성격 vlaue
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["petInfo", petId, memberId, token],
+    queryFn: () => getPetInfo(petId, memberId, token),
+  });
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      "postAPI"; //ex.포스트요청
+    },
+    onSuccess: (res) => {
+      console.log(res);
+      queryClient.invalidateQueries({ queryKey: ["petInfo"] });
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
   const goBack = () => {
     navigate(-1); // 뒤로가기 버튼
@@ -34,6 +66,14 @@ const PetProfileForm = () => {
   const handleEdit = () => {
     setIsEditing(!isEditing); // 수정 상태로 전환
   };
+
+  const { mutate: deletePet } = useDeletePetInfo(petId);
+  if (error) {
+    return <div>404페이지 예정</div>;
+  }
+  if (isLoading) {
+    return <div>Loading..... 로딩페이지 예정</div>;
+  }
 
   return (
     <ProfileForm>
@@ -59,6 +99,7 @@ const PetProfileForm = () => {
               value={introduction}
               onChange={(e) => {
                 setIntroduction(e.target.value);
+                console.log(data);
               }}
             />
           ) : (
@@ -85,13 +126,13 @@ const PetProfileForm = () => {
               value={gender}
               setValue={setGender}
             />
-            <Category
+            {/* <Category
               title="성격"
               isEditing={isEditing}
               value={character}
               setValue={setCharacter}
-            />
-            <IssueListForm>
+            /> */}
+            {/* <IssueListForm>
               <h3>특이사항</h3>
               <Issues>
                 <li>wqeqwe</li>
@@ -101,10 +142,20 @@ const PetProfileForm = () => {
                 <li>wqeqwe</li>
                 <li>wqeqwe</li>
               </Issues>
-            </IssueListForm>
+            </IssueListForm> */}
           </CategoryBox>
         </TextInfo>
       </ContentBox>
+      <DeleteButton onClick={() => setIsModal(true)}>삭제</DeleteButton>
+      {isModal ? (
+        <ConfirmModal
+          confirmContent={"삭제하시겠습니까?"}
+          positiveContent={"예"}
+          negativeContent={"아니오"}
+          handlePositiveFunc={deletePet}
+          handleNegativeFunc={() => setIsModal(false)}
+        />
+      ) : null}
     </ProfileForm>
   );
 };

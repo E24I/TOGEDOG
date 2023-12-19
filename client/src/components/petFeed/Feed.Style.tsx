@@ -94,6 +94,7 @@ export const Setting = styled(Dots)`
 `;
 
 export const FeedContents = styled.div`
+  width: 100%;
   max-height: 123px;
   padding: 10px 65px;
 `;
@@ -232,7 +233,7 @@ export const LeftDetail = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
 `;
 
@@ -241,10 +242,9 @@ export const RightDetail = styled.div`
   width: 100%;
   max-width: 40vw;
   height: 100%;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
 `;
 
@@ -303,21 +303,24 @@ export const FeedDetailStatus = styled.div`
 `;
 
 export const FeedReviewTop = styled.div`
-  width: 90%;
-  margin: 0px 50px;
-  padding: 20px 0px;
   border-bottom: 1px solid rgb(215, 215, 215);
+  width: 90%;
+  padding: 10px 5px;
 `;
 
 export const Replies = styled.ul`
+  border: 1px solid black;
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
+  overflow: visible auto;
 `;
 
 export const Reply = styled.li`
+  border: 1px solid black;
   width: 100%;
   padding: 20px 15px;
   display: flex;
@@ -342,6 +345,7 @@ export const ReplyProfile = styled.img`
 `;
 
 export const ReplyContents = styled.div`
+  width: 100%;
   padding: 0px 5px;
 `;
 
@@ -351,7 +355,15 @@ export const ReplyNickname = styled.div`
 `;
 
 export const ReplyContent = styled.div`
+  width: 100%;
   padding: 5px 0px;
+`;
+
+export const ReplyEditBox = styled.input`
+  background-color: rgb(245, 245, 245);
+  width: 100%;
+  padding: 5px 5px;
+  font-size: 16px;
 `;
 
 export const ReplySetting = styled.div`
@@ -381,8 +393,8 @@ export const ShowComment = styled.button`
 `;
 
 export const AddBox = styled.div`
+  border: 1px solid black;
   border-bottom: 1px solid rgb(215, 215, 215);
-  /* border-radius: 12px; */
   width: 90%;
   height: 30px;
   display: flex;
@@ -392,11 +404,17 @@ export const AddBox = styled.div`
 `;
 
 export const AddReply = styled.input`
-  padding: 0px 0px 5px 10px;
+  border: 1px solid black;
+  padding: 5px 0px 5px 10px;
+  width: 100%;
+  height: 30px;
 `;
 
 export const AddBtn = styled.button`
+  border: 1px solid black;
   padding: 5px 15px;
+  min-width: 60px;
+  height: 30px;
 `;
 
 export const Comments = styled(Replies)``;

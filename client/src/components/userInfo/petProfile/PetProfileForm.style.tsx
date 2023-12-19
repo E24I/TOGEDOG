@@ -3,6 +3,9 @@ import { ReactComponent as BackSpace } from "../../../assets/images/icons/Backsp
 
 export const ProfileForm = styled.div`
   width: 1440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: 0 auto;
   padding-top: 50px;
   textarea {
@@ -30,10 +33,10 @@ export const ContentBox = styled.div`
   margin-top: 100px;
   display: flex;
   justify-content: space-around;
+  align-items: center;
 `;
 export const ImgInfo = styled.div`
   width: 400px;
-  margin-top: 100px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -63,6 +66,13 @@ export const Introduction = styled.p`
 `;
 export const TextInfo = styled.div`
   width: 400px;
+`;
+
+export const DeleteButton = styled.button`
+  border-radius: 10px;
+  background: #d7d7d7;
+  width: 200px;
+  height: 50px;
 `;
 export const CategoryBox = styled.div``;
 

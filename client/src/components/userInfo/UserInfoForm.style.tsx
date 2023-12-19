@@ -11,13 +11,6 @@ export const MyInfoContainer = styled.div`
   }
 `;
 
-export const ProFileBox = styled.div`
-  width: 150px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
 export const NickName = styled.h2`
   text-align: center;
   margin: 50px 0 15px 0;
@@ -28,14 +21,9 @@ export const TopContainer = styled.div`
   justify-content: space-between;
 `;
 
-export const ProFileImg = styled.img`
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: gray;
-`; //추후 이미지 태그로 바꿀것
-
 export const Introduction = styled.p`
+  width: 100%;
+  display: block;
   margin-top: 10px;
 `;
 
@@ -45,19 +33,6 @@ export const SectionBox = styled.div`
   flex-direction: column;
   justify-content: center;
 `;
-
-//추후 어드벤스드
-// export const ListSection = styled.div`
-//   margin: 20px 0;
-//   display: flex;
-//   justify-content: space-around;
-//   div {
-//     text-align: center;
-//     p {
-//       font-weight: bold;
-//     }
-//   }
-// `;
 
 export const ButtonSection = styled.div`
   width: 100%;

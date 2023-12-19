@@ -1,9 +1,11 @@
 import axios from "axios";
-const ROOT_URL = process.env.REACT_APP_ROOT_URL;
+
 import {
   postInformationType,
   updateInformationType,
 } from "../types/feedDataType";
+
+const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
 // 피드 전체 조회
 export const getFeeds = async () => {
@@ -12,14 +14,18 @@ export const getFeeds = async () => {
 };
 
 // 피드 단일 조회
-export const getFeed = async (feedId: number) => {
-  const { data } = await axios.get(`${ROOT_URL}/feed/${feedId}`);
+export const getFeed = async (feedId: number, accesstoken: string) => {
+  const { data } = await axios.get(`${ROOT_URL}/feed/${feedId}`, {
+    headers: { Authorization: accesstoken },
+  });
   return data;
 };
 
 // 피드 단일 삭제
-export const deleteFeed = async (feedId: number) => {
-  const { data } = await axios.delete(`${ROOT_URL}/${feedId}`);
+export const deleteFeed = async (feedId: number, accesstoken: string) => {
+  const { data } = await axios.delete(`${ROOT_URL}/feed/${feedId}`, {
+    headers: { Authorization: accesstoken },
+  });
   return data;
 };
 
@@ -86,19 +92,25 @@ export const uploadToS3 = async (
 };
 
 // 피드 좋아요
-export const feedLike = async (feedId: number) => {
-  const { data } = await axios.patch(`${ROOT_URL}/${feedId}/like`);
+export const feedLike = async (feedId: number, accesstoken: string) => {
+  const { data } = await axios.patch(`${ROOT_URL}/${feedId}/like`, null, {
+    headers: { Authorization: accesstoken },
+  });
   return data;
 };
 
 // 피드 북마크
-export const feedBookmark = async (feedId: number) => {
-  const { data } = await axios.patch(`${ROOT_URL}/${feedId}/bookmark`);
+export const feedBookmark = async (feedId: number, accesstoken: string) => {
+  const { data } = await axios.patch(`${ROOT_URL}/${feedId}/bookmark`, null, {
+    headers: { Authorization: accesstoken },
+  });
   return data;
 };
 
 // 피드 신고
-export const feedReport = async (feedId: number) => {
-  const { data } = await axios.post(`${ROOT_URL}/${feedId}/report`);
+export const feedReport = async (feedId: number, accesstoken: string) => {
+  const { data } = await axios.post(`${ROOT_URL}/${feedId}/report`, null, {
+    headers: { Authorization: accesstoken },
+  });
   return data;
 };

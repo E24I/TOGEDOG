@@ -1,28 +1,37 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import FeedList from "../components/petFeed/FeedList";
 import { feedListsType } from "../types/feedDataType";
-import { feedLists } from "../components/petFeed/FeedDummy";
 import { ReactComponent as Pets } from "../assets/images/icons/Pets.svg";
-import loading from "../assets/loading/loading.gif";
+import { useGetFeeds } from "../hooks/FeedHook";
 
 const PetFeed: React.FC = () => {
-  const [isFeed, setFeed] = useState<feedListsType[]>(feedLists);
+  const { data: feedsData, error, isLoading } = useGetFeeds();
+  console.log(feedsData);
 
   return (
-    <FeedContainer>
-      <Feeds>
-        {isFeed.map((items) => (
-          <FeedList key={items.feedId} items={items} />
-        ))}
-      </Feeds>
-      <LoadingContainer>
-        <PetLeftFoot />
-        <PetRightFoot />
-        <PetLeftFoot />
-        {/* <Loadings src={loading} /> */}
-      </LoadingContainer>
-    </FeedContainer>
+    <>
+      {isLoading ? (
+        <>로딩중</>
+      ) : error ? (
+        <>오류</>
+      ) : (
+        <FeedContainer>
+          <Feeds>
+            {feedsData.length > 0 &&
+              feedsData.map((items: feedListsType) => (
+                <FeedList key={items.feedId} items={items} />
+              ))}
+          </Feeds>
+          <LoadingContainer>
+            <PetLeftFoot />
+            <PetRightFoot />
+            <PetLeftFoot />
+            {/* <Loadings src={loading} /> */}
+          </LoadingContainer>
+        </FeedContainer>
+      )}
+    </>
   );
 };
 

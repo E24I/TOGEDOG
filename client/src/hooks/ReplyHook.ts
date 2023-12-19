@@ -8,24 +8,31 @@ import {
   postReply,
   reportReply,
 } from "../services/replyService";
+import { queryClient } from "..";
 
 // 댓글 조회
 export const useGetReplies = (feedId: number) => {
   return useQuery({
-    queryKey: ["reply", feedId],
+    queryKey: ["Replies", feedId],
     queryFn: async () => getReplies(feedId),
   });
 };
 
 // 댓글 등록
-export const usePostReply = (feedId: number, content: string) => {
+export const usePostReply = (
+  feedId: number,
+  content: string,
+  accesstoken: string,
+  successFunc: () => void,
+) => {
   return useMutation({
     mutationFn: async () => {
-      return postReply(feedId, content);
+      return postReply(feedId, content, accesstoken);
     },
     onSuccess: (res) => {
       console.log("성공", res);
-      return;
+      successFunc();
+      queryClient.invalidateQueries({ queryKey: ["Feed"] });
     },
     onError: (err) => {
       console.log("실패", err);
@@ -35,30 +42,42 @@ export const usePostReply = (feedId: number, content: string) => {
 };
 
 // 댓글 수정
-export const usePatchReply = (replyId: number, content: string) => {
+export const usePatchReply = (
+  replyId: number,
+  content: string,
+  accesstoken: string,
+  successFunc?: () => void,
+  failFunc?: () => void,
+) => {
   return useMutation({
     mutationFn: async () => {
-      return patchReply(replyId, content);
+      return patchReply(replyId, content, accesstoken);
     },
     onSuccess: (res) => {
-      console.log("성공", res);
+      console.log(res);
+      alert("댓글 수정 완료");
+      queryClient.invalidateQueries({ queryKey: ["Feed"] });
+      successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log("실패", err);
+      console.log(err);
+      alert("댓글 수정 실패");
+      failFunc && failFunc();
       return;
     },
   });
 };
 
 // 댓글 삭제
-export const useDeleteReply = (replyId: number) => {
+export const useDeleteReply = (replyId: number, accesstoken: string) => {
   return useMutation({
     mutationFn: async () => {
-      return deleteReply(replyId);
+      return deleteReply(replyId, accesstoken);
     },
     onSuccess: (res) => {
       console.log("성공", res);
+      queryClient.invalidateQueries({ queryKey: ["Feed"] });
       return;
     },
     onError: (err) => {
@@ -69,10 +88,10 @@ export const useDeleteReply = (replyId: number) => {
 };
 
 // 댓글 고정
-export const useFixReply = (replyId: number) => {
+export const useFixReply = (replyId: number, accesstoken: string) => {
   return useMutation({
     mutationFn: async () => {
-      return fixReply(replyId);
+      return fixReply(replyId, accesstoken);
     },
     onSuccess: (res) => {
       console.log("성공", res);
@@ -86,10 +105,10 @@ export const useFixReply = (replyId: number) => {
 };
 
 // 댓글 좋아요
-export const useLikeReply = (replyId: number) => {
+export const useLikeReply = (replyId: number, accesstoken: string) => {
   return useMutation({
     mutationFn: async () => {
-      return likeReply(replyId);
+      return likeReply(replyId, accesstoken);
     },
     onSuccess: (res) => {
       console.log("성공", res);
@@ -103,10 +122,10 @@ export const useLikeReply = (replyId: number) => {
 };
 
 // 댓글 신고
-export const useReportReply = (replyId: number) => {
+export const useReportReply = (replyId: number, accesstoken: string) => {
   return useMutation({
     mutationFn: async () => {
-      return reportReply(replyId);
+      return reportReply(replyId, accesstoken);
     },
     onSuccess: (res) => {
       console.log("성공", res);

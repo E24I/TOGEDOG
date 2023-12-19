@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "styled-components";
-import MyInfoForm from "../components/myPage/MyInfoForm";
-import MyFeedForm from "../components/myPage/MyFeedForm";
+import UserInfoForm from "../components/userInfo/UserInfoForm";
+import UserFeedForm from "../components/userInfo/UserFeedForm";
 
 const MyPageContainer = styled.div`
   margin: 0 auto;
@@ -11,8 +11,8 @@ const MyPageContainer = styled.div`
 const MyPage = () => {
   return (
     <MyPageContainer>
-      <MyInfoForm />
-      <MyFeedForm />
+      <UserInfoForm />
+      <UserFeedForm />
     </MyPageContainer>
   );
 };

@@ -12,18 +12,47 @@ import {
   postInformationType,
   updateInformationType,
 } from "../types/feedDataType";
+  deleteFeed,
+} from "../services/feedService";
 import { queryClient } from "..";
 
 // 피드 전체 조회
 export const useGetFeeds = () => {
-  return useQuery({ queryKey: ["feeds"], queryFn: async () => getFeeds() });
+  return useQuery({
+    queryKey: ["Feeds"],
+    queryFn: async () => {
+      const response = await getFeeds();
+      return response.data;
+    },
+  });
 };
 
 // 피드 단일 조회
-export const useGetFeed = (feedId: number) => {
+export const useGetFeed = (feedId: number, accesstoken: string) => {
   return useQuery({
-    queryKey: ["feed", feedId],
-    queryFn: async () => getFeed(feedId),
+    queryKey: ["Feed", feedId, accesstoken],
+    queryFn: async () => {
+      const response = await getFeed(feedId, accesstoken);
+      return response.data;
+    },
+  });
+};
+
+// 피드 단일 삭제
+export const useDeleteFeed = (feedId: number, accesstoken: string) => {
+  return useMutation({
+    mutationFn: async () => {
+      return deleteFeed(feedId, accesstoken);
+    },
+    onSuccess: (res) => {
+      console.log("성공", res);
+      queryClient.invalidateQueries({ queryKey: ["Feeds"] });
+      return;
+    },
+    onError: (err) => {
+      console.log("실패", err);
+      return;
+    },
   });
 };
 
@@ -34,7 +63,7 @@ export const usePostFeed = (
 ) => {
   return useMutation({
     mutationFn: async () => {
-      postFeed(postInformation, token);
+      return postFeed(postInformation, token);
     },
     onSuccess: (res) => {
       console.log("성공", res);
@@ -55,7 +84,7 @@ export const useUpdateFeed = (
 ) => {
   return useMutation({
     mutationFn: async () => {
-      updateFeed(updateInformation, token);
+      return updateFeed(updateInformation, token);
     },
     onSuccess: (res) => {
       console.log("성공", res);
@@ -69,13 +98,14 @@ export const useUpdateFeed = (
 };
 
 // 피드 좋아요
-export const useFeedLike = (feedId: number) => {
+export const useFeedLike = (feedId: number, accesstoken: string) => {
   return useMutation({
     mutationFn: async () => {
-      feedLike(feedId);
+      return feedLike(feedId, accesstoken);
     },
     onSuccess: (res) => {
       console.log("성공", res);
+      queryClient.invalidateQueries({ queryKey: ["Feed"] });
       return;
     },
     onError: (err) => {
@@ -86,13 +116,14 @@ export const useFeedLike = (feedId: number) => {
 };
 
 // 피드 북마크
-export const useFeedBookmark = (feedId: number) => {
+export const useFeedBookmark = (feedId: number, accesstoken: string) => {
   return useMutation({
     mutationFn: async () => {
-      feedBookmark(feedId);
+      return feedBookmark(feedId, accesstoken);
     },
     onSuccess: (res) => {
       console.log("성공", res);
+      queryClient.invalidateQueries({ queryKey: ["Feed"] });
       return;
     },
     onError: (err) => {
@@ -103,10 +134,10 @@ export const useFeedBookmark = (feedId: number) => {
 };
 
 // 피드 신고
-export const useFeedReport = (feedId: number) => {
+export const useFeedReport = (feedId: number, accesstoken: string) => {
   return useMutation({
     mutationFn: async () => {
-      feedReport(feedId);
+      return feedReport(feedId, accesstoken);
     },
     onSuccess: (res) => {
       console.log("성공", res);
