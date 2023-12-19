@@ -1,5 +1,4 @@
 import axios from "axios";
-
 const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
 // 댓글 조회 // 현재 존재 x

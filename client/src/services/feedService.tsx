@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import {
   postInformationType,
   updateInformationType,
@@ -34,36 +35,41 @@ export const deleteFeeds = async () => {
   return data;
 };
 
-export const postFeed = async (postInformation: postInformationType) => {
-  const res = await axios.post(
-    `http://15.165.78.7:8080/feed`,
-    postInformation,
-    {
-      headers: {
-        Authorization: localStorage.getItem("token"),
-        "Content-Type": `application/json`,
-      },
+//피드 등록
+export const postFeed = async (
+  postInformation: postInformationType,
+  token: string | undefined,
+) => {
+  const res = await axios.post(`${ROOT_URL}/feed`, postInformation, {
+    headers: {
+      Authorization: token,
+      "Content-Type": `application/json`,
     },
-  );
-  return res.data;
+  });
+  return res;
 };
 
-export const updateFeed = async (updateInformation: updateInformationType) => {
+//피드 수정
+export const updateFeed = async (
+  updateInformation: updateInformationType,
+  token: string | undefined,
+) => {
   const res = await axios.post(
-    `http://15.165.78.7:8080/feed/{feed-id}/reply/{reply-id}`,
+    `${ROOT_URL}/feed/{feed-id}/reply/{reply-id}`,
     { title: updateInformation.title, content: updateInformation.content },
     {
       headers: {
-        Authorization: "authorizedToken자리",
+        Authorization: token,
       },
     },
   );
   return res;
 };
 
-export const getPresinedUrl = async (file: string) => {
+//s3 업로드 경로 요청
+export const getPresignedUrl = async (file: string) => {
   const res = await axios
-    .post(`http://15.165.78.7:8080/presigned-url`, {
+    .post(`${ROOT_URL}/presigned-url`, {
       imageName: file,
     })
     .then((res) => {
@@ -73,6 +79,7 @@ export const getPresinedUrl = async (file: string) => {
   return res;
 };
 
+//s3로 첨부파일ㄴ 업로드
 export const uploadToS3 = async (
   preSinedURL: string,
   file: File | null,
@@ -82,10 +89,6 @@ export const uploadToS3 = async (
     headers: { "Content-type": type },
   });
   return res;
-};
-
-export const deleteS3 = () => {
-  return;
 };
 
 // 피드 좋아요

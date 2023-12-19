@@ -6,13 +6,14 @@ import UpdatingSpace from "./updatingSpace/UpdatingSpace";
 import {
   postFeed,
   updateFeed,
-  getPresinedUrl,
+  getPresignedUrl,
   uploadToS3,
 } from "../../../services/feedService";
 import { postInformationType } from "../../../types/feedDataType";
-
 import Map from "./Map";
-import { enrollMap } from "../../../services/mapService";
+import { postMap } from "../../../services/mapService";
+import { useRecoilValue } from "recoil";
+import { tokenAtom } from "../../../atoms";
 
 interface WritingSpaceProps {
   page: string;
@@ -42,6 +43,7 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     title: string;
     content: string;
   }>({ title: "", content: "" });
+  const token = useRecoilValue(tokenAtom);
 
   const navigator = useNavigate();
   const handleInputChange = (
@@ -95,71 +97,46 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
   const send = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElement = e.target as HTMLElement;
 
-    if (targetElement instanceof HTMLElement) {
-      if (targetElement.textContent) {
-        const textContent = targetElement.textContent;
-        if (textContent === "게시") {
-          const images: string[] = [];
-          await Promise.all(
-            attachments.map(async (file) => {
-              if (file.url !== "") {
-                const presignedUrl = await getPresinedUrl(
-                  file.url.substring(27),
-                );
-                const response = await uploadToS3(
-                  presignedUrl,
-                  file.file,
-                  file.type,
-                );
+    if (targetElement.textContent) {
+      const textContent = targetElement.textContent;
 
-                if (file.type.includes("image") && response.config.url) {
-                  images.unshift(
-                    response.config.url.substring(
-                      0,
-                      response.config.url.indexOf("?"),
-                    ),
-                  );
-                } else if (file.type.includes("video") && response.config.url) {
-                  handleInputChange(
-                    "videos",
-                    response.config.url.substring(
-                      0,
-                      response.config.url.indexOf("?"),
-                    ),
-                  );
-                }
-              }
-            }),
-          );
-
+      if (textContent === "게시") {
+        const images: string[] = [];
+        attachments.map(async (file) => {
+          if (file.url !== "") {
+            const presignedUrl = await getPresignedUrl(file.url.substring(27));
+            uploadToS3(presignedUrl, file.file, file.type).then((res) => {
+              res.config.url &&
+                (file.type.includes("image")
+                  ? images.unshift(
+                      res.config.url.substring(0, res.config.url.indexOf("?")),
+                    )
+                  : handleInputChange(
+                      "videos",
+                      res.config.url.substring(0, res.config.url.indexOf("?")),
+                    ));
+            });
+          }
+        }),
           handleInputChange("images", images);
-
-          postFeed(postInformation)
-            .then(
-              (data) =>
-                data &&
-                enrollCoordinate(
-                  "feedId",
-                  Number(data.headers.location.substr(7)),
-                ),
-            )
-            .then(() =>
-              enrollMap(enrollMapInfo)
-                .then((data) => data && navigator(`feeds/${data.mapContentId}`))
-                .catch(() => alert("map등록 요청 실패")),
-            )
-            .catch((err) =>
-              alert(
-                err.response.data.message +
-                  " " +
-                  err.response.data.data[0].reason,
-              ),
-            );
-        } else if (textContent === "완료") {
-          updateFeed(updateInformation);
-        }
+        posting();
+      } else if (textContent === "완료") {
+        updateFeed(updateInformation, token);
       }
     }
+  };
+
+  const posting = () => {
+    postFeed(postInformation, token)
+      .then((data) =>
+        enrollCoordinate("feedId", Number(data.headers.location.substr(6))),
+      )
+      .then(() =>
+        postMap(enrollMapInfo)
+          .then((data) => data && navigator(`/feeds`))
+          .catch(() => alert("map등록 요청 실패")),
+      )
+      .catch((err) => alert(err.response.data.message));
   };
 
   return (

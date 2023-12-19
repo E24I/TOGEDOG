@@ -6,9 +6,14 @@ import {
   feedLike,
   feedBookmark,
   feedReport,
+  updateFeed,
+} from "../services/feedService";
+import {
+  postInformationType,
+  updateInformationType,
+} from "../types/feedDataType";
   deleteFeed,
 } from "../services/feedService";
-import { postInformationType } from "../types/feedDataType";
 import { queryClient } from "..";
 
 // 피드 전체 조회
@@ -52,10 +57,34 @@ export const useDeleteFeed = (feedId: number, accesstoken: string) => {
 };
 
 // 피드 등록
-export const usePostFeed = (postInformation: postInformationType) => {
+export const usePostFeed = (
+  postInformation: postInformationType,
+  token: string | undefined,
+) => {
   return useMutation({
     mutationFn: async () => {
-      postFeed(postInformation);
+      return postFeed(postInformation, token);
+    },
+    onSuccess: (res) => {
+      console.log("성공", res);
+      queryClient.invalidateQueries({ queryKey: ["Feeds"] });
+      return;
+    },
+    onError: (err) => {
+      console.log("실패", err);
+      return;
+    },
+  });
+};
+
+// 피드 수정
+export const useUpdateFeed = (
+  updateInformation: updateInformationType,
+  token: string | undefined,
+) => {
+  return useMutation({
+    mutationFn: async () => {
+      return updateFeed(updateInformation, token);
     },
     onSuccess: (res) => {
       console.log("성공", res);
@@ -72,7 +101,7 @@ export const usePostFeed = (postInformation: postInformationType) => {
 export const useFeedLike = (feedId: number, accesstoken: string) => {
   return useMutation({
     mutationFn: async () => {
-      feedLike(feedId, accesstoken);
+      return feedLike(feedId, accesstoken);
     },
     onSuccess: (res) => {
       console.log("성공", res);
@@ -90,7 +119,7 @@ export const useFeedLike = (feedId: number, accesstoken: string) => {
 export const useFeedBookmark = (feedId: number, accesstoken: string) => {
   return useMutation({
     mutationFn: async () => {
-      feedBookmark(feedId, accesstoken);
+      return feedBookmark(feedId, accesstoken);
     },
     onSuccess: (res) => {
       console.log("성공", res);
@@ -108,7 +137,7 @@ export const useFeedBookmark = (feedId: number, accesstoken: string) => {
 export const useFeedReport = (feedId: number, accesstoken: string) => {
   return useMutation({
     mutationFn: async () => {
-      feedReport(feedId, accesstoken);
+      return feedReport(feedId, accesstoken);
     },
     onSuccess: (res) => {
       console.log("성공", res);

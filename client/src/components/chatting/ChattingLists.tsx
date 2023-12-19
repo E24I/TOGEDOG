@@ -13,8 +13,10 @@ import {
   UserName,
 } from "./ChattingLists.Style";
 import { createNewChat } from "../../services/chatService";
-import { GetAllRoomsQuery } from "../../services/chatService";
 import DropDown from "../../atoms/dropdown/DropDown";
+import { useRecoilValue } from "recoil";
+import { tokenAtom } from "../../atoms";
+import { GetAllRoomsQuery } from "../../hooks/ChatHooks";
 
 interface ChattingListsProps {
   setDefaultBack: () => void;
@@ -25,6 +27,7 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
   setDefaultBack,
   getRoomNumber,
 }) => {
+  const token = useRecoilValue(tokenAtom);
   const [rooms, setRooms] = useState<
     {
       id: number;
@@ -48,8 +51,8 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
     requestMemberId: number;
     inviteMemberId: number;
   }>({
-    requestMemberId: 1,
-    inviteMemberId: 2,
+    requestMemberId: 2,
+    inviteMemberId: 3,
   });
   const roomsData = GetAllRoomsQuery();
 
@@ -104,7 +107,7 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
     <ChattingListsContainer>
       <ChattingFlexBox>
         <Message>Message</Message>
-        <button onClick={() => createNewChat(participants)}>+</button>
+        <button onClick={() => createNewChat(participants, token)}>+</button>
         <ChattingList>
           {rooms &&
             rooms.map((room, idx) => {

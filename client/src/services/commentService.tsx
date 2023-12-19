@@ -1,5 +1,4 @@
 import axios from "axios";
-
 const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
 // 대댓글 조회
