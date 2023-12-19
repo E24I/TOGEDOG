@@ -81,7 +81,21 @@ export type postInformationType = {
   addMap: boolean;
   openYn: boolean;
 };
+
 export type updateInformationType = {
   title: string;
   content: string;
+};
+
+export type feedCommentType = {
+  commentId: number;
+  member: {
+    memberId: number;
+    nickname: string;
+    imageUrl: string | null;
+  };
+  createDate: string;
+  updateDate: string;
+  content: string;
+  mention?: string;
 };

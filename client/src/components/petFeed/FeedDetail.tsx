@@ -56,7 +56,6 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
   const { data, error, isLoading } = useGetFeed(feedId, accesstoken);
   const { mutate: feedLike } = useFeedLike(feedId, accesstoken);
   const { mutate: feedBookmark } = useFeedBookmark(feedId, accesstoken);
-  console.log("feedDetail", data);
 
   const [isImg, setImg] = useState<number>(1);
   const [isSetting, setSetting] = useState<boolean>(false);
@@ -93,18 +92,11 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
   const handleChangeReply = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
-  const successFunc = () => setInput("");
-  const { mutate: postReply } = usePostReply(
-    feedId,
-    isInput,
-    accesstoken,
-    successFunc,
+  const { mutate: postReply } = usePostReply(feedId, isInput, accesstoken, () =>
+    setInput(""),
   );
   const handleEnterReply = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      console.log(e.key);
-      postReply();
-    }
+    if (e.key === "Enter") postReply();
   };
 
   const handleReplyPatch = () => {
@@ -117,6 +109,8 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
     수정하기: handleReplyPatch,
     삭제하기: handleReplyDelete,
   };
+
+  console.log(data);
 
   if (isLoading) {
     return <>로딩중</>;

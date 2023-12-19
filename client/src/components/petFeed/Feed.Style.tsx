@@ -345,6 +345,7 @@ export const ReplyProfile = styled.img`
 `;
 
 export const ReplyContents = styled.div`
+  width: 100%;
   padding: 0px 5px;
 `;
 
@@ -354,7 +355,15 @@ export const ReplyNickname = styled.div`
 `;
 
 export const ReplyContent = styled.div`
+  width: 100%;
   padding: 5px 0px;
+`;
+
+export const ReplyEditBox = styled.input`
+  background-color: rgb(245, 245, 245);
+  width: 100%;
+  padding: 5px 5px;
+  font-size: 16px;
 `;
 
 export const ReplySetting = styled.div`

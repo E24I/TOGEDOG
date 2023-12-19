@@ -51,19 +51,37 @@ export const deleteReply = async (replyId: number, accesstoken: string) => {
 };
 
 // 댓글 고정
-export const fixReply = async (replyId: number) => {
-  const { data } = await axios.patch(`${ROOT_URL}/replies/${replyId}/fix`);
+export const fixReply = async (replyId: number, accesstoken: string) => {
+  const { data } = await axios.patch(
+    `${ROOT_URL}/replies/${replyId}/fix`,
+    null,
+    {
+      headers: { Authorization: accesstoken },
+    },
+  );
   return data;
 };
 
 // 댓글 좋아요
-export const likeReply = async (replyId: number) => {
-  const { data } = await axios.patch(`${ROOT_URL}/replies/${replyId}/like`);
+export const likeReply = async (replyId: number, accesstoken: string) => {
+  const { data } = await axios.patch(
+    `${ROOT_URL}/replies/${replyId}/like`,
+    null,
+    {
+      headers: { Authorization: accesstoken },
+    },
+  );
   return data;
 };
 
 // 댓글 신고
-export const reportReply = async (replyId: number) => {
-  const { data } = await axios.post(`${ROOT_URL}/replies/${replyId}/report`);
+export const reportReply = async (replyId: number, accesstoken: string) => {
+  const { data } = await axios.post(
+    `${ROOT_URL}/replies/${replyId}/report`,
+    null,
+    {
+      headers: { Authorization: accesstoken },
+    },
+  );
   return data;
 };

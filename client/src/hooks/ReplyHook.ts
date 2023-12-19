@@ -46,18 +46,24 @@ export const usePatchReply = (
   replyId: number,
   content: string,
   accesstoken: string,
+  successFunc?: () => void,
+  failFunc?: () => void,
 ) => {
   return useMutation({
     mutationFn: async () => {
       return patchReply(replyId, content, accesstoken);
     },
     onSuccess: (res) => {
-      console.log("성공", res);
+      console.log(res);
+      alert("댓글 수정 완료");
       queryClient.invalidateQueries({ queryKey: ["Feed"] });
+      successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log("실패", err);
+      console.log(err);
+      alert("댓글 수정 실패");
+      failFunc && failFunc();
       return;
     },
   });
@@ -82,10 +88,10 @@ export const useDeleteReply = (replyId: number, accesstoken: string) => {
 };
 
 // 댓글 고정
-export const useFixReply = (replyId: number) => {
+export const useFixReply = (replyId: number, accesstoken: string) => {
   return useMutation({
     mutationFn: async () => {
-      return fixReply(replyId);
+      return fixReply(replyId, accesstoken);
     },
     onSuccess: (res) => {
       console.log("성공", res);
@@ -99,10 +105,10 @@ export const useFixReply = (replyId: number) => {
 };
 
 // 댓글 좋아요
-export const useLikeReply = (replyId: number) => {
+export const useLikeReply = (replyId: number, accesstoken: string) => {
   return useMutation({
     mutationFn: async () => {
-      return likeReply(replyId);
+      return likeReply(replyId, accesstoken);
     },
     onSuccess: (res) => {
       console.log("성공", res);
@@ -116,10 +122,10 @@ export const useLikeReply = (replyId: number) => {
 };
 
 // 댓글 신고
-export const useReportReply = (replyId: number) => {
+export const useReportReply = (replyId: number, accesstoken: string) => {
   return useMutation({
     mutationFn: async () => {
-      return reportReply(replyId);
+      return reportReply(replyId, accesstoken);
     },
     onSuccess: (res) => {
       console.log("성공", res);
