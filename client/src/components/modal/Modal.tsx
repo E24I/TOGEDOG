@@ -34,7 +34,7 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen }) => {
   const loginState = useRecoilValue(isLoginAtom);
   const Logout = () => {
     setLoginState(false);
-    setToken(undefined);
+    setToken("");
     setMemberId(undefined);
   };
   const navigator = useNavigate();

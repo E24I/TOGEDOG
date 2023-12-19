@@ -6,8 +6,10 @@ import {
   feedLike,
   feedBookmark,
   feedReport,
+  deleteFeed,
 } from "../services/feedService";
 import { postInformationType } from "../types/feedDataType";
+import { queryClient } from "..";
 
 // 피드 전체 조회
 export const useGetFeeds = () => {
@@ -27,6 +29,24 @@ export const useGetFeed = (feedId: number, accesstoken: string) => {
     queryFn: async () => {
       const response = await getFeed(feedId, accesstoken);
       return response.data;
+    },
+  });
+};
+
+// 피드 단일 삭제
+export const useDeleteFeed = (feedId: number, accesstoken: string) => {
+  return useMutation({
+    mutationFn: async () => {
+      return deleteFeed(feedId, accesstoken);
+    },
+    onSuccess: (res) => {
+      console.log("성공", res);
+      queryClient.invalidateQueries({ queryKey: ["Feeds"] });
+      return;
+    },
+    onError: (err) => {
+      console.log("실패", err);
+      return;
     },
   });
 };
@@ -56,6 +76,7 @@ export const useFeedLike = (feedId: number, accesstoken: string) => {
     },
     onSuccess: (res) => {
       console.log("성공", res);
+      queryClient.invalidateQueries({ queryKey: ["Feed"] });
       return;
     },
     onError: (err) => {
@@ -73,6 +94,7 @@ export const useFeedBookmark = (feedId: number, accesstoken: string) => {
     },
     onSuccess: (res) => {
       console.log("성공", res);
+      queryClient.invalidateQueries({ queryKey: ["Feed"] });
       return;
     },
     onError: (err) => {

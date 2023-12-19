@@ -6,9 +6,11 @@ import {
   ReplyContent,
   ReplyContents,
   ReplyDate,
+  ReplyEditBox,
   ReplyLeft,
   ReplyLikeCount,
   ReplyNickname,
+  ReplyProfile,
   ReplySetting,
   Setting,
   SettingBox,
@@ -17,7 +19,7 @@ import {
 } from "./Feed.Style";
 import Heart from "../../atoms/button/Heart";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
-import { useDeleteReply } from "../../hooks/ReplyHook";
+import { useDeleteReply, usePatchReply } from "../../hooks/ReplyHook";
 import { useRecoilValue } from "recoil";
 import { tokenAtom } from "../../atoms";
 
@@ -31,42 +33,62 @@ const FeedReply: React.FC<OwnProps> = ({ reply }) => {
   const [isLike, setLike] = useState<boolean>(false);
   const [isSetting, setSetting] = useState<boolean>(false);
   const [isComment, setComment] = useState<boolean>(false);
+  const [isEditReply, setEditReply] = useState<boolean>(false);
+  const [content, setContent] = useState<string>(reply.content);
+
+  const { mutate: deleteReply } = useDeleteReply(reply.replyId, accesstoken);
+  const { mutate: patchReply } = usePatchReply(
+    reply.replyId,
+    content,
+    accesstoken,
+    () => setEditReply(false),
+    () => setEditReply(false),
+  );
 
   const handleLike = (): void => setLike(!isLike);
   const handleSetting = (): void => setSetting(!isSetting);
   const handleComment = (): void => setComment(!isComment);
+  const handleCloseDropdown = () => setSetting(false);
+  const handleEditReply = () => setEditReply(true);
+  const handleReplyDelete = () => deleteReply();
+  const handleReplyFix = () => console.log("성공");
+  const handleChangeReply = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setContent(e.target.value);
+  const handleReplyPatch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      patchReply();
+    } else if (e.key === "Escape") {
+      setEditReply(false);
+      setContent(reply.content);
+    }
+  };
 
-  const { mutate: deleteReply } = useDeleteReply(reply.replyId, accesstoken);
-
-  const handleReplyPatch = () => {
-    return;
-  };
-  const handleReplyDelete = () => {
-    deleteReply();
-    return;
-  };
-  const handleReplyFix = () => {
-    return;
-  };
   const settingContent = {
-    수정하기: handleReplyPatch,
+    수정하기: handleEditReply,
     삭제하기: handleReplyDelete,
     댓글고정: handleReplyFix,
   };
-  const handleCloseDropdown = () => setSetting(false);
-
-  const [isContent, setContent] = useState(reply.content);
 
   return (
     <Reply>
       <ReplyLeft>
-        {/* <ReplyProfile /> */}
-        <Unknown />
+        {reply.member.imageUrl ? (
+          <ReplyProfile src={reply.member.imageUrl} alt="프로필 사진" />
+        ) : (
+          <Unknown />
+        )}
       </ReplyLeft>
       <ReplyContents>
         <ReplyNickname>{reply.member.nickname}</ReplyNickname>
-        <ReplyContent>{reply.content}</ReplyContent>
-        <input value={isContent} />
+        {!isEditReply ? (
+          <ReplyContent>{reply.content}</ReplyContent>
+        ) : (
+          <ReplyEditBox
+            value={content}
+            onChange={handleChangeReply}
+            onKeyUp={handleReplyPatch}
+          />
+        )}
         <ReplySetting>
           <ReplyDate>20분 전</ReplyDate>
           <Heart
@@ -91,9 +113,7 @@ const FeedReply: React.FC<OwnProps> = ({ reply }) => {
         </ShowComment>
         {isComment && (
           <>
-            <Comments>
-              <FeedComment />
-            </Comments>
+            <FeedComment replyId={reply.replyId} />
           </>
         )}
       </ReplyContents>

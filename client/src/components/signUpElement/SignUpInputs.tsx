@@ -17,11 +17,7 @@ import {
   usePostEmail,
   usePostCode,
   usePostNickname,
-<<<<<<< HEAD
 } from "../../hooks/MemberHook";
-=======
-} from "../../hooks/memberHook";
->>>>>>> df3d10b (로그인,회원가입 service,Hook 파일분리)
 
 const SignUpInputs = () => {
   const {

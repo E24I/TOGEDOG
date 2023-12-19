@@ -21,8 +21,10 @@ export const getFeed = async (feedId: number, accesstoken: string) => {
 };
 
 // 피드 단일 삭제
-export const deleteFeed = async (feedId: number) => {
-  const { data } = await axios.delete(`${ROOT_URL}/${feedId}`);
+export const deleteFeed = async (feedId: number, accesstoken: string) => {
+  const { data } = await axios.delete(`${ROOT_URL}/feed/${feedId}`, {
+    headers: { Authorization: accesstoken },
+  });
   return data;
 };
 

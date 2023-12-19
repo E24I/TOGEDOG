@@ -11,11 +11,7 @@ import {
   LoginInput,
   LogoImg,
 } from "./LoginForm.style";
-<<<<<<< HEAD
 import { usePostLogin } from "../../hooks/MemberHook";
-=======
-import { usePostLogin } from "../../hooks/memberHook";
->>>>>>> df3d10b (로그인,회원가입 service,Hook 파일분리)
 
 const LoginForm: React.FC = () => {
   const [lostPw, setLostPw] = useState<boolean>(false); //비밀번호 변경 모달

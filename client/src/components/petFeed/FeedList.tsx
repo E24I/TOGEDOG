@@ -31,12 +31,17 @@ import {
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
+import { useDeleteFeed } from "../../hooks/FeedHook";
+import { useRecoilValue } from "recoil";
+import { tokenAtom } from "../../atoms";
 
 interface OwnProps {
   items: feedListsType;
 }
 
 const FeedList: React.FC<OwnProps> = ({ items }) => {
+  const accesstoken = useRecoilValue(tokenAtom);
+
   const [isDetail, setDetail] = useState<boolean>(false);
   const [isLike, setLike] = useState<boolean>(false);
   const [isBookmark, setBookmark] = useState<boolean>(false);
@@ -57,6 +62,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   const imgRef = useRef<any>(items.images?.map(() => createRef()));
   const [isMedia, setMedia] = useState<number>(0);
 
+  // 미디어 오른쪽 스크롤 이동 버튼
   const handleScrollRight = () => {
     if (isMedia >= 0 && imgRef.current[isMedia + 1]) {
       mediaRef.current.scrollLeft =
@@ -67,6 +73,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
     }
   };
 
+  // 미디어 왼쪽 스크롤 이동 버튼
   const handleScrollLeft = () => {
     if (isMedia >= 0 && imgRef.current[isMedia - 1]) {
       mediaRef.current.scrollLeft =
@@ -77,12 +84,20 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
     }
   };
 
+  // 피드 단일 삭제
+  const { mutate: deleteFeed } = useDeleteFeed(items.feedId, accesstoken);
+
+  // 피드 단일 삭제 (핸들러)
+  const handleReplyDelete = () => {
+    return deleteFeed();
+  };
+
+  // 피드 수정 (핸들러)
   const handleReplyPatch = () => {
     return;
   };
-  const handleReplyDelete = () => {
-    return;
-  };
+
+  // 설정 드롭다운 버튼 종류 및 핸들러 연결
   const settingContent = {
     수정하기: handleReplyPatch,
     삭제하기: handleReplyDelete,
