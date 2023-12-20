@@ -32,6 +32,7 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen }) => {
   const setToken = useSetRecoilState(tokenAtom);
   const setMemberId = useSetRecoilState(memberIdAtom);
   const loginState = useRecoilValue(isLoginAtom);
+  const memberId = useRecoilValue(memberIdAtom);
   const Logout = () => {
     setLoginState(false);
     setToken("");
@@ -43,7 +44,7 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen }) => {
     switch (index) {
       case 0:
         if (loginState) {
-          navigator("/user");
+          navigator(`/user/${memberId}`);
         } else {
           alert("로그인이 필요합니다.");
           navigator("/");

@@ -1,4 +1,8 @@
 import { AxiosResponse, AxiosError } from "axios";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRecoilValue } from "recoil";
+import { tokenAtom } from "../atoms";
+import { useNavigate } from "react-router-dom";
 import {
   getUserInfo,
   getUserFeed,
@@ -10,13 +14,12 @@ import {
   getPetInfo,
   deletePetInfo,
 } from "../services/userInfoService";
-import { useMutation } from "@tanstack/react-query";
-import { useRecoilValue } from "recoil";
-import { tokenAtom } from "../atoms";
 import { feedDataType, infoType } from "../types/userInfoType";
-import { useNavigate } from "react-router-dom";
+import { LoadingContainer } from "../pages/PetFeed";
+import { queryClient } from "..";
+import { isBreakStatement } from "typescript";
 
-// 유저 정보 가져오기
+//유저 정보 가져오기
 export const useGetUserInfo = (
   memberId: number,
   setUserData: React.Dispatch<React.SetStateAction<infoType | undefined>>,
@@ -58,39 +61,37 @@ export const useGetUserFeed = (
 // 닉네임 변경
 export const usePatchUserNickname = (newNickname: string) => {
   const token = useRecoilValue(tokenAtom);
-  return useMutation({
+  const { mutate } = useMutation({
     mutationFn: async () => {
-      return patchUserNickname(newNickname, token);
+      patchUserNickname(newNickname, token);
     },
     onSuccess: () => {
-      alert("닉네임 변경완료");
+      alert("닉네임이 변경되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["userInfo"] });
     },
-    onError: (err: AxiosError<any>) => {
-      if (err.response !== undefined) {
-        alert(err.response.data.message);
-        console.log(err.response.data);
-      }
+    onError: (err) => {
+      console.log(err);
     },
   });
+  return { mutate };
 };
 
 // 소개글 변경
 export const usePatchUserIntro = (newMyIntro: string) => {
   const token = useRecoilValue(tokenAtom);
-  return useMutation({
+  const { mutate } = useMutation({
     mutationFn: async () => {
-      return patchUserIntro(newMyIntro, token);
+      patchUserIntro(newMyIntro, token);
     },
     onSuccess: () => {
-      alert("소개글 변경완료");
+      alert("자기 소개가 변경되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["userInfo"] });
     },
-    onError: (err: AxiosError<any>) => {
-      if (err.response !== undefined) {
-        alert(err.response.data.message);
-        console.log(err);
-      }
+    onError: (err) => {
+      console.log(err);
     },
   });
+  return { mutate };
 };
 
 // 비밀번호 변경 인증코드 메일보내기
@@ -135,7 +136,7 @@ export const usePatchUserPassword = (password: string, pwConfirm: string) => {
       return patchUserPassword(password, pwConfirm);
     },
     onSuccess: () => {
-      alert("비밀번호를 변경했습니다. 다시 로그인을해야 합니다.");
+      alert("비밀번호를 변경했습니다. 다시 로그인을 해야 합니다.");
     },
     onError: (err: AxiosError<any>) => {
       console.log(err);
@@ -144,11 +145,11 @@ export const usePatchUserPassword = (password: string, pwConfirm: string) => {
 };
 
 // 펫프로필 정보
-export const useGetPetInfo = (petId: string, memberId: number) => {
+export const useGetPetInfo = (petId: string) => {
   const token = useRecoilValue(tokenAtom);
   return useMutation({
     mutationFn: async () => {
-      return getPetInfo(petId, memberId, token);
+      return getPetInfo(petId, token);
     },
     onSuccess: (res) => {
       console.log(res);

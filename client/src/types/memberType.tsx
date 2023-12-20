@@ -27,3 +27,22 @@ export type nicknameProps = {
   nickname: string;
   setIsNickName: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+// 유저 페이지(마이페이지) props타입
+export interface MyInfoFormProps {
+  pageMemberId: string | undefined;
+}
+
+// 유저페이지(마이페이지) 피드 데이터 타입
+type feedDataType = {
+  content: string;
+  createdDate: string;
+  feedId: number;
+  images: string[];
+  likeCount: number;
+  repliesCount: number;
+  updatedDate: string;
+  title: string;
+  videos: string;
+  views: null | number;
+};

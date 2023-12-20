@@ -33,3 +33,5 @@ export const RegisterButton = styled.button`
   border-radius: 10px;
   background: #d7d7d7;
 `;
+
+export const Input = styled.input``;

@@ -47,12 +47,6 @@ export const ImgInfo = styled.div`
   }
 `;
 
-export const Img = styled.div`
-  width: 200px;
-  height: 200px;
-  background: #d7d7d7;
-  border-radius: 50%;
-`;
 export const NameText = styled.p`
   color: gray;
   margin: 10px 0;
