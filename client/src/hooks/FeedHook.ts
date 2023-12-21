@@ -6,14 +6,13 @@ import {
   feedLike,
   feedBookmark,
   feedReport,
+  deleteFeed,
   updateFeed,
 } from "../services/feedService";
 import {
   postInformationType,
   updateInformationType,
 } from "../types/feedDataType";
-  deleteFeed,
-} from "../services/feedService";
 import { queryClient } from "..";
 
 // 피드 전체 조회

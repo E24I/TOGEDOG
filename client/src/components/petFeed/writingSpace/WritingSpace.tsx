@@ -101,29 +101,40 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
       const textContent = targetElement.textContent;
 
       if (textContent === "게시") {
-        const images: string[] = [];
-        attachments.map(async (file) => {
-          if (file.url !== "") {
-            const presignedUrl = await getPresignedUrl(file.url.substring(27));
-            uploadToS3(presignedUrl, file.file, file.type).then((res) => {
-              res.config.url &&
-                (file.type.includes("image")
-                  ? images.unshift(
-                      res.config.url.substring(0, res.config.url.indexOf("?")),
-                    )
-                  : handleInputChange(
-                      "videos",
-                      res.config.url.substring(0, res.config.url.indexOf("?")),
-                    ));
-            });
-          }
-        }),
-          handleInputChange("images", images);
-        posting();
+        await s3presigned().then(() => posting());
       } else if (textContent === "완료") {
         updateFeed(updateInformation, token);
       }
     }
+  };
+
+  const s3presigned = async (): Promise<void> => {
+    const images: string[] = [];
+    const video: string[] = [];
+    const promises = attachments.map(async (file) => {
+      if (file.url !== "") {
+        const presignedUrl = await getPresignedUrl(file.url.substring(27));
+        return uploadToS3(presignedUrl, file.file, file.type).then((res) => {
+          if (res.config.url) {
+            const fileUrl = res.config.url.substring(
+              0,
+              res.config.url.indexOf("?"),
+            );
+            if (file.type.includes("image")) {
+              images.unshift(fileUrl);
+            } else {
+              video.unshift(fileUrl);
+            }
+          }
+        });
+      }
+    });
+
+    await Promise.all(promises);
+    handleInputChange("images", images);
+    handleInputChange("videos", video[0]);
+
+    return Promise.resolve();
   };
 
   const posting = () => {
@@ -132,9 +143,11 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
         enrollCoordinate("feedId", Number(data.headers.location.substr(6))),
       )
       .then(() =>
-        postMap(enrollMapInfo)
-          .then((data) => data && navigator(`/feeds`))
-          .catch(() => alert("map등록 요청 실패")),
+        isMapAssign
+          ? postMap(enrollMapInfo)
+              .then((data) => data && navigator(`/feeds`))
+              .catch(() => alert("map등록 요청 실패"))
+          : navigator(`/feeds`),
       )
       .catch((err) => alert(err.response.data.message));
   };
