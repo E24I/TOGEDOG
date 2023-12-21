@@ -23,8 +23,6 @@ public interface PetMapper {
             response.setName(pet.getName());
             response.setAge(pet.getAge());
             response.setType(pet.getType());
-            response.setPersonality(pet.getPersonality());
-            response.setSignificant(pet.getSignificant());
             response.setPetIntro(pet.getPetIntro());
             response.setGender(pet.getGender());
             response.setImage(pet.getImage());

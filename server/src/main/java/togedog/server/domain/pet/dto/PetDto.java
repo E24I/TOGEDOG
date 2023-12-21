@@ -12,11 +12,17 @@ public class PetDto {
 
         private String name;
         private Long age;
-        private String type;
-        private String personality;
-        private String significant;
-        private String petIntro;
         private Gender gender;
+        private String type;
+        private String petIntro;
+        private String image;
+    }
+
+    @Getter
+    @Setter
+    public static class Patch{
+        private Long petId;
+        private String petIntro;
         private String image;
     }
 

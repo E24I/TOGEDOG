@@ -220,7 +220,7 @@ public class MemberController {
     소개글(myintro) 수정
      */
     @PatchMapping("/update/myintro")
-    public ResponseEntity<?> updateMyintro(@RequestBody MemberDto.PatchIntro myintroDto){
+    public ResponseEntity<?> updateMyintro(@Valid @RequestBody MemberDto.PatchIntro myintroDto){
 
         memberService.updateMyintro(myintroDto.getMyIntro());
 
