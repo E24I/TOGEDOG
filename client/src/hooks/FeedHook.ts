@@ -6,6 +6,7 @@ import {
   feedLike,
   feedBookmark,
   feedReport,
+  deleteFeed,
   updateFeed,
   deleteFeed,
 } from "../services/feedService";
