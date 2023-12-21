@@ -8,7 +8,6 @@ import {
   feedReport,
   deleteFeed,
   updateFeed,
-  deleteFeed,
 } from "../services/feedService";
 import {
   postInformationType,
