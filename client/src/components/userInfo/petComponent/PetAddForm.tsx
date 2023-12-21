@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-
 import {
   PetAddContainer,
   TopBox,
@@ -16,17 +15,19 @@ const PetAddForm: React.FC = () => {
     register,
     formState: { errors },
     handleSubmit,
-    watch,
   } = useForm();
+
+  const onSubmit = (data: any) => {
+    console.log(data); // 폼 데이터 처리
+  };
   return (
     <PetAddContainer>
       <TopBox>
         <BackIcon />
         <Title>펫 등록</Title>
       </TopBox>
-      {/* 몸통 -이미지등록, -견종, -나이, -성별, 소개 */}
       <MiddleBox>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Input
             type="text"
             placeholder="반려동물의 이름 입력해주세요."
@@ -45,16 +46,31 @@ const PetAddForm: React.FC = () => {
             autoComplete="off"
             {...register("age", { required: true })}
           />
-          {/* 성별은 토글로 입력예정 */}
+          <label>
+            여자
+            <input
+              type="radio"
+              value="FEMAIL"
+              {...register("gender", { required: true })}
+            />
+          </label>
+          <label>
+            남자
+            <input
+              type="radio"
+              value="MALE"
+              {...register("gender", { required: true })}
+            />
+          </label>
           <Input
             type="text"
             placeholder="반려동물의 소개를 자유롭게 입력해주세요."
             autoComplete="off"
             {...register("intro")}
           />
+          <RegisterButton type="submit">등록</RegisterButton>
         </form>
       </MiddleBox>
-      <RegisterButton>등록</RegisterButton>
     </PetAddContainer>
   );
 };

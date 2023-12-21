@@ -34,4 +34,8 @@ export const RegisterButton = styled.button`
   background: #d7d7d7;
 `;
 
-export const Input = styled.input``;
+export const Input = styled.input`
+  width: 300px;
+  display: block;
+  border: 1px solid red;
+`;
