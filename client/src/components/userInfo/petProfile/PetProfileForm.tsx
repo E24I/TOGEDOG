@@ -11,7 +11,6 @@ import {
   ModifyButton,
   ImgInfo,
   TextInfo,
-  Img,
   NameText,
   Introduction,
   CategoryBox,
@@ -21,17 +20,17 @@ import {
 } from "./PetProfileForm.style";
 import { Category } from "./component/Category";
 import { useDeletePetInfo } from "../../../hooks/UserInfoHook";
-import { memberIdAtom, tokenAtom } from "../../../atoms";
+import { tokenAtom } from "../../../atoms";
 import { getPetInfo } from "../../../services/userInfoService";
 import ConfirmModal from "../../../atoms/modal/ConfirmModal";
 import { queryClient } from "../../..";
+import { PetImgForm } from "../../../atoms/imgForm/ImgForm";
 
 const PetProfileForm = () => {
   const navigate = useNavigate();
 
-  const { id } = useParams<{ id: string }>();
-  const petId = id ? id : "";
-  const memberId: number = useRecoilValue(memberIdAtom) || 0;
+  const { petId } = useParams<{ petId: string }>();
+  const currentPetId = petId || "";
   const token = useRecoilValue(tokenAtom);
 
   const [isModal, setIsModal] = useState<boolean>(false);
@@ -42,22 +41,19 @@ const PetProfileForm = () => {
   const [birthday, setBirthday] = useState("2023년 9월 5일"); // 생일 vlaue
   const [gender, setGender] = useState("여"); // 성별 vlaue
   const [character, setCharacter] = useState("발랄"); // 성격 vlaue
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["petInfo", petId, memberId, token],
-    queryFn: () => getPetInfo(petId, memberId, token),
-  });
-  const { mutate } = useMutation({
-    mutationFn: async () => {
-      "postAPI"; //ex.포스트요청
-    },
-    onSuccess: (res) => {
-      console.log(res);
-      queryClient.invalidateQueries({ queryKey: ["petInfo"] });
-    },
-    onError: (err) => {
-      console.log(err);
-    },
-  });
+
+  // const { mutate } = useMutation({
+  //   mutationFn: async () => {
+  //     "postAPI"; //ex.포스트요청
+  //   },
+  //   onSuccess: (res) => {
+  //     console.log(res);
+  //     queryClient.invalidateQueries({ queryKey: ["petInfo"] });
+  //   },
+  //   onError: (err) => {
+  //     console.log(err);
+  //   },
+  // });
 
   const goBack = () => {
     navigate(-1); // 뒤로가기 버튼
@@ -67,19 +63,23 @@ const PetProfileForm = () => {
     setIsEditing(!isEditing); // 수정 상태로 전환
   };
 
-  const { mutate: deletePet } = useDeletePetInfo(petId);
+  const { mutate: deletePet } = useDeletePetInfo(currentPetId);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["petInfo", currentPetId, token],
+    queryFn: () => getPetInfo(currentPetId, token),
+  });
   if (error) {
-    return <div>404페이지 예정</div>;
+    return <div>{petId}Error</div>;
   }
   if (isLoading) {
-    return <div>Loading..... 로딩페이지 예정</div>;
+    return <div>Loading......</div>;
   }
 
   return (
     <ProfileForm>
       <TopBox>
         <BackIcon onClick={goBack} />
-        <HeadText>멍 프로필</HeadText>
+        <HeadText>{`${data?.data.name}`} 프로필</HeadText>
         <div>
           {!isEditing ? (
             <ModifyButton onClick={handleEdit}>수정</ModifyButton>
@@ -90,20 +90,24 @@ const PetProfileForm = () => {
       </TopBox>
       <ContentBox>
         <ImgInfo>
-          <Img />
+          <PetImgForm
+            width={200}
+            height={200}
+            radius={50}
+            URL={data?.data.image}
+          />
           <NameText>
-            <strong>마루</strong> ∙ 2개월
+            <strong>{data?.data.name}</strong> ∙ {data?.data.age}살
           </NameText>
           {isEditing ? (
             <textarea
               value={introduction}
               onChange={(e) => {
                 setIntroduction(e.target.value);
-                console.log(data);
               }}
             />
           ) : (
-            <Introduction>{introduction}</Introduction>
+            <Introduction>{data?.data.petIntro}</Introduction>
           )}
         </ImgInfo>
         <TextInfo>
@@ -111,38 +115,33 @@ const PetProfileForm = () => {
             <Category
               title="견종"
               isEditing={isEditing}
-              value={kind}
+              value={
+                data?.data.type ? data?.data.type : "등록된 견종이 없습니다."
+              }
               setValue={setKind}
             />
             <Category
               title="생일"
               isEditing={isEditing}
-              value={birthday}
+              value={`${data?.data.age} 살`}
               setValue={setBirthday}
             />
             <Category
               title="성별"
               isEditing={isEditing}
-              value={gender}
+              value={data?.data.gender === "FEMALE" ? `여자` : "남자"}
               setValue={setGender}
             />
-            {/* <Category
+            <Category
               title="성격"
               isEditing={isEditing}
-              value={character}
+              value={
+                data?.data.personality
+                  ? data?.data.personality
+                  : "등록된 성격이 없습니다."
+              }
               setValue={setCharacter}
-            /> */}
-            {/* <IssueListForm>
-              <h3>특이사항</h3>
-              <Issues>
-                <li>wqeqwe</li>
-                <li>wqeqwe</li>
-                <li>wqeqwe</li>
-                <li>wqeqwe</li>
-                <li>wqeqwe</li>
-                <li>wqeqwe</li>
-              </Issues>
-            </IssueListForm> */}
+            />
           </CategoryBox>
         </TextInfo>
       </ContentBox>
