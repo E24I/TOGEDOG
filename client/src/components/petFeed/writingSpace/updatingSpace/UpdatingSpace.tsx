@@ -1,25 +1,46 @@
-import React, { ChangeEvent, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { ChangeEvent, useEffect, useState } from "react";
 import * as U from "./UpdatingSpace.Style";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
+import { useGetFeed } from "../../../../hooks/FeedHook";
+import { useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { tokenAtom } from "../../../../atoms";
+import { feedDetailType } from "../../../../types/feedDataType";
 
 interface UpdatingSpace {
-  handleContentChange: (title: string, content: string) => void;
+  handleUpdatedInfoChange: (title: string, content: string) => void;
+  setFeedId: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const modules = {
   toolbar: false,
 };
 
-const UpdatingSpace: React.FC<UpdatingSpace> = ({ handleContentChange }) => {
-  const [quillValue, setQuillValue] = useState(
-    "저히 몽자 오늘 애견카페가서 아주 신나게 놀다왔답니당 다들 저히 기여운 몽자 보고 가세요",
-  );
+const UpdatingSpace: React.FC<UpdatingSpace> = ({
+  handleUpdatedInfoChange,
+  setFeedId,
+}) => {
+  const token = useRecoilValue(tokenAtom);
+
+  const { feedId } = useParams();
+
+  const { data, error, isLoading } = useGetFeed(Number(feedId), token);
+
+  const feedData: feedDetailType = data;
+
   const [title, setTitle] = useState<string>("기존제목");
   const [isContentEdit, setContentEdit] = useState<boolean>(false);
-  const [defaultTitleValue, setDefaultTitleValue] = useState<string>(""); //피드 디테일 데이터 받아서 저장
-  const [defaultContentValue, setDefaultContentValue] = useState<string>(""); //피드 디테일 데이터 받아서 저장
   const [isTitleEdit, setTitleEdit] = useState<boolean>(false);
+  const [quillValue, setQuillValue] = useState<feedDetailType["content"]>("");
+
+  useEffect(() => {
+    if (!isLoading && !error && feedData) {
+      setQuillValue(feedData.content);
+      setFeedId(feedData.feedId);
+    }
+  }, [isLoading, error, feedData]);
 
   const changeToEditTitle = () => {
     setTitleEdit(true);
@@ -29,58 +50,70 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({ handleContentChange }) => {
   };
   const updateTitle = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
-    handleContentChange(title, quillValue);
+    handleUpdatedInfoChange("title", title);
   };
 
   const setContent = (editor: string) => {
     setQuillValue(editor);
-    handleContentChange(title, quillValue);
+    handleUpdatedInfoChange("content", quillValue);
   };
 
   return (
     <U.UpdateSpace>
-      <U.FeedOwner>
-        <U.FeedOwnerImg />
-        <U.IdAndAddress>
-          <U.Id>세계 최강 귀요미 몽자</U.Id>
-          <U.Address>멍멍 애견 카페</U.Address>
-        </U.IdAndAddress>
-      </U.FeedOwner>
-      <U.FeedItems>
-        <U.FeedTitle id="title" onClick={changeToEditTitle}>
-          {!isTitleEdit ? (
-            <U.DefaultTitle>등록 되었던 제목</U.DefaultTitle>
-          ) : (
-            <U.EditTitle
-              defaultValue="등록 되었던 제목"
-              onChange={(e) => updateTitle(e)}
-            ></U.EditTitle>
-          )}
-        </U.FeedTitle>
-        <U.FeedContent id="content" onClick={changeToEditContent}>
-          {!isContentEdit ? (
-            <U.DefaultContent>등록되었던 내용</U.DefaultContent>
-          ) : (
-            <ReactQuill
-              placeholder="내용을 입력하세요"
-              style={{ height: "90px", width: "100%" }}
-              value={quillValue}
-              modules={modules}
-              onChange={(editor) => setContent(editor)}
-            />
-          )}
-        </U.FeedContent>
-        <U.FeedImages>
-          <U.LeftButton />
-          <U.Images>
-            {/* 피드 이미지 매핑 구간 */}
-            <U.Img />
-            <U.Img />
-            <U.Img />
-          </U.Images>
-          <U.RightButton />
-        </U.FeedImages>
-      </U.FeedItems>
+      {isLoading ? (
+        <>Loading Data...</>
+      ) : error ? (
+        <>Error</>
+      ) : (
+        <>
+          <U.FeedOwner>
+            <U.FeedOwnerImg />
+            <U.IdAndAddress>
+              <U.Id>{feedData.member.nickname}</U.Id>
+              <U.Address>위치정보</U.Address>
+            </U.IdAndAddress>
+          </U.FeedOwner>
+          <U.FeedItems>
+            <U.FeedTitle id="title" onClick={changeToEditTitle}>
+              {!isTitleEdit ? (
+                <U.DefaultTitle>{feedData.title}</U.DefaultTitle>
+              ) : (
+                <U.EditTitle
+                  defaultValue={feedData.title}
+                  onChange={(e) => updateTitle(e)}
+                ></U.EditTitle>
+              )}
+            </U.FeedTitle>
+            <U.FeedContent id="content" onClick={changeToEditContent}>
+              {!isContentEdit ? (
+                <U.DefaultContent>
+                  <ReactQuill value={quillValue} modules={modules} />
+                </U.DefaultContent>
+              ) : (
+                <ReactQuill
+                  style={{ height: "90px", width: "100%" }}
+                  value={quillValue}
+                  modules={modules}
+                  onChange={(editor) => setContent(editor)}
+                />
+              )}
+            </U.FeedContent>
+            <U.FeedFilesContainer>
+              <U.FeedFiles>
+                <U.LeftButton />
+                <U.Videos controls>
+                  <source src={feedData.videos} />
+                  <track />
+                </U.Videos>
+                {feedData.images.map((image, idx) => {
+                  return <U.Img key={idx} src={image} />;
+                })}
+                <U.RightButton />
+              </U.FeedFiles>
+            </U.FeedFilesContainer>
+          </U.FeedItems>
+        </>
+      )}
     </U.UpdateSpace>
   );
 };

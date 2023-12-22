@@ -80,10 +80,11 @@ export const usePostFeed = (
 export const useUpdateFeed = (
   updateInformation: updateInformationType,
   token: string | undefined,
+  feedId: number,
 ) => {
   return useMutation({
     mutationFn: async () => {
-      return updateFeed(updateInformation, token);
+      return updateFeed(updateInformation, token, feedId);
     },
     onSuccess: (res) => {
       console.log("성공", res);
