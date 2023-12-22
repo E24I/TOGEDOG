@@ -33,6 +33,17 @@ public class PetController {
         return ResponseEntity.created(location).build(); //location 으로 return
     }
 
+    @PatchMapping("/{pet-id}/update")
+    public ResponseEntity<?> updatePet(@RequestBody PetDto.Patch patchDto,
+                                       @PathVariable("pet-id") Long petId){
+
+        patchDto.setPetId(petId);
+
+        Pet pet = petService.updatePet(patchDto);
+
+        return new ResponseEntity<>(pet,HttpStatus.CREATED);
+    }
+
     @GetMapping("/{pet-id}")
     public ResponseEntity<?> getOnePet(@PathVariable("pet-id") Long petId){
         Pet onePet = petService.findOnePet(petId);

@@ -5,12 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
+import togedog.server.domain.pet.dto.PetDto;
 import togedog.server.domain.pet.entity.Pet;
 import togedog.server.domain.pet.repository.PetRepository;
 import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.memberexception.MemberAccessDeniedException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
+import togedog.server.global.exception.businessexception.petexception.PetMemberNotAccordException;
 import togedog.server.global.exception.businessexception.petexception.PetNotFoundException;
 
 @Service
@@ -36,6 +38,28 @@ public class PetService {
         }
         return pet;
     }
+
+    public Pet updatePet(PetDto.Patch patchDto){
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+
+        if(loginMemberId == null){
+            throw new MemberNotLoginException();
+        }
+
+        Pet pet = petRepository.findById(patchDto.getPetId())
+                .orElseThrow(() -> new PetNotFoundException());
+
+        if(loginMemberId != pet.getMember().getMemberId()){
+            throw new PetMemberNotAccordException();
+        }
+
+        pet.setPetIntro(patchDto.getPetIntro());
+        pet.setImage(patchDto.getImage());
+
+        return petRepository.save(pet);
+    }
+
+
 
 //
 //    public Page<Pet> findPet(Pageable pageable){
