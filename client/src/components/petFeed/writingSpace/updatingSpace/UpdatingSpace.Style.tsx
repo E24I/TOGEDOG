@@ -91,10 +91,6 @@ export const FeedFiles = styled.div`
 
 export const Videos = styled.video``;
 
-export const Images = styled.div`
-  width: 745px;
-`;
-
 export const Img = styled.img`
   width: 233px;
   height: 100%;

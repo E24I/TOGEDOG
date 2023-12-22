@@ -105,11 +105,9 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
                   <source src={feedData.videos} />
                   <track />
                 </U.Videos>
-                <U.Images>
-                  {feedData.images.map((image, idx) => {
-                    return <U.Img key={idx} src={image} />;
-                  })}
-                </U.Images>
+                {feedData.images.map((image, idx) => {
+                  return <U.Img key={idx} src={image} />;
+                })}
                 <U.RightButton />
               </U.FeedFiles>
             </U.FeedFilesContainer>
