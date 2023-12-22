@@ -34,6 +34,7 @@ import Dropdown from "../../atoms/dropdown/Dropdowns";
 import { useDeleteFeed } from "../../hooks/FeedHook";
 import { useRecoilValue } from "recoil";
 import { tokenAtom } from "../../atoms";
+import { useNavigate } from "react-router-dom";
 
 interface OwnProps {
   items: feedListsType;
@@ -51,6 +52,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   const feedDate = createDate.split("-").map((el) => parseInt(el));
   const createTime = items.createdDate.split("T")[1];
   const feedTime = createTime.split(":").map((el) => parseInt(el));
+  const feedId = items.feedId;
 
   const handleMoreReview = (): void => setDetail(!isDetail);
   const handleLike = (): void => setLike(!isLike);
@@ -61,6 +63,8 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   const mediaRef = useRef<any>(null);
   const imgRef = useRef<any>(items.images?.map(() => createRef()));
   const [isMedia, setMedia] = useState<number>(0);
+
+  const navigator = useNavigate();
 
   // 미디어 오른쪽 스크롤 이동 버튼
   const handleScrollRight = () => {
@@ -94,7 +98,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
 
   // 피드 수정 (핸들러)
   const handleReplyPatch = () => {
-    return;
+    navigator(`/update/${feedId}`);
   };
 
   // 설정 드롭다운 버튼 종류 및 핸들러 연결
