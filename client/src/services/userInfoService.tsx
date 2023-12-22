@@ -111,7 +111,7 @@ type createPet = {
   age: number;
   type?: string;
   petIntro?: string;
-  gender?: string;
+  gender: string;
   image?: string;
 };
 // 펫 등록
@@ -120,6 +120,6 @@ export const postPetInfo = async (requestObj: createPet, token?: string) => {
     headers: { Authorization: token },
   };
   const url = `${ROOT_URL}/pet/create`;
-  const res = await axios.delete(url, headers);
+  const res = await axios.post(url, requestObj, headers);
   return res;
 };

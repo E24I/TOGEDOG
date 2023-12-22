@@ -23,7 +23,6 @@ import { useDeletePetInfo } from "../../../hooks/UserInfoHook";
 import { tokenAtom } from "../../../atoms";
 import { getPetInfo } from "../../../services/userInfoService";
 import ConfirmModal from "../../../atoms/modal/ConfirmModal";
-import { queryClient } from "../../..";
 import { PetImgForm } from "../../../atoms/imgForm/ImgForm";
 
 const PetProfileForm = () => {

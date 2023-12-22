@@ -13,6 +13,7 @@ import {
   patchUserPassword,
   getPetInfo,
   deletePetInfo,
+  postPetInfo,
 } from "../services/userInfoService";
 import { feedDataType, infoType } from "../types/userInfoType";
 import { LoadingContainer } from "../pages/PetFeed";
@@ -168,6 +169,31 @@ export const useDeletePetInfo = (petId: string) => {
   return useMutation({
     mutationFn: async () => {
       return deletePetInfo(petId, token);
+    },
+    onSuccess: () => {
+      navigator("/user");
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+};
+
+type createPet = {
+  name: string;
+  age: number;
+  type?: string;
+  petIntro?: string;
+  gender: string;
+  image?: string;
+};
+//펫 등록
+export const usePostPet = (requestObj: createPet) => {
+  const token = useRecoilValue(tokenAtom);
+  const navigator = useNavigate();
+  return useMutation({
+    mutationFn: async () => {
+      return postPetInfo(requestObj, token);
     },
     onSuccess: () => {
       navigator("/user");
