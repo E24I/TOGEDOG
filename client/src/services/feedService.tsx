@@ -56,7 +56,7 @@ export const updateFeed = async (
   token: string | undefined,
   feedId: number,
 ) => {
-  const res = await axios.post(
+  const res = await axios.patch(
     `${ROOT_URL}/feed/${feedId}`,
     updateInformation,
     {
