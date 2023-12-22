@@ -42,7 +42,8 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
   const [updateInformation, setUpdateInformation] = useState<{
     title: string;
     content: string;
-  }>({ title: "", content: "" });
+    openYn: boolean;
+  }>({ title: "", content: "", openYn: isFeedPublic });
   const [feedId, setFeedId] = useState<number>(0);
 
   const token = useRecoilValue(tokenAtom);
@@ -109,9 +110,9 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
       if (textContent === "게시") {
         await s3presigned().then(() => posting());
       } else if (textContent === "완료") {
-        updateFeed(updateInformation, token, feedId).then(() =>
-          navigator("/feeds"),
-        );
+        updateFeed(updateInformation, token, feedId)
+          .then(() => navigator("/feeds"))
+          .catch((err) => alert(err.response.data.message));
       }
     }
   };
@@ -142,10 +143,6 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     await Promise.all(promises);
     postInformation.images = images;
     postInformation.videos = video[0];
-    //handleInputChange, setState 비동기 동작
-    //영상이 조회되지 않는 경우 이미지도 렌더링이 안되고 있음(피드조회)
-    //영상이 렌더링 되지 않고 있음(피드조회)
-    //이 오류 때문인 것 같음 Media elements such as <audio> and <video> must have a <track> for captions.
     return Promise.resolve();
   };
   const posting = () => {
@@ -197,22 +194,22 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
             </>
           )}
         </W.AddressContainer>
-        {page === "create" && (
-          <W.Toggles>
-            <W.ToggleWrap onClick={() => feedToggleCheck()}>
-              피드 공개
-              <W.ToggleContainer data={isFeedPublic.toString()}>
-                <W.ToggleCircle data={isFeedPublic.toString()} />
-              </W.ToggleContainer>
-            </W.ToggleWrap>
+        <W.Toggles>
+          <W.ToggleWrap onClick={() => feedToggleCheck()}>
+            피드 공개
+            <W.ToggleContainer data={isFeedPublic.toString()}>
+              <W.ToggleCircle data={isFeedPublic.toString()} />
+            </W.ToggleContainer>
+          </W.ToggleWrap>
+          {page === "create" && (
             <W.ToggleWrap onClick={() => mapToggleCheck()}>
               지도 연동하기
               <W.ToggleContainer data={isMapAssign.toString()}>
                 <W.ToggleCircle data={isMapAssign.toString()} />
               </W.ToggleContainer>
             </W.ToggleWrap>
-          </W.Toggles>
-        )}
+          )}
+        </W.Toggles>
       </W.FeedBottomContainer>
       {isMapAssign && (
         <Map enrollCoordinate={enrollCoordinate} setMark={setMark} />

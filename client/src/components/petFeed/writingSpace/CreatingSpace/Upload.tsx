@@ -45,7 +45,7 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
   const uploadImage = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files && e.target.files[0];
     const imgLimitedSize = 10 * 1024 * 1024;
-    const videoLimitedSize = 100 * 1024 * 1024;
+    const videoLimitedSize = 50 * 1024 * 1024;
     if (selectedFile) {
       const fileSize = selectedFile.size;
 
@@ -69,7 +69,7 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
           selectedFile: selectedFile,
         });
       } else {
-        alert("첨부파일이 제한 크기보다 큽니다");
+        alert("지원하지 않는 형식이거나 첨부파일이 제한 크기보다 큽니다");
       }
     }
   };

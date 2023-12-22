@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { tokenAtom } from "../../../../atoms";
 import { feedDetailType } from "../../../../types/feedDataType";
+import { Alert } from "../CreatingSpace/CreatingSpace.Style";
 
 interface UpdatingSpace {
   handleUpdatedInfoChange: (title: string, content: string) => void;
@@ -30,13 +31,15 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
 
   const feedData: feedDetailType = data;
 
-  const [title, setTitle] = useState<string>("기존제목");
+  const [title, setTitle] = useState<string>("");
   const [isContentEdit, setContentEdit] = useState<boolean>(false);
   const [isTitleEdit, setTitleEdit] = useState<boolean>(false);
   const [quillValue, setQuillValue] = useState<feedDetailType["content"]>("");
+  const [alert, setAlert] = useState<string>("");
 
   useEffect(() => {
     if (!isLoading && !error && feedData) {
+      setTitle(feedData.title);
       setQuillValue(feedData.content);
       setFeedId(feedData.feedId);
     }
@@ -49,7 +52,14 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
     setContentEdit(true);
   };
   const updateTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+    const trimmedValue = e.target.value.trim();
+    const words = trimmedValue.split(/\s+/);
+    if (words.length < 2) {
+      setAlert("제목은 두 단어 이상으로 작성해야 합니다.");
+    } else {
+      setAlert("");
+      setTitle(e.target.value);
+    }
     handleUpdatedInfoChange("title", title);
   };
 
@@ -78,10 +88,13 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
               {!isTitleEdit ? (
                 <U.DefaultTitle>{feedData.title}</U.DefaultTitle>
               ) : (
-                <U.EditTitle
-                  defaultValue={feedData.title}
-                  onChange={(e) => updateTitle(e)}
-                ></U.EditTitle>
+                <>
+                  <U.EditTitle
+                    defaultValue={feedData.title}
+                    onChange={(e) => updateTitle(e)}
+                  />
+                  {alert && <Alert>{alert}</Alert>}
+                </>
               )}
             </U.FeedTitle>
             <U.FeedContent id="content" onClick={changeToEditContent}>
@@ -99,17 +112,20 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
               )}
             </U.FeedContent>
             <U.FeedFilesContainer>
+              <U.LeftButton />
               <U.FeedFiles>
-                <U.LeftButton />
-                <U.Videos controls>
-                  <source src={feedData.videos} />
-                  <track />
-                </U.Videos>
-                {feedData.images.map((image, idx) => {
-                  return <U.Img key={idx} src={image} />;
-                })}
-                <U.RightButton />
+                {feedData.videos && (
+                  <U.Videos controls>
+                    <source src={feedData.videos} />
+                    <track />
+                  </U.Videos>
+                )}
+                {feedData.images &&
+                  feedData.images.map((image, idx) => {
+                    return <U.Img key={idx} src={image} />;
+                  })}
               </U.FeedFiles>
+              <U.RightButton />
             </U.FeedFilesContainer>
           </U.FeedItems>
         </>
