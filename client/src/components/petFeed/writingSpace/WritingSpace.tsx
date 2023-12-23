@@ -3,17 +3,13 @@ import { useNavigate } from "react-router-dom";
 import * as W from "./WritingSpaces.Style";
 import CreatingSpace from "./CreatingSpace/CreatingSpace";
 import UpdatingSpace from "./updatingSpace/UpdatingSpace";
-import {
-  postFeed,
-  updateFeed,
-  getPresignedUrl,
-  uploadToS3,
-} from "../../../services/feedService";
+import { getPresignedUrl, uploadToS3 } from "../../../services/feedService";
 import { postInformationType } from "../../../types/feedDataType";
 import Map from "./Map";
-import { postMap } from "../../../services/mapService";
 import { useRecoilValue } from "recoil";
 import { tokenAtom } from "../../../atoms";
+import { usePostFeed, useUpdateFeed } from "../../../hooks/FeedHook";
+import { enrollMapType } from "../../../types/mapType";
 
 interface WritingSpaceProps {
   page: string;
@@ -34,11 +30,11 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
   const [attachments, setAttachments] = useState<
     { type: string; url: string; file: File | null }[]
   >([]);
-  const [enrollMapInfo, setEnrollMapInfo] = useState<{
-    feedId: number;
-    utm_k_x: string;
-    utm_k_y: string;
-  }>({ feedId: 0, utm_k_x: "", utm_k_y: "" });
+  const [enrollMapInfo, setEnrollMapInfo] = useState<enrollMapType>({
+    feedId: 0,
+    utm_k_x: "",
+    utm_k_y: "",
+  });
   const [updateInformation, setUpdateInformation] = useState<{
     title: string;
     content: string;
@@ -50,23 +46,37 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
 
   const navigator = useNavigate();
 
+  const { mutate: postFeedMutate } = usePostFeed(
+    postInformation,
+    token,
+    isMapAssign,
+    enrollMapInfo,
+  );
+  const { mutate: updateFeedMutate } = useUpdateFeed(
+    updateInformation,
+    token,
+    feedId,
+  );
+
+  //변경된 postInformation값을 할당해 줌ㄴ
   const handleInputChange = async (
     fieldName: string,
     value: string | boolean | string[],
   ) => {
     setPostInformation((prevPostInformation) => {
-      console.log(fieldName, value);
       return {
         ...prevPostInformation,
         [fieldName]: value,
       };
     });
   };
+  //좌표값 저장
   const enrollCoordinate = (key: string, value: string | number) => {
     setEnrollMapInfo((prev) => {
       return { ...prev, [key]: value };
     });
   };
+  //피드 공개 여부
   const feedToggleCheck = () => {
     setFeedPublic((prevIsFeedPublic) => {
       const updatedFeedPublic = !prevIsFeedPublic;
@@ -74,6 +84,7 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
       return updatedFeedPublic;
     });
   };
+  //맵 연동 여부
   const mapToggleCheck = () => {
     setMapAssign((prevIsMapAssign) => {
       const updatedMapAssign = !prevIsMapAssign;
@@ -81,18 +92,19 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
       return updatedMapAssign;
     });
   };
+  //피드 수정 정보 저장
   const handleUpdatedInfoChange = async (
     fieldName: string,
     value: string | boolean | string[],
   ) => {
     setUpdateInformation((prevUpdateInformation) => {
-      console.log(fieldName, value);
       return {
         ...prevUpdateInformation,
         [fieldName]: value,
       };
     });
   };
+  //선택한 좌표 정보 초기화
   const deleteLocation = () => {
     if (isMarked === true) {
       setMark(false);
@@ -108,14 +120,13 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
       const textContent = targetElement.textContent;
 
       if (textContent === "게시") {
-        await s3presigned().then(() => posting());
+        await s3presigned().then(() => postFeedMutate());
       } else if (textContent === "완료") {
-        updateFeed(updateInformation, token, feedId)
-          .then(() => navigator("/feeds"))
-          .catch((err) => alert(err.response.data.message));
+        updateFeedMutate();
       }
     }
   };
+  //s3 업로드
   const s3presigned = async (): Promise<void> => {
     const images: string[] = [];
     const video: string[] = [];
@@ -131,7 +142,6 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
               );
               if (file.type.includes("image")) {
                 images.unshift(fileUrl);
-                console.log("image1");
               } else {
                 video.unshift(fileUrl);
               }
@@ -145,21 +155,22 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     postInformation.videos = video[0];
     return Promise.resolve();
   };
-  const posting = () => {
-    postFeed(postInformation, token)
-      .then(
-        (data) =>
-          (enrollMapInfo.feedId = Number(data.headers.location.substr(6))),
-      )
-      .then(() =>
-        isMapAssign
-          ? postMap(enrollMapInfo)
-              .then((data) => data && navigator(`/feeds`))
-              .catch(() => alert("map등록 요청 실패"))
-          : navigator(`/feeds`),
-      )
-      .catch((err) => alert(err.response.data.message));
-  };
+  //피드 작성 api 호출
+  // const Posting = () => {
+  // usePostFeed(postInformation, token, isMapAssign, enrollMapInfo);
+  // .then(
+  //   (data) =>
+  //     (enrollMapInfo.feedId = Number(data.headers.location.substr(6))),
+  // )
+  // .then(() =>
+  //   isMapAssign
+  //     ? postMap(enrollMapInfo)
+  //         .then((data) => data && navigator(`/feeds`))
+  //         .catch(() => alert("map등록 요청 실패"))
+  //     : navigator(`/feeds`),
+  // )
+  // .catch((err) => alert(err.response.data.message));
+  // };
 
   return (
     <W.CreateFeedContainer>

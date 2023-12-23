@@ -17,6 +17,7 @@ import DropDown from "../../atoms/dropdown/DropDown";
 import { useRecoilValue } from "recoil";
 import { tokenAtom } from "../../atoms";
 import { GetAllRoomsQuery } from "../../hooks/ChatHooks";
+import { roomsDataType } from "../../types/chatType";
 
 interface ChattingListsProps {
   setDefaultBack: () => void;
@@ -28,23 +29,7 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
   getRoomNumber,
 }) => {
   const token = useRecoilValue(tokenAtom);
-  const [rooms, setRooms] = useState<
-    {
-      id: number;
-      member_id_1: number;
-      member_id_2: number;
-      last_message: string;
-      created_at: string;
-    }[]
-  >([
-    {
-      id: 0,
-      member_id_1: 1,
-      member_id_2: 2,
-      last_message: "마지막 채팅",
-      created_at: "2023-11-29 16:03:01",
-    },
-  ]);
+
   const [memberId, setMemberId] = useState<number>(0);
   const [isOpen, setOpen] = useState<boolean>(false);
   const [participants, setParticipants] = useState<{
@@ -54,13 +39,7 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
     requestMemberId: 2,
     inviteMemberId: 3,
   });
-  const roomsData = GetAllRoomsQuery();
-
-  useEffect(() => {
-    if (roomsData) {
-      setRooms(roomsData);
-    }
-  }, [roomsData]);
+  const { data: roomsData } = GetAllRoomsQuery();
 
   const openDropDown = (e: MouseEvent) => {
     e.stopPropagation();
@@ -109,21 +88,23 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
         <Message>Message</Message>
         <button onClick={() => createNewChat(participants, token)}>+</button>
         <ChattingList>
-          {rooms &&
-            rooms.map((room, idx) => {
+          {roomsData &&
+            roomsData.map((room: roomsDataType) => {
               return (
                 <ChattingListContainer
-                  key={idx}
+                  key={room.chatRoomId}
                   onClick={() => {
-                    sendRoomNumber(1);
+                    sendRoomNumber(room.chatRoomId);
                   }}
                 >
                   <ProfileImage />
                   <MiddleWrap>
-                    <UserName>유저이름</UserName>
-                    <RecentConversation>{room.last_message}</RecentConversation>
+                    <UserName>{room.otherMember_id}</UserName>
+                    <RecentConversation>
+                      {room.latestMessage}
+                    </RecentConversation>
                   </MiddleWrap>
-                  <TimeStamp>* {room && setTime(room.created_at)}</TimeStamp>
+                  <TimeStamp>* {room && setTime(room.createdAt)}</TimeStamp>
                   <button onBlur={() => setOpen(false)} onClick={openDropDown}>
                     <SeeMoreButton />
                   </button>

@@ -15,6 +15,7 @@ interface UpdatingSpace {
   setFeedId: React.Dispatch<React.SetStateAction<number>>;
 }
 
+//react-query modules - toolbar제거
 const modules = {
   toolbar: false,
 };
@@ -24,11 +25,8 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
   setFeedId,
 }) => {
   const token = useRecoilValue(tokenAtom);
-
   const { feedId } = useParams();
-
   const { data, error, isLoading } = useGetFeed(Number(feedId), token);
-
   const feedData: feedDetailType = data;
 
   const [title, setTitle] = useState<string>("");
@@ -37,6 +35,7 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
   const [quillValue, setQuillValue] = useState<feedDetailType["content"]>("");
   const [alert, setAlert] = useState<string>("");
 
+  //피드 수정 시 마운트 되자 마자 초기값(제목, 내용)설정과 feedId를 WritingSpace.tsx로 전달
   useEffect(() => {
     if (!isLoading && !error && feedData) {
       setTitle(feedData.title);
@@ -44,13 +43,15 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
       setFeedId(feedData.feedId);
     }
   }, [isLoading, error, feedData]);
-
+  //제목 편집 ui로 변경
   const changeToEditTitle = () => {
     setTitleEdit(true);
   };
+  //본문 편집 ui로 변경
   const changeToEditContent = () => {
     setContentEdit(true);
   };
+  //수정한 제목을 WritingSpace.tsx로 전달
   const updateTitle = (e: ChangeEvent<HTMLInputElement>) => {
     const trimmedValue = e.target.value.trim();
     const words = trimmedValue.split(/\s+/);
@@ -62,7 +63,7 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
     }
     handleUpdatedInfoChange("title", title);
   };
-
+  //수정한 본문을 WritingSpace로 전달
   const setContent = (editor: string) => {
     setQuillValue(editor);
     handleUpdatedInfoChange("content", quillValue);
