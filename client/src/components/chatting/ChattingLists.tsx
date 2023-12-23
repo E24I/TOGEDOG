@@ -15,8 +15,8 @@ import {
 import { createNewChat } from "../../services/chatService";
 import DropDown from "../../atoms/dropdown/DropDown";
 import { useRecoilValue } from "recoil";
-import { tokenAtom } from "../../atoms";
-import { GetAllRoomsQuery } from "../../hooks/ChatHooks";
+import { memberIdAtom, tokenAtom } from "../../atoms";
+import { GetAllRoomsQuery, useCreateChattingRoom } from "../../hooks/ChatHooks";
 import { roomsDataType } from "../../types/chatType";
 
 interface ChattingListsProps {
@@ -28,18 +28,19 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
   setDefaultBack,
   getRoomNumber,
 }) => {
-  const token = useRecoilValue(tokenAtom);
+  const { data: roomsData, isLoading, error } = GetAllRoomsQuery();
 
-  const [memberId, setMemberId] = useState<number>(0);
   const [isOpen, setOpen] = useState<boolean>(false);
   const [participants, setParticipants] = useState<{
     requestMemberId: number;
     inviteMemberId: number;
   }>({
-    requestMemberId: 2,
+    requestMemberId: 0,
     inviteMemberId: 3,
+    //유저검색을 통해 추가
   });
-  const { data: roomsData } = GetAllRoomsQuery();
+
+  const { mutate: createChattingRoom } = useCreateChattingRoom(participants);
 
   const openDropDown = (e: MouseEvent) => {
     e.stopPropagation();
@@ -86,7 +87,7 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
     <ChattingListsContainer>
       <ChattingFlexBox>
         <Message>Message</Message>
-        <button onClick={() => createNewChat(participants, token)}>+</button>
+        <button onClick={() => createChattingRoom()}>+</button>
         <ChattingList>
           {roomsData &&
             roomsData.map((room: roomsDataType) => {

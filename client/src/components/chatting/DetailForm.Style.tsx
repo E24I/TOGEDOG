@@ -14,7 +14,7 @@ export const Date = styled.div`
   text-align: center;
 `;
 
-export const TheOtherPerson = styled.div`
+export const ContentContainer = styled.div`
   display: flex;
   flex-direction: row;
   border: 2px solid #b87e7e;
@@ -56,19 +56,4 @@ export const Talk = styled.p`
   margin-top: 11px;
   background-color: #d2c0c0;
   border-radius: 20px;
-`;
-
-export const MyTalks = styled(Talks)`
-  width: fit-content;
-`;
-
-export const MyTalk = styled(Talk)`
-  width: inherit;
-  margin-left: auto;
-`;
-
-export const Checking = styled.div`
-  border: 2px solid #5854c6;
-  width: fit-content;
-  margin-left: auto;
 `;
