@@ -8,12 +8,14 @@ import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { tokenAtom } from "../../../../atoms";
 import { feedDetailType } from "../../../../types/feedDataType";
+import { Alert } from "../CreatingSpace/CreatingSpace.Style";
 
 interface UpdatingSpace {
   handleUpdatedInfoChange: (title: string, content: string) => void;
   setFeedId: React.Dispatch<React.SetStateAction<number>>;
 }
 
+//react-query modules - toolbar제거
 const modules = {
   toolbar: false,
 };
@@ -23,36 +25,45 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
   setFeedId,
 }) => {
   const token = useRecoilValue(tokenAtom);
-
   const { feedId } = useParams();
-
   const { data, error, isLoading } = useGetFeed(Number(feedId), token);
-
   const feedData: feedDetailType = data;
 
-  const [title, setTitle] = useState<string>("기존제목");
+  const [title, setTitle] = useState<string>("");
   const [isContentEdit, setContentEdit] = useState<boolean>(false);
   const [isTitleEdit, setTitleEdit] = useState<boolean>(false);
   const [quillValue, setQuillValue] = useState<feedDetailType["content"]>("");
+  const [alert, setAlert] = useState<string>("");
 
+  //피드 수정 시 마운트 되자 마자 초기값(제목, 내용)설정과 feedId를 WritingSpace.tsx로 전달
   useEffect(() => {
     if (!isLoading && !error && feedData) {
+      setTitle(feedData.title);
       setQuillValue(feedData.content);
       setFeedId(feedData.feedId);
     }
   }, [isLoading, error, feedData]);
-
+  //제목 편집 ui로 변경
   const changeToEditTitle = () => {
     setTitleEdit(true);
   };
+  //본문 편집 ui로 변경
   const changeToEditContent = () => {
     setContentEdit(true);
   };
+  //수정한 제목을 WritingSpace.tsx로 전달
   const updateTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+    const trimmedValue = e.target.value.trim();
+    const words = trimmedValue.split(/\s+/);
+    if (words.length < 2) {
+      setAlert("제목은 두 단어 이상으로 작성해야 합니다.");
+    } else {
+      setAlert("");
+      setTitle(e.target.value);
+    }
     handleUpdatedInfoChange("title", title);
   };
-
+  //수정한 본문을 WritingSpace로 전달
   const setContent = (editor: string) => {
     setQuillValue(editor);
     handleUpdatedInfoChange("content", quillValue);
@@ -78,10 +89,13 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
               {!isTitleEdit ? (
                 <U.DefaultTitle>{feedData.title}</U.DefaultTitle>
               ) : (
-                <U.EditTitle
-                  defaultValue={feedData.title}
-                  onChange={(e) => updateTitle(e)}
-                ></U.EditTitle>
+                <>
+                  <U.EditTitle
+                    defaultValue={feedData.title}
+                    onChange={(e) => updateTitle(e)}
+                  />
+                  {alert && <Alert>{alert}</Alert>}
+                </>
               )}
             </U.FeedTitle>
             <U.FeedContent id="content" onClick={changeToEditContent}>
@@ -99,17 +113,20 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
               )}
             </U.FeedContent>
             <U.FeedFilesContainer>
+              <U.LeftButton />
               <U.FeedFiles>
-                <U.LeftButton />
-                <U.Videos controls>
-                  <source src={feedData.videos} />
-                  <track />
-                </U.Videos>
-                {feedData.images.map((image, idx) => {
-                  return <U.Img key={idx} src={image} />;
-                })}
-                <U.RightButton />
+                {feedData.videos && (
+                  <U.Videos controls>
+                    <source src={feedData.videos} />
+                    <track />
+                  </U.Videos>
+                )}
+                {feedData.images &&
+                  feedData.images.map((image, idx) => {
+                    return <U.Img key={idx} src={image} />;
+                  })}
               </U.FeedFiles>
+              <U.RightButton />
             </U.FeedFilesContainer>
           </U.FeedItems>
         </>
