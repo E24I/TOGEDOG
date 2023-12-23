@@ -8,3 +8,9 @@ export type roomsDataType = {
   latestMessage: string;
   createdAt: string;
 };
+export type messagesType = {
+  messageId: number;
+  memberId: number;
+  content: string;
+  createdAt: string;
+}[];

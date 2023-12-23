@@ -1,57 +1,47 @@
 import React from "react";
 import {
-  Checking,
   ContentForm,
   Date,
   Image,
-  MyTalk,
-  MyTalks,
   Talk,
   Talks,
-  TheOtherPerson,
+  ContentContainer,
   UserName,
   Wrap,
 } from "./DetailForm.Style";
+import { messagesType } from "../../types/chatType";
+import { useRecoilValue } from "recoil";
+import { memberIdAtom } from "../../atoms";
 
 interface DetailFormType {
-  messages: {
-    id: number;
-    member_id: number;
-    time: number;
-    content: string[] | string;
-  }[];
+  messages: messagesType;
 }
 
 const DetailForm: React.FC<DetailFormType> = ({ messages }) => {
+  const myMemberId = useRecoilValue(memberIdAtom);
   return (
     <ContentForm>
       {messages &&
         messages.map((message, idx) => {
           return (
-            <div key={idx}>
-              <Date>{message.time}</Date>
-              <TheOtherPerson>
-                <Image></Image>
+            <div key={message.messageId}>
+              {message.createdAt[9] !== messages[idx - 1].createdAt[9] && (
+                <Date>{message.createdAt}</Date>
+              )}
+              <ContentContainer>
+                {message.memberId !== myMemberId && <Image></Image>}
                 <Wrap>
-                  <UserName>유저</UserName>
+                  {message.memberId !== myMemberId && (
+                    <UserName>{message.memberId}</UserName>
+                  )}
+                  {/* 프로필과 닉네임은 나중에 유저조회로 불러오기 */}
                   <Talks>
-                    {message.member_id === 0 &&
-                      Array.isArray(message.content) &&
-                      message.content.map((content, idx) => {
-                        return <Talk key={idx}>{content}</Talk>;
-                      })}
+                    <Talk>{message.content}</Talk>
                   </Talks>
                 </Wrap>
-              </TheOtherPerson>
-              <MyTalks>
-                {message.member_id === 0 &&
-                  Array.isArray(message.content) &&
-                  message.content.map((content, idx) => {
-                    return <MyTalk key={idx}>{content}</MyTalk>;
-                  })}
-              </MyTalks>
-              <Checking>읽음</Checking>
+              </ContentContainer>
             </div>
+            //실시간 대화 업데이트용 폼이 필요한 경우 추가 생성
           );
         })}
     </ContentForm>

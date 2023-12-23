@@ -25,27 +25,24 @@ export const getAllRooms = async (memberId: number, token: string) => {
   return res.data;
 };
 
-export const getAllMessages = async (
-  roomId: number,
-  token: string | undefined,
-) => {
-  const res = await axios.get(`${ROOT_URL}/chat/${roomId}/message`, {
-    headers: { Authorization: token },
-  });
+export const getAllMessages = async (roomId: number, token: string) => {
+  const res = await axios.get(
+    `${ROOT_URL}/chat/${roomId}/message?page_number=1&page_size=10`,
+    {
+      headers: { Authorization: token },
+    },
+  );
   return res;
 };
 
-export const exitARoom = async (roomId: number, token: string | undefined) => {
+export const exitARoom = async (roomId: number, token: string) => {
   const res = axios.delete(`${ROOT_URL}/chat/${roomId}`, {
     headers: { Authorization: token },
   });
   return res;
 };
 
-export const reportAMessage = async (
-  roomId: number,
-  token: string | undefined,
-) => {
+export const reportAMessage = async (roomId: number, token: string) => {
   const res = axios.post(`${ROOT_URL}/chat/${roomId}`, {
     headers: { Authorization: token },
   });
