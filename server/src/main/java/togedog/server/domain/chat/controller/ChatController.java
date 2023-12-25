@@ -35,11 +35,10 @@ public class ChatController {
     }
 
     //채팅방 목록 조회
-    @GetMapping
-    public ResponseEntity<List<ChatRoomResponse>> getChatRooms(@RequestBody ChatGetRequest chatGetRequest) {
+    @GetMapping("/member-id")
+    public ResponseEntity<List<ChatRoomResponse>> getChatRooms(@PathVariable("member-id") Long memberId) {
 
 //        Long memberId = loginMemberUtil.getLoginMemberId();
-        Long memberId = chatGetRequest.getMemberId();
 
         List<ChatRoomResponse> responses = chatService.findChatRooms(memberId);
 

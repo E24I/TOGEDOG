@@ -3,6 +3,7 @@ package togedog.server.domain.chat.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import togedog.server.global.entity.BaseEntity;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Message extends BaseEntity {
 
     @Id
