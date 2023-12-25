@@ -3,6 +3,7 @@ import {
   Comment,
   CommentContent,
   CommentContents,
+  CommentHeader,
   CommentLeft,
   CommentNickname,
   CommentProfile,
@@ -14,27 +15,48 @@ import {
 import { feedCommentType } from "../../types/feedDataType";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
 import { useDeleteComment, usePatchComment } from "../../hooks/CommentHook";
-import { useRecoilValue } from "recoil";
-import { tokenAtom } from "../../atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { reportAtom, tokenAtom } from "../../atoms";
 
 interface OwnProps {
-  replyId: number;
   comment: feedCommentType;
 }
 
-const CommentItem: React.FC<OwnProps> = ({ replyId, comment }) => {
+const CommentItem: React.FC<OwnProps> = ({ comment }) => {
   const accesstoken = useRecoilValue(tokenAtom);
 
-  const [isComment, setComment] = useState<boolean>(false);
-  const [isEditComment, setEditComment] = useState<boolean>(false);
-  const [content, setContent] = useState<string>("");
   const [isSetting, setSetting] = useState<boolean>(false);
+  const [isEditMode, setEditMode] = useState<boolean>(false);
+  const [content, setContent] = useState<string>(comment.content);
 
-  const handleEditComment = () => setEditComment(true);
+  // 대댓글 삭제 요청 훅
+  const { mutate: deleteComment } = useDeleteComment(
+    comment.commentId,
+    accesstoken,
+  );
+
+  // 대댓글 수정 요청 훅
+  const { mutate: patchComment } = usePatchComment(
+    comment.commentId,
+    content,
+    accesstoken,
+    () => setEditMode(false),
+    () => setEditMode(false),
+  );
+
+  const handleEditComment = () => setEditMode(true);
   const handleCommentDelete = () => deleteComment();
-  const handleReportComment = () => console.log("성공");
-  const handleSetting = (): void => setSetting(!isSetting);
+  const handleSetting = () => setSetting(!isSetting);
   const handleCloseDropdown = () => setSetting(false);
+
+  // 대댓글 신고
+  const [reportModal, setReportModal] = useRecoilState(reportAtom);
+  const handleReportComment = () =>
+    setReportModal({
+      ...reportModal,
+      sort: "comment",
+      commentId: comment.commentId,
+    });
 
   const settingContent = {
     수정하기: handleEditComment,
@@ -42,23 +64,17 @@ const CommentItem: React.FC<OwnProps> = ({ replyId, comment }) => {
     신고하기: handleReportComment,
   };
 
-  const { mutate: deleteComment } = useDeleteComment(replyId, accesstoken);
-  const { mutate: patchComment } = usePatchComment(
-    replyId,
-    content,
-    accesstoken,
-    () => setEditComment(false),
-    () => setEditComment(false),
-  );
-
+  // 대댓글 입력 창 onChange 이벤트
   const handleChangeComment = (e: React.ChangeEvent<HTMLInputElement>) =>
     setContent(e.target.value);
+
+  // 대댓글 입력 창 enter, esc 입력 시 이벤트
   const handleCommentPatch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       patchComment();
     } else if (e.key === "Escape") {
-      setEditComment(false);
-      setContent("?");
+      setEditMode(false);
+      setContent(comment.content);
     }
   };
 
@@ -72,7 +88,7 @@ const CommentItem: React.FC<OwnProps> = ({ replyId, comment }) => {
         )}
       </CommentLeft>
       <CommentContents>
-        <div>
+        <CommentHeader>
           <CommentNickname>{comment.member.nickname}</CommentNickname>
           <SettingBox onClick={handleSetting} onBlur={handleCloseDropdown}>
             <Setting />
@@ -83,11 +99,19 @@ const CommentItem: React.FC<OwnProps> = ({ replyId, comment }) => {
               />
             )}
           </SettingBox>
-        </div>
-        <CommentContent>
-          {comment.mention && <Mentions>{comment.mention}</Mentions>}
-          {comment.content}
-        </CommentContent>
+        </CommentHeader>
+        {!isEditMode ? (
+          <CommentContent>
+            {comment.mention && <Mentions>{comment.mention}</Mentions>}
+            {comment.content}
+          </CommentContent>
+        ) : (
+          <input
+            value={content}
+            onChange={handleChangeComment}
+            onKeyUp={handleCommentPatch}
+          />
+        )}
       </CommentContents>
     </Comment>
   );

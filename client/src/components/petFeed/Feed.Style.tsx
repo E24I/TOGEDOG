@@ -422,5 +422,10 @@ export const Comment = styled(Reply)``;
 export const CommentLeft = styled(ReplyLeft)``;
 export const CommentProfile = styled(ReplyProfile)``;
 export const CommentContents = styled(ReplyContents)``;
+export const CommentHeader = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+`;
 export const CommentNickname = styled(ReplyNickname)``;
 export const CommentContent = styled(ReplyContent)``;

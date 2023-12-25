@@ -8,8 +8,8 @@ import {
 const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
 // 피드 전체 조회
-export const getFeeds = async () => {
-  const { data } = await axios.get(`${ROOT_URL}/feed`);
+export const getFeeds = async (page: number) => {
+  const { data } = await axios.get(`${ROOT_URL}/feed?page=${page}`);
   return data;
 };
 
@@ -93,7 +93,7 @@ export const uploadToS3 = async (
 
 // 피드 좋아요
 export const feedLike = async (feedId: number, accesstoken: string) => {
-  const { data } = await axios.patch(`${ROOT_URL}/${feedId}/like`, null, {
+  const { data } = await axios.patch(`${ROOT_URL}/feed/${feedId}/like`, null, {
     headers: { Authorization: accesstoken },
   });
   return data;
@@ -101,16 +101,28 @@ export const feedLike = async (feedId: number, accesstoken: string) => {
 
 // 피드 북마크
 export const feedBookmark = async (feedId: number, accesstoken: string) => {
-  const { data } = await axios.patch(`${ROOT_URL}/${feedId}/bookmark`, null, {
-    headers: { Authorization: accesstoken },
-  });
+  const { data } = await axios.patch(
+    `${ROOT_URL}/feed/${feedId}/bookmark`,
+    null,
+    {
+      headers: { Authorization: accesstoken },
+    },
+  );
   return data;
 };
 
 // 피드 신고
-export const feedReport = async (feedId: number, accesstoken: string) => {
-  const { data } = await axios.post(`${ROOT_URL}/${feedId}/report`, null, {
-    headers: { Authorization: accesstoken },
-  });
+export const feedReport = async (
+  feedId: number,
+  content: string,
+  accesstoken: string,
+) => {
+  const { data } = await axios.post(
+    `${ROOT_URL}/feed/${feedId}/report`,
+    { content },
+    {
+      headers: { Authorization: accesstoken },
+    },
+  );
   return data;
 };

@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { AddBox, AddBtn, AddReply, Comments } from "./Feed.Style";
-import { useGetComments, usePostComment } from "../../hooks/CommentHook";
+import {
+  useInfiniteGetComments,
+  usePostComment,
+} from "../../hooks/CommentHook";
 import { useRecoilValue } from "recoil";
 import { tokenAtom } from "../../atoms";
 import { feedCommentType } from "../../types/feedDataType";
 import CommentItem from "./CommentItems";
+import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 
 interface OwnProps {
   replyId: number;
@@ -12,13 +16,19 @@ interface OwnProps {
 
 const FeedComment: React.FC<OwnProps> = ({ replyId }) => {
   const accesstoken = useRecoilValue(tokenAtom);
-
-  const { data, isLoading, error } = useGetComments(replyId);
-  console.log("commentData", data);
-
-  const [isInput, setInput] = useState(""); // 대댓글 입력창 value
+  const [moreComments, setMoreComments] = useState(false);
+  const callbackFn = () => setMoreComments(false);
+  const { data, isLoading, isError, fetchNextPage, hasNextPage } =
+    useInfiniteGetComments(replyId);
+  const commentsData = data?.pages.flat();
+  const { setTarget } = useIntersectionObserver({
+    hasNextPage,
+    fetchNextPage,
+    callbackFn,
+  });
 
   // 대댓글 입력 핸들러
+  const [isInput, setInput] = useState(""); // 대댓글 입력창 value
   const handleWriteComment = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
@@ -39,7 +49,7 @@ const FeedComment: React.FC<OwnProps> = ({ replyId }) => {
   if (isLoading) {
     return <>로딩중</>;
   }
-  if (error) {
+  if (isError) {
     return <>오류 발생</>;
   }
   return (
@@ -53,13 +63,13 @@ const FeedComment: React.FC<OwnProps> = ({ replyId }) => {
         />
         <AddBtn>게시</AddBtn>
       </AddBox>
-      {data.map((comment: feedCommentType) => (
-        <CommentItem
-          key={comment.commentId}
-          replyId={replyId}
-          comment={comment}
-        />
+      {commentsData?.map((comment: feedCommentType) => (
+        <CommentItem key={comment.commentId} comment={comment} />
       ))}
+      {hasNextPage && (
+        <button onClick={() => setMoreComments(true)}>답글 더보기</button>
+      )}
+      {moreComments && <div ref={setTarget} />}
     </Comments>
   );
 };

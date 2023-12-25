@@ -41,9 +41,14 @@ import Bookmark from "../../atoms/button/Bookmark";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
 import PaginationCircle from "../../atoms/pagination/PaginationCircle";
 import FeedImage from "./FeedImage";
-import { useFeedBookmark, useFeedLike, useGetFeed } from "../../hooks/FeedHook";
-import { useRecoilValue } from "recoil";
-import { tokenAtom } from "../../atoms";
+import {
+  useDeleteFeed,
+  useFeedBookmark,
+  useFeedLike,
+  useGetFeed,
+} from "../../hooks/FeedHook";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { reportAtom, tokenAtom } from "../../atoms";
 import { usePostReply } from "../../hooks/ReplyHook";
 
 interface OwnProps {
@@ -69,12 +74,6 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
     setImgUrl(url);
   };
 
-  const today = new Date();
-  const createDate = data?.createdDate.split("T")[0];
-  const feedDate = createDate?.split("-").map((el: string) => parseInt(el));
-  const createTime = data?.createdDate.split("T")[1];
-  const feedTime = createTime?.split(":").map((el: string) => parseInt(el));
-
   const handlePrevImg = (): void => {
     if (!data.images || !data.videos) return;
     if (isImg !== 1) {
@@ -88,6 +87,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
     }
   };
 
+  // 댓글 달기
   const [isInput, setInput] = useState("");
   const handleChangeReply = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
@@ -99,18 +99,34 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
     if (e.key === "Enter") postReply();
   };
 
+  // 피드 수정
   const handleReplyPatch = () => {
     return;
   };
+
+  // 피드 단일 삭제
+  const { mutate: deleteFeed } = useDeleteFeed(feedId, accesstoken);
   const handleReplyDelete = () => {
-    return;
+    return deleteFeed();
   };
+
+  // 피드 신고
+  const [reportModal, setReportModal] = useRecoilState(reportAtom);
+  const handleReplyReport = () =>
+    setReportModal({ ...reportModal, sort: "feed", feedId: feedId });
+
+  // 설정 드롭다운 버튼 종류 및 핸들러 연결
   const settingContent = {
     수정하기: handleReplyPatch,
     삭제하기: handleReplyDelete,
+    신고하기: handleReplyReport,
   };
 
-  console.log(data);
+  const today = new Date();
+  const createDate = data?.createdDate.split("T")[0];
+  const feedDate = createDate?.split("-").map((el: string) => parseInt(el));
+  const createTime = data?.createdDate.split("T")[1];
+  const feedTime = createTime?.split(":").map((el: string) => parseInt(el));
 
   if (isLoading) {
     return <>로딩중</>;

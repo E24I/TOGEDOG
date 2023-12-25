@@ -3,35 +3,36 @@ import styled from "styled-components";
 import FeedList from "../components/petFeed/FeedList";
 import { feedListsType } from "../types/feedDataType";
 import { ReactComponent as Pets } from "../assets/images/icons/Pets.svg";
-import { useGetFeeds } from "../hooks/FeedHook";
+import { useInfiniteGetFeeds } from "../hooks/FeedHook";
+import useIntersectionObserver from "../hooks/useIntersectionObserver";
 
 const PetFeed: React.FC = () => {
-  const { data: feedsData, error, isLoading } = useGetFeeds();
-  console.log(feedsData);
+  const { data, isLoading, isError, fetchNextPage, hasNextPage } =
+    useInfiniteGetFeeds();
+  const feedsData = data?.pages.flat();
 
+  const { setTarget } = useIntersectionObserver({
+    hasNextPage,
+    fetchNextPage,
+  });
+
+  if (isLoading) {
+    return <>로딩중입니다.</>;
+  }
+  if (isError) {
+    return <>페이지를 불러오는데 실패했습니다.</>;
+  }
   return (
-    <>
-      {isLoading ? (
-        <>로딩중</>
-      ) : error ? (
-        <>오류</>
-      ) : (
-        <FeedContainer>
-          <Feeds>
-            {feedsData.length > 0 &&
-              feedsData.map((items: feedListsType) => (
-                <FeedList key={items.feedId} items={items} />
-              ))}
-          </Feeds>
-          <LoadingContainer>
-            <PetLeftFoot />
-            <PetRightFoot />
-            <PetLeftFoot />
-            {/* <Loadings src={loading} /> */}
-          </LoadingContainer>
-        </FeedContainer>
+    <FeedContainer>
+      {feedsData && feedsData.length > 0 && (
+        <Feeds>
+          {feedsData?.map((items: feedListsType) => (
+            <FeedList key={items.feedId} items={items} />
+          ))}
+          <div ref={setTarget} />
+        </Feeds>
       )}
-    </>
+    </FeedContainer>
   );
 };
 
