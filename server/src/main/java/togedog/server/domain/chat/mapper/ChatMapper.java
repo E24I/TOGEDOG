@@ -56,7 +56,7 @@ public class ChatMapper {
             for (ChatParticipant chatParticipant : chatParticipants) {
                 Long tempMemberId = chatParticipant.getMember().getMemberId();
                 if (!tempMemberId.equals(requestMemberId)) {
-                    otherMemberId = requestMemberId;
+                    otherMemberId = tempMemberId;
                     break;
                 }
             }
