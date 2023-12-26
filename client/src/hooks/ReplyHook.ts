@@ -56,7 +56,7 @@ export const usePostReply = (
     onSuccess: (res) => {
       console.log(res);
       alert("댓글 등록 완료");
-      queryClient.invalidateQueries({ queryKey: ["Feed"] });
+      queryClient.invalidateQueries({ queryKey: ["Replies"] });
       successFunc && successFunc();
       return;
     },
@@ -84,7 +84,7 @@ export const usePatchReply = (
     onSuccess: (res) => {
       console.log(res);
       alert("댓글 수정 완료");
-      queryClient.invalidateQueries({ queryKey: ["Feed"] });
+      queryClient.invalidateQueries({ queryKey: ["Replies"] });
       successFunc && successFunc();
       return;
     },
@@ -111,7 +111,7 @@ export const useDeleteReply = (
     onSuccess: (res) => {
       console.log(res);
       alert("댓글 삭제 완료");
-      queryClient.invalidateQueries({ queryKey: ["Feed"] });
+      queryClient.invalidateQueries({ queryKey: ["Replies"] });
       successFunc && successFunc();
       return;
     },
@@ -138,6 +138,7 @@ export const useFixReply = (
     onSuccess: (res) => {
       console.log(res);
       alert("댓글 고정 완료");
+      queryClient.invalidateQueries({ queryKey: ["Replies"] });
       successFunc && successFunc();
       return;
     },
@@ -164,7 +165,7 @@ export const useLikeReply = (
     onSuccess: (res) => {
       console.log(res);
       alert("댓글 좋아요 성공");
-      queryClient.invalidateQueries({ queryKey: ["Feed"] });
+      queryClient.invalidateQueries({ queryKey: ["Replies"] });
       successFunc && successFunc();
       return;
     },

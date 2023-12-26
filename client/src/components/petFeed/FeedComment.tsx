@@ -66,10 +66,10 @@ const FeedComment: React.FC<OwnProps> = ({ replyId }) => {
       {commentsData?.map((comment: feedCommentType) => (
         <CommentItem key={comment.commentId} comment={comment} />
       ))}
+      {moreComments && <div ref={setTarget} />}
       {hasNextPage && (
         <button onClick={() => setMoreComments(true)}>답글 더보기</button>
       )}
-      {moreComments && <div ref={setTarget} />}
     </Comments>
   );
 };
