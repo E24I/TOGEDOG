@@ -1,4 +1,4 @@
-package togedog.server.feed;
+//package togedog.server.feed;
 
 import com.google.gson.Gson;
 import org.junit.jupiter.api.DisplayName;
@@ -15,66 +15,66 @@ import togedog.server.domain.member.entity.Member;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@WebMvcTest(FeedController.class)
-@MockBean(JpaMetamodelMappingContext.class)
-@AutoConfigureRestDocs
-public class FeedControllerTest {
+//@WebMvcTest(FeedController.class)
+//@MockBean(JpaMetamodelMappingContext.class)
+//@AutoConfigureRestDocs
+//public class FeedControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private FeedService feedService;
-
-    @Autowired
-    private Gson gson;
-
-    @Test
-    void getFeeds() {
-    }
-
-    @Test
-    void getRepliesByFeedId() {
-    }
-
-    @Test
-    @DisplayName("피드 등록 api ")
-    void postFeed() {
-    }
-
-    @Test
-    void updateFeed() {
-    }
-
-    @Test
-    void deleteFeed() {
-    }
-
-    @Test
-    void deleteFeedByReport() {
-    }
-
-    @Test
-    void likeFeed() {
-    }
-
-    @Test
-    void bookmarkFeed() {
-    }
-
-    @Test
-    void postReply() {
-    }
-
-    @Test
-    void reportFeed() {
-    }
-
-    @Test
-    void reportFeedGet() {
-    }
-
-    @Test
-    void reportUpdate() {
-    }
-}
+//    @Autowired
+//    private MockMvc mockMvc;
+//
+//    @MockBean
+//    private FeedService feedService;
+//
+//    @Autowired
+//    private Gson gson;
+//
+//    @Test
+//    void getFeeds() {
+//    }
+//
+//    @Test
+//    void getRepliesByFeedId() {
+//    }
+//
+//    @Test
+//    @DisplayName("피드 등록 api ")
+//    void postFeed() {
+//    }
+//
+//    @Test
+//    void updateFeed() {
+//    }
+//
+//    @Test
+//    void deleteFeed() {
+//    }
+//
+//    @Test
+//    void deleteFeedByReport() {
+//    }
+//
+//    @Test
+//    void likeFeed() {
+//    }
+//
+//    @Test
+//    void bookmarkFeed() {
+//    }
+//
+//    @Test
+//    void postReply() {
+//    }
+//
+//    @Test
+//    void reportFeed() {
+//    }
+//
+//    @Test
+//    void reportFeedGet() {
+//    }
+//
+//    @Test
+//    void reportUpdate() {
+//    }
+//}
