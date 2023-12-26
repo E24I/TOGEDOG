@@ -13,8 +13,15 @@ import {
   patchUserPassword,
   getPetInfo,
   deletePetInfo,
+  postPetInfo,
+  patchPetInfo,
 } from "../services/userInfoService";
-import { feedDataType, infoType } from "../types/userInfoType";
+import {
+  createPet,
+  feedDataType,
+  infoType,
+  petIntro,
+} from "../types/userInfoType";
 import { LoadingContainer } from "../pages/PetFeed";
 import { queryClient } from "..";
 import { isBreakStatement } from "typescript";
@@ -39,24 +46,24 @@ export const useGetUserInfo = (
 };
 
 // 유저 피드 가져오기
-export const useGetUserFeed = (
-  memberId: number,
-  endPoint: string,
-  setFeedData: React.Dispatch<React.SetStateAction<feedDataType[] | undefined>>,
-) => {
-  const token = useRecoilValue(tokenAtom);
-  return useMutation({
-    mutationFn: async () => {
-      return getUserFeed(memberId, endPoint, token);
-    },
-    onSuccess: (res: AxiosResponse) => {
-      setFeedData(res.data.data);
-    },
-    onError: (err: AxiosResponse) => {
-      console.log(err);
-    },
-  });
-};
+// export const useGetUserFeed = (
+//   memberId: number,
+//   endPoint: string,
+//   setFeedData: React.Dispatch<React.SetStateAction<feedDataType[] | undefined>>,
+// ) => {
+//   const token = useRecoilValue(tokenAtom);
+//   return useMutation({
+//     mutationFn: async () => {
+//       return getUserFeed(memberId, endPoint, token);
+//     },
+//     onSuccess: (res: AxiosResponse) => {
+//       setFeedData(res.data.data);
+//     },
+//     onError: (err: AxiosResponse) => {
+//       console.log(err);
+//     },
+//   });
+// };
 
 // 닉네임 변경
 export const usePatchUserNickname = (newNickname: string) => {
@@ -152,7 +159,6 @@ export const useGetPetInfo = (petId: string) => {
       return getPetInfo(petId, token);
     },
     onSuccess: (res) => {
-      console.log(res);
       return res.data;
     },
     onError: (err) => {
@@ -170,7 +176,40 @@ export const useDeletePetInfo = (petId: string) => {
       return deletePetInfo(petId, token);
     },
     onSuccess: () => {
-      navigator("/user");
+      navigator(-1);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+};
+
+//펫 등록
+export const usePostPet = (requestObj: createPet) => {
+  const token = useRecoilValue(tokenAtom);
+  const navigator = useNavigate();
+  return useMutation({
+    mutationFn: async () => {
+      return postPetInfo(requestObj, token);
+    },
+    onSuccess: () => {
+      navigator(-1);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+};
+
+//펫 정보 수정
+export const usePatchPetIntro = (petIntro: petIntro, petId: string) => {
+  const token = useRecoilValue(tokenAtom);
+  return useMutation({
+    mutationFn: async () => {
+      return patchPetInfo(petIntro, petId, token);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["petInfo"] });
     },
     onError: (err) => {
       console.log(err);

@@ -21,9 +21,13 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ setModalOpen, setAlarmSetting }) => {
+  const LoginState = useRecoilValue(isLoginAtom);
   const modalInfo = [
     { menu: "마이페이지", icon: <MypageButton className="icon" /> },
-    { menu: "로그아웃", icon: <LogoutButton className="icon" /> },
+    {
+      menu: LoginState ? "로그아웃" : "로그인",
+      icon: <LogoutButton className="icon" />,
+    },
     { menu: "메시지", icon: <ChatButton className="icon" /> },
     { menu: "알림설정", icon: <AlarmButton className="icon" /> },
     { menu: "검색", icon: <SearchButton className="icon" /> },

@@ -20,7 +20,6 @@ const PaginationCircle: React.FC<OwnProps> = ({
   for (let i = 1; i <= totalPage; i++) {
     pageList.push(i);
   }
-  console.log(isPage);
 
   return (
     <PaginationContainer>
@@ -28,7 +27,7 @@ const PaginationCircle: React.FC<OwnProps> = ({
         <CircleBtn
           key={idx}
           onClick={() => handleFunc(el)}
-          page={isPage === el}
+          page={isPage === idx}
         />
       ))}
     </PaginationContainer>

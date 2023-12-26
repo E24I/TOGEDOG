@@ -2,8 +2,10 @@ import axios from "axios";
 const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
 // 댓글 조회 // 현재 존재 x
-export const getReplies = async (feedId: number) => {
-  const { data } = await axios.get(`${ROOT_URL}/${feedId}`);
+export const getReplies = async (feedId: number, page: number) => {
+  const { data } = await axios.get(
+    `${ROOT_URL}/replies/feed/${feedId}?page=${page}`,
+  );
   return data;
 };
 
@@ -74,10 +76,14 @@ export const likeReply = async (replyId: number, accesstoken: string) => {
 };
 
 // 댓글 신고
-export const reportReply = async (replyId: number, accesstoken: string) => {
+export const reportReply = async (
+  replyId: number,
+  content: string,
+  accesstoken: string,
+) => {
   const { data } = await axios.post(
     `${ROOT_URL}/replies/${replyId}/report`,
-    null,
+    { content },
     {
       headers: { Authorization: accesstoken },
     },

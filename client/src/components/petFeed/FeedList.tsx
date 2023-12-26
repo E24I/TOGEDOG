@@ -32,8 +32,8 @@ import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
 import { useDeleteFeed } from "../../hooks/FeedHook";
-import { useRecoilValue } from "recoil";
-import { tokenAtom } from "../../atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { memberIdAtom, reportAtom, tokenAtom } from "../../atoms";
 import { useNavigate } from "react-router-dom";
 
 interface OwnProps {
@@ -90,22 +90,31 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
 
   // 피드 단일 삭제
   const { mutate: deleteFeed } = useDeleteFeed(items.feedId, accesstoken);
-
-  // 피드 단일 삭제 (핸들러)
   const handleReplyDelete = () => {
     return deleteFeed();
   };
 
+  // 피드 신고
+  const [reportModal, setReportModal] = useRecoilState(reportAtom);
+  const handleReplyReport = () =>
+    setReportModal({ ...reportModal, sort: "feed", feedId: items.feedId });
+  
   // 피드 수정 (핸들러)
   const handleReplyPatch = () => {
     navigator(`/update/${feedId}`);
   };
 
   // 설정 드롭다운 버튼 종류 및 핸들러 연결
-  const settingContent = {
-    수정하기: handleReplyPatch,
-    삭제하기: handleReplyDelete,
-  };
+  const myId = useRecoilValue(memberIdAtom);
+  const settingContent =
+    items.member?.memberId === myId
+      ? {
+          수정하기: handleReplyPatch,
+          삭제하기: handleReplyDelete,
+        }
+      : {
+          신고하기: handleReplyReport,
+        };
 
   return (
     <Feed>
@@ -156,29 +165,31 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
         <FeedContent>{items.content}</FeedContent>
       </FeedContents>
 
-      {items.images && items.videos && (
+      {(items.images.length > 0 || items.videos) && (
         <FeedMedia>
           <LeftScroll onClick={() => handleScrollLeft()} />
           <FeedImgs ref={mediaRef}>
             {items.videos && (
               <FeedVideo
                 ref={imgRef.current[0]}
+                src={items.videos}
                 onClick={() => {
                   console.log(items.videos);
                 }}
               />
             )}
-            {items.images?.map((el, idx) => (
-              <FeedImg
-                key={idx}
-                ref={imgRef.current[idx + 1]}
-                src={el}
-                alt={`피드 이미지${idx + 1}`}
-                onClick={() => {
-                  handleMoreReview();
-                }}
-              />
-            ))}
+            {items.images.length > 0 &&
+              items.images.map((el, idx) => (
+                <FeedImg
+                  key={idx}
+                  ref={imgRef.current[idx + 1]}
+                  src={el}
+                  alt={`피드 이미지${idx + 1}`}
+                  onClick={() => {
+                    handleMoreReview();
+                  }}
+                />
+              ))}
           </FeedImgs>
           <RightScroll onClick={() => handleScrollRight()} />
         </FeedMedia>

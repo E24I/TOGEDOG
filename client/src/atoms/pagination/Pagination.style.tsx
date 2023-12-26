@@ -25,5 +25,6 @@ export const CircleBtn = styled(Circle)<{ page?: boolean }>`
   cursor: pointer;
   circle {
     fill: ${(props) => props.page && "rgb(255, 255, 255)"};
+    stroke: rgb(196, 196, 196);
   }
 `;

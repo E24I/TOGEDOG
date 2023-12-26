@@ -19,9 +19,14 @@ import {
 } from "./Feed.Style";
 import Heart from "../../atoms/button/Heart";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
-import { useDeleteReply, usePatchReply } from "../../hooks/ReplyHook";
-import { useRecoilValue } from "recoil";
-import { tokenAtom } from "../../atoms";
+import {
+  useDeleteReply,
+  useFixReply,
+  useLikeReply,
+  usePatchReply,
+} from "../../hooks/ReplyHook";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { memberIdAtom, reportAtom, tokenAtom } from "../../atoms";
 
 interface OwnProps {
   reply: any;
@@ -30,7 +35,6 @@ interface OwnProps {
 const FeedReply: React.FC<OwnProps> = ({ reply }) => {
   const accesstoken = useRecoilValue(tokenAtom);
 
-  const [isLike, setLike] = useState<boolean>(false);
   const [isSetting, setSetting] = useState<boolean>(false);
   const [isComment, setComment] = useState<boolean>(false);
   const [isEditReply, setEditReply] = useState<boolean>(false);
@@ -44,14 +48,15 @@ const FeedReply: React.FC<OwnProps> = ({ reply }) => {
     () => setEditReply(false),
     () => setEditReply(false),
   );
+  const { mutate: replyLike } = useLikeReply(reply.replyId, accesstoken);
+  const { mutate: replyfix } = useFixReply(reply.replyId, accesstoken);
 
-  const handleLike = (): void => setLike(!isLike);
   const handleSetting = (): void => setSetting(!isSetting);
   const handleComment = (): void => setComment(!isComment);
   const handleCloseDropdown = () => setSetting(false);
   const handleEditReply = () => setEditReply(true);
   const handleReplyDelete = () => deleteReply();
-  const handleReplyFix = () => console.log("성공");
+  const handleReplyFix = () => replyfix();
   const handleChangeReply = (e: React.ChangeEvent<HTMLInputElement>) =>
     setContent(e.target.value);
   const handleReplyPatch = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -63,11 +68,28 @@ const FeedReply: React.FC<OwnProps> = ({ reply }) => {
     }
   };
 
-  const settingContent = {
-    수정하기: handleEditReply,
-    삭제하기: handleReplyDelete,
-    댓글고정: handleReplyFix,
-  };
+  // 댓글 신고
+  const [reportModal, setReportModal] = useRecoilState(reportAtom);
+  const handleReplyReport = () =>
+    setReportModal({ ...reportModal, sort: "reply", replyId: reply.replyId });
+
+  const myId = useRecoilValue(memberIdAtom);
+  const settingContent =
+    reply?.member.memberId === myId
+      ? {
+          수정하기: handleEditReply,
+          삭제하기: handleReplyDelete,
+          댓글고정: handleReplyFix,
+        }
+      : {
+          신고하기: handleReplyReport,
+        };
+
+  const today = new Date();
+  const createDate = reply?.createdDate.split("T")[0];
+  const feedDate = createDate?.split("-").map((el: string) => parseInt(el));
+  const createTime = reply?.createdDate.split("T")[1];
+  const feedTime = createTime?.split(":").map((el: string) => parseInt(el));
 
   return (
     <Reply>
@@ -90,12 +112,24 @@ const FeedReply: React.FC<OwnProps> = ({ reply }) => {
           />
         )}
         <ReplySetting>
-          <ReplyDate>20분 전</ReplyDate>
+          <ReplyDate>
+            {today.getFullYear() !== feedDate[0]
+              ? `${today.getFullYear() - feedDate[0]}년 전`
+              : today.getMonth() + 1 !== feedDate[1]
+              ? `${today.getMonth() + 1 - feedDate[1]}개월 전`
+              : today.getDate() !== feedDate[0]
+              ? `${today.getDate() - feedDate[2]}일 전`
+              : today.getHours() !== feedTime[0]
+              ? `${today.getHours() - feedTime[0]}시간 전`
+              : today.getMinutes() !== feedTime[1]
+              ? `${today.getMinutes() - feedTime[1]}분 전`
+              : `${today.getSeconds() - feedTime[2]}초 전`}
+          </ReplyDate>
           <Heart
             width="18px"
             height="18px"
             isLike={reply.likeYn}
-            handleFunc={handleLike}
+            handleFunc={replyLike}
           />
           <ReplyLikeCount>{reply.likeCount}</ReplyLikeCount>
           <SettingBox onClick={handleSetting} onBlur={handleCloseDropdown}>
