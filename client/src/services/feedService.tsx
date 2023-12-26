@@ -40,6 +40,7 @@ export const postFeed = async (
   postInformation: postInformationType,
   token: string | undefined,
 ) => {
+  console.log(postInformation);
   const res = await axios.post(`${ROOT_URL}/feed`, postInformation, {
     headers: {
       Authorization: token,
@@ -53,10 +54,11 @@ export const postFeed = async (
 export const updateFeed = async (
   updateInformation: updateInformationType,
   token: string | undefined,
+  feedId: number,
 ) => {
-  const res = await axios.post(
-    `${ROOT_URL}/feed/{feed-id}/reply/{reply-id}`,
-    { title: updateInformation.title, content: updateInformation.content },
+  const res = await axios.patch(
+    `${ROOT_URL}/feed/${feedId}`,
+    updateInformation,
     {
       headers: {
         Authorization: token,
@@ -79,7 +81,7 @@ export const getPresignedUrl = async (file: string) => {
   return res;
 };
 
-//s3로 첨부파일ㄴ 업로드
+//s3로 첨부파일 업로드
 export const uploadToS3 = async (
   preSinedURL: string,
   file: File | null,

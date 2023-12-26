@@ -28,15 +28,20 @@ const ProfileChange: React.FC<ChageData> = ({
   //각각 input 태그 value 호출
   const newNickname = watch("NickName", "");
   const introduction = watch("introduction", "");
+  const { mutate: patchNicknameMutate } = usePatchUserNickname(newNickname);
+  const { mutate: patchIntroMutate } = usePatchUserIntro(introduction);
   const handleModal = () => {
     setChangeInfo(false);
   };
   const handelCahnge = () => {
     setChangeInfo(false);
-    window.location.reload();
   };
-  const { mutate: patchNicknameMutate } = usePatchUserNickname(newNickname);
-  const { mutate: patchIntroMutate } = usePatchUserIntro(introduction);
+  const handleNickname = () => {
+    newNickname ? patchNicknameMutate() : alert("닉네임을 입력해주세요.");
+  };
+  const handleIntro = () => {
+    introduction ? patchIntroMutate() : alert("소개글을 입력해주세요.");
+  };
   return (
     <ChangeForm>
       <ChangeContainer>
@@ -71,7 +76,7 @@ const ProfileChange: React.FC<ChageData> = ({
                   autoComplete="off"
                   {...register("NickName")}
                 />
-                <button onClick={() => patchNicknameMutate()}>변경하기</button>
+                <button onClick={handleNickname}>변경하기</button>
               </TextInput>
             </div>
             <div>
@@ -84,7 +89,7 @@ const ProfileChange: React.FC<ChageData> = ({
                   autoComplete="off"
                   {...register("introduction")}
                 />
-                <button onClick={() => patchIntroMutate()}>변경하기</button>
+                <button onClick={handleIntro}>변경하기</button>
               </TextInput>
             </div>
           </form>

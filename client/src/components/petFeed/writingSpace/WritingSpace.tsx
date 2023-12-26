@@ -43,25 +43,22 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     title: string;
     content: string;
   }>({ title: "", content: "" });
+  const [feedId, setFeedId] = useState<number>(0);
+
   const token = useRecoilValue(tokenAtom);
 
   const navigator = useNavigate();
-  const handleInputChange = (
+
+  const handleInputChange = async (
     fieldName: string,
     value: string | boolean | string[],
   ) => {
     setPostInformation((prevPostInformation) => {
-      if (Array.isArray(value)) {
-        return {
-          ...prevPostInformation,
-          [fieldName]: [...value],
-        };
-      } else {
-        return {
-          ...prevPostInformation,
-          [fieldName]: value,
-        };
-      }
+      console.log(fieldName, value);
+      return {
+        ...prevPostInformation,
+        [fieldName]: value,
+      };
     });
   };
   const enrollCoordinate = (key: string, value: string | number) => {
@@ -83,8 +80,17 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
       return updatedMapAssign;
     });
   };
-  const handleContentChange = (title: string, content: string) => {
-    setUpdateInformation({ title: title, content: content });
+  const handleUpdatedInfoChange = async (
+    fieldName: string,
+    value: string | boolean | string[],
+  ) => {
+    setUpdateInformation((prevUpdateInformation) => {
+      console.log(fieldName, value);
+      return {
+        ...prevUpdateInformation,
+        [fieldName]: value,
+      };
+    });
   };
   const deleteLocation = () => {
     if (isMarked === true) {
@@ -101,40 +107,59 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
       const textContent = targetElement.textContent;
 
       if (textContent === "게시") {
-        const images: string[] = [];
-        attachments.map(async (file) => {
-          if (file.url !== "") {
-            const presignedUrl = await getPresignedUrl(file.url.substring(27));
-            uploadToS3(presignedUrl, file.file, file.type).then((res) => {
-              res.config.url &&
-                (file.type.includes("image")
-                  ? images.unshift(
-                      res.config.url.substring(0, res.config.url.indexOf("?")),
-                    )
-                  : handleInputChange(
-                      "videos",
-                      res.config.url.substring(0, res.config.url.indexOf("?")),
-                    ));
-            });
-          }
-        }),
-          handleInputChange("images", images);
-        posting();
+        await s3presigned().then(() => posting());
       } else if (textContent === "완료") {
-        updateFeed(updateInformation, token);
+        updateFeed(updateInformation, token, feedId).then(() =>
+          navigator("/feeds"),
+        );
       }
     }
   };
-
+  const s3presigned = async (): Promise<void> => {
+    const images: string[] = [];
+    const video: string[] = [];
+    const promises = attachments.map(async (file) => {
+      if (file.url !== "") {
+        const presignedUrl = await getPresignedUrl(file.url.substring(27));
+        return await uploadToS3(presignedUrl, file.file, file.type).then(
+          (res) => {
+            if (res.config.url) {
+              const fileUrl = res.config.url.substring(
+                0,
+                res.config.url.indexOf("?"),
+              );
+              if (file.type.includes("image")) {
+                images.unshift(fileUrl);
+                console.log("image1");
+              } else {
+                video.unshift(fileUrl);
+              }
+            }
+          },
+        );
+      }
+    });
+    await Promise.all(promises);
+    postInformation.images = images;
+    postInformation.videos = video[0];
+    //handleInputChange, setState 비동기 동작
+    //영상이 조회되지 않는 경우 이미지도 렌더링이 안되고 있음(피드조회)
+    //영상이 렌더링 되지 않고 있음(피드조회)
+    //이 오류 때문인 것 같음 Media elements such as <audio> and <video> must have a <track> for captions.
+    return Promise.resolve();
+  };
   const posting = () => {
     postFeed(postInformation, token)
-      .then((data) =>
-        enrollCoordinate("feedId", Number(data.headers.location.substr(6))),
+      .then(
+        (data) =>
+          (enrollMapInfo.feedId = Number(data.headers.location.substr(6))),
       )
       .then(() =>
-        postMap(enrollMapInfo)
-          .then((data) => data && navigator(`/feeds`))
-          .catch(() => alert("map등록 요청 실패")),
+        isMapAssign
+          ? postMap(enrollMapInfo)
+              .then((data) => data && navigator(`/feeds`))
+              .catch(() => alert("map등록 요청 실패"))
+          : navigator(`/feeds`),
       )
       .catch((err) => alert(err.response.data.message));
   };
@@ -156,7 +181,10 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
           setAttachments={setAttachments}
         />
       ) : (
-        <UpdatingSpace handleContentChange={handleContentChange} />
+        <UpdatingSpace
+          handleUpdatedInfoChange={handleUpdatedInfoChange}
+          setFeedId={setFeedId}
+        />
       )}
       <W.FeedBottomContainer>
         <W.AddressContainer>

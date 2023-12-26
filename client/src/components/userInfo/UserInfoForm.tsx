@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
-import { memberIdAtom } from "../../atoms";
+import { memberIdAtom, tokenAtom } from "../../atoms";
 import {
   MyInfoContainer,
   NickName,
@@ -17,26 +18,17 @@ import {
 import PetList from "./petComponent/PetList";
 import ButtonDrop from "./petComponent/ButtonDrop";
 import ProfileChange from "./infoChangeComponent/ProfileChange";
-import { useGetUserInfo } from "../../hooks/UserInfoHook";
-import { infoType, petDataType } from "../../types/userInfoType";
+import { petDataType } from "../../types/userInfoType";
 import { UserImgForm } from "../../atoms/imgForm/ImgForm";
 import PasswordChangeForm from "./infoChangeComponent/PasswordChange";
+import { getUserInfo } from "../../services/userInfoService";
+import { MyInfoFormProps } from "../../types/memberType";
 
-const MyInfoForm: React.FC = () => {
-  const [drop, setDrop] = useState<boolean>(false); //드롭다운 ... 버튼
-  const dropdownRef = useRef<HTMLButtonElement>(null); //드롭다운 밖클릭시 없어짐
+const MyInfoForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
   const [changeInfo, setChangeInfo] = useState<boolean>(false); //프로필변경
   const [lostPw, setLostPw] = useState<boolean>(false); //비번변경
-  const [userData, setUserData] = useState<infoType | undefined>(undefined); //유저 데이터담기
   const memberId = useRecoilValue(memberIdAtom);
-  const { mutate: getInfoMutate } = useGetUserInfo(
-    Number(memberId),
-    setUserData,
-  );
-  const handleDrop = () => {
-    //드롭열기
-    setDrop(!drop);
-  };
+  const token = useRecoilValue(tokenAtom);
   const handleInfoModal = () => {
     //모달열기
     setChangeInfo(!changeInfo);
@@ -45,53 +37,45 @@ const MyInfoForm: React.FC = () => {
     //모달열기
     setLostPw(!lostPw);
   };
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node)
-    ) {
-      setDrop(false);
-    }
-  };
-  useEffect(() => {
-    getInfoMutate();
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["userInfo", pageMemberId, token],
+    queryFn: () => getUserInfo(Number(pageMemberId), token),
+  });
+  if (error) {
+    return <div>404.....</div>;
+  }
+  if (isLoading) {
+    <div>Loading...</div>;
+  }
   return (
     <MyInfoContainer>
-      <NickName>{userData?.nickname}</NickName>
+      <NickName>{data?.data.nickname}</NickName>
       <TopContainer>
         <UserImgForm
           width={150}
           height={150}
           radius={50}
-          // URL={
-          //   "https://i.pinimg.com/736x/64/63/40/646340423a648806278bfc51d055f7e6.jpg"
-          // }
+          URL={data?.data.image}
         />
         <SectionBox>
           <ButtonSection>
-            <Button1 onClick={handlePasswordModal}>비밀번호 변경</Button1>
-            <Button2 onClick={handleInfoModal}>프로필 수정</Button2>
-            <MoreButton onClick={handleDrop} ref={dropdownRef}>
-              ...
-            </MoreButton>
-            {drop && <ButtonDrop />}
+            <Button1 onClick={handlePasswordModal}>
+              {Number(pageMemberId) === memberId ? "비밀번호 변경" : "메시지"}
+            </Button1>
+            <Button2 onClick={handleInfoModal}>
+              {Number(pageMemberId) === memberId ? "프로필 수정" : "신고하기"}
+            </Button2>
           </ButtonSection>
         </SectionBox>
       </TopContainer>
       <Introduction>
-        {userData?.myIntro !== null
-          ? userData?.myIntro
+        {data?.data.myIntro !== null
+          ? data?.data.myIntro
           : "자기소개 글이 없습니다."}
       </Introduction>
       <PetListBox>
-        {Array.isArray(userData?.pet) &&
-          userData?.pet.map((el: petDataType) => (
+        {Array.isArray(data?.data.pet) &&
+          data?.data.pet.map((el: petDataType) => (
             <PetList
               name={el.name}
               image={el.image}
@@ -99,13 +83,13 @@ const MyInfoForm: React.FC = () => {
               key={el.petId}
             />
           ))}
-        <PetAdd />
+        {Number(pageMemberId) === memberId ? <PetAdd /> : ""}
       </PetListBox>
       {changeInfo && (
         <ProfileChange
           setChangeInfo={setChangeInfo}
-          nickname={userData?.nickname}
-          intro={userData?.myIntro}
+          nickname={data?.data.nickname}
+          intro={data?.data.myIntro}
         />
       )}
       {lostPw && <PasswordChangeForm setLostPw={setLostPw} />}

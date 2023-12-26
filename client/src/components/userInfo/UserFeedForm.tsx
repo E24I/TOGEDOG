@@ -13,32 +13,19 @@ import FeedCard from "./feedCardComponent/FeedCard";
 import { useGetUserFeed } from "../../hooks/UserInfoHook";
 import { useRecoilValue } from "recoil";
 import { memberIdAtom } from "../../atoms";
+import { MyInfoFormProps } from "../../types/memberType";
+import { feedDataType } from "../../types/userInfoType";
 
-type feedDataType = {
-  content: string;
-  createdDate: string;
-  feedId: number;
-  images: string[];
-  likeCount: number;
-  repliesCount: number;
-  updatedDate: string;
-  title: string;
-  videos: string;
-  views: null | number;
-};
-type data = feedDataType[];
-
-const UserFeedForm = () => {
+const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
   const [tap, setTap] = useState<number>(0);
   const [feedData, setFeedData] = useState<feedDataType[] | undefined>(
     undefined,
   );
   const [endPoint, setEndPoint] = useState<string>("feed");
   const tapMenu = ["feed", "feed-like", "feed-bookmark"];
-
   const memberId = useRecoilValue(memberIdAtom);
   const { mutate: getFeedMutate } = useGetUserFeed(
-    Number(memberId),
+    Number(pageMemberId),
     endPoint,
     setFeedData,
   );
@@ -60,7 +47,6 @@ const UserFeedForm = () => {
   };
   useEffect(() => {
     getFeedMutate();
-    console.log(feedData);
   }, [endPoint]);
 
   return (
@@ -85,7 +71,6 @@ const UserFeedForm = () => {
               <button onClick={() => handleTap(idx, menu)}>
                 {tapImg(menu)}
                 <p>
-                  {" "}
                   {menu === "feed"
                     ? "게시물"
                     : menu === "feed-like"
@@ -98,14 +83,17 @@ const UserFeedForm = () => {
         )}
       </TapContainer>
       <FeedContainer>
-        {feedData &&
-          feedData.map((data) => (
+        {feedData?.length ? (
+          feedData?.map((data) => (
             <FeedCard
               likeCount={data.likeCount}
               repliesCount={data.repliesCount}
               key={data.feedId}
             />
-          ))}
+          ))
+        ) : (
+          <p>등록된 피드가 없습니다.</p>
+        )}
       </FeedContainer>
     </MyFeedContainer>
   );

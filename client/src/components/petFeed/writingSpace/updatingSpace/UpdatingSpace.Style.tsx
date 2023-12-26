@@ -64,20 +64,32 @@ export const FeedContent = styled.div`
   margin: 0 0 10px 75px;
 `;
 
-export const DefaultContent = styled.p``;
+export const DefaultContent = styled.div`
+  .ql-editor {
+    padding: 0;
+  }
+  p {
+    font-size: 16px;
+    font-weight: 800;
+  }
+`;
 
 //수정 페이지 - 피드 사진컨테이너
-export const FeedImages = styled.div`
+export const FeedFilesContainer = styled.div`
+  width: 100%;
+  height: 280px;
+  overflow: scroll;
+`;
+export const FeedFiles = styled.div`
   display: flex;
   flex-direction: row;
   height: 280px;
   justify-content: space-between;
-`;
-
-export const Images = styled.div`
-  width: 745px;
+  width: fit-content;
   border: 2px solid #999999; //구분선 입니다
 `;
+
+export const Videos = styled.video``;
 
 export const Img = styled.img`
   width: 233px;
