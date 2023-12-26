@@ -16,5 +16,12 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "@types",
+    "src/components",
+    "src/custom.d.ts",
+    "proxyserver/server.js",
+    "srx/types"
+  ]
 }
