@@ -4,7 +4,7 @@ export type createNewChatType = {
 };
 export type roomsDataType = {
   chatRoomId: number;
-  otherMember_id: number;
+  otherMemberId: number;
   latestMessage: string;
   createdAt: string;
 };
@@ -14,3 +14,8 @@ export type messagesType = {
   content: string;
   createdAt: string;
 }[];
+export type searchedUserType = {
+  memberId: number;
+  nickname: string;
+  imageUrl: string;
+};

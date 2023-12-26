@@ -9,6 +9,7 @@ import {
 import { createNewChatType } from "../types/chatType";
 import { useRecoilValue } from "recoil";
 import { memberIdAtom, tokenAtom } from "../atoms";
+import { queryClient } from "..";
 
 //채팅 리스트 조회
 export const GetAllRoomsQuery = () => {
@@ -21,7 +22,7 @@ export const GetAllRoomsQuery = () => {
         memberId !== undefined ? memberId : 0,
         token,
       );
-      return response.data;
+      return response;
     },
   });
 };
@@ -48,7 +49,8 @@ export const useCreateChattingRoom = (participants: createNewChatType) => {
       createNewChat(participants, token);
     },
     onSuccess: (res) => {
-      console.log("성공", res);
+      queryClient.invalidateQueries({ queryKey: ["rooms"] });
+      participants.inviteMemberId = 0;
       return;
     },
     onError: (err) => {

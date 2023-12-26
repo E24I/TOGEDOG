@@ -15,10 +15,10 @@ import { memberIdAtom } from "../../atoms";
 
 interface DetailFormType {
   messages: messagesType;
+  myMemberId: number;
 }
 
-const DetailForm: React.FC<DetailFormType> = ({ messages }) => {
-  const myMemberId = useRecoilValue(memberIdAtom);
+const DetailForm: React.FC<DetailFormType> = ({ messages, myMemberId }) => {
   return (
     <ContentForm>
       {messages &&

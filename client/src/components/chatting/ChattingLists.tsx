@@ -12,12 +12,12 @@ import {
   TimeStamp,
   UserName,
 } from "./ChattingLists.Style";
-import { createNewChat } from "../../services/chatService";
 import DropDown from "../../atoms/dropdown/DropDown";
 import { useRecoilValue } from "recoil";
 import { memberIdAtom, tokenAtom } from "../../atoms";
-import { GetAllRoomsQuery, useCreateChattingRoom } from "../../hooks/ChatHooks";
+import { GetAllRoomsQuery } from "../../hooks/ChatHooks";
 import { roomsDataType } from "../../types/chatType";
+import SearchUser from "./SearchUsers";
 
 interface ChattingListsProps {
   setDefaultBack: () => void;
@@ -31,16 +31,6 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
   const { data: roomsData, isLoading, error } = GetAllRoomsQuery();
 
   const [isOpen, setOpen] = useState<boolean>(false);
-  const [participants, setParticipants] = useState<{
-    requestMemberId: number;
-    inviteMemberId: number;
-  }>({
-    requestMemberId: 0,
-    inviteMemberId: 3,
-    //유저검색을 통해 추가
-  });
-
-  const { mutate: createChattingRoom } = useCreateChattingRoom(participants);
 
   const openDropDown = (e: MouseEvent) => {
     e.stopPropagation();
@@ -52,8 +42,10 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
   };
 
   const sendRoomNumber = (roomId: number) => {
-    setDefaultBack();
-    getRoomNumber(roomId);
+    if (roomId !== 0) {
+      setDefaultBack();
+      getRoomNumber(roomId);
+    }
   };
 
   const setTime = (createdAt: string) => {
@@ -87,7 +79,7 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
     <ChattingListsContainer>
       <ChattingFlexBox>
         <Message>Message</Message>
-        <button onClick={() => createChattingRoom()}>+</button>
+        <SearchUser />
         <ChattingList>
           {roomsData &&
             roomsData.map((room: roomsDataType) => {
@@ -100,9 +92,11 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
                 >
                   <ProfileImage />
                   <MiddleWrap>
-                    <UserName>{room.otherMember_id}</UserName>
+                    <UserName>{room.otherMemberId}</UserName>
                     <RecentConversation>
-                      {room.latestMessage}
+                      {room.latestMessage === "not exist"
+                        ? "대화 시작하기"
+                        : room.latestMessage}
                     </RecentConversation>
                   </MiddleWrap>
                   <TimeStamp>* {room && setTime(room.createdAt)}</TimeStamp>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   AlarmButton,
   ChatButton,
@@ -17,9 +17,10 @@ import { useNavigate } from "react-router-dom";
 
 interface ModalProps {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setAlarmSetting: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Modal: React.FC<ModalProps> = ({ setModalOpen }) => {
+const Modal: React.FC<ModalProps> = ({ setModalOpen, setAlarmSetting }) => {
   const modalInfo = [
     { menu: "마이페이지", icon: <MypageButton className="icon" /> },
     { menu: "로그아웃", icon: <LogoutButton className="icon" /> },
@@ -58,7 +59,7 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen }) => {
         navigator("/chat");
         break;
       case 3:
-        navigator("/set/alarm");
+        setAlarmSetting(true);
         break;
       case 4:
         navigator("/search");

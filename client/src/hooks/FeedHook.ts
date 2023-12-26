@@ -94,12 +94,15 @@ export const useUpdateFeed = (
   token: string,
   feedId: number,
 ) => {
+  const navigator = useNavigate();
   return useMutation({
     mutationFn: async () => {
       return updateFeed(updateInformation, token, feedId);
     },
     onSuccess: (res) => {
       console.log("성공", res);
+      queryClient.invalidateQueries({ queryKey: ["Feeds"] });
+      navigator("/feeds");
       return;
     },
     onError: (err) => {

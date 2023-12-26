@@ -81,6 +81,7 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     setFeedPublic((prevIsFeedPublic) => {
       const updatedFeedPublic = !prevIsFeedPublic;
       handleInputChange("openYn", updatedFeedPublic);
+      updateInformation.openYn = updatedFeedPublic;
       return updatedFeedPublic;
     });
   };
@@ -155,22 +156,6 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     postInformation.videos = video[0];
     return Promise.resolve();
   };
-  //피드 작성 api 호출
-  // const Posting = () => {
-  // usePostFeed(postInformation, token, isMapAssign, enrollMapInfo);
-  // .then(
-  //   (data) =>
-  //     (enrollMapInfo.feedId = Number(data.headers.location.substr(6))),
-  // )
-  // .then(() =>
-  //   isMapAssign
-  //     ? postMap(enrollMapInfo)
-  //         .then((data) => data && navigator(`/feeds`))
-  //         .catch(() => alert("map등록 요청 실패"))
-  //     : navigator(`/feeds`),
-  // )
-  // .catch((err) => alert(err.response.data.message));
-  // };
 
   return (
     <W.CreateFeedContainer>
@@ -192,6 +177,7 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
         <UpdatingSpace
           handleUpdatedInfoChange={handleUpdatedInfoChange}
           setFeedId={setFeedId}
+          setFeedPublic={setFeedPublic}
         />
       )}
       <W.FeedBottomContainer>

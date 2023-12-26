@@ -11,8 +11,12 @@ import { feedDetailType } from "../../../../types/feedDataType";
 import { Alert } from "../CreatingSpace/CreatingSpace.Style";
 
 interface UpdatingSpace {
-  handleUpdatedInfoChange: (title: string, content: string) => void;
+  handleUpdatedInfoChange: (
+    fieldName: string,
+    value: string | boolean | string[],
+  ) => void;
   setFeedId: React.Dispatch<React.SetStateAction<number>>;
+  setFeedPublic: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 //react-query modules - toolbar제거
@@ -23,13 +27,13 @@ const modules = {
 const UpdatingSpace: React.FC<UpdatingSpace> = ({
   handleUpdatedInfoChange,
   setFeedId,
+  setFeedPublic,
 }) => {
   const token = useRecoilValue(tokenAtom);
   const { feedId } = useParams();
   const { data, error, isLoading } = useGetFeed(Number(feedId), token);
   const feedData: feedDetailType = data;
 
-  const [title, setTitle] = useState<string>("");
   const [isContentEdit, setContentEdit] = useState<boolean>(false);
   const [isTitleEdit, setTitleEdit] = useState<boolean>(false);
   const [quillValue, setQuillValue] = useState<feedDetailType["content"]>("");
@@ -38,7 +42,10 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
   //피드 수정 시 마운트 되자 마자 초기값(제목, 내용)설정과 feedId를 WritingSpace.tsx로 전달
   useEffect(() => {
     if (!isLoading && !error && feedData) {
-      setTitle(feedData.title);
+      handleUpdatedInfoChange("title", feedData.title);
+      handleUpdatedInfoChange("content", feedData.content);
+      handleUpdatedInfoChange("openYn", true);
+      setFeedPublic(true);
       setQuillValue(feedData.content);
       setFeedId(feedData.feedId);
     }
@@ -59,14 +66,13 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
       setAlert("제목은 두 단어 이상으로 작성해야 합니다.");
     } else {
       setAlert("");
-      setTitle(e.target.value);
+      handleUpdatedInfoChange("title", e.target.value);
     }
-    handleUpdatedInfoChange("title", title);
   };
   //수정한 본문을 WritingSpace로 전달
   const setContent = (editor: string) => {
     setQuillValue(editor);
-    handleUpdatedInfoChange("content", quillValue);
+    handleUpdatedInfoChange("content", editor);
   };
 
   return (
