@@ -15,6 +15,7 @@ public interface ReplyRepository extends JpaRepository<Reply,Long> {
 //    Page<Reply> findAllByFeed(Feed feed, Pageable pageable);
 
     Page<Reply> findByFeedAndDeleteYnFalse(Feed feed, Pageable pageable);
+    Page<Reply> findByFeedAndDeleteYnFalseOrderByFixDesc(Feed feed, Pageable pageable);
 
     Optional<Reply> findByReplyIdAndDeleteYnFalse(Long replyId);
 

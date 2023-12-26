@@ -1,6 +1,10 @@
 spring:
   profiles:
     default: prod # ?? ???? dev / ??? prod
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
 
 
 #### ?? ?? ?? ####
