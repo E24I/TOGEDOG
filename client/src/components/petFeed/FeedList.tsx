@@ -156,29 +156,31 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
         <FeedContent>{items.content}</FeedContent>
       </FeedContents>
 
-      {(items.images || items.videos) && (
+      {(items.images.length > 0 || items.videos) && (
         <FeedMedia>
           <LeftScroll onClick={() => handleScrollLeft()} />
           <FeedImgs ref={mediaRef}>
             {items.videos && (
               <FeedVideo
                 ref={imgRef.current[0]}
+                src={items.videos}
                 onClick={() => {
                   console.log(items.videos);
                 }}
               />
             )}
-            {items.images?.map((el, idx) => (
-              <FeedImg
-                key={idx}
-                ref={imgRef.current[idx + 1]}
-                src={el}
-                alt={`피드 이미지${idx + 1}`}
-                onClick={() => {
-                  handleMoreReview();
-                }}
-              />
-            ))}
+            {items.images.length > 0 &&
+              items.images.map((el, idx) => (
+                <FeedImg
+                  key={idx}
+                  ref={imgRef.current[idx + 1]}
+                  src={el}
+                  alt={`피드 이미지${idx + 1}`}
+                  onClick={() => {
+                    handleMoreReview();
+                  }}
+                />
+              ))}
           </FeedImgs>
           <RightScroll onClick={() => handleScrollRight()} />
         </FeedMedia>

@@ -62,30 +62,27 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
   const { mutate: feedLike } = useFeedLike(feedId, accesstoken);
   const { mutate: feedBookmark } = useFeedBookmark(feedId, accesstoken);
 
-  const [isImg, setImg] = useState<number>(1);
-  const [isSetting, setSetting] = useState<boolean>(false);
-  const [bigImage, setBigImage] = useState<boolean>(false);
-  const [imgUrl, setImgUrl] = useState<string>("");
+  const [isImg, setImg] = useState<number>(0);
+  const handlePrevImg = (): void => {
+    if (isImg !== 0) {
+      setImg(isImg - 1);
+    }
+  };
+  const handleNextImg = (): void => {
+    if (isImg !== data.images.length) {
+      setImg(isImg + 1);
+    }
+  };
 
+  const [isSetting, setSetting] = useState<boolean>(false);
   const handleOpenDropdown = () => setSetting(!isSetting);
   const handleCloseDropdown = () => setSetting(false);
   const handleBigImg = (url = ""): void => {
     setBigImage(!bigImage);
     setImgUrl(url);
   };
-
-  const handlePrevImg = (): void => {
-    if (!data.images || !data.videos) return;
-    if (isImg !== 1) {
-      setImg(isImg - 1);
-    }
-  };
-  const handleNextImg = (): void => {
-    if (!data.images || !data.videos) return;
-    if (isImg !== data.images.length + data.videos.length) {
-      setImg(isImg + 1);
-    }
-  };
+  const [bigImage, setBigImage] = useState<boolean>(false);
+  const [imgUrl, setImgUrl] = useState<string>("");
 
   // 댓글 달기
   const [isInput, setInput] = useState("");
@@ -192,27 +189,28 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
             <FeedTitle>{data.title}</FeedTitle>
             <FeedContent>{data.content}</FeedContent>
           </FeedContents>
-          {data.images && data.videos && (
+          {data.images.length > 0 && data.videos && (
             <FeedDetailMedia>
               <LeftScroll onClick={handlePrevImg} />
               <FeedDetailImgs>
-                {data.images?.map((el: string, idx: number) => {
-                  if (isImg === idx + 1) {
-                    return (
-                      <FeedDetailImg
-                        key={idx}
-                        src={el}
-                        alt={`피드 이미지${idx + 1}`}
-                        onClick={() => {
-                          handleBigImg(el);
-                        }}
-                      />
-                    );
-                  }
-                })}
-                {data.videos && data.images.length + 1 === isImg && (
+                {data.videos && isImg === 0 && (
                   <FeedDetailVideo src={data.videos} />
                 )}
+                {data.images.length > 0 &&
+                  data.images.map((el: string, idx: number) => {
+                    if (isImg === idx + 1) {
+                      return (
+                        <FeedDetailImg
+                          key={idx}
+                          src={el}
+                          alt={`피드 이미지${idx + 1}`}
+                          onClick={() => {
+                            handleBigImg(el);
+                          }}
+                        />
+                      );
+                    }
+                  })}
               </FeedDetailImgs>
               <RightScroll onClick={handleNextImg} />
               <PaginationImage>
