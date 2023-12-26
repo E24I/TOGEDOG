@@ -33,7 +33,7 @@ import Bookmark from "../../atoms/button/Bookmark";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
 import { useDeleteFeed } from "../../hooks/FeedHook";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { reportAtom, tokenAtom } from "../../atoms";
+import { memberIdAtom, reportAtom, tokenAtom } from "../../atoms";
 
 interface OwnProps {
   items: feedListsType;
@@ -101,11 +101,16 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
     setReportModal({ ...reportModal, sort: "feed", feedId: items.feedId });
 
   // 설정 드롭다운 버튼 종류 및 핸들러 연결
-  const settingContent = {
-    수정하기: handleReplyPatch,
-    삭제하기: handleReplyDelete,
-    신고하기: handleReplyReport,
-  };
+  const myId = useRecoilValue(memberIdAtom);
+  const settingContent =
+    items.member?.memberId === myId
+      ? {
+          수정하기: handleReplyPatch,
+          삭제하기: handleReplyDelete,
+        }
+      : {
+          신고하기: handleReplyReport,
+        };
 
   return (
     <Feed>

@@ -16,7 +16,7 @@ import { feedCommentType } from "../../types/feedDataType";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
 import { useDeleteComment, usePatchComment } from "../../hooks/CommentHook";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { reportAtom, tokenAtom } from "../../atoms";
+import { memberIdAtom, reportAtom, tokenAtom } from "../../atoms";
 
 interface OwnProps {
   comment: feedCommentType;
@@ -58,11 +58,16 @@ const CommentItem: React.FC<OwnProps> = ({ comment }) => {
       commentId: comment.commentId,
     });
 
-  const settingContent = {
-    수정하기: handleEditComment,
-    삭제하기: handleCommentDelete,
-    신고하기: handleReportComment,
-  };
+  const myId = useRecoilValue(memberIdAtom);
+  const settingContent =
+    comment?.member.memberId === myId
+      ? {
+          수정하기: handleEditComment,
+          삭제하기: handleCommentDelete,
+        }
+      : {
+          신고하기: handleReportComment,
+        };
 
   // 대댓글 입력 창 onChange 이벤트
   const handleChangeComment = (e: React.ChangeEvent<HTMLInputElement>) =>

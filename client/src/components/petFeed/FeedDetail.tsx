@@ -48,7 +48,7 @@ import {
   useGetFeed,
 } from "../../hooks/FeedHook";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { reportAtom, tokenAtom } from "../../atoms";
+import { memberIdAtom, reportAtom, tokenAtom } from "../../atoms";
 import { usePostReply } from "../../hooks/ReplyHook";
 
 interface OwnProps {
@@ -113,11 +113,16 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
     setReportModal({ ...reportModal, sort: "feed", feedId: feedId });
 
   // 설정 드롭다운 버튼 종류 및 핸들러 연결
-  const settingContent = {
-    수정하기: handleReplyPatch,
-    삭제하기: handleReplyDelete,
-    신고하기: handleReplyReport,
-  };
+  const myId = useRecoilValue(memberIdAtom);
+  const settingContent =
+    data?.member.memberId === myId
+      ? {
+          수정하기: handleReplyPatch,
+          삭제하기: handleReplyDelete,
+        }
+      : {
+          신고하기: handleReplyReport,
+        };
 
   const today = new Date();
   const createDate = data?.createdDate.split("T")[0];

@@ -26,7 +26,7 @@ import {
   usePatchReply,
 } from "../../hooks/ReplyHook";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { reportAtom, tokenAtom } from "../../atoms";
+import { memberIdAtom, reportAtom, tokenAtom } from "../../atoms";
 
 interface OwnProps {
   reply: any;
@@ -73,12 +73,17 @@ const FeedReply: React.FC<OwnProps> = ({ reply }) => {
   const handleReplyReport = () =>
     setReportModal({ ...reportModal, sort: "reply", replyId: reply.replyId });
 
-  const settingContent = {
-    수정하기: handleEditReply,
-    삭제하기: handleReplyDelete,
-    댓글고정: handleReplyFix,
-    신고하기: handleReplyReport,
-  };
+  const myId = useRecoilValue(memberIdAtom);
+  const settingContent =
+    reply?.member.memberId === myId
+      ? {
+          수정하기: handleEditReply,
+          삭제하기: handleReplyDelete,
+          댓글고정: handleReplyFix,
+        }
+      : {
+          신고하기: handleReplyReport,
+        };
 
   const today = new Date();
   const createDate = reply?.createdDate.split("T")[0];
