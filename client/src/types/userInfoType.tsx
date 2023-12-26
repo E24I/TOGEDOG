@@ -3,7 +3,6 @@ export type CategoryElement = {
   title: string;
   isEditing: boolean;
   value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
 // 유저페이지 게시물을 제외한 정보
@@ -58,4 +57,20 @@ export type ChageData = {
   setChangeInfo: React.Dispatch<React.SetStateAction<boolean>>;
   nickname?: string;
   intro?: string | null;
+  img?: string | undefined;
+};
+
+// 펫 정보 수정
+export type petIntro = {
+  petIntro: string;
+};
+
+// 펫 등록
+export type createPet = {
+  name: string;
+  age: number;
+  type?: string;
+  petIntro?: string;
+  gender: string;
+  image?: string;
 };

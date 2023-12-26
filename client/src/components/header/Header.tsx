@@ -15,8 +15,10 @@ import {
 import { Link } from "react-router-dom";
 import Modal from "../modal/Modal";
 import Alarm from "../alarm/Alarm";
-
+import { useRecoilValue } from "recoil";
+import { isLoginAtom } from "../../atoms";
 const Header: React.FC = () => {
+  const loginState = useRecoilValue(isLoginAtom);
   const [isRead, setRead] = useState<boolean>(false);
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const openModal = () => {
@@ -39,7 +41,7 @@ const Header: React.FC = () => {
 
   return (
     <HeaderContainer>
-      <Link to="/">
+      <Link to={loginState ? "/feeds" : "/"}>
         <Logo />
       </Link>
 

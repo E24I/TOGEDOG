@@ -18,11 +18,13 @@ import {
   usePatchUserIntro,
 } from "../../../hooks/UserInfoHook";
 import { ChageData } from "../../../types/userInfoType";
+import { UserImgForm } from "../../../atoms/imgForm/ImgForm";
 
 const ProfileChange: React.FC<ChageData> = ({
   setChangeInfo,
   nickname,
   intro,
+  img,
 }) => {
   const { register, watch } = useForm();
   //각각 input 태그 value 호출
@@ -53,11 +55,7 @@ const ProfileChange: React.FC<ChageData> = ({
           </button>
         </Topbox>
         <ProfileBox>
-          <ProfileImg
-            thumbnail={
-              "https://i.pinimg.com/736x/64/63/40/646340423a648806278bfc51d055f7e6.jpg"
-            }
-          />
+          <UserImgForm width={100} height={100} radius={50} URL={img} />
           <ChangeImgButton>프로필사진 바꾸기</ChangeImgButton>
         </ProfileBox>
         <InputBox>

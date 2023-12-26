@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 import {
   MyFeedContainer,
   TapContainer,
@@ -10,11 +12,12 @@ import {
   FeedContainer,
 } from "./UserFeedForm.style";
 import FeedCard from "./feedCardComponent/FeedCard";
-import { useGetUserFeed } from "../../hooks/UserInfoHook";
+// import { useGetUserFeed } from "../../hooks/UserInfoHook";
 import { useRecoilValue } from "recoil";
-import { memberIdAtom } from "../../atoms";
+import { memberIdAtom, tokenAtom } from "../../atoms";
 import { MyInfoFormProps } from "../../types/memberType";
 import { feedDataType } from "../../types/userInfoType";
+import { getUserFeed } from "../../services/userInfoService";
 
 const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
   const [tap, setTap] = useState<number>(0);
@@ -23,12 +26,11 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
   );
   const [endPoint, setEndPoint] = useState<string>("feed");
   const tapMenu = ["feed", "feed-like", "feed-bookmark"];
-  const memberId = useRecoilValue(memberIdAtom);
-  const { mutate: getFeedMutate } = useGetUserFeed(
-    Number(pageMemberId),
-    endPoint,
-    setFeedData,
-  );
+  // const { mutate: getFeedMutate } = useGetUserFeed(
+  //   Number(pageMemberId),
+  //   endPoint,
+  //   setFeedData,
+  // );
 
   const handleTap = (index: number, menu: string) => {
     setTap(index);
@@ -45,9 +47,20 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
         return <BookMarks />;
     }
   };
-  useEffect(() => {
-    getFeedMutate();
-  }, [endPoint]);
+  const paramsId = useParams();
+  const memberId = paramsId && paramsId.pageMemberId;
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["userFeed", memberId, endPoint, 1],
+    queryFn: () => getUserFeed(memberId, endPoint, 1),
+  });
+
+  if (error) {
+    return <div>404.....</div>;
+  }
+  if (isLoading) {
+    <div>Loading...</div>;
+  }
 
   return (
     <MyFeedContainer>
@@ -83,14 +96,20 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
         )}
       </TapContainer>
       <FeedContainer>
-        {feedData?.length ? (
-          feedData?.map((data) => (
-            <FeedCard
-              likeCount={data.likeCount}
-              repliesCount={data.repliesCount}
-              key={data.feedId}
-            />
-          ))
+        {data?.data.data ? (
+          data?.data.data.map(
+            (feed: {
+              likeCount: number;
+              repliesCount: number;
+              feedId: React.Key | null | undefined;
+            }) => (
+              <FeedCard
+                likeCount={feed.likeCount}
+                repliesCount={feed.repliesCount}
+                key={feed.feedId}
+              />
+            ),
+          )
         ) : (
           <p>등록된 피드가 없습니다.</p>
         )}

@@ -6,20 +6,12 @@ export const Category: React.FC<CategoryElement> = ({
   title,
   isEditing,
   value,
-  setValue,
 }) => {
   return (
     <CategoryForm>
       <h3>{title}</h3>
       {isEditing ? (
-        <input
-          type="text"
-          value={value}
-          maxLength={20}
-          onChange={(e) => {
-            setValue(e.target.value);
-          }}
-        />
+        <input type="text" placeholder={value} maxLength={20} />
       ) : (
         <p>{value}</p>
       )}

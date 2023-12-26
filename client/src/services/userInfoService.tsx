@@ -1,4 +1,5 @@
 import axios from "axios";
+import { createPet, petIntro } from "../types/userInfoType";
 
 const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
@@ -16,17 +17,12 @@ export const getUserInfo = async (memberId: number, token?: string) => {
 
 // 유저 피드 가져오기
 export const getUserFeed = async (
-  memberId: number,
+  memberId: string | undefined,
   endPoint: string,
-  token?: string,
+  page: number,
 ) => {
-  const headers = {
-    headers: {
-      Authorization: token,
-    },
-  };
-  const url = `${ROOT_URL}/member/${memberId}/${endPoint}`;
-  const res = await axios.get(url, headers);
+  const url = `${ROOT_URL}/member/${memberId}/${endPoint}?page=${page}`;
+  const res = await axios.get(url);
   return res;
 };
 
@@ -92,7 +88,6 @@ export const getPetInfo = async (petId: string, token?: string) => {
   };
   const url = `${ROOT_URL}/pet/${petId}`;
   const res = await axios.get(url, headers);
-  console.log(res);
   return res;
 };
 
@@ -106,20 +101,26 @@ export const deletePetInfo = async (petId: string, token?: string) => {
   return res;
 };
 
-type createPet = {
-  name: string;
-  age: number;
-  type?: string;
-  petIntro?: string;
-  gender?: string;
-  image?: string;
-};
 // 펫 등록
 export const postPetInfo = async (requestObj: createPet, token?: string) => {
   const headers = {
     headers: { Authorization: token },
   };
   const url = `${ROOT_URL}/pet/create`;
-  const res = await axios.delete(url, headers);
+  const res = await axios.post(url, requestObj, headers);
+  return res;
+};
+
+//펫 정보 수정
+export const patchPetInfo = async (
+  petIntro: petIntro,
+  petId: string,
+  token: string,
+) => {
+  const headers = {
+    headers: { Authorization: token },
+  };
+  const url = `${ROOT_URL}/pet/${petId}/update`;
+  const res = await axios.patch(url, petIntro, headers);
   return res;
 };
