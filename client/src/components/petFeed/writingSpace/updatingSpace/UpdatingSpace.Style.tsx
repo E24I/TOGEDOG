@@ -10,9 +10,10 @@ export const RightButton = styled(RightBtn)`
   margin: auto 30px auto 15px;
 `;
 
+//components
 export const UpdateSpace = styled.div`
   border: 2px solid #a06cb7; //구분선 입니다
-  width: 880px; // 임시 사이징
+  width: 80%; // 임시 사이징
   margin: 108px auto; //임시사이징
 `;
 
@@ -76,6 +77,8 @@ export const DefaultContent = styled.div`
 
 //수정 페이지 - 피드 사진컨테이너
 export const FeedFilesContainer = styled.div`
+  display: flex;
+  flex-direction: row;
   width: 100%;
   height: 280px;
   overflow: scroll;
@@ -84,15 +87,23 @@ export const FeedFiles = styled.div`
   display: flex;
   flex-direction: row;
   height: 280px;
-  justify-content: space-between;
   width: fit-content;
+  margin: auto;
   border: 2px solid #999999; //구분선 입니다
+  :nth-child(n + 2) {
+    margin-left: 30px;
+  }
 `;
 
-export const Videos = styled.video``;
+export const Videos = styled.video`
+  width: fit-content;
+  height: 100%;
+  background-color: #d7d7d7;
+  border-radius: 20px;
+`;
 
 export const Img = styled.img`
-  width: 233px;
+  width: fit-content;
   height: 100%;
   background-color: #d7d7d7;
   border-radius: 20px;

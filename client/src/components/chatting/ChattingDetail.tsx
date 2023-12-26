@@ -14,6 +14,10 @@ import {
 import DetailForm from "./DetailForm";
 import DropDown from "../../atoms/dropdown/DropDown";
 import { ProfileImage, SeeMoreButton, UserName } from "./ChattingLists.Style";
+import { GetAllMessagesQuery } from "../../hooks/ChatHooks";
+import { messagesType } from "../../types/chatType";
+import { useRecoilValue } from "recoil";
+import { memberIdAtom } from "../../atoms";
 
 interface ChattingDetailprops {
   isEntered: boolean;
@@ -24,30 +28,23 @@ const ChattingDetail: React.FC<ChattingDetailprops> = ({
   isEntered,
   roomId,
 }) => {
+  const { data, isLoading, error } = GetAllMessagesQuery(roomId);
+
   const [isOpen, setOpen] = useState<boolean>(false);
-  const [messages, setMessages] = useState<
-    {
-      id: number;
-      member_id: number;
-      time: number;
-      content: string[] | string;
-    }[]
-  >([]);
-  const [liveMessages, setLiveMessages] = useState<
-    {
-      id: number;
-      member_id: number;
-      time: number;
-      content: string[] | string;
-    }[]
-  >([]);
+  const [liveMessages, setLiveMessages] = useState<messagesType>([]);
+  const [allMessages, setAllMessages] = useState<messagesType>();
+  //이전대화기록과, 실시간 추가 기록을 모두 합친 데이터를 detailform으로 전달해야 함
+  //타입 정의를 위해서 실시간 응답 데이터의 형태를 알아야함 - 이전 기록과 같으면 좋음
   const [inputMessage, setInputMessage] = useState<string>("");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [client, setClient] = useState<any>(null);
 
-  // GetAllMessagesQuery(roomId).then((data) => setMessages(data));
+  const myMemberId = useRecoilValue(memberIdAtom);
 
   useEffect(() => {
+    //이전 대화 기록 불러오기
+    // if (data && !isLoading && !error) {
+    //   setAllMessages(data.messages);
+    // }
     // WebSocket 연결 생성
     const client = new Client({
       brokerURL: "ws://15.165.78.7:8080/ws", // WebSocket 서버 주소 및 엔드포인트
@@ -70,7 +67,7 @@ const ChattingDetail: React.FC<ChattingDetailprops> = ({
         (message: { body: any }) => {
           // 메시지가 도착했을 때 실행할 동작
           console.log("Received message:", message.body);
-          // 여기서 메시지 처리 또는 화면 업데이트 등을 수행할 수 있습니다.
+          // 여기서 메시지 처리 또는 화면 업데이트 등을 수행할 수 있다.
         },
       );
       return subscription;
@@ -95,10 +92,12 @@ const ChattingDetail: React.FC<ChattingDetailprops> = ({
 
   const sendMessage = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    const content = inputMessage;
+    const memberId = myMemberId;
     if (client && client.connected) {
       client.publish({
-        destination: `/pub/chat/${roomId}`, // 채팅 메시지를 받을 서버의 엔드포인트
-        body: inputMessage, // 전송할 메시지 본문
+        destination: `/pub/chat/${roomId}`,
+        body: JSON.stringify({ content, memberId }),
       });
       setInputMessage("");
     } else {
@@ -114,7 +113,6 @@ const ChattingDetail: React.FC<ChattingDetailprops> = ({
       setOpen(true);
     }
   };
-  console.log(messages);
   return (
     <ChattingContentContainer>
       <TopFlex>
@@ -128,7 +126,14 @@ const ChattingDetail: React.FC<ChattingDetailprops> = ({
         {isOpen && <DropDown component="content" setOpen={setOpen} />}
       </TopFlex>
       <MiddleFlex>
-        {!isEntered ? <DefaultBack /> : <DetailForm messages={messages} />}
+        {!isEntered ? (
+          <DefaultBack />
+        ) : (
+          <DetailForm
+            messages={data.messages}
+            myMemberId={myMemberId ? myMemberId : 0}
+          />
+        )}
       </MiddleFlex>
       {isEntered && (
         <BottomFlex id="chatting">

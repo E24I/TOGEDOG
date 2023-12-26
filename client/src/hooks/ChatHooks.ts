@@ -9,43 +9,48 @@ import {
 import { createNewChatType } from "../types/chatType";
 import { useRecoilValue } from "recoil";
 import { memberIdAtom, tokenAtom } from "../atoms";
+import { queryClient } from "..";
 
 //채팅 리스트 조회
 export const GetAllRoomsQuery = () => {
   const token = useRecoilValue(tokenAtom);
   const memberId = useRecoilValue(memberIdAtom);
-  const { data } = useQuery({
+  return useQuery({
     queryKey: ["rooms", token, memberId],
-    queryFn: async () => memberId && (await getAllRooms(memberId, token)),
+    queryFn: async () => {
+      const response = await getAllRooms(
+        memberId !== undefined ? memberId : 0,
+        token,
+      );
+      return response;
+    },
   });
-  return data;
 };
 
 //특정 채팅방 대화 내용 조회
 export const GetAllMessagesQuery = (roomId: number) => {
   const token = useRecoilValue(tokenAtom);
-  const { data, isError } = useQuery({
+  return useQuery({
     queryKey: ["messages", roomId, token],
-    queryFn: () => getAllMessages(roomId, token),
-    // select: (data) => data.toString(),
+    queryFn: async () => {
+      const response = await getAllMessages(roomId, token);
+      return response.data;
+    },
   });
-  if (isError) {
-    console.log(isError);
-  }
-  return data;
 };
 
 //채팅방 생성
-export const useCreateChattingRoom = (
-  participants: createNewChatType,
-  token: string | undefined,
-) => {
+export const useCreateChattingRoom = (participants: createNewChatType) => {
+  const token = useRecoilValue(tokenAtom);
+  const memberId = useRecoilValue(memberIdAtom);
+  participants.requestMemberId = memberId !== undefined ? memberId : 0;
   return useMutation({
     mutationFn: async () => {
       createNewChat(participants, token);
     },
     onSuccess: (res) => {
-      console.log("성공", res);
+      queryClient.invalidateQueries({ queryKey: ["rooms"] });
+      participants.inviteMemberId = 0;
       return;
     },
     onError: (err) => {
@@ -56,7 +61,7 @@ export const useCreateChattingRoom = (
 };
 
 //채팅방 나가기
-export const useExitRoom = (roomId: number, token: string | undefined) => {
+export const useExitRoom = (roomId: number, token: string) => {
   return useMutation({
     mutationFn: async () => {
       exitARoom(roomId, token);
@@ -73,7 +78,7 @@ export const useExitRoom = (roomId: number, token: string | undefined) => {
 };
 
 //채팅 신고
-export const useReportChat = (roomId: number, token: string | undefined) => {
+export const useReportChat = (roomId: number, token: string) => {
   return useMutation({
     mutationFn: async () => {
       reportAMessage(roomId, token);

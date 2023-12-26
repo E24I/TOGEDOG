@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable react-hooks/exhaustive-deps */
+//피드 작성 - 첨부파일 업로드 컴포넌트
 import React, { ChangeEvent, useEffect, useState } from "react";
 import * as U from "./Upload.Style";
 
@@ -16,19 +17,19 @@ interface UploadSpaceType {
 }
 
 const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
-  const [file, setFile] = useState<{
-    url: string;
-    image: string;
-    video: string;
-    type: string;
-    selectedFile: File | null;
-  }>({
-    url: "",
-    image: "",
-    video: "",
-    type: "",
-    selectedFile: null,
-  });
+  // const [file, setFile] = useState<{
+  //   url: string;
+  //   image: string;
+  //   video: string;
+  //   type: string;
+  //   selectedFile: File | null;
+  // }>({
+  //   url: "",
+  //   image: "",
+  //   video: "",
+  //   type: "",
+  //   selectedFile: null,
+  // });
   const [imageFiles, setImageFiles] = useState<
     { type: string; url: string; file: File | null }[]
   >([]);
@@ -42,52 +43,67 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
     file: null,
   });
 
-  const uploadImage = (e: ChangeEvent<HTMLInputElement>) => {
+  //브라우저에서 파일을 선택하면 일어나는 동작 - 영상과 이미지를 구분하여 각 속성을 상태로 저장
+  const uploadFiles = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files && e.target.files[0];
     const imgLimitedSize = 10 * 1024 * 1024;
-    const videoLimitedSize = 100 * 1024 * 1024;
+    const videoLimitedSize = 50 * 1024 * 1024;
     if (selectedFile) {
       const fileSize = selectedFile.size;
-
       const imageType = selectedFile.type.includes("image");
       const videoType = selectedFile.type.includes("video");
 
       console.log(selectedFile);
       if (imageType && fileSize < imgLimitedSize) {
-        setFile({
-          type: selectedFile.type,
-          url: URL.createObjectURL(selectedFile),
-          image: selectedFile.type,
-          video: "",
-          selectedFile: selectedFile,
-        });
+        // setFile({
+        //   type: selectedFile.type,
+        //   url: URL.createObjectURL(selectedFile),
+        //   image: selectedFile.type,
+        //   video: "",
+        //   selectedFile: selectedFile,
+        // });
+        setImageFiles((prev) => [
+          ...prev,
+          {
+            type: selectedFile.type,
+            url: URL.createObjectURL(selectedFile),
+            file: selectedFile,
+          },
+        ]);
       } else if (videoType && fileSize < videoLimitedSize) {
-        setFile({
+        // setFile({
+        //   type: selectedFile.type,
+        //   url: URL.createObjectURL(selectedFile),
+        //   image: "",
+        //   video: selectedFile.type,
+        //   selectedFile: selectedFile,
+        // });
+        setVideoFile({
           type: selectedFile.type,
           url: URL.createObjectURL(selectedFile),
-          image: "",
-          video: selectedFile.type,
-          selectedFile: selectedFile,
+          file: selectedFile,
         });
       } else {
-        alert("첨부파일이 제한 크기보다 큽니다");
+        alert("지원하지 않는 형식이거나 첨부파일이 제한 크기보다 큽니다");
       }
     }
   };
-  useEffect(() => {
-    if (file.image) {
-      setImageFiles((prev) => [
-        ...prev,
-        { type: file.type, url: file.url, file: file.selectedFile },
-      ]);
-    } else if (file.video) {
-      setVideoFile({ type: file.type, url: file.url, file: file.selectedFile });
-    }
-  }, [file]);
+  // useEffect(() => {
+  //   if (file.image) {
+  //     setImageFiles((prev) => [
+  //       ...prev,
+  //       { type: file.type, url: file.url, file: file.selectedFile },
+  //     ]);
+  //   } else if (file.video) {
+  //     setVideoFile({ type: file.type, url: file.url, file: file.selectedFile });
+  //   }
+  // }, [file]);
+  //첨부된 영상과 이미지 파일을 WritingSpace.tsx의 postInformation으로 전달
   useEffect(() => {
     const videoAndImages = [videoFile, ...imageFiles];
     setAttachments(videoAndImages);
   }, [videoFile, imageFiles]);
+  //브라우저 상에서 첨부한 이미지 파일 제거
   const deleteImageFile = (idx?: number) => {
     if (idx !== undefined) {
       setImageFiles((prevFiles) => {
@@ -97,6 +113,7 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
       });
     }
   };
+  //브라우저 상에서 첨부한 영상 파일 제거
   const deleteVideoFile = () => {
     setVideoFile({ type: "", url: "", file: null });
   };
@@ -119,7 +136,7 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
           id="add_video"
           type="file"
           accept="video/*"
-          onChange={uploadImage}
+          onChange={uploadFiles}
         />
       </U.AttachmentSpaceContainer>
       <U.FilesCount>{videoFile ? 1 : 0}/1</U.FilesCount>
@@ -145,7 +162,7 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
                 id="add_image"
                 type="file"
                 accept="image/*"
-                onChange={uploadImage}
+                onChange={uploadFiles}
               />
             </>
           )}

@@ -15,7 +15,6 @@ const Chatting: React.FC = () => {
     if (isEntered === false) {
       setEnter(true);
     }
-    console.log(isEntered);
   };
   return (
     <ChattingContainer>

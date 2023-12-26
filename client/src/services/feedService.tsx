@@ -38,7 +38,7 @@ export const deleteFeeds = async () => {
 //피드 등록
 export const postFeed = async (
   postInformation: postInformationType,
-  token: string | undefined,
+  token: string,
 ) => {
   console.log(postInformation);
   const res = await axios.post(`${ROOT_URL}/feed`, postInformation, {
@@ -53,7 +53,7 @@ export const postFeed = async (
 //피드 수정
 export const updateFeed = async (
   updateInformation: updateInformationType,
-  token: string | undefined,
+  token: string,
   feedId: number,
 ) => {
   const res = await axios.patch(

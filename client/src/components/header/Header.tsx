@@ -15,12 +15,16 @@ import {
 import { Link } from "react-router-dom";
 import Modal from "../modal/Modal";
 import Alarm from "../alarm/Alarm";
+import SetAlarm from "../alarm/SetAlarm";
 import { useRecoilValue } from "recoil";
 import { isLoginAtom } from "../../atoms";
+
 const Header: React.FC = () => {
   const loginState = useRecoilValue(isLoginAtom);
   const [isRead, setRead] = useState<boolean>(false);
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  const [isAlarmSetting, setAlarmSetting] = useState<boolean>(false);
+
   const openModal = () => {
     if (isModalOpen !== false) {
       setModalOpen(false);
@@ -61,8 +65,11 @@ const Header: React.FC = () => {
         </NotificationsContainer>
       </MiddleButtonContainer>
       <ProfileStyle onClick={openModal} />
-      {isModalOpen && <Modal setModalOpen={setModalOpen} />}
+      {isModalOpen && (
+        <Modal setModalOpen={setModalOpen} setAlarmSetting={setAlarmSetting} />
+      )}
       {isRead && <Alarm setRead={setRead} />}
+      {isAlarmSetting && <SetAlarm setAlarmSetting={setAlarmSetting} />}
     </HeaderContainer>
   );
 };

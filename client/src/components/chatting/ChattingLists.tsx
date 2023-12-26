@@ -12,11 +12,12 @@ import {
   TimeStamp,
   UserName,
 } from "./ChattingLists.Style";
-import { createNewChat } from "../../services/chatService";
 import DropDown from "../../atoms/dropdown/DropDown";
 import { useRecoilValue } from "recoil";
-import { tokenAtom } from "../../atoms";
+import { memberIdAtom, tokenAtom } from "../../atoms";
 import { GetAllRoomsQuery } from "../../hooks/ChatHooks";
+import { roomsDataType } from "../../types/chatType";
+import SearchUser from "./SearchUsers";
 
 interface ChattingListsProps {
   setDefaultBack: () => void;
@@ -27,40 +28,9 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
   setDefaultBack,
   getRoomNumber,
 }) => {
-  const token = useRecoilValue(tokenAtom);
-  const [rooms, setRooms] = useState<
-    {
-      id: number;
-      member_id_1: number;
-      member_id_2: number;
-      last_message: string;
-      created_at: string;
-    }[]
-  >([
-    {
-      id: 0,
-      member_id_1: 1,
-      member_id_2: 2,
-      last_message: "마지막 채팅",
-      created_at: "2023-11-29 16:03:01",
-    },
-  ]);
-  const [memberId, setMemberId] = useState<number>(0);
-  const [isOpen, setOpen] = useState<boolean>(false);
-  const [participants, setParticipants] = useState<{
-    requestMemberId: number;
-    inviteMemberId: number;
-  }>({
-    requestMemberId: 2,
-    inviteMemberId: 3,
-  });
-  const roomsData = GetAllRoomsQuery();
+  const { data: roomsData, isLoading, error } = GetAllRoomsQuery();
 
-  useEffect(() => {
-    if (roomsData) {
-      setRooms(roomsData);
-    }
-  }, [roomsData]);
+  const [isOpen, setOpen] = useState<boolean>(false);
 
   const openDropDown = (e: MouseEvent) => {
     e.stopPropagation();
@@ -72,8 +42,10 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
   };
 
   const sendRoomNumber = (roomId: number) => {
-    setDefaultBack();
-    getRoomNumber(roomId);
+    if (roomId !== 0) {
+      setDefaultBack();
+      getRoomNumber(roomId);
+    }
   };
 
   const setTime = (createdAt: string) => {
@@ -107,23 +79,27 @@ const ChattingLists: React.FC<ChattingListsProps> = ({
     <ChattingListsContainer>
       <ChattingFlexBox>
         <Message>Message</Message>
-        <button onClick={() => createNewChat(participants, token)}>+</button>
+        <SearchUser />
         <ChattingList>
-          {rooms &&
-            rooms.map((room, idx) => {
+          {roomsData &&
+            roomsData.map((room: roomsDataType) => {
               return (
                 <ChattingListContainer
-                  key={idx}
+                  key={room.chatRoomId}
                   onClick={() => {
-                    sendRoomNumber(1);
+                    sendRoomNumber(room.chatRoomId);
                   }}
                 >
                   <ProfileImage />
                   <MiddleWrap>
-                    <UserName>유저이름</UserName>
-                    <RecentConversation>{room.last_message}</RecentConversation>
+                    <UserName>{room.otherMemberId}</UserName>
+                    <RecentConversation>
+                      {room.latestMessage === "not exist"
+                        ? "대화 시작하기"
+                        : room.latestMessage}
+                    </RecentConversation>
                   </MiddleWrap>
-                  <TimeStamp>* {room && setTime(room.created_at)}</TimeStamp>
+                  <TimeStamp>* {room && setTime(room.createdAt)}</TimeStamp>
                   <button onBlur={() => setOpen(false)} onClick={openDropDown}>
                     <SeeMoreButton />
                   </button>

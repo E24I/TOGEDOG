@@ -15,6 +15,9 @@ import {
   updateInformationType,
 } from "../types/feedDataType";
 import { queryClient } from "..";
+import { enrollMapType } from "../types/mapType";
+import { usePostMap } from "./MapHooks";
+import { useNavigate } from "react-router-dom";
 
 // 피드 전체 조회
 export const useGetFeeds = (page: number) => {
@@ -90,19 +93,28 @@ export const useDeleteFeed = (
 // 피드 등록
 export const usePostFeed = (
   postInformation: postInformationType,
-  token: string | undefined,
+  token: string,
+  isMapAssign: boolean,
+  enrollMapInfo: enrollMapType,
 ) => {
+  const postMapMutation = usePostMap(enrollMapInfo);
+  const navigator = useNavigate();
   return useMutation({
     mutationFn: async () => {
       return postFeed(postInformation, token);
     },
-    onSuccess: (res) => {
-      console.log("성공", res);
+    onSuccess: async (res) => {
       queryClient.invalidateQueries({ queryKey: ["Feeds"] });
+      enrollMapInfo.feedId = Number(res.headers.location.substr(6));
+      if (isMapAssign && enrollMapInfo) {
+        await postMapMutation.mutateAsync(enrollMapInfo);
+      } else {
+        navigator("/feeds");
+      }
       return;
     },
     onError: (err) => {
-      console.log("실패", err);
+      alert(err);
       return;
     },
   });
@@ -111,15 +123,18 @@ export const usePostFeed = (
 // 피드 수정
 export const useUpdateFeed = (
   updateInformation: updateInformationType,
-  token: string | undefined,
+  token: string,
   feedId: number,
 ) => {
+  const navigator = useNavigate();
   return useMutation({
     mutationFn: async () => {
       return updateFeed(updateInformation, token, feedId);
     },
     onSuccess: (res) => {
       console.log("성공", res);
+      queryClient.invalidateQueries({ queryKey: ["Feeds"] });
+      navigator("/feeds");
       return;
     },
     onError: (err) => {

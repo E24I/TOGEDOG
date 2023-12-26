@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
+//피드 작성 컴포넌트
 import React, { ChangeEvent, useState, useRef, KeyboardEvent } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
@@ -21,6 +23,7 @@ interface CreatingSpaceProps {
   >;
 }
 
+//react-query modules - toolbar제거
 const modules = {
   toolbar: false,
 };
@@ -30,17 +33,17 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({
   setAttachments,
 }) => {
   const [quillValue, setQuillValue] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const contentRef = useRef<any>();
   const [contentLength, sendContentLength] = useState<number>(0);
   const [alert, setAlert] = useState<string>("");
 
+  //제목 입력칸에서 엔터 누르면 내용 입력칸으로 넘어가게 만든 함수
   const enterToContent = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter") {
       contentRef.current.focus();
     }
   };
-
+  //입력한 제목을 검증하여 handleInputChange의 파라미터로 WritingSpace.ts의 postInformation에 전달
   const sendTitle = (e: ChangeEvent<HTMLInputElement>) => {
     const trimmedValue = e.target.value.trim();
     const words = trimmedValue.split(/\s+/);
@@ -51,12 +54,12 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({
       handleInputChange("title", e.target.value);
     }
   };
-
+  //입력한 내용을 handleInputChange의 파라미터로 WritingSpace.ts의 postInformation에 전달
   const sendContent = (editor: string) => {
     handleInputChange("content", editor);
     setQuillValue(editor);
-    // sendContentLength(editor.length);
     const p = "</p>";
+    //본문 글자 수
     sendContentLength(
       editor
         .replace(/<br>/g, "")

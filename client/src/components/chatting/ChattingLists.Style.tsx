@@ -24,19 +24,31 @@ export const ChattingListsContainer = styled.div`
 `;
 
 export const ChattingFlexBox = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
-  margin: 0 34px 0 49px; //임시사이즈
+  margin: 34px 0 49px; //임시사이즈
   border: 2px solid #a05555; //구분선 입니다
   height: 100%;
   overflow: scroll;
 `;
 
-export const Message = styled.p`
-  margin-top: 30px; // 임시사이즈
+export const Message = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: white;
+  z-index: 5;
+  border: 1px solid green;
+  width: 100%;
+  height: 60px;
 `;
 
-export const ChattingList = styled.div``;
+export const ChattingList = styled.div`
+  position: absolute;
+  top: 90px;
+  left: 0;
+`;
 
 export const ChattingListContainer = styled.div`
   position: relative;
@@ -65,9 +77,7 @@ export const MiddleWrap = styled.div`
   justify-content: center;
 `;
 
-export const UserName = styled.div`
-  font-size: 16px;
-`;
+export const UserName = styled.div``;
 
 export const RecentConversation = styled.p`
   width: 100%;
