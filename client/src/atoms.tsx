@@ -17,11 +17,13 @@ export const tokenAtom = atom<string>({
   default: "",
   effects_UNSTABLE: [persistAtom],
 });
+
 export const memberIdAtom = atom<number | undefined>({
   key: "memberId",
   default: undefined,
   effects_UNSTABLE: [persistAtom],
 });
+
 // 다른 컴포넌트에서 로그인 비로그인을 따질때는
 // import { useRecoilValue } from "recoil";
 // import { isLoginAtom } from "~~/atoms";
@@ -46,3 +48,30 @@ export const memberIdAtom = atom<number | undefined>({
 
 // const [isLogin, setIsLogin] = useRecoilState(isLoginAtom)
 // 이렇게 useState처럼 사용도 가능
+
+export const alertAtom = atom<string>({
+  key: "alert",
+  default: "",
+});
+
+export const confirmAtom = atom<string>({
+  key: "confirm",
+  default: "",
+});
+
+type reportType = {
+  sort: string;
+  feedId: number | undefined;
+  replyId: number | undefined;
+  commentId: number | undefined;
+};
+
+export const reportAtom = atom<reportType>({
+  key: "report",
+  default: {
+    sort: "",
+    feedId: undefined,
+    replyId: undefined,
+    commentId: undefined,
+  },
+});

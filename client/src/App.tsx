@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Header from "./components/header/Header";
@@ -15,8 +15,13 @@ import MyMap from "./pages/MyMap";
 import UserInfo from "./pages/UserInfo";
 import PetProfile from "./pages/PetProfile";
 import PetAdd from "./pages/PetAdd";
+import ReportModal from "./atoms/modal/ReportModal";
+import { useRecoilValue } from "recoil";
+import { reportAtom } from "./atoms";
 
 const App: React.FC = () => {
+  const reportModal = useRecoilValue(reportAtom);
+
   return (
     <BrowserRouter>
       <Header />
@@ -35,6 +40,7 @@ const App: React.FC = () => {
         <Route path="/petAdd" element={<PetAdd />} />
       </Routes>
       <Footer />
+      {reportModal.sort !== "" && <ReportModal />}
     </BrowserRouter>
   );
 };

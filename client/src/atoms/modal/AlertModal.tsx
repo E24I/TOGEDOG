@@ -3,13 +3,13 @@ import { ModalBackground } from "../layout/Layout.style";
 import { ModalContainer, ModalContents, BtnBox, CheckBtn } from "./Modal.style";
 
 interface OwnProps {
-  alertContent: string;
+  alertHeader: string;
   checkContent: string;
   handleFunc: () => void;
 }
 
 const AlertModal: React.FC<OwnProps> = ({
-  alertContent,
+  alertHeader,
   checkContent,
   handleFunc,
 }) => {
@@ -21,7 +21,7 @@ const AlertModal: React.FC<OwnProps> = ({
     <ModalBackground>
       <ModalContainer>
         <ModalContents>
-          <span>{alertContent}</span>
+          <span>{alertHeader}</span>
         </ModalContents>
         <BtnBox>
           <CheckBtn onClick={handleFunc}>{checkContent}</CheckBtn>

@@ -6,7 +6,7 @@ export const ModalContainer = styled.div`
   border-radius: 18px;
   width: 100%;
   max-width: 350px;
-  height: 170px;
+  min-height: 170px;
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -17,13 +17,22 @@ export const ModalContainer = styled.div`
 export const ModalContents = styled.div`
   border: 1px solid black;
   width: 100%;
-  max-height: 120px;
   min-height: 120px;
-  padding: 10px 10px;
+  padding: 20px;
   text-align: center;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+
+export const ModalInput = styled.textarea`
+  border: 1px solid black;
+  border-radius: 8px;
+  width: 100%;
+  height: 200px;
+  margin-top: 20px;
+  padding: 10px;
 `;
 
 export const BtnBox = styled.div`
@@ -40,6 +49,12 @@ export const ModalBtn = styled.button`
   min-height: 50px;
   padding: 10px 0px;
   text-align: center;
+  &:hover {
+    background-color: rgb(215, 215, 215);
+  }
+  &:active {
+    background-color: rgb(162, 162, 162);
+  }
 `;
 
 export const CheckBtn = styled(ModalBtn)``;

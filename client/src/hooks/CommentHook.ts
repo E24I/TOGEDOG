@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import {
   getComments,
   postComment,
@@ -9,13 +9,36 @@ import {
 import { queryClient } from "..";
 
 // 대댓글 조회
-export const useGetComments = (replyId: number) => {
+export const useGetComments = (replyId: number, page: number) => {
   return useQuery({
-    queryKey: ["comment", replyId],
+    queryKey: ["comment", replyId, page],
     queryFn: async () => {
-      const response = await getComments(replyId);
+      const response = await getComments(replyId, page);
       return response.data;
     },
+  });
+};
+
+// 댓글 전체 조회 (무한스크롤)
+export const useInfiniteGetComments = (replyId: number) => {
+  return useInfiniteQuery({
+    queryKey: ["comment", replyId],
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await getComments(replyId, pageParam);
+      console.log("response", response);
+      return response;
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.pageInformation.page !==
+        allPages[0].pageInformation.totalPage
+        ? lastPage.pageInformation.page + 1
+        : undefined;
+    },
+    select: (data) => ({
+      pages: data?.pages.map((page) => page.data),
+      pageParams: data.pageParams,
+    }),
+    initialPageParam: 1,
   });
 };
 
@@ -49,7 +72,7 @@ export const usePostComment = (
 
 // 대댓글 수정
 export const usePatchComment = (
-  replyId: number,
+  commentId: number,
   content: string,
   accesstoken: string,
   successFunc?: () => void,
@@ -57,7 +80,7 @@ export const usePatchComment = (
 ) => {
   return useMutation({
     mutationFn: async () => {
-      return patchComment(replyId, content, accesstoken);
+      return patchComment(commentId, content, accesstoken);
     },
     onSuccess: (res) => {
       console.log(res);
@@ -76,35 +99,56 @@ export const usePatchComment = (
 };
 
 // 대댓글 삭제
-export const useDeleteComment = (replyId: number, accesstoken: string) => {
+export const useDeleteComment = (
+  commentId: number,
+  accesstoken: string,
+  successFunc?: () => void,
+  failFunc?: () => void,
+) => {
   return useMutation({
     mutationFn: async () => {
-      return deleteComment(replyId, accesstoken);
+      return deleteComment(commentId, accesstoken);
     },
     onSuccess: (res) => {
-      console.log("성공", res);
+      console.log(res);
+      alert("대댓글 삭제 완료");
       queryClient.invalidateQueries({ queryKey: ["comment"] });
+      successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log("실패", err);
+      console.log(err);
+      alert("대댓글 삭제 실패");
+      failFunc && failFunc();
       return;
     },
   });
 };
 
 // 대댓글 신고
-export const useReportComment = (replyId: number, accesstoken: string) => {
+export const useReportComment = (
+  commentId: number | undefined,
+  content: string,
+  accesstoken: string,
+  successFunc?: () => void,
+  failFunc?: () => void,
+) => {
   return useMutation({
     mutationFn: async () => {
-      return reportComment(replyId, accesstoken);
+      if (commentId) {
+        return reportComment(commentId, content, accesstoken);
+      }
     },
     onSuccess: (res) => {
-      console.log("성공", res);
+      console.log(res);
+      alert("대댓글 신고 완료");
+      successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log("실패", err);
+      console.log(err);
+      alert("대댓글 신고 실패");
+      failFunc && failFunc();
       return;
     },
   });
