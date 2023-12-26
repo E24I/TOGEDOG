@@ -20,9 +20,9 @@ public class MapContent extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mapContentId;
 
-    private String wsg84_x;
+    private String wsg84x;
 
-    private String wsg84_y;
+    private String wsg84y;
 
     @OneToMany(mappedBy = "mapContent")
     private List<Feed> feeds = new ArrayList<>();

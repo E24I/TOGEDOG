@@ -81,6 +81,19 @@ public class ChatService {
         return chatMapper.chatRoomsToResponses(chatRooms, memberId);
     }
 
+    public Boolean deleteRoom(Long chatRoomId) {
+
+        ChatRoom findChatRoom = chatRoomRepository.findById(chatRoomId).orElseThrow(ChatNotFoundException::new);
+
+        List<ChatParticipant> findChatParticipants = findChatRoom.getChatParticipants();
+
+        findChatParticipants.forEach(chatParticipantRepository::delete);
+
+        chatRoomRepository.delete(findChatRoom);
+
+        return true;
+    }
+
     private Member findMemberById(Long memberId) {
 
         return memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
