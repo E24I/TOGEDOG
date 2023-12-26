@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 import { memberIdAtom, tokenAtom } from "../../atoms";
@@ -11,18 +11,17 @@ import {
   ButtonSection,
   Button1,
   Button2,
-  MoreButton,
   PetListBox,
   PetAdd,
 } from "./UserInfoForm.style";
 import PetList from "./petComponent/PetList";
-import ButtonDrop from "./petComponent/ButtonDrop";
 import ProfileChange from "./infoChangeComponent/ProfileChange";
 import { petDataType } from "../../types/userInfoType";
 import { UserImgForm } from "../../atoms/imgForm/ImgForm";
 import PasswordChangeForm from "./infoChangeComponent/PasswordChange";
 import { getUserInfo } from "../../services/userInfoService";
 import { MyInfoFormProps } from "../../types/memberType";
+import { Link } from "react-router-dom";
 
 const MyInfoForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
   const [changeInfo, setChangeInfo] = useState<boolean>(false); //프로필변경
@@ -83,13 +82,20 @@ const MyInfoForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
               key={el.petId}
             />
           ))}
-        {Number(pageMemberId) === memberId ? <PetAdd /> : ""}
+        {Number(pageMemberId) === memberId ? (
+          <Link to="petAdd">
+            <PetAdd />
+          </Link>
+        ) : (
+          ""
+        )}
       </PetListBox>
       {changeInfo && (
         <ProfileChange
           setChangeInfo={setChangeInfo}
           nickname={data?.data.nickname}
           intro={data?.data.myIntro}
+          img={data?.data.image}
         />
       )}
       {lostPw && <PasswordChangeForm setLostPw={setLostPw} />}

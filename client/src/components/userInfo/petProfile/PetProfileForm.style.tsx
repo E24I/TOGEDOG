@@ -12,6 +12,12 @@ export const ProfileForm = styled.div`
     border: 1px solid #d7d7d7;
   }
 `;
+export const Form = styled.form`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 export const TopBox = styled.div`
   width: 100%;
   height: 50px;
@@ -31,9 +37,6 @@ export const ContentBox = styled.div`
   margin: 0 auto;
   height: 450px;
   margin-top: 100px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
 `;
 export const ImgInfo = styled.div`
   width: 400px;
@@ -76,5 +79,21 @@ export const Issues = styled.ul`
   li {
     list-style: circle;
     margin-bottom: 10px;
+  }
+`;
+
+export const CategoryForm = styled.div`
+  display: flex;
+  margin-bottom: 60px;
+  align-items: center;
+  h3 {
+    margin: 0 15px 0 0px;
+  }
+  input {
+    width: 85%;
+    border: 1px solid #d7d7d7;
+    height: 100%;
+    border-radius: 5px;
+    font-size: 16px;
   }
 `;

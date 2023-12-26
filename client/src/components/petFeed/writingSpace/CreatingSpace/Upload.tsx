@@ -52,6 +52,7 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
       const imageType = selectedFile.type.includes("image");
       const videoType = selectedFile.type.includes("video");
 
+      console.log(selectedFile);
       if (imageType && fileSize < imgLimitedSize) {
         setFile({
           type: selectedFile.type,
