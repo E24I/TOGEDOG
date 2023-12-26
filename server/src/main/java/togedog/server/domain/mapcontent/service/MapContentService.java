@@ -6,13 +6,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.feed.repository.FeedRepository;
+import togedog.server.domain.mapcontent.dto.MapContentFeedIdResponse;
+import togedog.server.domain.mapcontent.dto.MapContentGetRequest;
 import togedog.server.domain.mapcontent.dto.MapContentRequest;
 import togedog.server.domain.mapcontent.dto.MapContentResponse;
 import togedog.server.domain.mapcontent.entity.MapContent;
 import togedog.server.domain.mapcontent.repository.MapContentRepository;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
+import togedog.server.global.exception.businessexception.mapcontentexception.MapContentNotFoundException;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,8 +46,8 @@ public class MapContentService {
         utm_kToWgs.transform(new ProjCoordinate(utm_x, utm_y), result);
 
         MapContent mapContent = MapContent.builder()
-                .wsg84_x(Double.toString(result.x))
-                .wsg84_y(Double.toString(result.y))
+                .wsg84x(Double.toString(result.x))
+                .wsg84y(Double.toString(result.y))
                 .feeds(new ArrayList<>())
                 .build();
 
@@ -64,8 +69,24 @@ public class MapContentService {
         MapContent mapContent = mapContentRepository.findById(feed.getMapContent().getMapContentId()).orElseThrow();
 
         return MapContentResponse.builder()
-                .wgs84_x(mapContent.getWsg84_x())
-                .wgs84_y(mapContent.getWsg84_y())
+                .wgs84_x(mapContent.getWsg84x())
+                .wgs84_y(mapContent.getWsg84y())
                 .build();
+    }
+
+    public MapContentFeedIdResponse findFeedFromWsg84(MapContentGetRequest request) {
+
+
+        Optional<MapContent> findMapContent = mapContentRepository.findByWsg84xAndWsg84y(request.getWsg84_x(), request.getWsg84_y());
+
+        if(findMapContent.isEmpty()) {
+            throw new MapContentNotFoundException();
+        }
+
+        List<Feed> findFeeds = findMapContent.get().getFeeds();
+        MapContentFeedIdResponse response = new MapContentFeedIdResponse();
+        findFeeds.forEach(o -> response.getFeedIdList().add(o.getFeedId()));
+        System.out.println("@@@@@@@@ " + findFeeds.get(0).getFeedId());
+        return response;
     }
 }
