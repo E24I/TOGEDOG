@@ -1,30 +1,24 @@
 import React from "react";
 import { ModalBackground } from "../layout/Layout.style";
 import { ModalContainer, ModalContents, BtnBox, CheckBtn } from "./Modal.style";
+import { useRecoilValue, useResetRecoilState } from "recoil";
+import { alertAtom } from "../../atoms";
 
-interface OwnProps {
-  alertHeader: string;
-  checkContent: string;
-  handleFunc: () => void;
-}
+const AlertModal: React.FC = () => {
+  const alertContent = useRecoilValue(alertAtom);
 
-const AlertModal: React.FC<OwnProps> = ({
-  alertHeader,
-  checkContent,
-  handleFunc,
-}) => {
-  // Modal 창을 열고 닫는 아래 useState를 추가해주세요.
-  // const [isModal, setModal] = useState<boolean>(false);
-  // const handleFunc = () => setModal(false)
+  // 알림 모달 초기화
+  const resetAlert = useResetRecoilState(alertAtom);
+  const handleResetAlert = () => resetAlert();
 
   return (
     <ModalBackground>
       <ModalContainer>
         <ModalContents>
-          <span>{alertHeader}</span>
+          <span>{alertContent}</span>
         </ModalContents>
         <BtnBox>
-          <CheckBtn onClick={handleFunc}>{checkContent}</CheckBtn>
+          <CheckBtn onClick={handleResetAlert}>확인</CheckBtn>
         </BtnBox>
       </ModalContainer>
     </ModalBackground>
