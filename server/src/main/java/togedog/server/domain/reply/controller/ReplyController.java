@@ -16,6 +16,7 @@ import togedog.server.domain.feedreport.service.dto.response.FeedReportResponse;
 import togedog.server.domain.reply.controller.dto.ReplyReportApiRequest;
 import togedog.server.domain.reply.controller.dto.ReplyUpdateApiRequest;
 import togedog.server.domain.reply.service.ReplyService;
+import togedog.server.domain.reply.service.dto.response.ReplyResponse;
 import togedog.server.domain.replylike.service.ReplyLikeService;
 import togedog.server.domain.replyreport.service.ReplyReportService;
 import togedog.server.domain.replyreport.service.dto.response.ReplyReportResponse;
@@ -39,7 +40,7 @@ public class ReplyController {
     public ResponseEntity<Void> updateReply(@PathVariable("reply-id") Long replyId,
                                             @RequestBody @Valid ReplyUpdateApiRequest request) {
 
-        replyService.UpdateReply(request.toServiceRequest(),replyId);
+        replyService.UpdateReply(request.toServiceRequest(), replyId);
 
 
         return ResponseEntity.noContent().build();
@@ -75,7 +76,8 @@ public class ReplyController {
 
         replyService.fixReply(replyId);
 
-        return ResponseEntity.noContent().build();}
+        return ResponseEntity.noContent().build();
+    }
 
 
     @PostMapping("{reply-id}/comment") //리플에 대한 코멘트 생성
@@ -90,7 +92,7 @@ public class ReplyController {
 
     @PostMapping("/{reply-id}/report")
     public ResponseEntity<Void> reportReply(@PathVariable("reply-id") Long replyId,
-                                           @Valid @RequestBody ReplyReportApiRequest request) {
+                                            @Valid @RequestBody ReplyReportApiRequest request) {
 
 
         Long replyReportId = replyReportService.reportReply(request.replyReportApiToService(), replyId);
@@ -100,7 +102,6 @@ public class ReplyController {
         return ResponseEntity.created(uri).build();
 
     }
-
 
 
     @GetMapping("/report")
@@ -122,6 +123,14 @@ public class ReplyController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/feed/{feed-id}")
+    public ResponseEntity<ApiPageResponse<ReplyResponse>> getReplies(@RequestParam(defaultValue = "1") int page,
+                                                                     @RequestParam(defaultValue = "5") int size,
+                                                                     @PathVariable("feed-id") Long feedId) {
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdDateTime").descending());
+        Page<ReplyResponse> repliesPaged = replyService.getRepliesPaged(feedId, pageable);
 
+        return ResponseEntity.ok(ApiPageResponse.ok(repliesPaged));
+    }
 
 }
