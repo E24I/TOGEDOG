@@ -40,7 +40,6 @@ public class FeedControllerTest {
     @Test
     @DisplayName("피드 등록 api ")
     void postFeed() {
-        Member member = new Member()
     }
 
     @Test
