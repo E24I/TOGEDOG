@@ -125,7 +125,7 @@ public class ReplyController {
 
     @GetMapping("/feed/{feed-id}")
     public ResponseEntity<ApiPageResponse<ReplyResponse>> getReplies(@RequestParam(defaultValue = "1") int page,
-                                                                     @RequestParam(defaultValue = "5") int size,
+                                                                     @RequestParam(defaultValue = "10") int size,
                                                                      @PathVariable("feed-id") Long feedId) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdDateTime").descending());
         Page<ReplyResponse> repliesPaged = replyService.getRepliesPaged(feedId, pageable);

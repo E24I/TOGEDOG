@@ -152,7 +152,7 @@ public class ReplyService {
                 if (feed.getDeleteYn() == true) {
                     throw new FeedAlreadyDeleteException();
                 }
-                Page<Reply> repliesPage = replyRepository.findByFeedAndDeleteYnFalse(feed, pageable1);
+                Page<Reply> repliesPage = replyRepository.findByFeedAndDeleteYnFalseOrderByFixDesc(feed, pageable);
 
                 Page<ReplyResponse> replyResponses = repliesPage.map(reply -> {
                     boolean isLikedByCurrentUser = isReplyLikedByMember(member, reply); // 사용자에 따른 좋아요 여부 확인
@@ -172,7 +172,7 @@ public class ReplyService {
                 throw new FeedAlreadyDeleteException();
             }
 
-            Page<Reply> repliesPage = replyRepository.findByFeedAndDeleteYnFalse(feed, pageable1);
+            Page<Reply> repliesPage = replyRepository.findByFeedAndDeleteYnFalseOrderByFixDesc(feed, pageable);
 
             Page<ReplyResponse> replyResponses = repliesPage.map(reply ->
                     ReplyResponse.singReplyResponse(reply, false) // 로그인되지 않은 상태에서는 좋아요가 없는 상태로 가정
