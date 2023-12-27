@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class MapContentGetRequest {
 
-    private String wsg84_x;
+    private String wgs84_x;
 
-    private String wsg84_y;
+    private String wgs84_y;
 }
