@@ -1,5 +1,5 @@
 import { AxiosResponse, AxiosError } from "axios";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 import { tokenAtom } from "../atoms";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +15,7 @@ import {
   deletePetInfo,
   postPetInfo,
   patchPetInfo,
+  patchProfileImg,
 } from "../services/userInfoService";
 import {
   createPet,
@@ -24,7 +25,6 @@ import {
 } from "../types/userInfoType";
 import { LoadingContainer } from "../pages/PetFeed";
 import { queryClient } from "..";
-import { isBreakStatement } from "typescript";
 
 //유저 정보 가져오기
 export const useGetUserInfo = (
@@ -45,25 +45,29 @@ export const useGetUserInfo = (
   });
 };
 
-// 유저 피드 가져오기
-// export const useGetUserFeed = (
-//   memberId: number,
-//   endPoint: string,
-//   setFeedData: React.Dispatch<React.SetStateAction<feedDataType[] | undefined>>,
-// ) => {
-//   const token = useRecoilValue(tokenAtom);
-//   return useMutation({
-//     mutationFn: async () => {
-//       return getUserFeed(memberId, endPoint, token);
-//     },
-//     onSuccess: (res: AxiosResponse) => {
-//       setFeedData(res.data.data);
-//     },
-//     onError: (err: AxiosResponse) => {
-//       console.log(err);
-//     },
-//   });
-// };
+// 유저 피드 가져오기 (무한스크롤)
+export const useGetUserFeeds = (
+  memberId: string | undefined,
+  endPoint: string,
+) => {
+  return useInfiniteQuery({
+    queryKey: ["userFeed", memberId, endPoint],
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await getUserFeed({ memberId, endPoint, pageParam });
+      return response;
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.pageInfo.page !== allPages[0].pageInfo.totalPages
+        ? lastPage.pageInfo.page + 1
+        : undefined;
+    },
+    select: (data) => ({
+      pages: data?.pages.map((page) => page.data),
+      pageParams: data.pageParams,
+    }),
+    initialPageParam: 1,
+  });
+};
 
 // 닉네임 변경
 export const usePatchUserNickname = (newNickname: string) => {
@@ -212,6 +216,23 @@ export const usePatchPetIntro = (petIntro: petIntro, petId: string) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["petInfo"] });
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+};
+
+//펫 정보 수정
+export const usePatchImg = (imgURL: string) => {
+  const token = useRecoilValue(tokenAtom);
+  return useMutation({
+    mutationFn: async () => {
+      return patchProfileImg(imgURL, token);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+      console.log("성공!");
     },
     onError: (err) => {
       console.log(err);

@@ -97,7 +97,7 @@ export const ProfileImg = styled.div<{ thumbnail: string | undefined }>`
   background-repeat: no-repeat;
   background-position: center;
 `;
-export const ChangeImgButton = styled.p`
+export const ChangeImgButton = styled.label`
   font-size: 16px;
   cursor: pointer;
 `;

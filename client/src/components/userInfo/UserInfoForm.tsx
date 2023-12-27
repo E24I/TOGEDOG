@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 import { memberIdAtom, tokenAtom } from "../../atoms";
@@ -40,6 +40,9 @@ const MyInfoForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
     queryKey: ["userInfo", pageMemberId, token],
     queryFn: () => getUserInfo(Number(pageMemberId), token),
   });
+  // useEffect(()=>{
+  //   postPresignedUrl()
+  // },[])
   if (error) {
     return <div>404.....</div>;
   }

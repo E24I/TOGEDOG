@@ -34,7 +34,7 @@ const SignUpInputs = () => {
   //각각 input 태그 value 호출
   const email = watch("email", "");
   const nickname = watch("nickname", "");
-  const authentication = watch("authentication", "");
+  const authNum = watch("authentication", "");
   const password = watch("password", "");
   const pwConfirm = watch("pwConfirm", "");
   const agree1 = watch("agree1", "");
@@ -69,7 +69,7 @@ const SignUpInputs = () => {
   const { mutate: emailMutate } = usePostEmail(email);
   const { mutate: codeMutate } = usePostCode({
     email,
-    authentication,
+    authNum,
     setIsAuthentication,
   });
   const { mutate: nicknameMutate } = usePostNickname({
