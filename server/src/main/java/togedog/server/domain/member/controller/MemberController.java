@@ -45,6 +45,7 @@ public class MemberController {
 
         Boolean pwCheck = memberService.pwCheck(memberPostDto.getPassword(), memberPostDto.getPwConfirm());
 
+        //refactoring point -> service 로직으로 넘겨야하지 않을까?
         if(pwCheck){
             Member member = mapper.memberPostDtoToMember(memberPostDto);
             memberService.createMember(member);
@@ -85,12 +86,42 @@ public class MemberController {
 
     /*
     닉네임으로 회원을 조회
+    - 요구사항 : 회원 조회를 특정 문자 기준으로 리스트 형식으로 반환해주세요.
      */
     @GetMapping("/find")
-    public ResponseEntity<?> findnickname(@RequestParam("n") String nickname){
-        Member member = memberService.findNickname(nickname);
-        MemberInfo memberInfo = MemberInfo.of(member);
-        return new ResponseEntity<>(memberInfo, HttpStatus.OK);
+    public ResponseEntity<?> findnickname(@RequestParam("n") String nickname,
+                                          @RequestParam(defaultValue = "1") int page,
+                                          @RequestParam(defaultValue = "10")int size){
+
+        Pageable pageable = PageRequest.of(page-1, size, Sort.by("nickname").descending());
+        Page<Member> pageMember = memberService.findNickname(nickname, pageable);
+        List<Member> memberList = pageMember.getContent();
+        List<MemberInfo> memberInfoList = new ArrayList<>();
+        memberList.forEach(m -> memberInfoList.add(MemberInfo.of(m)));
+
+        return new ResponseEntity<>(new MultiResponseDto<>(memberInfoList, pageMember), HttpStatus.OK);
+    }
+
+    /*
+    프로필 이미지 추가, 수정
+     */
+    @PatchMapping("image/upload")
+    public ResponseEntity<?> uploadImage(@RequestBody MemberDto.PatchImage imageDto){
+
+        memberService.updateImage(imageDto.getImage());
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /*
+  프로필 이미지 삭제
+   */
+    @DeleteMapping("image/delete")
+    public ResponseEntity<?> deleteImage(){
+
+        memberService.deleteImage();
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /*
@@ -226,6 +257,5 @@ public class MemberController {
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
-
 
 }

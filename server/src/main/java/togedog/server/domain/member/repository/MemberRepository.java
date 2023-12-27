@@ -1,5 +1,7 @@
 package togedog.server.domain.member.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +16,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Boolean existsMemberByNicknameContaining(String nickname);
 
-    Optional<Member> findMemberByNickname(String nickname);
+    Page<Member> findByNicknameContaining(String query, Pageable pageable);
 
     void deleteMemberByMemberId(Long memberId);
 
@@ -25,6 +27,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Modifying
     @Query("UPDATE Member m SET m.myIntro = :myIntro WHERE m.memberId = :memberId")
     int updateMemberByMemberIdEqualsForMyIntro(@Param("memberId") Long memberId, @Param("myIntro") String myIntro);
+
+    @Modifying
+    @Query("UPDATE Member m SET m.image = :image WHERE m.memberId = :memberId")
+    int updateMemberByMemberIdEqualsForImage(@Param("memberId") Long memberId, @Param("image") String image);
 
 }
 
