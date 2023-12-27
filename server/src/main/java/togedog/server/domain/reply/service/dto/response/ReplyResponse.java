@@ -24,7 +24,8 @@ public class ReplyResponse {
     private Boolean fix;
 
 
-    public static ReplyResponse singReplyResponse(Reply reply,boolean isLikedByCurrentUser) {
+    public static ReplyResponse
+    singReplyResponse(Reply reply,boolean isLikedByCurrentUser) {
 
         return ReplyResponse.builder()
                 .replyId(reply.getReplyId())

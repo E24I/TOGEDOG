@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import togedog.server.domain.chat.dto.MessagePageResponse;
 import togedog.server.domain.chat.dto.MessageRequest;
+import togedog.server.domain.chat.dto.MessageResponse;
 import togedog.server.domain.chat.entity.ChatRoom;
 import togedog.server.domain.chat.entity.Message;
 import togedog.server.domain.chat.mapper.MessageMapper;
@@ -34,7 +35,7 @@ public class MessageService {
     private final MessageMapper messageMapper;
 
     @Transactional
-    public Long createMessage(Long roomId, MessageRequest messageRequest) {
+    public MessageResponse createMessage(Long roomId, MessageRequest messageRequest) {
 
         Member findMember = findMemberById(messageRequest.getMemberId());
 
@@ -44,7 +45,11 @@ public class MessageService {
 
         Message message = messageMapper.messageRequestToMessage(messageRequest, findMember, findChatRoom);
 
-        return messageRepository.save(message).getMessageId();
+        Message savedMessage = messageRepository.save(message);
+
+        MessageResponse messageResponse = messageMapper.messageToMessageResponse(savedMessage);
+
+        return messageResponse;
     }
 
     private Member findMemberById(Long memberId) {

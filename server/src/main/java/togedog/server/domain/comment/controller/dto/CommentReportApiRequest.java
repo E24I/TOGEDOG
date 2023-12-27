@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class CommentReportApiRequest {
 
     @NotNull(message = "신고 내역을 입력해주세요.")

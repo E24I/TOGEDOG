@@ -133,9 +133,11 @@ public class ReplyService {
 
     }
 
-    public Page<ReplyResponse> getRepliesPaged(Long feedId, Pageable pageable,  Long loginMemberId) {
+    public Page<ReplyResponse> getRepliesPaged(Long feedId, Pageable pageable) {
 
-        Pageable pageable1 = PageRequest.of(0,3, Sort.by("createdDateTime").descending());
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+
+        Pageable pageable1 = PageRequest.of(0,10, Sort.by("createdDateTime").descending());
         // 받아서 넘기니까 왠진 모르겠는데 안넘온다;; 그냐 여기서 만들어서 주자!
         if (loginMemberId != null) {
             Optional<Member> optionalMember = memberRepository.findById(loginMemberId);
@@ -150,7 +152,7 @@ public class ReplyService {
                 if (feed.getDeleteYn() == true) {
                     throw new FeedAlreadyDeleteException();
                 }
-                Page<Reply> repliesPage = replyRepository.findByFeedAndDeleteYnFalse(feed, pageable1);
+                Page<Reply> repliesPage = replyRepository.findByFeedAndDeleteYnFalseOrderByFixDesc(feed, pageable);
 
                 Page<ReplyResponse> replyResponses = repliesPage.map(reply -> {
                     boolean isLikedByCurrentUser = isReplyLikedByMember(member, reply); // 사용자에 따른 좋아요 여부 확인
@@ -170,7 +172,7 @@ public class ReplyService {
                 throw new FeedAlreadyDeleteException();
             }
 
-            Page<Reply> repliesPage = replyRepository.findByFeedAndDeleteYnFalse(feed, pageable1);
+            Page<Reply> repliesPage = replyRepository.findByFeedAndDeleteYnFalseOrderByFixDesc(feed, pageable);
 
             Page<ReplyResponse> replyResponses = repliesPage.map(reply ->
                     ReplyResponse.singReplyResponse(reply, false) // 로그인되지 않은 상태에서는 좋아요가 없는 상태로 가정

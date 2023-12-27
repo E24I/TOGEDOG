@@ -4,8 +4,10 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 #
 # readme
-
 README.md
+
+#env
+/client/.env
 
 # dependencies
 /client/node_modules

@@ -135,7 +135,7 @@ public class FeedService {
             Feed feed = findFeedRepository(feedId);
 
         Page<ReplyResponse> pagedReplies = replyService.getRepliesPaged(feedId,
-                PageRequest.of(0, 3, Sort.by("createdDateTime").descending()), loginMemberId);
+                PageRequest.of(0, 10, Sort.by("createdDateTime").descending()));
 
         List<ReplyResponse> replyResponses = pagedReplies.getContent();
 
@@ -154,7 +154,7 @@ public class FeedService {
             Feed feed = findFeedRepository(feedId);
 
             Page<ReplyResponse> pagedReplies = replyService.getRepliesPaged(feedId,
-                    PageRequest.of(0, 3, Sort.by("createdDateTime").descending()), loginMemberId);
+                    PageRequest.of(0, 10, Sort.by("createdDateTime").descending()));
 
             List<ReplyResponse> replyResponses = pagedReplies.getContent();
 
@@ -169,6 +169,21 @@ public class FeedService {
 
             return FeedDetailResponse.feedDetailResponse(feed, isBookmarkedByCurrentUser, isLikedByCurrentUser, feedReplies);
         }
+    }
+
+    public Page<ReplyResponse> getReplies(Long feedId) {
+
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+
+            findMember(loginMemberId);
+
+            findFeedRepository(feedId);
+
+            Page<ReplyResponse> pagedReplies = replyService.getRepliesPaged(feedId,
+                    PageRequest.of(0, 10, Sort.by("createdDateTime").descending()));
+
+            return pagedReplies;
+
     }
 
 
