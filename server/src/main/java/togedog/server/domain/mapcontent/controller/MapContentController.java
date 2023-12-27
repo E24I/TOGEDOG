@@ -33,7 +33,7 @@ public class MapContentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/coordinate")
+    @PostMapping("/coordinate")
     public ResponseEntity getFeedFromCoordinate(@RequestBody MapContentGetRequest request) {
 
         MapContentFeedIdResponse response = mapContentService.findFeedFromWsg84(request);
