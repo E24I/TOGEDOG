@@ -64,6 +64,11 @@ public class MemberDto {
     }
 
     @Getter
+    public static class PatchImage{
+        private String image;
+    }
+
+    @Getter
     @Builder
     public static class ResponseMemberInfo {
         private Long memberId;

@@ -127,15 +127,12 @@ public class MemberService {
 
 
     //닉네임으로 멤버 조회
-    public Member findNickname(String nickname){
+    public Page<Member> findNickname(String nickname, Pageable pageable){
         Long loginMemberId = loginMemberUtil.getLoginMemberId();
 
-        Member member = memberRepository.findMemberByNickname(nickname)
-                .orElseThrow(() -> new MemberNotFoundException());
-        if(member.getMemberId() == loginMemberId){
-            throw new MemberNotFoundException();
-        }
-        return member;
+        Page<Member> memberPage = memberRepository.findByNicknameContaining(nickname, pageable);
+
+        return memberPage;
     }
 
     //닉네임 변경
@@ -188,6 +185,37 @@ public class MemberService {
     public Boolean checkNickname(String nickname){
         Boolean bool = memberRepository.existsMemberByNicknameContaining(nickname);
         return bool;
+    }
+
+    //회원 이미지 추가
+    @Transactional
+    public void updateImage(String image){
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+
+        if(loginMemberId == null){
+            throw new MemberNotFoundException();
+        }
+
+        try {
+            memberRepository.updateMemberByMemberIdEqualsForImage(loginMemberId, image);
+        }catch (Exception e) {
+            throw new DbException();
+        }
+    }
+
+    //회원 이미지 삭제
+    @Transactional
+    public void deleteImage(){
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+
+        if(loginMemberId == null){
+            throw new MemberNotFoundException();
+        }
+
+        Member member = memberRepository.findById(loginMemberId).orElseThrow(() ->
+                new MemberNotFoundException());
+
+        member.setImage(null);
     }
 
 
