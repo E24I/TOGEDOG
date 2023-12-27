@@ -10,6 +10,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 import togedog.server.domain.chat.dto.MessagePageResponse;
 import togedog.server.domain.chat.dto.MessageRequest;
+import togedog.server.domain.chat.dto.MessageResponse;
 import togedog.server.domain.chat.service.MessageService;
 
 import java.util.List;
@@ -31,11 +32,11 @@ public class MessageController {
 
     @MessageMapping("/chat/{room-id}") // 보낼 때 /pub/chat/{room-id}
     @SendTo("/sub/chat/{room-id}")     // 받을 때 /sub/chat/{room-id}
-    public ResponseEntity<String> sendMessage(@DestinationVariable("room-id") Long roomId, @RequestBody MessageRequest messageRequest) {
+    public ResponseEntity<MessageResponse> sendMessage(@DestinationVariable("room-id") Long roomId, @RequestBody MessageRequest messageRequest) {
 
-        Long messageId = messageService.createMessage(roomId, messageRequest);
+        MessageResponse messageResponse = messageService.createMessage(roomId, messageRequest);
 
-        return new ResponseEntity<>("messageId: " + messageId, HttpStatus.CREATED);
+        return new ResponseEntity<>(messageResponse, HttpStatus.CREATED);
     }
 
     @GetMapping("/chat/{room-id}/message")
