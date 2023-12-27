@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FeedComment from "./FeedComment";
 import {
   Comments,
+  FixedReply,
   Reply,
   ReplyContent,
   ReplyContents,
@@ -101,7 +102,10 @@ const FeedReply: React.FC<OwnProps> = ({ reply }) => {
         )}
       </ReplyLeft>
       <ReplyContents>
-        <ReplyNickname>{reply.member.nickname}</ReplyNickname>
+        <ReplyNickname>
+          {reply.member.nickname}
+          {reply.fix && <FixedReply>(고정된 댓글)</FixedReply>}
+        </ReplyNickname>
         {!isEditReply ? (
           <ReplyContent>{reply.content}</ReplyContent>
         ) : (

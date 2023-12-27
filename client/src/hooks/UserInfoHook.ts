@@ -168,12 +168,14 @@ export const useGetPetInfo = (petId: string) => {
 };
 
 //펫정보 삭제
-export const useDeletePetInfo = (petId: string) => {
+export const useDeletePetInfo = (petId: string | undefined) => {
   const token = useRecoilValue(tokenAtom);
   const navigator = useNavigate();
   return useMutation({
     mutationFn: async () => {
-      return deletePetInfo(petId, token);
+      if (petId) {
+        return deletePetInfo(petId, token);
+      }
     },
     onSuccess: () => {
       navigator(-1);

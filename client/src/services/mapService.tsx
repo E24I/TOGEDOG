@@ -1,13 +1,17 @@
 import axios from "axios";
-import { enrollMapType } from "../types/mapType";
+import { enrollMapType, coordinateType } from "../types/mapType";
 const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
-export const getPetMap = async (feedId: number) => {
-  const response = await axios.get(`${ROOT_URL}/map/content/${feedId}`);
+export const postMap = async (enrollMap: enrollMapType) => {
+  const response = await axios.post(`${ROOT_URL}/map/content`, enrollMap);
   return response.data;
 };
 
-export const postMap = async (enrollMap: enrollMapType) => {
-  const res = await axios.post(`${ROOT_URL}/map/content`, enrollMap);
-  return res.data;
+// 피드 조회 (좌표 사용)
+export const getPetMap = async (coordinate: coordinateType) => {
+  const response = await axios.post(
+    `${ROOT_URL}/map/conetent/coordinate`,
+    coordinate,
+  );
+  return response.data;
 };

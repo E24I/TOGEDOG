@@ -309,7 +309,6 @@ export const FeedReviewTop = styled.div`
 `;
 
 export const Replies = styled.ul`
-  border: 1px solid black;
   width: 100%;
   height: 100%;
   display: flex;
@@ -320,7 +319,6 @@ export const Replies = styled.ul`
 `;
 
 export const Reply = styled.li`
-  border: 1px solid black;
   width: 100%;
   padding: 20px 15px;
   display: flex;
@@ -393,7 +391,6 @@ export const ShowComment = styled.button`
 `;
 
 export const AddBox = styled.div`
-  border: 1px solid black;
   border-bottom: 1px solid rgb(215, 215, 215);
   width: 90%;
   height: 30px;
@@ -404,14 +401,12 @@ export const AddBox = styled.div`
 `;
 
 export const AddReply = styled.input`
-  border: 1px solid black;
   padding: 5px 0px 5px 10px;
   width: 100%;
   height: 30px;
 `;
 
 export const AddBtn = styled.button`
-  border: 1px solid black;
   padding: 5px 15px;
   min-width: 60px;
   height: 30px;
@@ -429,3 +424,9 @@ export const CommentHeader = styled.div`
 `;
 export const CommentNickname = styled(ReplyNickname)``;
 export const CommentContent = styled(ReplyContent)``;
+
+export const FixedReply = styled.span`
+  margin-left: 10px;
+  font-size: 12px;
+  font-weight: 400;
+`;

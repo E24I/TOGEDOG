@@ -98,7 +98,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   const [reportModal, setReportModal] = useRecoilState(reportAtom);
   const handleReplyReport = () =>
     setReportModal({ ...reportModal, sort: "feed", feedId: items.feedId });
-  
+
   // 피드 수정 (핸들러)
   const handleReplyPatch = () => {
     navigator(`/update/${feedId}`);
@@ -173,6 +173,8 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
               <FeedVideo
                 ref={imgRef.current[0]}
                 src={items.videos}
+                controls={true}
+                muted={false}
                 onClick={() => {
                   console.log(items.videos);
                 }}

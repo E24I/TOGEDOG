@@ -14,12 +14,7 @@ import { useFeedReport } from "../../hooks/FeedHook";
 import { useReportReply } from "../../hooks/ReplyHook";
 import { useReportComment } from "../../hooks/CommentHook";
 
-interface OwnProps {
-  handlePositiveFunc?: () => void;
-  handleNegativeFunc?: () => void;
-}
-
-const ReportModal: React.FC<OwnProps> = () => {
+const ReportModal: React.FC = () => {
   const accesstoken = useRecoilValue(tokenAtom);
   const reportModal = useRecoilValue(reportAtom);
 

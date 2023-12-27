@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useInfiniteGetReplies } from "../../hooks/ReplyHook";
 import { Replies } from "./Feed.Style";
 import FeedReply from "./FeedReply";
@@ -9,15 +9,18 @@ interface OwnProps {
 }
 
 const FeedReplies: React.FC<OwnProps> = ({ feedId }) => {
+  const [moreReplies, setMoreReplies] = useState(false);
+  const callbackFn = () => setMoreReplies(false);
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
     useInfiniteGetReplies(feedId);
   const repliesData = data?.pages.flat();
 
-  console.log(repliesData);
+  // console.log(repliesData);
 
   const { setTarget } = useIntersectionObserver({
     hasNextPage,
     fetchNextPage,
+    callbackFn,
   });
 
   if (isLoading) {
@@ -31,7 +34,10 @@ const FeedReplies: React.FC<OwnProps> = ({ feedId }) => {
       {repliesData?.map((reply: any) => (
         <FeedReply key={reply.replyId} reply={reply} />
       ))}
-      <div ref={setTarget} />
+      {moreReplies && <div ref={setTarget}></div>}
+      {hasNextPage && (
+        <button onClick={() => setMoreReplies(true)}>댓글 더보기</button>
+      )}
     </Replies>
   );
 };

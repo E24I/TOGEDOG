@@ -50,6 +50,7 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import { memberIdAtom, reportAtom, tokenAtom } from "../../atoms";
 import { usePostReply } from "../../hooks/ReplyHook";
+import FeedReplies from "./FeedReplies";
 
 interface OwnProps {
   feedId: number;
@@ -255,11 +256,12 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
               댓글 {data.replies.pageInformation.totalSize}개
             </ReviewCount>
           </FeedReviewTop>
-          <Replies>
+          <FeedReplies feedId={feedId} />
+          {/* <Replies>
             {data.replies.replies.map((reply: any) => (
               <FeedReply key={reply.replyId} reply={reply} />
             ))}
-          </Replies>
+          </Replies> */}
           <AddBox>
             <AddReply
               placeholder="댓글 달기..."

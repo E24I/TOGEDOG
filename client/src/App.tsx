@@ -17,9 +17,13 @@ import PetProfile from "./pages/PetProfile";
 import PetAdd from "./pages/PetAdd";
 import ReportModal from "./atoms/modal/ReportModal";
 import { useRecoilValue } from "recoil";
-import { reportAtom } from "./atoms";
+import { alertAtom, confirmAtom, reportAtom } from "./atoms";
+import AlertModal from "./atoms/modal/AlertModal";
+import ConfirmModal from "./atoms/modal/ConfirmModal";
 
 const App: React.FC = () => {
+  const alertModal = useRecoilValue(alertAtom);
+  const confirmModal = useRecoilValue(confirmAtom);
   const reportModal = useRecoilValue(reportAtom);
 
   return (
@@ -40,6 +44,8 @@ const App: React.FC = () => {
         <Route path="/user/:id/petAdd" element={<PetAdd />} />
       </Routes>
       <Footer />
+      {alertModal !== "" && <AlertModal />}
+      {confirmModal.sort !== "" && <ConfirmModal />}
       {reportModal.sort !== "" && <ReportModal />}
     </BrowserRouter>
   );

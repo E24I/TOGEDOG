@@ -54,9 +54,19 @@ export const alertAtom = atom<string>({
   default: "",
 });
 
-export const confirmAtom = atom<string>({
+type confirmType = {
+  sort: string;
+  content: string;
+  currentPetId: string | undefined;
+};
+
+export const confirmAtom = atom<confirmType>({
   key: "confirm",
-  default: "",
+  default: {
+    sort: "",
+    content: "",
+    currentPetId: undefined,
+  },
 });
 
 type reportType = {

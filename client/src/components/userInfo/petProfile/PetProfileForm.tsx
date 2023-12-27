@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useQuery } from "@tanstack/react-query";
 import {
   ProfileForm,
@@ -23,7 +23,7 @@ import {
   useDeletePetInfo,
   usePatchPetIntro,
 } from "../../../hooks/UserInfoHook";
-import { tokenAtom } from "../../../atoms";
+import { confirmAtom, tokenAtom } from "../../../atoms";
 import { getPetInfo } from "../../../services/userInfoService";
 import ConfirmModal from "../../../atoms/modal/ConfirmModal";
 import { PetImgForm } from "../../../atoms/imgForm/ImgForm";
@@ -36,7 +36,7 @@ const PetProfileForm = () => {
   const currentPetId = petId || "";
   const token = useRecoilValue(tokenAtom);
 
-  const [isModal, setIsModal] = useState<boolean>(false);
+  // const [isModal, setIsModal] = useState<boolean>(false);
   const [petData, setPetData] = useState<petIntro>({ petIntro: "" });
 
   const [isEditing, setIsEditing] = useState(false); // 수정 상태
@@ -46,7 +46,7 @@ const PetProfileForm = () => {
   };
   const { register, handleSubmit } = useForm();
 
-  const { mutate: deletePet } = useDeletePetInfo(currentPetId);
+  // const { mutate: deletePet } = useDeletePetInfo(currentPetId);
   const { mutate: patchPet } = usePatchPetIntro(petData, currentPetId);
 
   const onSubmit = (data: any) => {
@@ -59,6 +59,16 @@ const PetProfileForm = () => {
     queryKey: ["petInfo", currentPetId, token],
     queryFn: () => getPetInfo(currentPetId, token),
   });
+
+  // 펫 삭제
+  const [alertModal, setAlertModal] = useRecoilState(confirmAtom);
+  const handleDeleteAlert = () =>
+    setAlertModal({
+      ...alertModal,
+      sort: "deletePet",
+      content: "삭제하시겠습니까?",
+      currentPetId: currentPetId,
+    });
 
   if (error) {
     return <div>{petId}Error</div>;
@@ -126,16 +136,7 @@ const PetProfileForm = () => {
           </TextInfo>
         </Form>
       </ContentBox>
-      {isModal ? (
-        <ConfirmModal
-          confirmContent={"삭제하시겠습니까?"}
-          positiveContent={"예"}
-          negativeContent={"아니오"}
-          handlePositiveFunc={deletePet}
-          handleNegativeFunc={() => setIsModal(false)}
-        />
-      ) : null}
-      <DeleteButton onClick={() => setIsModal(true)}>삭제</DeleteButton>
+      <DeleteButton onClick={handleDeleteAlert}>삭제</DeleteButton>
     </ProfileForm>
   );
 };
