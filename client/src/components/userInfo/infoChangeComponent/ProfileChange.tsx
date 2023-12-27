@@ -18,10 +18,7 @@ import {
 } from "../../../hooks/UserInfoHook";
 import { ChageData } from "../../../types/userInfoType";
 import { UserImgForm } from "../../../atoms/imgForm/ImgForm";
-import {
-  AttachingButton,
-  AttachingInput,
-} from "../../petFeed/writingSpace/CreatingSpace/Upload.Style";
+import { AttachingInput } from "../../petFeed/writingSpace/CreatingSpace/Upload.Style";
 import { getPresignedUrl, uploadToS3 } from "../../../services/feedService";
 
 const ProfileChange: React.FC<ChageData> = ({
