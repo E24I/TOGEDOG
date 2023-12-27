@@ -14,16 +14,16 @@ export const getUserInfo = async (memberId: number, token?: string) => {
   const res = await axios.get(url, headers);
   return res;
 };
-
+export type userFeedNeedType = {
+  memberId: string | undefined;
+  endPoint: string;
+  pageParam: number;
+};
 // 유저 피드 가져오기
-export const getUserFeed = async (
-  memberId: string | undefined,
-  endPoint: string,
-  page: number,
-) => {
-  const url = `${ROOT_URL}/member/${memberId}/${endPoint}?page=${page}`;
+export const getUserFeed = async (requestObj: userFeedNeedType) => {
+  const url = `${ROOT_URL}/member/${requestObj.memberId}/${requestObj.endPoint}?page=${requestObj.pageParam}`;
   const res = await axios.get(url);
-  return res;
+  return res.data;
 };
 
 // 닉네임변경
@@ -50,7 +50,7 @@ export const patchUserIntro = async (newMyIntro: string, token?: string) => {
     },
   };
   const intro = { myIntro: newMyIntro };
-  const url = `${ROOT_URL}/member/update/myIntro`;
+  const url = `${ROOT_URL}/member/update/myintro`;
   const res = await axios.patch(url, intro, headers);
   return res;
 };
@@ -122,5 +122,16 @@ export const patchPetInfo = async (
   };
   const url = `${ROOT_URL}/pet/${petId}/update`;
   const res = await axios.patch(url, petIntro, headers);
+  return res;
+};
+
+// 프로필 이미지 변경
+export const patchProfileImg = async (imgURL: string, token: string) => {
+  const headers = {
+    headers: { Authorization: token },
+  };
+  const URL = imgURL;
+  const url = `${ROOT_URL}/member/image/upload`;
+  const res = await axios.patch(url, URL, headers);
   return res;
 };

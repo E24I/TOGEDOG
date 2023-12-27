@@ -18,7 +18,7 @@ export type signUpInfoProps = {
 // 인증번호 인증하기 props
 export type authenticationProps = {
   email: string;
-  authentication: string;
+  authNum: string;
   setIsAuthentication: React.Dispatch<React.SetStateAction<boolean>>;
 };
 

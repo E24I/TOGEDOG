@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
 import {
   MyFeedContainer,
   TapContainer,
@@ -12,25 +10,14 @@ import {
   FeedContainer,
 } from "./UserFeedForm.style";
 import FeedCard from "./feedCardComponent/FeedCard";
-// import { useGetUserFeed } from "../../hooks/UserInfoHook";
-import { useRecoilValue } from "recoil";
-import { memberIdAtom, tokenAtom } from "../../atoms";
 import { MyInfoFormProps } from "../../types/memberType";
-import { feedDataType } from "../../types/userInfoType";
-import { getUserFeed } from "../../services/userInfoService";
+import { useGetUserFeeds } from "../../hooks/UserInfoHook";
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
   const [tap, setTap] = useState<number>(0);
-  const [feedData, setFeedData] = useState<feedDataType[] | undefined>(
-    undefined,
-  );
   const [endPoint, setEndPoint] = useState<string>("feed");
   const tapMenu = ["feed", "feed-like", "feed-bookmark"];
-  // const { mutate: getFeedMutate } = useGetUserFeed(
-  //   Number(pageMemberId),
-  //   endPoint,
-  //   setFeedData,
-  // );
 
   const handleTap = (index: number, menu: string) => {
     setTap(index);
@@ -47,16 +34,16 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
         return <BookMarks />;
     }
   };
-  const paramsId = useParams();
-  const memberId = paramsId && paramsId.pageMemberId;
+  const { data, isLoading, isError, fetchNextPage, hasNextPage } =
+    useGetUserFeeds(pageMemberId, endPoint);
+  const feedsData = data?.pages.flat();
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["userFeed", memberId, endPoint, 1],
-    queryFn: () => getUserFeed(memberId, endPoint, 1),
+  const { setTarget } = useIntersectionObserver({
+    hasNextPage,
+    fetchNextPage,
   });
-
-  if (error) {
-    return <div>404.....</div>;
+  if (isError) {
+    return <div>페이지 불러 오기 실패</div>;
   }
   if (isLoading) {
     <div>Loading...</div>;
@@ -96,8 +83,8 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
         )}
       </TapContainer>
       <FeedContainer>
-        {data?.data.data ? (
-          data?.data.data.map(
+        {feedsData ? (
+          feedsData?.map(
             (feed: {
               likeCount: number;
               repliesCount: number;
@@ -113,6 +100,7 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
         ) : (
           <p>등록된 피드가 없습니다.</p>
         )}
+        <div ref={setTarget} />
       </FeedContainer>
     </MyFeedContainer>
   );

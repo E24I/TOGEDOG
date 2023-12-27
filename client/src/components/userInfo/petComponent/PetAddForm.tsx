@@ -21,7 +21,6 @@ const PetAddForm: React.FC = () => {
     formState: { errors },
     handleSubmit,
   } = useForm();
-  // const { mutate: postPetMutate } = usePostPet(requestObj);
   const toekn = useRecoilValue(tokenAtom);
   const onSubmit = (data: any) => {
     postPetInfo(data, toekn);
