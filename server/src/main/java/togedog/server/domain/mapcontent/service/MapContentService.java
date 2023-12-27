@@ -77,7 +77,7 @@ public class MapContentService {
     public MapContentFeedIdResponse findFeedFromWsg84(MapContentGetRequest request) {
 
 
-        Optional<MapContent> findMapContent = mapContentRepository.findByWsg84xAndWsg84y(request.getWsg84_x(), request.getWsg84_y());
+        Optional<MapContent> findMapContent = mapContentRepository.findByWsg84xAndWsg84y(request.getWgs84_x(), request.getWgs84_y());
 
         if(findMapContent.isEmpty()) {
             throw new MapContentNotFoundException();
@@ -86,7 +86,7 @@ public class MapContentService {
         List<Feed> findFeeds = findMapContent.get().getFeeds();
         MapContentFeedIdResponse response = new MapContentFeedIdResponse();
         findFeeds.forEach(o -> response.getFeedIdList().add(o.getFeedId()));
-        System.out.println("@@@@@@@@ " + findFeeds.get(0).getFeedId());
+
         return response;
     }
 }
