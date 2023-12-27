@@ -29,7 +29,7 @@ public class MessageMapper {
         }
     }
 
-    private MessageResponse messageToMessageResponse(Message message) {
+    public MessageResponse messageToMessageResponse(Message message) {
         if(message == null) {
             return null;
         }
