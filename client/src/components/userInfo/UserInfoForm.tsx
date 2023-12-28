@@ -40,9 +40,6 @@ const MyInfoForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
     queryKey: ["userInfo", pageMemberId, token],
     queryFn: () => getUserInfo(Number(pageMemberId), token),
   });
-  // useEffect(()=>{
-  //   postPresignedUrl()
-  // },[])
   if (error) {
     return <div>404.....</div>;
   }

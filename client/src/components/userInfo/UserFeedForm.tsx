@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MyFeedContainer,
   TapContainer,
@@ -48,7 +48,6 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
   if (isLoading) {
     <div>Loading...</div>;
   }
-
   return (
     <MyFeedContainer>
       <TapContainer>
@@ -84,19 +83,15 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
       </TapContainer>
       <FeedContainer>
         {feedsData ? (
-          feedsData?.map(
-            (feed: {
-              likeCount: number;
-              repliesCount: number;
-              feedId: React.Key | null | undefined;
-            }) => (
-              <FeedCard
-                likeCount={feed.likeCount}
-                repliesCount={feed.repliesCount}
-                key={feed.feedId}
-              />
-            ),
-          )
+          feedsData?.map((feed) => (
+            <FeedCard
+              image={feed.images}
+              likeCount={feed.likeCount}
+              repliesCount={feed.repliesCount}
+              key={feed.feedId}
+              feedId={feed.feedId}
+            />
+          ))
         ) : (
           <p>등록된 피드가 없습니다.</p>
         )}

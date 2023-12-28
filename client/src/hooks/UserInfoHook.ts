@@ -223,7 +223,7 @@ export const usePatchPetIntro = (petIntro: petIntro, petId: string) => {
   });
 };
 
-//펫 정보 수정
+// 유저 프로필 이미지(사용x)
 export const usePatchImg = (imgURL: string) => {
   const token = useRecoilValue(tokenAtom);
   return useMutation({
@@ -232,7 +232,7 @@ export const usePatchImg = (imgURL: string) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["userInfo"] });
-      console.log("성공!");
+      console.log(imgURL);
     },
     onError: (err) => {
       console.log(err);
