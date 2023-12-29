@@ -77,6 +77,7 @@ export const useDeleteFeed = (
       console.log(res);
       alert("피드 삭제 완료");
       queryClient.invalidateQueries({ queryKey: ["Feeds"] });
+      queryClient.invalidateQueries({ queryKey: ["userFeed"] });
       successFunc && successFunc();
       return;
     },
@@ -104,6 +105,7 @@ export const usePostFeed = (
     },
     onSuccess: async (res) => {
       queryClient.invalidateQueries({ queryKey: ["Feeds"] });
+      queryClient.invalidateQueries({ queryKey: ["userFeed"] });
       enrollMapInfo.feedId = Number(res.headers.location.substr(6));
       if (isMapAssign && enrollMapInfo) {
         await postMapMutation.mutateAsync(enrollMapInfo);

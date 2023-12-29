@@ -84,7 +84,14 @@ const ProfileChange: React.FC<ChageData> = ({
         <Topbox>
           <BackIcon onClick={handleModal} />
           <h3>프로필 설정</h3>
-          <button className="submitButton" onClick={handelChange}>
+          <button
+            className="submitButton"
+            onClick={() => {
+              imgURL !== ""
+                ? handelChange
+                : alert("변경된 프로필 이미지가 없습니다.");
+            }}
+          >
             완료
           </button>
         </Topbox>

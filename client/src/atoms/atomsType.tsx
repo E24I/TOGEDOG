@@ -8,6 +8,7 @@ export type ImgFormProps = {
   height: number;
   radius: number;
   URL?: string | null;
+  onClick?: () => void;
 };
 
 export type ProFileBoxProps = {
