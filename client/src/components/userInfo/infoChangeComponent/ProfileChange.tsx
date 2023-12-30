@@ -14,15 +14,15 @@ import {
 import {
   usePatchUserNickname,
   usePatchUserIntro,
-  usePatchImg,
 } from "../../../hooks/UserInfoHook";
 import { ChageData } from "../../../types/userInfoType";
 import { UserImgForm } from "../../../atoms/imgForm/ImgForm";
-import {
-  AttachingButton,
-  AttachingInput,
-} from "../../petFeed/writingSpace/CreatingSpace/Upload.Style";
+import { AttachingInput } from "../../petFeed/writingSpace/CreatingSpace/Upload.Style";
 import { getPresignedUrl, uploadToS3 } from "../../../services/feedService";
+import { useRecoilValue } from "recoil";
+import { patchProfileImg } from "../../../services/userInfoService";
+import { tokenAtom } from "../../../atoms";
+import { queryClient } from "../../..";
 
 const ProfileChange: React.FC<ChageData> = ({
   setChangeInfo,
@@ -30,8 +30,8 @@ const ProfileChange: React.FC<ChageData> = ({
   intro,
   img,
 }) => {
-  const { register, watch } = useForm();
   let imgURL = "";
+  const { register, watch } = useForm();
   const [imageFiles, setImageFiles] = useState<{
     file: File | null;
     name: string;
@@ -40,23 +40,11 @@ const ProfileChange: React.FC<ChageData> = ({
   //각각 input 태그 value 호출
   const newNickname = watch("NickName", "");
   const introduction = watch("introduction", "");
-  const { mutate: patchNicknameMutate } = usePatchUserNickname(newNickname);
-  const { mutate: patchIntroMutate } = usePatchUserIntro(introduction);
-  const { mutate: patchImgMutate } = usePatchImg(imgURL);
+
   const handleModal = () => {
     setChangeInfo(false);
   };
-  const handelChange = () => {
-    getPresignedUrl(imageFiles.name).then((res) => {
-      uploadToS3(res, imageFiles.file, imageFiles.type).then((res) => {
-        if (res.config.url) {
-          imgURL = res.config.url.substring(0, res.config.url.indexOf("?"));
-        }
-      });
-    });
-    patchImgMutate();
-    setChangeInfo(false);
-  };
+
   const uploadImg = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     if (file) {
@@ -64,6 +52,20 @@ const ProfileChange: React.FC<ChageData> = ({
       const type = file.type;
       setImageFiles({ file: file, name: name, type: type });
     }
+  };
+  const token = useRecoilValue(tokenAtom);
+  const handelChange = async () => {
+    await getPresignedUrl(imageFiles.name).then((res) => {
+      uploadToS3(res, imageFiles.file, imageFiles.type).then((res) => {
+        if (res.config.url) {
+          imgURL = res.config.url.substring(0, res.config.url.indexOf("?"));
+          patchProfileImg(imgURL, token).then(() => {
+            queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+          });
+        }
+      });
+    });
+    setChangeInfo(false);
   };
   const handleNickname = () => {
     newNickname ? patchNicknameMutate() : alert("닉네임을 입력해주세요.");
@@ -73,13 +75,23 @@ const ProfileChange: React.FC<ChageData> = ({
       ? alert("소개글은 10자 이상이어야 합니다.")
       : patchIntroMutate();
   };
+  const { mutate: patchNicknameMutate } = usePatchUserNickname(newNickname);
+  const { mutate: patchIntroMutate } = usePatchUserIntro(introduction);
+
   return (
     <ChangeForm>
       <ChangeContainer>
         <Topbox>
           <BackIcon onClick={handleModal} />
           <h3>프로필 설정</h3>
-          <button className="submitButton" onClick={handelChange}>
+          <button
+            className="submitButton"
+            onClick={() => {
+              imgURL !== ""
+                ? handelChange
+                : alert("변경된 프로필 이미지가 없습니다.");
+            }}
+          >
             완료
           </button>
         </Topbox>
@@ -98,7 +110,7 @@ const ProfileChange: React.FC<ChageData> = ({
               URL={URL.createObjectURL(imageFiles.file)}
             />
           ) : (
-            <UserImgForm width={100} height={100} radius={50} />
+            <UserImgForm width={100} height={100} radius={50} URL={img} />
           )}
           <ChangeImgButton htmlFor="add_image">
             프로필사진 바꾸기

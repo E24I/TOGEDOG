@@ -44,15 +44,17 @@ export const ButtonSection = styled.div`
 `;
 
 export const Button1 = styled.button`
+  color: #ffffff;
   width: 160px;
   height: 40px;
-  background: #d7d7d7;
+  background: #494949;
   border-radius: 5px;
 `;
 export const Button2 = styled.button`
+  color: #ffffff;
   width: 160px;
   height: 40px;
-  background: #d7d7d7;
+  background: #494949;
   border-radius: 5px;
 `;
 export const MoreButton = styled.button`

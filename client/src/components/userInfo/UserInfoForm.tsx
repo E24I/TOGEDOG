@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 import { memberIdAtom, tokenAtom } from "../../atoms";
@@ -36,13 +36,10 @@ const MyInfoForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
     //모달열기
     setLostPw(!lostPw);
   };
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery<any>({
     queryKey: ["userInfo", pageMemberId, token],
     queryFn: () => getUserInfo(Number(pageMemberId), token),
   });
-  // useEffect(()=>{
-  //   postPresignedUrl()
-  // },[])
   if (error) {
     return <div>404.....</div>;
   }

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { memberIdAtom } from "../../atoms";
 import {
   MyFeedContainer,
   TapContainer,
@@ -15,15 +17,15 @@ import { useGetUserFeeds } from "../../hooks/UserInfoHook";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
+  const tapMenu = ["feed", "feed-like", "feed-bookmark"];
+  const [tapList, setTapList] = useState<string[]>(tapMenu);
   const [tap, setTap] = useState<number>(0);
   const [endPoint, setEndPoint] = useState<string>("feed");
-  const tapMenu = ["feed", "feed-like", "feed-bookmark"];
-
+  const memberId = useRecoilValue(memberIdAtom);
   const handleTap = (index: number, menu: string) => {
     setTap(index);
     setEndPoint(menu);
   };
-
   const tapImg = (menu: string) => {
     switch (menu) {
       case "feed":
@@ -34,6 +36,11 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
         return <BookMarks />;
     }
   };
+  useEffect(() => {
+    if (Number(pageMemberId) !== memberId) {
+      setTapList(["feed"]);
+    }
+  }, [pageMemberId]);
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
     useGetUserFeeds(pageMemberId, endPoint);
   const feedsData = data?.pages.flat();
@@ -48,11 +55,10 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
   if (isLoading) {
     <div>Loading...</div>;
   }
-
   return (
     <MyFeedContainer>
       <TapContainer>
-        {tapMenu.map((menu: string, idx: number) =>
+        {tapList.map((menu: string, idx: number) =>
           tap === idx ? (
             <TapMenuOn key={idx}>
               <button onClick={() => handleTap(idx, menu)}>
@@ -84,19 +90,15 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
       </TapContainer>
       <FeedContainer>
         {feedsData ? (
-          feedsData?.map(
-            (feed: {
-              likeCount: number;
-              repliesCount: number;
-              feedId: React.Key | null | undefined;
-            }) => (
-              <FeedCard
-                likeCount={feed.likeCount}
-                repliesCount={feed.repliesCount}
-                key={feed.feedId}
-              />
-            ),
-          )
+          feedsData?.map((feed) => (
+            <FeedCard
+              image={feed.images}
+              likeCount={feed.likeCount}
+              repliesCount={feed.repliesCount}
+              key={feed.feedId}
+              feedId={feed.feedId}
+            />
+          ))
         ) : (
           <p>등록된 피드가 없습니다.</p>
         )}

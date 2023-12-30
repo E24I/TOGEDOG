@@ -52,8 +52,8 @@ export const usePostSignUp = (requestObj: signUpInfoProps) => {
       alert("회원가입 완료 완료");
       navigate("/");
     },
-    onError: (err: AxiosResponse) => {
-      console.log(err);
+    onError: (err: any) => {
+      alert(err.response.data.message);
     },
   });
 };

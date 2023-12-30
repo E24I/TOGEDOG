@@ -130,8 +130,26 @@ export const patchProfileImg = async (imgURL: string, token: string) => {
   const headers = {
     headers: { Authorization: token },
   };
-  const URL = imgURL;
+  const URL = {
+    image: `${imgURL}`,
+  };
   const url = `${ROOT_URL}/member/image/upload`;
+  const res = await axios.patch(url, URL, headers);
+  return res;
+};
+// 펫 프로필 이미지 변경
+export const patchPetProfileImg = async (
+  imgURL: string,
+  token: string,
+  petId: number,
+) => {
+  const headers = {
+    headers: { Authorization: token },
+  };
+  const URL = {
+    image: `${imgURL}`,
+  };
+  const url = `${ROOT_URL}/pet/${petId}/image/upload`;
   const res = await axios.patch(url, URL, headers);
   return res;
 };
