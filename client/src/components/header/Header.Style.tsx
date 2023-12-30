@@ -8,8 +8,7 @@ import { ReactComponent as Map } from "../../assets/images/icons/headerIcons/Map
 import { ReactComponent as CreateFeed } from "../../assets/images/icons/headerIcons/CreateFeed.svg";
 import { ReactComponent as Notifications } from "../../assets/images/icons/headerIcons/Notifications.svg";
 import { ReactComponent as NotificationsRedPoint } from "../../assets/images/icons/headerIcons/NotificationsRedpoint.svg";
-import { ReactComponent as Profile } from "../../assets/images/icons/headerIcons/Profile.svg";
-// import { ReactComponent as Logo } from "../../assets/images/logos/Logo.svg";
+import { ReactComponent as Profile } from "../../assets/images/icons/headerIcons/ProfileImage.svg";
 
 //assets style
 export const Logo = styled(Home)``;

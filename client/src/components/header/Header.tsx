@@ -58,7 +58,6 @@ const Header: React.FC = () => {
         <Link to={loginState ? "/feeds" : "/"}>
           <Logo />
         </Link>
-
         <MiddleButtonContainer>
           <Link to="/feeds">
             <MainButtonStyle />

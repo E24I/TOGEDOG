@@ -14,7 +14,6 @@ export const CancelBtn = styled(Cancel)`
 
 // 피드 전체 컨테이너
 export const CreateFeedContainer = styled.div`
-  border: 2px solid #ffa1a1; // 구분선 입니다
   margin: 60px;
 `;
 
@@ -24,7 +23,6 @@ export const FeedTopContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  border: 2px solid #63af80; //구분선 입니다
 `;
 
 export const PageName = styled.p`

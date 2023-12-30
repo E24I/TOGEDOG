@@ -6,6 +6,11 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 import * as C from "./CreatingSpace.Style";
 import UploadSpace from "./Upload";
+import UserName from "../../../chatting/otherUserName";
+import { useRecoilValue } from "recoil";
+import { memberIdAtom } from "../../../../atoms";
+import UserImage from "../../../chatting/otherUserImage";
+import { Id } from "../updatingSpace/UpdatingSpace.Style";
 
 interface CreatingSpaceProps {
   handleInputChange: (
@@ -36,6 +41,7 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({
   const contentRef = useRef<any>();
   const [contentLength, sendContentLength] = useState<number>(0);
   const [alert, setAlert] = useState<string>("");
+  const myMemberId = useRecoilValue(memberIdAtom);
 
   //제목 입력칸에서 엔터 누르면 내용 입력칸으로 넘어가게 만든 함수
   const enterToContent = (e: KeyboardEvent<HTMLInputElement>): void => {
@@ -56,23 +62,24 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({
   };
   //입력한 내용을 handleInputChange의 파라미터로 WritingSpace.ts의 postInformation에 전달
   const sendContent = (editor: string) => {
-    handleInputChange("content", editor);
-    setQuillValue(editor);
     const p = "</p>";
     //본문 글자 수
-    sendContentLength(
-      editor
-        .replace(/<br>/g, "")
-        .replace(/<p>/g, "")
-        .replace(new RegExp(p, "g"), "").length,
-    );
+    const textLength = editor
+      .replace(/<br>/g, "")
+      .replace(/<p>/g, "")
+      .replace(new RegExp(p, "g"), "").length;
+    if (textLength <= 200) {
+      handleInputChange("content", editor);
+      setQuillValue(editor);
+      sendContentLength(textLength);
+    }
   };
 
   return (
     <C.CreateSpace>
       <C.ProfileWrap>
-        <C.ProfileImg />
-        <C.Username>세계 최강 귀요미 몽자</C.Username>
+        <UserImage id={myMemberId} />
+        <UserName id={myMemberId} />
       </C.ProfileWrap>
       <UploadSpace setAttachments={setAttachments} />
       <C.CreateTitleWrap>

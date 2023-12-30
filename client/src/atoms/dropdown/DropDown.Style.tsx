@@ -1,14 +1,19 @@
 import styled from "styled-components";
 
 export const DropDownContainer = styled.div<{ data?: string }>`
-  border: 2px solid black; // 채팅 토스트 구분선
   position: absolute;
-  top: ${(props) => (props.data === "list" ? "-40px" : "70px")};
+  top: ${(props) => (props.data === "list" ? "-25px" : "70px")};
   right: ${(props) => (props.data === "list" ? "0" : "20px")};
   display: flex;
   flex-direction: column;
 `;
 
 export const Menu = styled.button`
-  border: 2px solid green; // 구분선
+  background-color: #63b89c;
+  &:hover {
+    background-color: #69d3b0;
+  }
+  &:active {
+    background-color: #4a967c;
+  }
 `;

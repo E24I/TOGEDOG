@@ -5,15 +5,19 @@ import { createNewChatType } from "../types/chatType";
 const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
 //유저 검색
-export const searchUser = async (
+export const searchUsers = async (
   nickname: string,
   token: string,
+  pageNumber: number,
 ): Promise<any> => {
-  const res = await axios.get(`${ROOT_URL}/member/find?n=${nickname}`, {
-    headers: {
-      Authorization: token,
+  const res = await axios.get(
+    `${ROOT_URL}/member/find?n=${nickname}&page=${pageNumber}`,
+    {
+      headers: {
+        Authorization: token,
+      },
     },
-  });
+  );
   return res;
 };
 
@@ -39,7 +43,7 @@ export const getAllRooms = async (memberId: number, token: string) => {
 };
 
 //특정 채팅방의 모든 대화 내용 조회
-export const getAllMessages = async (roomId: number, token: string) => {
+export const getAllMessages = async (token: string, roomId?: number) => {
   const res = await axios.get(
     `${ROOT_URL}/chat/${roomId}/message?page_number=1&page_size=10`,
     {
@@ -50,10 +54,12 @@ export const getAllMessages = async (roomId: number, token: string) => {
 };
 
 //채팅방 나가기
-export const exitARoom = async (roomId: number, token: string) => {
-  const res = axios.delete(`${ROOT_URL}/chat/${roomId}`, {
-    headers: { Authorization: token },
-  });
+export const exitARoom = async (token: string, roomId?: number) => {
+  const res =
+    roomId &&
+    axios.delete(`${ROOT_URL}/chat/${roomId}`, {
+      headers: { Authorization: token },
+    });
   return res;
 };
 

@@ -7,19 +7,14 @@ import {
   SearchUsersContainer,
   SearchedUser,
 } from "./SearchUsers.Style";
-import { searchUser } from "../../services/chatService";
-import { useRecoilValue } from "recoil";
-import { tokenAtom } from "../../atoms";
 import { searchedUserType } from "../../types/chatType";
-import { useCreateChattingRoom } from "../../hooks/ChatHooks";
+import { GetUsersQuery, useCreateChattingRoom } from "../../hooks/ChatHooks";
 
 const SearchUser: React.FC = () => {
-  const token = useRecoilValue(tokenAtom);
-
   const [isSearched, setSearched] = useState<string>("");
-  const [isUser, setUser] = useState<searchedUserType>();
+  const [isSubmit, setSubmit] = useState<boolean>(false);
 
-  const [participants, setParticipants] = useState<{
+  const [participants] = useState<{
     requestMemberId: number;
     inviteMemberId: number;
   }>({
@@ -29,38 +24,59 @@ const SearchUser: React.FC = () => {
   });
 
   const { mutate: createChattingRoom } = useCreateChattingRoom(participants);
+  const {
+    data: usersData,
+    isLoading,
+    error,
+  } = GetUsersQuery(isSearched, 1, isSubmit);
 
   //엔터키 누르면 실행
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
-    searchUser(isSearched, token)
-      .then((res) => {
-        setUser(res.data);
-        setParticipants({
-          requestMemberId: 0,
-          inviteMemberId: res.data.memberId,
-        });
-      })
-      .catch((err) => {
-        console.log(err.response.data.message);
-      });
+    setSubmit(true);
   };
   //검색어 핸들러
   const searchValueHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setSubmit(false);
     setSearched(e.target.value);
+  };
+  //검색된 채팅 상대 클릭
+  const onClickHandler = (otherMemberId: number) => {
+    participants.inviteMemberId = otherMemberId;
+    createChattingRoom();
+    setSubmit(false);
+    setSearched("");
   };
 
   return (
     <SearchUsersContainer id="search" onSubmit={submitHandler}>
-      <SearchBar form="search" onChange={searchValueHandler} />
-      {isUser && (
-        <SearchedUser>
-          <ProfileImg src={isUser.imageUrl} />
-          <Nickname>{isUser.nickname}</Nickname>
-          <CreateNewChatButton onClick={() => createChattingRoom()}>
-            채팅하기
-          </CreateNewChatButton>
-        </SearchedUser>
+      <SearchBar
+        form="search"
+        value={isSearched}
+        placeholder="유저 검색"
+        onChange={searchValueHandler}
+      />
+      {isLoading ? (
+        <>loading</>
+      ) : error ? (
+        <>error</>
+      ) : (
+        isSubmit &&
+        usersData.data.data.map((user: searchedUserType, idx: number) => {
+          return (
+            <SearchedUser key={idx}>
+              <ProfileImg src={user.imageUrl} />
+              <Nickname>{user.nickname}</Nickname>
+              <CreateNewChatButton
+                onClick={() => {
+                  onClickHandler(user.memberId);
+                }}
+              >
+                채팅하기
+              </CreateNewChatButton>
+            </SearchedUser>
+          );
+        })
       )}
     </SearchUsersContainer>
   );

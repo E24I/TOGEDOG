@@ -74,6 +74,7 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
     setQuillValue(editor);
     handleUpdatedInfoChange("content", editor);
   };
+  console.log(data);
 
   return (
     <U.UpdateSpace>

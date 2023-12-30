@@ -1,27 +1,31 @@
-import React from "react";
+import React, { MouseEvent } from "react";
 import { Menu, DropDownContainer } from "./DropDown.Style";
+import { useExitRoom } from "../../hooks/ChatHooks";
 
 interface DropDownProps {
   component: string;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  roomId?: number;
 }
 
-const DropDown: React.FC<DropDownProps> = ({ component, setOpen }) => {
-  const menus = ["읽음 처리", "알림 끄기", "채팅방 신고"];
+const DropDown: React.FC<DropDownProps> = ({ component, roomId }) => {
+  const menus = ["채팅방 나가기", "알림 끄기", "채팅방 신고"];
+  const { mutate: exitRoom } = useExitRoom(roomId);
 
   if (component === "content") {
     menus[0] = "대화방 삭제";
   }
 
-  const onClickController = () => {
-    setOpen(false);
+  const onClickController = (menu: string) => {
+    if (menu === "채팅방 나가기") {
+      exitRoom();
+    }
   };
 
   return (
     <DropDownContainer data={component}>
       {menus.map((menu, idx) => {
         return (
-          <Menu key={idx} onClick={onClickController}>
+          <Menu key={idx} onMouseDown={() => onClickController(menu)}>
             {menu}
           </Menu>
         );
