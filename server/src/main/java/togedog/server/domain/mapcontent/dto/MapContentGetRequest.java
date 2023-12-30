@@ -8,4 +8,6 @@ public class MapContentGetRequest {
     private String wgs84_x;
 
     private String wgs84_y;
+
+    private int range;
 }
