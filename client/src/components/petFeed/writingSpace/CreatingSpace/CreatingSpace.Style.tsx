@@ -10,6 +10,7 @@ export const CreateSpace = styled.div`
       font-style: normal;
     }
   }
+  margin-top: 5.5rem;
 `;
 
 //프로필 래핑
@@ -17,10 +18,12 @@ export const ProfileWrap = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: 220px;
-  justify-content: space-between;
+  width: fit-content;
   margin-left: 20px;
-  border: 2px solid #9876e3; //구분선 입니다
+  :nth-child(2) {
+    margin-left: 20px;
+  }
+  margin-bottom: 5%;
 `;
 
 export const ProfileImg = styled.div`
@@ -30,8 +33,6 @@ export const ProfileImg = styled.div`
   border-radius: 200px;
   text-align: center;
 `;
-
-export const Username = styled.div``;
 
 export const CreateTitleWrap = styled.div`
   height: 100%;
@@ -43,6 +44,7 @@ export const CreateTitle = styled.input`
   width: 100%;
   display: block;
   padding: 20px 15px;
+  margin-top: 7%;
 `;
 export const Alert = styled.p`
   margin-left: 20px;

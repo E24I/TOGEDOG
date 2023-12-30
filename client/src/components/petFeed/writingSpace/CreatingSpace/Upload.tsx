@@ -17,19 +17,6 @@ interface UploadSpaceType {
 }
 
 const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
-  // const [file, setFile] = useState<{
-  //   url: string;
-  //   image: string;
-  //   video: string;
-  //   type: string;
-  //   selectedFile: File | null;
-  // }>({
-  //   url: "",
-  //   image: "",
-  //   video: "",
-  //   type: "",
-  //   selectedFile: null,
-  // });
   const [imageFiles, setImageFiles] = useState<
     { type: string; url: string; file: File | null }[]
   >([]);
@@ -55,13 +42,6 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
 
       console.log(selectedFile);
       if (imageType && fileSize < imgLimitedSize) {
-        // setFile({
-        //   type: selectedFile.type,
-        //   url: URL.createObjectURL(selectedFile),
-        //   image: selectedFile.type,
-        //   video: "",
-        //   selectedFile: selectedFile,
-        // });
         setImageFiles((prev) => [
           ...prev,
           {
@@ -71,13 +51,6 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
           },
         ]);
       } else if (videoType && fileSize < videoLimitedSize) {
-        // setFile({
-        //   type: selectedFile.type,
-        //   url: URL.createObjectURL(selectedFile),
-        //   image: "",
-        //   video: selectedFile.type,
-        //   selectedFile: selectedFile,
-        // });
         setVideoFile({
           type: selectedFile.type,
           url: URL.createObjectURL(selectedFile),
@@ -88,16 +61,6 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
       }
     }
   };
-  // useEffect(() => {
-  //   if (file.image) {
-  //     setImageFiles((prev) => [
-  //       ...prev,
-  //       { type: file.type, url: file.url, file: file.selectedFile },
-  //     ]);
-  //   } else if (file.video) {
-  //     setVideoFile({ type: file.type, url: file.url, file: file.selectedFile });
-  //   }
-  // }, [file]);
   //첨부된 영상과 이미지 파일을 WritingSpace.tsx의 postInformation으로 전달
   useEffect(() => {
     const videoAndImages = [videoFile, ...imageFiles];
@@ -119,9 +82,9 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
   };
 
   return (
-    <>
+    <U.AttachmentSpaceWrap>
+      <U.FilesCount>{videoFile ? 1 : 0}/1</U.FilesCount>
       <U.AttachmentSpaceContainer>
-        영상
         {videoFile.url ? (
           <U.AttachmentWrap>
             <U.AttachedVideo controls src={videoFile.url}></U.AttachedVideo>
@@ -129,7 +92,7 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
           </U.AttachmentWrap>
         ) : (
           <U.AttachingButton htmlFor="add_video">
-            <U.AddButton />
+            <U.AddVideoButton />
           </U.AttachingButton>
         )}
         <U.AttachingInput
@@ -139,10 +102,9 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
           onChange={uploadFiles}
         />
       </U.AttachmentSpaceContainer>
-      <U.FilesCount>{videoFile ? 1 : 0}/1</U.FilesCount>
       <>
+        <U.FilesCount>{imageFiles.length}/4</U.FilesCount>
         <U.AttachmentSpaceContainer>
-          이미지
           {imageFiles &&
             imageFiles.map(
               (file, idx) =>
@@ -156,7 +118,7 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
           {imageFiles.length < 4 && (
             <>
               <U.AttachingButton htmlFor="add_image">
-                <U.AddButton />
+                <U.AddImageButton />
               </U.AttachingButton>
               <U.AttachingInput
                 id="add_image"
@@ -167,9 +129,8 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
             </>
           )}
         </U.AttachmentSpaceContainer>
-        <U.FilesCount>{imageFiles.length}/4</U.FilesCount>
       </>
-    </>
+    </U.AttachmentSpaceWrap>
   );
 };
 

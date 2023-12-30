@@ -1,12 +1,6 @@
 import styled from "styled-components";
 
-import { ReactComponent as DefaultBackGround } from "../../assets/images/icons/ChattingDefaultBackground.svg";
-
-//assets
-export const DefaultBack = styled(DefaultBackGround)`
-  margin: 22% 45%; //임시 사이즈
-`;
-
+//components
 export const ChattingContentContainer = styled.div`
   position: relative;
   display: flex;
@@ -35,7 +29,6 @@ export const ProfileWrap = styled.div`
 
 export const MiddleFlex = styled.div`
   flex-grow: 1;
-  border: 2px solid red;
   overflow: scroll;
   padding: 23px 20px;
 `;

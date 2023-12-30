@@ -1,9 +1,17 @@
 import styled from "styled-components";
 import { ReactComponent as Add } from "../../../../assets/images/icons/Add.svg";
 import { ReactComponent as Delete } from "../../../../assets/images/icons/Delete.svg";
+import { ReactComponent as AddVedio } from "../../../../assets/images/icons/AddVedioBtn.svg";
+import { ReactComponent as AddImage } from "../../../../assets/images/icons/AddImageBtn.svg";
 //assets
 export const AddButton = styled(Add)`
   margin: 100px 75px;
+`;
+export const AddVideoButton = styled(AddVedio)`
+  margin: 50% 32%;
+`;
+export const AddImageButton = styled(AddImage)`
+  margin: 50% 28%;
 `;
 export const DeleteButton = styled(Delete)`
   position: absolute;
@@ -14,16 +22,22 @@ export const DeleteButton = styled(Delete)`
 `;
 
 //첨부파일 컨테이너
-export const AttachmentSpaceContainer = styled.div`
+export const AttachmentSpaceWrap = styled.div`
   display: flex;
   flex-direction: row;
-  border: 2px solid #d79fe3; //구분선 입니다
-  height: fit-content;
+  width: 100%;
+  height: 100%;
   overflow: scroll;
+`;
+
+export const AttachmentSpaceContainer = styled.div`
+  display: flex;
+  height: 100%;
 `;
 
 //첨부파일 래핑
 export const AttachmentWrap = styled.div`
+  flex-basis: 300px;
   width: 300px;
   position: relative;
   padding: 10px;
@@ -44,12 +58,18 @@ export const AttachedVideo = styled.video`
 export const AttachingButton = styled.label`
   height: 275px;
   width: 200px;
-  background-color: #d8d8d8;
+  background-color: #63b89c;
   font-size: inherit;
   line-height: normal;
   cursor: pointer;
-  border-radius: 30px;
-  margin: 20px;
+  border-radius: 1.7rem;
+  margin: 10px;
+  &:hover {
+    background-color: #69d3b0;
+  }
+  &:active {
+    background-color: #4a967c;
+  }
 `;
 
 //첨부인풋폼
@@ -58,5 +78,5 @@ export const AttachingInput = styled.input`
 `;
 
 export const FilesCount = styled.p`
-  border: 2px solid #e9d14b;
+  margin: 0 0 -1.3% 2%;
 `;

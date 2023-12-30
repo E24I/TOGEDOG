@@ -1,14 +1,21 @@
 import styled from "styled-components";
 
 export const SearchUsersContainer = styled.form`
-  border: 1px solid #b0b0b0;
   z-index: 5;
   position: absolute;
   top: 60px;
   left: 0;
   width: 100%;
+  margin-top: 10px;
 `;
-export const SearchBar = styled.input``;
+export const SearchBar = styled.input`
+  width: 90%;
+  height: 30px;
+  margin-left: 5%;
+  background-color: #e1e1e1;
+  border-radius: 100px;
+  padding: 5%;
+`;
 
 export const SearchedUser = styled.div`
   display: flex;

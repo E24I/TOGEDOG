@@ -60,7 +60,12 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen, setAlarmSetting }) => {
         navigator("/");
         break;
       case 2:
-        navigator("/chat");
+        if (loginState) {
+          navigator("/chat");
+        } else {
+          alert("로그인이 필요합니다.");
+          navigator("/");
+        }
         break;
       case 3:
         setAlarmSetting(true);

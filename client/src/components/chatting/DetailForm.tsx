@@ -2,16 +2,14 @@ import React from "react";
 import {
   ContentForm,
   Date,
-  Image,
   Talk,
   Talks,
   ContentContainer,
-  UserName,
   Wrap,
 } from "./DetailForm.Style";
 import { messagesType } from "../../types/chatType";
-import { useRecoilValue } from "recoil";
-import { memberIdAtom } from "../../atoms";
+import UserName from "./otherUserName";
+import UserImage from "./otherUserImage";
 
 interface DetailFormType {
   messages: messagesType;
@@ -22,28 +20,33 @@ const DetailForm: React.FC<DetailFormType> = ({ messages, myMemberId }) => {
   return (
     <ContentForm>
       {messages &&
-        messages.map((message, idx) => {
-          return (
-            <div key={message.messageId}>
-              {message.createdAt[9] !== messages[idx - 1].createdAt[9] && (
+        messages
+          .map((message) => {
+            return (
+              <div key={message.messageId}>
                 <Date>{message.createdAt}</Date>
-              )}
-              <ContentContainer>
-                {message.memberId !== myMemberId && <Image></Image>}
-                <Wrap>
+                <ContentContainer>
                   {message.memberId !== myMemberId && (
-                    <UserName>{message.memberId}</UserName>
+                    <>
+                      <UserImage id={message.memberId} />
+                      <Wrap>
+                        <UserName id={message.memberId} />
+                        <Talks data="mate">
+                          <Talk>{message.content}</Talk>
+                        </Talks>
+                      </Wrap>
+                    </>
                   )}
-                  {/* 프로필과 닉네임은 나중에 유저조회로 불러오기 */}
-                  <Talks>
-                    <Talk>{message.content}</Talk>
-                  </Talks>
-                </Wrap>
-              </ContentContainer>
-            </div>
-            //실시간 대화 업데이트용 폼이 필요한 경우 추가 생성
-          );
-        })}
+                  {message.memberId === myMemberId && (
+                    <Talks data="my">
+                      <Talk>{message.content}</Talk>
+                    </Talks>
+                  )}
+                </ContentContainer>
+              </div>
+            );
+          })
+          .reverse()}
     </ContentForm>
   );
 };

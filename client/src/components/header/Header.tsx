@@ -56,7 +56,7 @@ const Header: React.FC = () => {
         <Link to="/petmap">
           <MapButtonStyle />
         </Link>
-        <Link to="/create">
+        <Link to={loginState ? "/create" : "/"}>
           <CreateFeedButtonStyle />
         </Link>
 
