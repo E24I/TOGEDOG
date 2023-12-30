@@ -95,7 +95,7 @@ export const Setting = styled(Dots)`
 
 export const FeedContents = styled.div`
   width: 100%;
-  max-height: 123px;
+  min-height: 100px;
   padding: 10px 65px;
 `;
 

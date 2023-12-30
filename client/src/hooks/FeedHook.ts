@@ -157,6 +157,7 @@ export const useFeedLike = (
     onSuccess: (res) => {
       console.log(res);
       alert("피드 좋아요 성공");
+      queryClient.invalidateQueries({ queryKey: ["Feeds"] });
       queryClient.invalidateQueries({ queryKey: ["Feed"] });
       successFunc && successFunc();
       return;
@@ -184,6 +185,7 @@ export const useFeedBookmark = (
     onSuccess: (res) => {
       console.log(res);
       alert("피드 북마크 성공");
+      queryClient.invalidateQueries({ queryKey: ["Feeds"] });
       queryClient.invalidateQueries({ queryKey: ["Feed"] });
       successFunc && successFunc();
       return;

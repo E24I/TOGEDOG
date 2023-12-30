@@ -195,7 +195,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
             <FeedTitle>{data.title}</FeedTitle>
             <FeedContent>{data.content}</FeedContent>
           </FeedContents>
-          {data.images.length > 0 && data.videos && (
+          {(data.images.length > 0 || data.videos) && (
             <FeedDetailMedia>
               <LeftScroll onClick={handlePrevImg} />
               <FeedDetailImgs>

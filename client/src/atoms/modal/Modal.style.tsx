@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const ModalContainer = styled.div`
+  border: 1px solid rgb(215, 215, 215);
+  box-shadow: 1px 1px 5px 0.1px rgb(131, 131, 131);
   background-color: white;
   border: none;
   border-radius: 18px;
@@ -15,7 +17,6 @@ export const ModalContainer = styled.div`
 `;
 
 export const ModalContents = styled.div`
-  border: 1px solid black;
   width: 100%;
   min-height: 120px;
   padding: 20px;
@@ -37,14 +38,14 @@ export const ModalInput = styled.textarea`
 
 export const BtnBox = styled.div`
   width: 100%;
+  border-top: 1px solid rgb(215, 215, 215);
   display: flex;
   justify-content: space-around;
   align-items: center;
 `;
 
 export const ModalBtn = styled.button`
-  width: 50%;
-  border: 1px solid black;
+  width: 100%;
   max-height: 50px;
   min-height: 50px;
   padding: 10px 0px;

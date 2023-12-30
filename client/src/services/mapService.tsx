@@ -10,7 +10,7 @@ export const postMap = async (enrollMap: enrollMapType) => {
 // 피드 조회 (좌표 사용)
 export const getPetMap = async (coordinate: coordinateType) => {
   const response = await axios.post(
-    `${ROOT_URL}/map/conetent/coordinate`,
+    `${ROOT_URL}/map/content/coordinate`,
     coordinate,
   );
   return response.data;
