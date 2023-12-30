@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { memberIdAtom } from "../../atoms";
 import {
   MyFeedContainer,
   TapContainer,
@@ -15,15 +17,15 @@ import { useGetUserFeeds } from "../../hooks/UserInfoHook";
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
+  const tapMenu = ["feed", "feed-like", "feed-bookmark"];
+  const [tapList, setTapList] = useState<string[]>(tapMenu);
   const [tap, setTap] = useState<number>(0);
   const [endPoint, setEndPoint] = useState<string>("feed");
-  const tapMenu = ["feed", "feed-like", "feed-bookmark"];
-
+  const memberId = useRecoilValue(memberIdAtom);
   const handleTap = (index: number, menu: string) => {
     setTap(index);
     setEndPoint(menu);
   };
-
   const tapImg = (menu: string) => {
     switch (menu) {
       case "feed":
@@ -34,6 +36,11 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
         return <BookMarks />;
     }
   };
+  useEffect(() => {
+    if (Number(pageMemberId) !== memberId) {
+      setTapList(["feed"]);
+    }
+  }, [pageMemberId]);
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
     useGetUserFeeds(pageMemberId, endPoint);
   const feedsData = data?.pages.flat();
@@ -51,7 +58,7 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
   return (
     <MyFeedContainer>
       <TapContainer>
-        {tapMenu.map((menu: string, idx: number) =>
+        {tapList.map((menu: string, idx: number) =>
           tap === idx ? (
             <TapMenuOn key={idx}>
               <button onClick={() => handleTap(idx, menu)}>
