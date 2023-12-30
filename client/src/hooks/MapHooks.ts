@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation } from "@tanstack/react-query";
 import { coordinateType, enrollMapType } from "../types/mapType";
-import { postMap } from "../services/mapService";
+import { getPetMap, postMap } from "../services/mapService";
 import { useNavigate } from "react-router-dom";
-import PetMap from "../pages/PetMap";
 
 // 맵 좌표 등록
 export const usePostMap = (enrollMap: enrollMapType): any => {
@@ -26,7 +25,7 @@ export const usePostMap = (enrollMap: enrollMapType): any => {
 export const usePetMap = (coordinate: coordinateType) => {
   return useMutation({
     mutationFn: async () => {
-      return PetMap(coordinate);
+      return getPetMap(coordinate);
     },
     onSuccess: (res) => {
       console.log(res);
