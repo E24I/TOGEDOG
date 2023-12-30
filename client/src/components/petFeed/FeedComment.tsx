@@ -4,8 +4,8 @@ import {
   useInfiniteGetComments,
   usePostComment,
 } from "../../hooks/CommentHook";
-import { useRecoilValue } from "recoil";
-import { tokenAtom } from "../../atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { alertAtom, isLoginAtom, tokenAtom } from "../../atoms";
 import { feedCommentType } from "../../types/feedDataType";
 import CommentItem from "./CommentItems";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
@@ -15,7 +15,10 @@ interface OwnProps {
 }
 
 const FeedComment: React.FC<OwnProps> = ({ replyId }) => {
+  const isLogin = useRecoilValue(isLoginAtom);
   const accesstoken = useRecoilValue(tokenAtom);
+  const setAlertModal = useSetRecoilState(alertAtom);
+
   const [moreComments, setMoreComments] = useState(false);
   const callbackFn = () => setMoreComments(false);
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
@@ -43,7 +46,12 @@ const FeedComment: React.FC<OwnProps> = ({ replyId }) => {
 
   // 대댓글 등록 핸들러
   const handlePostComment = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") postComment();
+    if (e.key === "Enter") {
+      if (!isLogin) {
+        return setAlertModal("로그인 후 이용해주세요.");
+      }
+      postComment();
+    }
   };
 
   if (isLoading) {

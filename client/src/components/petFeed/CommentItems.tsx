@@ -15,15 +15,23 @@ import {
 import { feedCommentType } from "../../types/feedDataType";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
 import { useDeleteComment, usePatchComment } from "../../hooks/CommentHook";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { memberIdAtom, reportAtom, tokenAtom } from "../../atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  alertAtom,
+  isLoginAtom,
+  memberIdAtom,
+  reportAtom,
+  tokenAtom,
+} from "../../atoms";
 
 interface OwnProps {
   comment: feedCommentType;
 }
 
 const CommentItem: React.FC<OwnProps> = ({ comment }) => {
+  const isLogin = useRecoilValue(isLoginAtom);
   const accesstoken = useRecoilValue(tokenAtom);
+  const setAlertModal = useSetRecoilState(alertAtom);
 
   const [isSetting, setSetting] = useState<boolean>(false);
   const [isEditMode, setEditMode] = useState<boolean>(false);
@@ -51,12 +59,16 @@ const CommentItem: React.FC<OwnProps> = ({ comment }) => {
 
   // 대댓글 신고
   const [reportModal, setReportModal] = useRecoilState(reportAtom);
-  const handleReportComment = () =>
+  const handleReportComment = () => {
+    if (!isLogin) {
+      return setAlertModal("로그인 후 이용해주세요.");
+    }
     setReportModal({
       ...reportModal,
       sort: "comment",
       commentId: comment.commentId,
     });
+  };
 
   const myId = useRecoilValue(memberIdAtom);
   const settingContent =

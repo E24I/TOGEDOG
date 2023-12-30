@@ -28,7 +28,7 @@ export const ModalContents = styled.div`
 `;
 
 export const ModalInput = styled.textarea`
-  border: 1px solid black;
+  border: 1px solid rgb(215, 215, 215);
   border-radius: 8px;
   width: 100%;
   height: 200px;

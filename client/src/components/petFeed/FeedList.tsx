@@ -36,8 +36,14 @@ import {
   useFeedBookmark,
   useFeedLike,
 } from "../../hooks/FeedHook";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { memberIdAtom, reportAtom, tokenAtom } from "../../atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  alertAtom,
+  isLoginAtom,
+  memberIdAtom,
+  reportAtom,
+  tokenAtom,
+} from "../../atoms";
 import { useNavigate } from "react-router-dom";
 
 interface OwnProps {
@@ -45,7 +51,9 @@ interface OwnProps {
 }
 
 const FeedList: React.FC<OwnProps> = ({ items }) => {
+  const isLogin = useRecoilValue(isLoginAtom);
   const accesstoken = useRecoilValue(tokenAtom);
+  const setAlertModal = useSetRecoilState(alertAtom);
 
   const [isDetail, setDetail] = useState<boolean>(false);
   const [isSetting, setSetting] = useState<boolean>(false);
@@ -98,8 +106,12 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
 
   // 피드 신고
   const [reportModal, setReportModal] = useRecoilState(reportAtom);
-  const handleReplyReport = () =>
+  const handleReplyReport = () => {
+    if (!isLogin) {
+      return setAlertModal("로그인 후 이용해주세요.");
+    }
     setReportModal({ ...reportModal, sort: "feed", feedId: items.feedId });
+  };
 
   // 피드 수정 (핸들러)
   const handleReplyPatch = () => {
