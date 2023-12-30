@@ -46,7 +46,7 @@ public class ChatController {
     }
 
     //채팅방 조회
-    @GetMapping("/{chatroom-id}")
+    @PostMapping("/{chatroom-id}")
     public ResponseEntity<ChatRoomResponse> getChatRoom(@PathVariable("chatroom-id") Long chatRoomId, @RequestBody ChatGetRequest chatGetRequest) {
 
         ChatRoomResponse response = chatService.findChatRoom(chatGetRequest.getMemberId(), chatRoomId);
