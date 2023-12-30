@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { ReactComponent as Message } from "../../assets/images/icons/signUpIcons/Message.svg";
-import { ReactComponent as Person } from "../../assets/images/icons/signUpIcons/Person.svg";
-import { ReactComponent as Lock } from "../../assets/images/icons/signUpIcons/Lock.svg";
 import {
   InputContainer,
   CheckBoxContainer,
@@ -11,6 +8,9 @@ import {
   ErrorMsg,
   TextInput,
   SubmitButton,
+  MessageIcon,
+  PersonIcon,
+  LockIcon,
 } from "./SignUpInputs.style";
 import {
   usePostSignUp,
@@ -101,7 +101,7 @@ const SignUpInputs = () => {
       >
         <div>
           <TextInput>
-            <Message />
+            <MessageIcon />
             <input
               type="text"
               placeholder="이메일을 입력해주세요."
@@ -118,7 +118,7 @@ const SignUpInputs = () => {
         </div>
         <div>
           <TextInput>
-            <Message />
+            <MessageIcon />
             <input
               type="text"
               placeholder="인증번호를 입력해주세요."
@@ -130,7 +130,7 @@ const SignUpInputs = () => {
         </div>
         <div>
           <TextInput>
-            <Person />
+            <PersonIcon />
             <input
               type="text"
               placeholder="닉네임을 입력해주세요."
@@ -142,7 +142,7 @@ const SignUpInputs = () => {
         </div>
         <div>
           <TextInput>
-            <Lock />
+            <LockIcon />
             <input
               type="password"
               placeholder="비밀번호를 입력해주세요."
@@ -163,7 +163,7 @@ const SignUpInputs = () => {
         </div>
         <div>
           <TextInput>
-            <Lock />
+            <LockIcon />
             <input
               type="password"
               placeholder="비밀번호를 확인해주세요."

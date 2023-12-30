@@ -77,6 +77,7 @@ export const useDeleteFeed = (
       console.log(res);
       alert("피드 삭제 완료");
       queryClient.invalidateQueries({ queryKey: ["Feeds"] });
+      queryClient.invalidateQueries({ queryKey: ["userFeed"] });
       successFunc && successFunc();
       return;
     },
@@ -104,6 +105,7 @@ export const usePostFeed = (
     },
     onSuccess: async (res) => {
       queryClient.invalidateQueries({ queryKey: ["Feeds"] });
+      queryClient.invalidateQueries({ queryKey: ["userFeed"] });
       enrollMapInfo.feedId = Number(res.headers.location.substr(6));
       if (isMapAssign && enrollMapInfo) {
         await postMapMutation.mutateAsync(enrollMapInfo);
@@ -157,6 +159,7 @@ export const useFeedLike = (
     onSuccess: (res) => {
       console.log(res);
       alert("피드 좋아요 성공");
+      queryClient.invalidateQueries({ queryKey: ["Feeds"] });
       queryClient.invalidateQueries({ queryKey: ["Feed"] });
       successFunc && successFunc();
       return;
@@ -184,6 +187,7 @@ export const useFeedBookmark = (
     onSuccess: (res) => {
       console.log(res);
       alert("피드 북마크 성공");
+      queryClient.invalidateQueries({ queryKey: ["Feeds"] });
       queryClient.invalidateQueries({ queryKey: ["Feed"] });
       successFunc && successFunc();
       return;

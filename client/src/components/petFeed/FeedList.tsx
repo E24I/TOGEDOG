@@ -31,9 +31,19 @@ import {
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
-import { useDeleteFeed } from "../../hooks/FeedHook";
+import {
+  useDeleteFeed,
+  useFeedBookmark,
+  useFeedLike,
+} from "../../hooks/FeedHook";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { memberIdAtom, reportAtom, tokenAtom } from "../../atoms";
+import {
+  alertAtom,
+  isLoginAtom,
+  memberIdAtom,
+  reportAtom,
+  tokenAtom,
+} from "../../atoms";
 import { useNavigate } from "react-router-dom";
 
 interface OwnProps {
@@ -41,11 +51,11 @@ interface OwnProps {
 }
 
 const FeedList: React.FC<OwnProps> = ({ items }) => {
+  const isLogin = useRecoilValue(isLoginAtom);
   const accesstoken = useRecoilValue(tokenAtom);
+  const setAlertModal = useSetRecoilState(alertAtom);
 
   const [isDetail, setDetail] = useState<boolean>(false);
-  const [isLike, setLike] = useState<boolean>(false);
-  const [isBookmark, setBookmark] = useState<boolean>(false);
   const [isSetting, setSetting] = useState<boolean>(false);
   const today = new Date();
   const createDate = items.createdDate.split("T")[0];
@@ -53,10 +63,10 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   const createTime = items.createdDate.split("T")[1];
   const feedTime = createTime.split(":").map((el) => parseInt(el));
   const feedId = items.feedId;
+  const { mutate: feedLike } = useFeedLike(feedId, accesstoken);
+  const { mutate: feedBookmark } = useFeedBookmark(feedId, accesstoken);
 
   const handleMoreReview = (): void => setDetail(!isDetail);
-  const handleLike = (): void => setLike(!isLike);
-  const handleBookmark = (): void => setBookmark(!isBookmark);
   const handleSetting = (): void => setSetting(!isSetting);
   const handleCloseDropdown = () => setSetting(false);
 
@@ -96,8 +106,12 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
 
   // 피드 신고
   const [reportModal, setReportModal] = useRecoilState(reportAtom);
-  const handleReplyReport = () =>
+  const handleReplyReport = () => {
+    if (!isLogin) {
+      return setAlertModal("로그인 후 이용해주세요.");
+    }
     setReportModal({ ...reportModal, sort: "feed", feedId: items.feedId });
+  };
 
   // 피드 수정 (핸들러)
   const handleReplyPatch = () => {
@@ -162,7 +176,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
       </FeedHeader>
       <FeedContents>
         <FeedTitle>{items.title}</FeedTitle>
-        <FeedContent>{items.content}</FeedContent>
+        <FeedContent dangerouslySetInnerHTML={{ __html: items.content }} />
       </FeedContents>
 
       {(items.images.length > 0 || items.videos) && (
@@ -202,16 +216,16 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
           <Heart
             width="30px"
             height="30px"
-            isLike={isLike}
-            handleFunc={handleLike}
+            isLike={items.likeYn}
+            handleFunc={feedLike}
           />
           <span>{items.likeCount}</span>
         </LikeBox>
         <Bookmark
           width="30px"
           height="30px"
-          isBookmark={isBookmark}
-          handleFunc={handleBookmark}
+          isBookmark={items.bookmarkYn}
+          handleFunc={feedBookmark}
         />
       </FeedStatus>
       <FeedBottom>

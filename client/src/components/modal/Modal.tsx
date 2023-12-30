@@ -52,7 +52,6 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen, setAlarmSetting }) => {
           navigator(`/user/${memberId}`);
         } else {
           alert("로그인이 필요합니다.");
-          navigator("/");
         }
         break;
       case 1:
@@ -68,7 +67,11 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen, setAlarmSetting }) => {
         }
         break;
       case 3:
-        setAlarmSetting(true);
+        if (loginState) {
+          setAlarmSetting(true);
+        } else {
+          alert("로그인이 필요합니다.");
+        }
         break;
       case 4:
         navigator("/search");

@@ -9,7 +9,7 @@ import {
   LostPassword,
   SignUpMove,
   LoginInput,
-  LogoImg,
+  YellowLogo,
 } from "./LoginForm.style";
 import { usePostLogin } from "../../hooks/MemberHook";
 
@@ -34,7 +34,7 @@ const LoginForm: React.FC = () => {
   return (
     <>
       <InputContainer>
-        <LogoImg>로고</LogoImg>
+        <YellowLogo />
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -54,7 +54,7 @@ const LoginForm: React.FC = () => {
             비밀번호를 잊으셨나요?
           </LostPassword>
           {lostPw && <PasswordChangeForm setLostPw={setLostPw} />}
-          <LoginButtonOn onClick={handleLogin}>로그인</LoginButtonOn>
+          <LoginButtonOn onClick={handleLogin}>Login</LoginButtonOn>
         </form>
         <div>
           <Oauth />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -19,15 +19,18 @@ import {
   Form,
   CategoryForm,
 } from "./PetProfileForm.style";
-import {
-  useDeletePetInfo,
-  usePatchPetIntro,
-} from "../../../hooks/UserInfoHook";
+import { usePatchPetIntro } from "../../../hooks/UserInfoHook";
 import { confirmAtom, tokenAtom } from "../../../atoms";
-import { getPetInfo } from "../../../services/userInfoService";
-import ConfirmModal from "../../../atoms/modal/ConfirmModal";
+import {
+  getPetInfo,
+  patchPetProfileImg,
+} from "../../../services/userInfoService";
 import { PetImgForm } from "../../../atoms/imgForm/ImgForm";
 import { petIntro } from "../../../types/userInfoType";
+import { ChangeImgButton } from "../infoChangeComponent/ProfileChange.style";
+import { AttachingInput } from "../../petFeed/writingSpace/CreatingSpace/Upload.Style";
+import { getPresignedUrl, uploadToS3 } from "../../../services/feedService";
+import { queryClient } from "../../..";
 
 const PetProfileForm = () => {
   const navigate = useNavigate();
@@ -35,24 +38,28 @@ const PetProfileForm = () => {
   const { petId } = useParams<{ petId: string }>();
   const currentPetId = petId || "";
   const token = useRecoilValue(tokenAtom);
-
-  // const [isModal, setIsModal] = useState<boolean>(false);
   const [petData, setPetData] = useState<petIntro>({ petIntro: "" });
-
+  const [imageFiles, setImageFiles] = useState<{
+    file: File | null;
+    name: string;
+    type: string;
+  }>({ file: null, name: "", type: "" });
   const [isEditing, setIsEditing] = useState(false); // 수정 상태
 
   const handleEdit = () => {
     setIsEditing(true); // 수정 상태로 전환
   };
   const { register, handleSubmit } = useForm();
-
-  // const { mutate: deletePet } = useDeletePetInfo(currentPetId);
   const { mutate: patchPet } = usePatchPetIntro(petData, currentPetId);
 
+  //수정 누르고 수정후 저장버튼을 누르면 실행
   const onSubmit = (data: any) => {
     setIsEditing(false);
-    setPetData(data);
-    patchPet();
+    if (data.petIntro !== "") {
+      setPetData(data);
+      patchPet();
+    }
+    handelChange();
   };
 
   const { data, isLoading, error } = useQuery({
@@ -60,8 +67,33 @@ const PetProfileForm = () => {
     queryFn: () => getPetInfo(currentPetId, token),
   });
 
+  //펫 프로필이미지 변경
+  const uploadImg = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      const name = file.name;
+      const type = file.type;
+      setImageFiles({ file: file, name: name, type: type });
+    }
+  };
+  let imgURL = "";
+  const handelChange = async () => {
+    await getPresignedUrl(imageFiles.name).then((res) => {
+      uploadToS3(res, imageFiles.file, imageFiles.type).then((res) => {
+        if (res.config.url) {
+          imgURL = res.config.url.substring(0, res.config.url.indexOf("?"));
+          patchPetProfileImg(imgURL, token, Number(currentPetId)).then(() => {
+            queryClient.invalidateQueries({ queryKey: ["petInfo"] });
+            console.log(data);
+          });
+        }
+      });
+    });
+  };
+
   // 펫 삭제
   const [alertModal, setAlertModal] = useRecoilState(confirmAtom);
+  // 펫 삭제 컨펌모달
   const handleDeleteAlert = () =>
     setAlertModal({
       ...alertModal,
@@ -69,7 +101,6 @@ const PetProfileForm = () => {
       content: "삭제하시겠습니까?",
       currentPetId: currentPetId,
     });
-
   if (error) {
     return <div>{petId}Error</div>;
   }
@@ -96,12 +127,32 @@ const PetProfileForm = () => {
           }}
         >
           <ImgInfo>
-            <PetImgForm
-              width={200}
-              height={200}
-              radius={50}
-              URL={data?.data.image}
+            <AttachingInput
+              id="add_image"
+              type="file"
+              accept="image/*"
+              onChange={uploadImg}
             />
+            {imageFiles.file ? (
+              <PetImgForm
+                width={200}
+                height={200}
+                radius={50}
+                URL={URL.createObjectURL(imageFiles.file)}
+              />
+            ) : (
+              <PetImgForm
+                width={200}
+                height={200}
+                radius={50}
+                URL={data?.data.image}
+              />
+            )}
+            {isEditing && (
+              <ChangeImgButton htmlFor="add_image">
+                프로필사진 바꾸기
+              </ChangeImgButton>
+            )}
             <NameText>
               <strong>{data?.data.name}</strong> ∙ {data?.data.age}살
             </NameText>

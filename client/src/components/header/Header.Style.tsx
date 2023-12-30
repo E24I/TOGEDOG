@@ -12,16 +12,45 @@ import { ReactComponent as Profile } from "../../assets/images/icons/headerIcons
 
 //assets style
 export const Logo = styled(Home)``;
-export const MainButtonStyle = styled(Main)``;
-export const MapButtonStyle = styled(Map)``;
-export const CreateFeedButtonStyle = styled(CreateFeed)``;
-export const NotificationsStyle = styled(Notifications)``;
-export const RedPointStyle = styled(NotificationsRedPoint)``;
+export const MainButtonStyle = styled(Main)`
+  width: 39px;
+  height: 36px;
+  path {
+    fill: #f8d259;
+  }
+`;
+export const MapButtonStyle = styled(Map)`
+  width: 39px;
+  height: 39px;
+  path {
+    fill: #f8d259;
+  }
+`;
+export const CreateFeedButtonStyle = styled(CreateFeed)`
+  width: 39px;
+  height: 39px;
+  path {
+    fill: #f8d259;
+  }
+`;
+export const NotificationsStyle = styled(Notifications)`
+  width: 48px;
+  path {
+    fill: #f8d259;
+  }
+`;
+export const RedPointStyle = styled(NotificationsRedPoint)`
+  width: 48px;
+  height: 58px;
+  path {
+    fill: #f8d259;
+  }
+`;
 export const ProfileStyle = styled(Profile)`
   background-color: #d7d7d7;
   border-radius: 100px;
-  width: 60px; //임시 사이징 입니다
-  height: 60px; //임시 사이징 입니다
+  width: 50px; //임시 사이징 입니다
+  height: 50px; //임시 사이징 입니다
   cursor: pointer;
 `;
 
@@ -34,19 +63,27 @@ export const HeaderContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 80px; //추후 수정 부분
-  justify-content: space-between;
-  align-items: center;
+  height: 70px; //추후 수정 부분
   border-bottom: 1px solid #d8d8d8; //구분을 위한 임시 코드 입니다
   padding: 0 20px; //임시 코드 입니다
+`;
+
+export const HeaderBox = styled.div`
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export const MiddleButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 500px; // 추후 수정 부분
   justify-content: space-between;
   align-items: center;
+  width: 33.3%;
+  margin-right: 70px;
 `;
 
 export const NotificationsContainer = styled.button`

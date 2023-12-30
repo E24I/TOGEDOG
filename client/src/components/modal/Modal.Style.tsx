@@ -18,7 +18,7 @@ export const ModeButton = styled(Mode)``;
 //components
 export const ModalContainer = styled.div`
   position: absolute;
-  top: 80px; // 헤더의 높이만큼 지정
+  top: 70px; // 헤더의 높이만큼 지정
   left: 0;
   width: 100%;
   height: 100vh;

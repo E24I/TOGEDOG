@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
@@ -10,21 +10,47 @@ import {
   MiddleBox,
   RegisterButton,
   Input,
+  RadioBox,
+  Textarea,
+  ImgBox,
 } from "./PetAdd.style";
 import { postPetInfo } from "../../../services/userInfoService";
 import { tokenAtom } from "../../../atoms";
+import { AttachingInput } from "../../petFeed/writingSpace/CreatingSpace/Upload.Style";
+import { PetImgForm } from "../../../atoms/imgForm/ImgForm";
+import { ChangeImgButton } from "../infoChangeComponent/ProfileChange.style";
+import { getPresignedUrl, uploadToS3 } from "../../../services/feedService";
 
 const PetAddForm: React.FC = () => {
   const navigate = useNavigate();
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm();
+  const { register, handleSubmit } = useForm();
+  const [imageFiles, setImageFiles] = useState<{
+    file: File | null;
+    name: string;
+    type: string;
+  }>({ file: null, name: "", type: "" });
   const toekn = useRecoilValue(tokenAtom);
-  const onSubmit = (data: any) => {
-    postPetInfo(data, toekn);
-    navigate(-1);
+  let imgURL = "";
+  const uploadImg = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      const name = file.name;
+      const type = file.type;
+      setImageFiles({ file: file, name: name, type: type });
+    }
+  };
+  const handelSubmit = async (data: any) => {
+    await getPresignedUrl(imageFiles.name).then((res) => {
+      uploadToS3(res, imageFiles.file, imageFiles.type).then((res) => {
+        if (res.config.url) {
+          imgURL = res.config.url.substring(0, res.config.url.indexOf("?"));
+          const realData = { ...data, image: imgURL };
+          postPetInfo(realData, toekn);
+          console.log(realData);
+          navigate(-1);
+        }
+      });
+    });
   };
   return (
     <PetAddContainer>
@@ -33,7 +59,26 @@ const PetAddForm: React.FC = () => {
         <Title>펫 등록</Title>
       </TopBox>
       <MiddleBox>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <ImgBox>
+          <AttachingInput
+            id="add_image"
+            type="file"
+            accept="image/*"
+            onChange={uploadImg}
+          />
+          {imageFiles.file ? (
+            <PetImgForm
+              width={200}
+              height={200}
+              radius={50}
+              URL={URL.createObjectURL(imageFiles.file)}
+            />
+          ) : (
+            <PetImgForm width={200} height={200} radius={50} URL={null} />
+          )}
+          <ChangeImgButton htmlFor="add_image">프로필사진 추가</ChangeImgButton>
+        </ImgBox>
+        <form onSubmit={handleSubmit(handelSubmit)}>
           <Input
             type="text"
             placeholder="반려동물의 이름 입력해주세요."
@@ -58,28 +103,29 @@ const PetAddForm: React.FC = () => {
               },
             })}
           />
-          <label>
-            여자
-            <input
-              type="radio"
-              value="FEMAIL"
-              {...register("gender", { required: true })}
-            />
-          </label>
-          <label>
-            남자
-            <input
-              type="radio"
-              value="MALE"
-              {...register("gender", { required: true })}
-            />
-          </label>
-          <Input
-            type="text"
+          <Textarea
             placeholder="반려동물의 소개를 자유롭게 입력해주세요."
             autoComplete="off"
             {...register("petIntro")}
           />
+          <RadioBox>
+            <label>
+              여자
+              <input
+                type="radio"
+                value="FEMAIL"
+                {...register("gender", { required: true })}
+              />
+            </label>
+            <label>
+              남자
+              <input
+                type="radio"
+                value="MALE"
+                {...register("gender", { required: true })}
+              />
+            </label>
+          </RadioBox>
           <RegisterButton type="submit">등록</RegisterButton>
         </form>
       </MiddleBox>

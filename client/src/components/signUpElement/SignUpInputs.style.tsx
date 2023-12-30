@@ -1,4 +1,7 @@
 import { styled } from "styled-components";
+import { ReactComponent as Message } from "../../assets/images/icons/signUpIcons/Message.svg";
+import { ReactComponent as Person } from "../../assets/images/icons/signUpIcons/Person.svg";
+import { ReactComponent as Lock } from "../../assets/images/icons/signUpIcons/Lock.svg";
 
 export const InputContainer = styled.div`
   display: flex;
@@ -23,7 +26,7 @@ export const InputContainer = styled.div`
       height: 36px;
       padding: 10px 13px;
       border-radius: 100px;
-      border: 1px solid #d7d7d7;
+      border: 1px solid #494949;
       color: #818181;
       font-size: 10px;
       font-weight: 400;
@@ -35,7 +38,7 @@ export const InputContainer = styled.div`
 `;
 
 export const TextInput = styled.div`
-  border-bottom: 1px solid #d7d7d7;
+  border-bottom: 1px solid #494949;
   display: flex;
   width: 320px;
   flex-direction: row;
@@ -77,7 +80,23 @@ export const CheckInput = styled.input`
 
 export const SubmitButton = styled.button`
   color: black;
-  background: #d7d7d7;
+  background: #494949;
   position: absolute;
   bottom: -50px;
+`;
+
+export const MessageIcon = styled(Message)`
+  path {
+    fill: #494949;
+  }
+`;
+export const PersonIcon = styled(Person)`
+  path {
+    fill: #494949;
+  }
+`;
+export const LockIcon = styled(Lock)`
+  path {
+    fill: #494949;
+  }
 `;

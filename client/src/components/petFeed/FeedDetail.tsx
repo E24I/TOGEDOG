@@ -47,8 +47,14 @@ import {
   useFeedLike,
   useGetFeed,
 } from "../../hooks/FeedHook";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { memberIdAtom, reportAtom, tokenAtom } from "../../atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  alertAtom,
+  isLoginAtom,
+  memberIdAtom,
+  reportAtom,
+  tokenAtom,
+} from "../../atoms";
 import { usePostReply } from "../../hooks/ReplyHook";
 import FeedReplies from "./FeedReplies";
 
@@ -58,7 +64,10 @@ interface OwnProps {
 }
 
 const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
+  const isLogin = useRecoilValue(isLoginAtom);
   const accesstoken = useRecoilValue(tokenAtom);
+  const setAlertModal = useSetRecoilState(alertAtom);
+
   const { data, error, isLoading } = useGetFeed(feedId, accesstoken);
   const { mutate: feedLike } = useFeedLike(feedId, accesstoken);
   const { mutate: feedBookmark } = useFeedBookmark(feedId, accesstoken);
@@ -94,7 +103,12 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
     setInput(""),
   );
   const handleEnterReply = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") postReply();
+    if (e.key === "Enter") {
+      if (!isLogin) {
+        return setAlertModal("로그인 후 이용해주세요.");
+      }
+      postReply();
+    }
   };
 
   // 피드 수정
@@ -110,8 +124,12 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
 
   // 피드 신고
   const [reportModal, setReportModal] = useRecoilState(reportAtom);
-  const handleReplyReport = () =>
+  const handleReplyReport = () => {
+    if (!isLogin) {
+      return setAlertModal("로그인 후 이용해주세요.");
+    }
     setReportModal({ ...reportModal, sort: "feed", feedId: feedId });
+  };
 
   // 설정 드롭다운 버튼 종류 및 핸들러 연결
   const myId = useRecoilValue(memberIdAtom);
@@ -195,7 +213,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
             <FeedTitle>{data.title}</FeedTitle>
             <FeedContent>{data.content}</FeedContent>
           </FeedContents>
-          {data.images.length > 0 && data.videos && (
+          {(data.images.length > 0 || data.videos) && (
             <FeedDetailMedia>
               <LeftScroll onClick={handlePrevImg} />
               <FeedDetailImgs>

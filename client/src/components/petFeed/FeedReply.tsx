@@ -26,15 +26,23 @@ import {
   useLikeReply,
   usePatchReply,
 } from "../../hooks/ReplyHook";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { memberIdAtom, reportAtom, tokenAtom } from "../../atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  alertAtom,
+  isLoginAtom,
+  memberIdAtom,
+  reportAtom,
+  tokenAtom,
+} from "../../atoms";
 
 interface OwnProps {
   reply: any;
 }
 
 const FeedReply: React.FC<OwnProps> = ({ reply }) => {
+  const isLogin = useRecoilValue(isLoginAtom);
   const accesstoken = useRecoilValue(tokenAtom);
+  const setAlertModal = useSetRecoilState(alertAtom);
 
   const [isSetting, setSetting] = useState<boolean>(false);
   const [isComment, setComment] = useState<boolean>(false);
@@ -71,8 +79,12 @@ const FeedReply: React.FC<OwnProps> = ({ reply }) => {
 
   // 댓글 신고
   const [reportModal, setReportModal] = useRecoilState(reportAtom);
-  const handleReplyReport = () =>
+  const handleReplyReport = () => {
+    if (!isLogin) {
+      return setAlertModal("로그인 후 이용해주세요.");
+    }
     setReportModal({ ...reportModal, sort: "reply", replyId: reply.replyId });
+  };
 
   const myId = useRecoilValue(memberIdAtom);
   const settingContent =

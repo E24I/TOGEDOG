@@ -15,8 +15,6 @@ const FeedReplies: React.FC<OwnProps> = ({ feedId }) => {
     useInfiniteGetReplies(feedId);
   const repliesData = data?.pages.flat();
 
-  // console.log(repliesData);
-
   const { setTarget } = useIntersectionObserver({
     hasNextPage,
     fetchNextPage,
@@ -35,7 +33,7 @@ const FeedReplies: React.FC<OwnProps> = ({ feedId }) => {
         <FeedReply key={reply.replyId} reply={reply} />
       ))}
       {moreReplies && <div ref={setTarget}></div>}
-      {hasNextPage && (
+      {repliesData && repliesData.length > 0 && hasNextPage && (
         <button onClick={() => setMoreReplies(true)}>댓글 더보기</button>
       )}
     </Replies>
