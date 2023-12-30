@@ -7,15 +7,19 @@ import togedog.server.domain.chat.dto.ChatPostRequest;
 import togedog.server.domain.chat.dto.ChatRoomResponse;
 import togedog.server.domain.chat.entity.ChatParticipant;
 import togedog.server.domain.chat.entity.ChatRoom;
+import togedog.server.domain.chat.entity.Message;
 import togedog.server.domain.chat.mapper.ChatMapper;
 import togedog.server.domain.chat.repository.ChatParticipantRepository;
 import togedog.server.domain.chat.repository.ChatRoomRepository;
+import togedog.server.domain.chat.repository.MessageRepository;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
+import togedog.server.global.exception.businessexception.chatexception.ChatBadRequestException;
 import togedog.server.global.exception.businessexception.chatexception.ChatNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,8 +34,14 @@ public class ChatService {
 
     private final ChatMapper chatMapper;
 
+    private final MessageRepository messageRepository;
+
     @Transactional
     public Long createChatRoom(ChatPostRequest chatPostRequest) {
+
+        if(chatPostRequest.getInviteMemberId().equals(chatPostRequest.getRequestMemberId())) {
+            throw new ChatBadRequestException();
+        }
 
         Member requestMember = findMemberById(chatPostRequest.getRequestMemberId());
         Member inviteMember = findMemberById(chatPostRequest.getInviteMemberId());
@@ -40,8 +50,7 @@ public class ChatService {
         chatRoom = chatRoomRepository.save(chatRoom);
 
         //참가자가 같은 방이 존재하면 Exception 발생
-        verifyExistParticipant(requestMember.getMemberId(), chatRoom.getChatRoomId());
-        verifyExistParticipant(inviteMember.getMemberId(), chatRoom.getChatRoomId());
+        verifyExistParticipant(requestMember.getMemberId(), inviteMember.getMemberId(), chatRoom.getChatRoomId());
 
         //채팅방 참가자(요청자, 초대자) save
         ChatParticipant requestParticipant = chatParticipantRepository
@@ -89,6 +98,14 @@ public class ChatService {
 
         findChatParticipants.forEach(chatParticipantRepository::delete);
 
+        List<Message> messageList = messageRepository.findByChatRoomChatRoomId(chatRoomId);
+
+        if(!messageList.isEmpty()) {
+            for(Message message : messageList) {
+                messageRepository.delete(message);
+            }
+        }
+
         chatRoomRepository.delete(findChatRoom);
 
         return true;
@@ -99,10 +116,22 @@ public class ChatService {
         return memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
     }
 
-    private void verifyExistParticipant(Long memberId, Long chatRoomId) {
+    private void verifyExistParticipant(Long memberId1, Long memberId2, Long chatRoomId) {
 
-        if(!chatParticipantRepository.findByMemberMemberIdAndChatRoomChatRoomId(memberId, chatRoomId).isEmpty()) {
-            throw new ChatNotFoundException();
+        List<ChatParticipant> chatParticipantsByMember1 = chatParticipantRepository.findByMemberMemberId(memberId1);
+
+        List<ChatParticipant> chatParticipantsByMember2 = chatParticipantRepository.findByMemberMemberId(memberId2);
+
+        boolean checkJoinedSameChatRoom = false;
+
+        for(ChatParticipant chatParticipant1 : chatParticipantsByMember1) {
+            Long findChatId = chatParticipant1.getChatRoom().getChatRoomId();
+
+            for(ChatParticipant chatParticipant2 : chatParticipantsByMember2) {
+                if(findChatId.equals(chatParticipant2.getChatRoom().getChatRoomId())) {
+                    throw new ChatBadRequestException();
+                }
+            }
         }
     }
 }
