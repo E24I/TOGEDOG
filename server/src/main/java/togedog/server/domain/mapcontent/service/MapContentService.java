@@ -23,6 +23,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MapContentService {
 
+    private final Double X_COORDINATE_VALUE_PER_100_METERS = 0.0012;
+
+    private final Double Y_COORDINATE_VALUE_PER_100_METERS = 0.0009;
+
     private final MapContentRepository mapContentRepository;
 
     private final FeedRepository feedRepository;
@@ -46,8 +50,8 @@ public class MapContentService {
         utm_kToWgs.transform(new ProjCoordinate(utm_x, utm_y), result);
 
         MapContent mapContent = MapContent.builder()
-                .wsg84x(Double.toString(result.x))
-                .wsg84y(Double.toString(result.y))
+                .wgs84x(result.x)
+                .wgs84y(result.y)
                 .feeds(new ArrayList<>())
                 .build();
 
@@ -69,23 +73,34 @@ public class MapContentService {
         MapContent mapContent = mapContentRepository.findById(feed.getMapContent().getMapContentId()).orElseThrow();
 
         return MapContentResponse.builder()
-                .wgs84_x(mapContent.getWsg84x())
-                .wgs84_y(mapContent.getWsg84y())
+                .wgs84_x(Double.toString(mapContent.getWgs84x()))
+                .wgs84_y(Double.toString(mapContent.getWgs84y()))
                 .build();
     }
 
     public MapContentFeedIdResponse findFeedFromWsg84(MapContentGetRequest request) {
 
+        double thresholdX = Double.parseDouble(request.getWgs84_x());
+        double thresholdY = Double.parseDouble(request.getWgs84_y());
 
-        Optional<MapContent> findMapContent = mapContentRepository.findByWsg84xAndWsg84y(request.getWgs84_x(), request.getWgs84_y());
+        double thresholdXMin = thresholdX - ( X_COORDINATE_VALUE_PER_100_METERS * request.getRange() );
+        double thresholdXMax = thresholdX + ( X_COORDINATE_VALUE_PER_100_METERS * request.getRange() );
+
+        double thresholdYMin = thresholdY - ( Y_COORDINATE_VALUE_PER_100_METERS * request.getRange() );
+        double thresholdYMax = thresholdY + ( Y_COORDINATE_VALUE_PER_100_METERS * request.getRange() );
+
+        List<MapContent> findMapContent = mapContentRepository.findMapContentByThreshold(thresholdXMin, thresholdXMax, thresholdYMin, thresholdYMax);
 
         if(findMapContent.isEmpty()) {
             throw new MapContentNotFoundException();
         }
 
-        List<Feed> findFeeds = findMapContent.get().getFeeds();
         MapContentFeedIdResponse response = new MapContentFeedIdResponse();
-        findFeeds.forEach(o -> response.getFeedIdList().add(o.getFeedId()));
+
+        for(MapContent mapContent : findMapContent) {
+            List<Feed> findFeeds = mapContent.getFeeds();
+            findFeeds.forEach(o -> response.getFeedIdList().add(o.getFeedId()));
+        }
 
         return response;
     }
