@@ -9,11 +9,14 @@ import togedog.server.domain.pet.dto.PetDto;
 import togedog.server.domain.pet.entity.Pet;
 import togedog.server.domain.pet.repository.PetRepository;
 import togedog.server.global.auth.utils.LoginMemberUtil;
+import togedog.server.global.exception.businessexception.dbexception.DbException;
 import togedog.server.global.exception.businessexception.memberexception.MemberAccessDeniedException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
 import togedog.server.global.exception.businessexception.petexception.PetMemberNotAccordException;
 import togedog.server.global.exception.businessexception.petexception.PetNotFoundException;
+
+import javax.transaction.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -24,7 +27,7 @@ public class PetService {
     private final LoginMemberUtil loginMemberUtil;
     private final MemberRepository memberRepository;
 
-
+    //펫 추가
     public Pet createPet(Pet pet){
         Long loginMemberId = loginMemberUtil.getLoginMemberId();
 
@@ -39,6 +42,7 @@ public class PetService {
         return pet;
     }
 
+    //펫 수정
     public Pet updatePet(PetDto.Patch patchDto){
         Long loginMemberId = loginMemberUtil.getLoginMemberId();
 
@@ -54,7 +58,6 @@ public class PetService {
         }
 
         pet.setPetIntro(patchDto.getPetIntro());
-        pet.setImage(patchDto.getImage());
 
         return petRepository.save(pet);
     }
@@ -78,13 +81,14 @@ public class PetService {
 //    }
 
 
+    //펫 1마리 조회
     public Pet findOnePet(Long petId){
         Pet pet = petRepository.findById(petId).orElseThrow(() -> new PetNotFoundException());
         return pet;
     }
 
 
-
+    //펫 1마리 삭제
     public void deleteOnePet(Long petId){
         Long loginMemberId = loginMemberUtil.getLoginMemberId();
 
@@ -99,5 +103,25 @@ public class PetService {
         }
     }
 
+    //펫 이미지 업데이트
+    @Transactional
+    public void updatePetImage(Long petId ,String image){
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+
+        if(loginMemberId == null){
+            throw new MemberNotFoundException();
+        }
+
+        try {
+            Pet pet = petRepository.findById(petId).orElseThrow(() -> new PetNotFoundException());
+
+            if(pet.getMember().getMemberId() != loginMemberId){
+                throw new MemberAccessDeniedException();
+            }
+            pet.setImage(image);
+        }catch (Exception e) {
+            throw new DbException();
+        }
+    }
 
 }

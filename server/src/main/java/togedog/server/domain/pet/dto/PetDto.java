@@ -23,6 +23,11 @@ public class PetDto {
     public static class Patch{
         private Long petId;
         private String petIntro;
+    }
+
+    @Getter
+    @Setter
+    public static class PatchImage{
         private String image;
     }
 

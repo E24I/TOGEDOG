@@ -198,6 +198,7 @@ public class MemberController {
      */
     @PostMapping("/signup/emails/send-code")
     public ResponseEntity sendSingnupMessage(@RequestParam("email") String email) {
+        memberService.verifyExistsEmail(email);
         mailService.sendCodeToEmail(email);
         return new ResponseEntity<>(HttpStatus.OK);
     }

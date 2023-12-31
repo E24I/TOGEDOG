@@ -13,7 +13,7 @@ public interface FeedBookmarkRepository extends JpaRepository<FeedBookmark, Long
 
     Optional<FeedBookmark> findByMemberAndFeed(Member member, Feed feed);
 
-    Page<FeedBookmark> findAllByMember(Pageable pageable, Member member);
+    Page<FeedBookmark> findAllByMemberAndFeed_DeleteYnIsFalse(Pageable pageable, Member member);
 
 //    boolean existsByMemberAndFeed(Member member, Feed feed);
 
