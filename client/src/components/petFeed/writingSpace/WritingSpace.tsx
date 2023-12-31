@@ -187,7 +187,9 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
           ) : (
             <>
               <W.CancelBtn onClick={deleteLocation} />
-              <W.MarkResult>마킹장소</W.MarkResult>
+              <W.MarkResult>
+                마킹장소(추후 수정 또는 삭제 될 수 있습니다 - UI)
+              </W.MarkResult>
             </>
           )}
         </W.AddressContainer>

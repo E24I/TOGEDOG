@@ -4,9 +4,10 @@ import { GetUserInfoQuery } from "../../hooks/ChatHooks";
 
 interface UserNameType {
   id?: number;
+  component?: string;
 }
 
-const UserName: React.FC<UserNameType> = ({ id }) => {
+const UserName: React.FC<UserNameType> = ({ id, component }) => {
   const { data: userInfo, isLoading, error } = GetUserInfoQuery(Number(id));
   return (
     <>
@@ -15,12 +16,14 @@ const UserName: React.FC<UserNameType> = ({ id }) => {
       ) : error ? (
         <>error</>
       ) : (
-        <Name>{userInfo.nickname}</Name>
+        <Name data={component}>{userInfo.nickname}</Name>
       )}
     </>
   );
 };
 
-export const Name = styled.div``;
+export const Name = styled.div<{ data?: string }>`
+  margin-left: ${(props) => props["data"] === "detail" && 11}px;
+`;
 
 export default UserName;

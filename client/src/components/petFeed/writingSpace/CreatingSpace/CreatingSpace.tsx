@@ -71,8 +71,8 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({
     if (textLength <= 200) {
       handleInputChange("content", editor);
       setQuillValue(editor);
-      sendContentLength(textLength);
     }
+    sendContentLength(textLength);
   };
 
   return (
@@ -98,7 +98,9 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({
           modules={modules}
           onChange={(editor) => sendContent(editor)}
         />
-        <C.TextCount>{contentLength} / 200</C.TextCount>
+        <C.TextCount length={contentLength}>
+          /200 <div>{contentLength}</div>
+        </C.TextCount>
       </C.CreateContentWrap>
     </C.CreateSpace>
   );
