@@ -5,6 +5,7 @@ export type enrollMapType = {
 };
 
 export type coordinateType = {
-  wsg84_x: number;
-  wsg84_y: number;
+  wgs84_x: number;
+  wgs84_y: number;
+  range: number;
 };

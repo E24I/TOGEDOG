@@ -11,6 +11,8 @@ const PetFeed: React.FC = () => {
     useInfiniteGetFeeds();
   const feedsData = data?.pages.flat();
 
+  console.log(feedsData);
+
   const { setTarget } = useIntersectionObserver({
     hasNextPage,
     fetchNextPage,

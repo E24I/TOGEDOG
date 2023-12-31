@@ -18,16 +18,16 @@ import { enrollMapType } from "../types/mapType";
 import { usePostMap } from "./MapHooks";
 import { useNavigate } from "react-router-dom";
 
-// 피드 전체 조회
-export const useGetFeeds = (page: number) => {
-  return useQuery({
-    queryKey: ["Feeds", page],
-    queryFn: async () => {
-      const response = await getFeeds(page);
-      return response.data;
-    },
-  });
-};
+// // 피드 전체 조회
+// export const useGetFeeds = (page: number) => {
+//   return useQuery({
+//     queryKey: ["Feeds", page],
+//     queryFn: async () => {
+//       const response = await getFeeds(page);
+//       return response.data;
+//     },
+//   });
+// };
 
 // 피드 전체 조회 (무한스크롤)
 export const useInfiniteGetFeeds = () => {

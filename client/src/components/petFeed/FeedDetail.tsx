@@ -25,7 +25,6 @@ import {
   Profile,
   ProfileBox,
   ProfileImg,
-  Replies,
   ReviewCount,
   RightDetail,
   RightScroll,
@@ -35,7 +34,6 @@ import {
   UploadTime,
   UserName,
 } from "./Feed.Style";
-import FeedReply from "./FeedReply";
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
@@ -211,7 +209,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
           </FeedHeader>
           <FeedContents>
             <FeedTitle>{data.title}</FeedTitle>
-            <FeedContent>{data.content}</FeedContent>
+            <FeedContent dangerouslySetInnerHTML={{ __html: data.content }} />
           </FeedContents>
           {(data.images.length > 0 || data.videos) && (
             <FeedDetailMedia>
@@ -274,7 +272,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
               댓글 {data.replies.pageInformation.totalSize}개
             </ReviewCount>
           </FeedReviewTop>
-          <FeedReplies feedId={feedId} />
+          <FeedReplies feedId={feedId} feedOwnerId={data.member.memberId} />
           {/* <Replies>
             {data.replies.replies.map((reply: any) => (
               <FeedReply key={reply.replyId} reply={reply} />

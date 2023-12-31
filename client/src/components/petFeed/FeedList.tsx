@@ -62,9 +62,8 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   const feedDate = createDate.split("-").map((el) => parseInt(el));
   const createTime = items.createdDate.split("T")[1];
   const feedTime = createTime.split(":").map((el) => parseInt(el));
-  const feedId = items.feedId;
-  const { mutate: feedLike } = useFeedLike(feedId, accesstoken);
-  const { mutate: feedBookmark } = useFeedBookmark(feedId, accesstoken);
+  const { mutate: feedLike } = useFeedLike(items.feedId, accesstoken);
+  const { mutate: feedBookmark } = useFeedBookmark(items.feedId, accesstoken);
 
   const handleMoreReview = (): void => setDetail(!isDetail);
   const handleSetting = (): void => setSetting(!isSetting);
@@ -115,7 +114,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
 
   // 피드 수정 (핸들러)
   const handleReplyPatch = () => {
-    navigator(`/update/${feedId}`);
+    navigator(`/update/${items.feedId}`);
   };
 
   // 설정 드롭다운 버튼 종류 및 핸들러 연결
@@ -210,7 +209,6 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
           <RightScroll onClick={() => handleScrollRight()} />
         </FeedMedia>
       )}
-
       <FeedStatus>
         <LikeBox>
           <Heart

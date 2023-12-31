@@ -10,13 +10,13 @@ import {
 } from "../services/replyService";
 import { queryClient } from "..";
 
-// 댓글 전체 조회
-export const useGetReplies = (feedId: number, page: number) => {
-  return useQuery({
-    queryKey: ["Replies", feedId, page],
-    queryFn: async () => getReplies(feedId, page),
-  });
-};
+// // 댓글 전체 조회
+// export const useGetReplies = (feedId: number, page: number) => {
+//   return useQuery({
+//     queryKey: ["Replies", feedId, page],
+//     queryFn: async () => getReplies(feedId, page),
+//   });
+// };
 
 // 댓글 전체 조회 (무한스크롤)
 export const useInfiniteGetReplies = (feedId: number) => {
@@ -56,6 +56,7 @@ export const usePostReply = (
     onSuccess: (res) => {
       console.log(res);
       alert("댓글 등록 완료");
+      queryClient.invalidateQueries({ queryKey: ["Feed"] });
       queryClient.invalidateQueries({ queryKey: ["Replies"] });
       successFunc && successFunc();
       return;
