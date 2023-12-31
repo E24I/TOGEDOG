@@ -19,11 +19,11 @@ import { queryClient } from "..";
 // };
 
 // 댓글 전체 조회 (무한스크롤)
-export const useInfiniteGetReplies = (feedId: number) => {
+export const useInfiniteGetReplies = (feedId: number, accesstoken: string) => {
   return useInfiniteQuery({
-    queryKey: ["Replies", feedId],
+    queryKey: ["Replies", feedId, accesstoken],
     queryFn: async ({ pageParam = 1 }) => {
-      const response = await getReplies(feedId, pageParam);
+      const response = await getReplies(feedId, accesstoken, pageParam);
       console.log("response", response);
       return response;
     },
