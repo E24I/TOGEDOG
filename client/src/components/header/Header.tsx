@@ -65,11 +65,18 @@ const Header: React.FC = () => {
           <Link to="/petmap">
             <MapButtonStyle />
           </Link>
-          <Link to="/create">
-            <CreateFeedButtonStyle />
+          <Link to={loginState ? "/create" : ""}>
+            <CreateFeedButtonStyle
+              onClick={() =>
+                loginState ? undefined : alert("로그인이 필요합니다.")
+              }
+            />
           </Link>
-
-          <NotificationsContainer onClick={convertToRead}>
+          <NotificationsContainer
+            onClick={() =>
+              loginState ? convertToRead : alert("로그인이 필요합니다.")
+            }
+          >
             {isRead === false ? <RedPointStyle /> : <NotificationsStyle />}
           </NotificationsContainer>
         </MiddleButtonContainer>

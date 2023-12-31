@@ -161,6 +161,7 @@ export const useFeedLike = (
       alert("피드 좋아요 성공");
       queryClient.invalidateQueries({ queryKey: ["Feeds"] });
       queryClient.invalidateQueries({ queryKey: ["Feed"] });
+      queryClient.invalidateQueries({ queryKey: ["userFeed"] });
       successFunc && successFunc();
       return;
     },
@@ -189,6 +190,7 @@ export const useFeedBookmark = (
       alert("피드 북마크 성공");
       queryClient.invalidateQueries({ queryKey: ["Feeds"] });
       queryClient.invalidateQueries({ queryKey: ["Feed"] });
+      queryClient.invalidateQueries({ queryKey: ["userFeed"] });
       successFunc && successFunc();
       return;
     },

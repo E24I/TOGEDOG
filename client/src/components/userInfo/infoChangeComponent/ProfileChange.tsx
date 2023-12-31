@@ -44,6 +44,7 @@ const ProfileChange: React.FC<ChageData> = ({
   const handleModal = () => {
     setChangeInfo(false);
   };
+  const token = useRecoilValue(tokenAtom);
 
   const uploadImg = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
@@ -53,15 +54,16 @@ const ProfileChange: React.FC<ChageData> = ({
       setImageFiles({ file: file, name: name, type: type });
     }
   };
-  const token = useRecoilValue(tokenAtom);
   const handelChange = async () => {
     await getPresignedUrl(imageFiles.name).then((res) => {
       uploadToS3(res, imageFiles.file, imageFiles.type).then((res) => {
         if (res.config.url) {
           imgURL = res.config.url.substring(0, res.config.url.indexOf("?"));
-          patchProfileImg(imgURL, token).then(() => {
-            queryClient.invalidateQueries({ queryKey: ["userInfo"] });
-          });
+          if (imgURL) {
+            patchProfileImg(imgURL, token).then(() => {
+              queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+            });
+          }
         }
       });
     });
@@ -84,16 +86,6 @@ const ProfileChange: React.FC<ChageData> = ({
         <Topbox>
           <BackIcon onClick={handleModal} />
           <h3>프로필 설정</h3>
-          <button
-            className="submitButton"
-            onClick={() => {
-              imgURL !== ""
-                ? handelChange
-                : alert("변경된 프로필 이미지가 없습니다.");
-            }}
-          >
-            완료
-          </button>
         </Topbox>
         <ProfileBox>
           <AttachingInput
@@ -112,9 +104,12 @@ const ProfileChange: React.FC<ChageData> = ({
           ) : (
             <UserImgForm width={100} height={100} radius={50} URL={img} />
           )}
-          <ChangeImgButton htmlFor="add_image">
-            프로필사진 바꾸기
-          </ChangeImgButton>
+          <ChangeImgButton htmlFor="add_image">프로필사진 선택</ChangeImgButton>{" "}
+          {imageFiles.file !== null && (
+            <button className="submitButton" onClick={handelChange}>
+              변경하기
+            </button>
+          )}
         </ProfileBox>
         <InputBox>
           <form

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 import { memberIdAtom, tokenAtom } from "../../atoms";
@@ -98,7 +98,9 @@ const MyInfoForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
           img={data?.data.image}
         />
       )}
-      {lostPw && <PasswordChangeForm setLostPw={setLostPw} />}
+      {lostPw && (
+        <PasswordChangeForm setLostPw={setLostPw} email={data.data.email} />
+      )}
     </MyInfoContainer>
   );
 };

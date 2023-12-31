@@ -1,7 +1,7 @@
 import { AxiosResponse, AxiosError } from "axios";
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
-import { useRecoilValue } from "recoil";
-import { tokenAtom } from "../atoms";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { tokenAtom, isLoginAtom, memberIdAtom } from "../atoms";
 import { useNavigate } from "react-router-dom";
 import {
   getUserInfo,
@@ -57,7 +57,8 @@ export const useGetUserFeeds = (
       return response;
     },
     getNextPageParam: (lastPage, allPages) => {
-      return lastPage.pageInfo.page !== allPages[0].pageInfo.totalPages
+      return lastPage.pageInfo.page === 0 &&
+        lastPage.pageInfo.page !== allPages[0].pageInfo.totalPages
         ? lastPage.pageInfo.page + 1
         : undefined;
     },
@@ -74,14 +75,14 @@ export const usePatchUserNickname = (newNickname: string) => {
   const token = useRecoilValue(tokenAtom);
   const { mutate } = useMutation({
     mutationFn: async () => {
-      patchUserNickname(newNickname, token);
+      await patchUserNickname(newNickname, token);
     },
     onSuccess: () => {
       alert("닉네임이 변경되었습니다.");
       queryClient.invalidateQueries({ queryKey: ["userInfo"] });
     },
-    onError: (err) => {
-      console.log(err);
+    onError: (err: any) => {
+      alert(err.response.data.message);
     },
   });
   return { mutate };
@@ -142,12 +143,21 @@ export const usePostUserCode = (
 
 // 비밀번호 변경하기 버튼
 export const usePatchUserPassword = (password: string, pwConfirm: string) => {
+  const token = useRecoilValue(tokenAtom);
+  const setLoginState = useSetRecoilState(isLoginAtom);
+  const setToken = useSetRecoilState(tokenAtom);
+  const setMemberId = useSetRecoilState(memberIdAtom);
+  const navigate = useNavigate();
   return useMutation({
     mutationFn: async () => {
-      return patchUserPassword(password, pwConfirm);
+      return patchUserPassword(password, pwConfirm, token);
     },
     onSuccess: () => {
       alert("비밀번호를 변경했습니다. 다시 로그인을 해야 합니다.");
+      navigate("/");
+      setLoginState(false);
+      setToken("");
+      setMemberId(undefined);
     },
     onError: (err: AxiosError<any>) => {
       console.log(err);

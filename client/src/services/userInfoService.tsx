@@ -74,10 +74,14 @@ export const postUserCode = async (email: string, authNum: number) => {
 export const patchUserPassword = async (
   password: string,
   pwConfirm: string,
+  token: string,
 ) => {
+  const headers = {
+    headers: { Authorization: token },
+  };
   const requestObj = { password: password, pwConfirm: pwConfirm };
   const url = `${ROOT_URL}/member/update/password`;
-  const res = await axios.patch(url, requestObj);
+  const res = await axios.patch(url, requestObj, headers);
   return res;
 };
 
