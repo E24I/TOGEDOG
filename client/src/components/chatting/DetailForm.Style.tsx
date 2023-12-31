@@ -16,6 +16,8 @@ export const Date = styled.div`
 export const ContentContainer = styled.div`
   display: flex;
   flex-direction: row;
+  margin-top: 20px;
+  align-items: center;
 `;
 
 export const Wrap = styled.div`
@@ -38,6 +40,6 @@ export const Talk = styled.p`
   font-size: 13px;
   padding: 10px 20px;
   margin-top: 11px;
-  background-color: #d2c0c0;
+  background-color: #ffeaa7;
   border-radius: 20px;
 `;

@@ -12,7 +12,7 @@ const DropDown: React.FC<DropDownProps> = ({ component, roomId }) => {
   const { mutate: exitRoom } = useExitRoom(roomId);
 
   if (component === "content") {
-    menus[0] = "대화방 삭제";
+    menus[0] = "채팅방 삭제";
   }
 
   const onClickController = (menu: string) => {

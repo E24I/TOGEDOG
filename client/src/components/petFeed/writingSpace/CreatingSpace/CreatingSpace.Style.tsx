@@ -56,7 +56,11 @@ export const Alert = styled.p`
 //본문 입력 공간 래핑
 export const CreateContentWrap = styled.div``;
 
-export const TextCount = styled.p`
-  text-align: right;
+export const TextCount = styled.p<{ length: number }>`
+  display: flex;
+  flex-direction: row-reverse;
   margin-bottom: 30px;
+  div {
+    color: ${(props) => (props["length"] > 200 ? "red" : "black")};
+  }
 `;

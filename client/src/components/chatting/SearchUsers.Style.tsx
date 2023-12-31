@@ -8,21 +8,22 @@ export const SearchUsersContainer = styled.form`
   width: 100%;
   margin-top: 10px;
 `;
-export const SearchBar = styled.input`
+export const SearchBar = styled.input<{ page?: string }>`
   width: 90%;
-  height: 30px;
+  height: ${(props) => (props["page"] === "page" ? 8 : 30)}px;
   margin-left: 5%;
   background-color: #e1e1e1;
   border-radius: 100px;
   padding: 5%;
 `;
 
-export const SearchedUser = styled.div`
+export const SearchedUser = styled.div<{ page?: string }>`
   display: flex;
   flex-direction: row;
-  padding: 10px;
+  padding: ${(props) => (props["page"] === "page" ? 2 : 10)}px;
   align-items: center;
   justify-content: space-between;
+  background-color: white;
 `;
 export const ProfileImg = styled.img`
   width: 50px;

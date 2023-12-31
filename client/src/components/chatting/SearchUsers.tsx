@@ -10,7 +10,11 @@ import {
 import { searchedUserType } from "../../types/chatType";
 import { GetUsersQuery, useCreateChattingRoom } from "../../hooks/ChatHooks";
 
-const SearchUser: React.FC = () => {
+interface SearchUserType {
+  page?: string;
+}
+
+const SearchUser: React.FC<SearchUserType> = ({ page }) => {
   const [isSearched, setSearched] = useState<string>("");
   const [isSubmit, setSubmit] = useState<boolean>(false);
 
@@ -55,6 +59,7 @@ const SearchUser: React.FC = () => {
         value={isSearched}
         placeholder="유저 검색"
         onChange={searchValueHandler}
+        page={page}
       />
       {isLoading ? (
         <>loading</>
@@ -64,7 +69,7 @@ const SearchUser: React.FC = () => {
         isSubmit &&
         usersData.data.data.map((user: searchedUserType, idx: number) => {
           return (
-            <SearchedUser key={idx}>
+            <SearchedUser key={idx} page={page}>
               <ProfileImg src={user.imageUrl} />
               <Nickname>{user.nickname}</Nickname>
               <CreateNewChatButton

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect, FormEvent } from "react";
+import React, { useState, useEffect, FormEvent, useRef } from "react";
 import { Client } from "@stomp/stompjs";
 import {
   BottomFlex,
@@ -38,8 +38,9 @@ const ChattingDetail: React.FC<ChattingDetailprops> = ({
   //타입 정의를 위해서 실시간 응답 데이터의 형태를 알아야함 - 이전 기록과 같으면 좋음
   const [inputMessage, setInputMessage] = useState<string>("");
   const [client, setClient] = useState<any>(null);
-
+  const scrollRef = useRef<HTMLDivElement>(null);
   const myMemberId = useRecoilValue(memberIdAtom);
+
   useEffect(() => {
     const client = new Client({
       brokerURL: "ws://15.165.78.7:8080/ws", // WebSocket 서버 주소 및 엔드포인트
@@ -59,6 +60,10 @@ const ChattingDetail: React.FC<ChattingDetailprops> = ({
       // 구독할 특정 주제(topic)에 대한 구독
       const subscription = client.subscribe(`/sub/chat/${roomId}`, () => {
         queryClient.invalidateQueries({ queryKey: ["messages"] });
+        scrollRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+        });
       });
       return subscription;
     };
@@ -108,7 +113,7 @@ const ChattingDetail: React.FC<ChattingDetailprops> = ({
       <TopFlex>
         <ProfileWrap>
           <UserImage id={myMemberId} />
-          <UserName id={myMemberId} />
+          <UserName id={myMemberId} component="detail" />
         </ProfileWrap>
         <button onBlur={() => setOpen(false)} onClick={openDropDown}>
           <SeeMoreButton />

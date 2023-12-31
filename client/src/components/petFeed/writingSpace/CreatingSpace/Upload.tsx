@@ -83,7 +83,7 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
 
   return (
     <U.AttachmentSpaceWrap>
-      <U.FilesCount>{videoFile ? 1 : 0}/1</U.FilesCount>
+      <U.FilesCount>{videoFile.url.length > 0 ? 1 : 0}/1</U.FilesCount>
       <U.AttachmentSpaceContainer>
         {videoFile.url ? (
           <U.AttachmentWrap>
