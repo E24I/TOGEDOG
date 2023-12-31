@@ -2,9 +2,16 @@ import axios from "axios";
 const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
 // 댓글 조회 // 현재 존재 x
-export const getReplies = async (feedId: number, page: number) => {
+export const getReplies = async (
+  feedId: number,
+  accesstoken: string,
+  page: number,
+) => {
   const { data } = await axios.get(
     `${ROOT_URL}/replies/feed/${feedId}?page=${page}`,
+    {
+      headers: { Authorization: accesstoken },
+    },
   );
   return data;
 };

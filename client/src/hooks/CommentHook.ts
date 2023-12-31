@@ -58,6 +58,7 @@ export const usePostComment = (
       console.log(res);
       alert("대댓글 등록 완료");
       queryClient.invalidateQueries({ queryKey: ["comment"] });
+      queryClient.invalidateQueries({ queryKey: ["Replies"] });
       successFunc && successFunc();
       return;
     },

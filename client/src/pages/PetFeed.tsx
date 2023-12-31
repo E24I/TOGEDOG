@@ -5,11 +5,16 @@ import { feedListsType } from "../types/feedDataType";
 import { ReactComponent as Pets } from "../assets/images/icons/Pets.svg";
 import { useInfiniteGetFeeds } from "../hooks/FeedHook";
 import useIntersectionObserver from "../hooks/useIntersectionObserver";
+import { useRecoilValue } from "recoil";
+import { tokenAtom } from "../atoms";
 
 const PetFeed: React.FC = () => {
+  const accesstoken = useRecoilValue(tokenAtom);
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
-    useInfiniteGetFeeds();
+    useInfiniteGetFeeds(accesstoken);
   const feedsData = data?.pages.flat();
+
+  console.log(feedsData);
 
   const { setTarget } = useIntersectionObserver({
     hasNextPage,

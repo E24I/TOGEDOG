@@ -37,9 +37,10 @@ import {
 
 interface OwnProps {
   reply: any;
+  feedOwnerId: number;
 }
 
-const FeedReply: React.FC<OwnProps> = ({ reply }) => {
+const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
   const isLogin = useRecoilValue(isLoginAtom);
   const accesstoken = useRecoilValue(tokenAtom);
   const setAlertModal = useSetRecoilState(alertAtom);
@@ -64,7 +65,12 @@ const FeedReply: React.FC<OwnProps> = ({ reply }) => {
   const handleComment = (): void => setComment(!isComment);
   const handleCloseDropdown = () => setSetting(false);
   const handleEditReply = () => setEditReply(true);
-  const handleReplyDelete = () => deleteReply();
+  const handleReplyDelete = () => {
+    if (reply.fix) {
+      return setAlertModal("고정된 댓글은 삭제할 수 없습니다.");
+    }
+    deleteReply();
+  };
   const handleReplyFix = () => replyfix();
   const handleChangeReply = (e: React.ChangeEvent<HTMLInputElement>) =>
     setContent(e.target.value);
@@ -89,9 +95,19 @@ const FeedReply: React.FC<OwnProps> = ({ reply }) => {
   const myId = useRecoilValue(memberIdAtom);
   const settingContent =
     reply?.member.memberId === myId
+      ? feedOwnerId === myId
+        ? {
+            수정하기: handleEditReply,
+            삭제하기: handleReplyDelete,
+            댓글고정: handleReplyFix,
+          }
+        : {
+            수정하기: handleEditReply,
+            삭제하기: handleReplyDelete,
+          }
+      : feedOwnerId === myId
       ? {
-          수정하기: handleEditReply,
-          삭제하기: handleReplyDelete,
+          신고하기: handleReplyReport,
           댓글고정: handleReplyFix,
         }
       : {

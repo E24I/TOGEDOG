@@ -122,11 +122,8 @@ const PetMap: React.FC = () => {
   const placesSearchCallBack = (data: any, status: any, pagination: any) => {
     if (status === kakao.maps.services.Status.OK) {
       getData(data);
-      // setPage(pagination.current);
       setTotalPage(pagination.last);
       pagination.gotoPage(isPage);
-      console.log("data", data);
-      console.log("pagination", pagination);
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
       alertNothig();
     } else if (status === kakao.maps.services.Status.ERROR) {
@@ -172,13 +169,14 @@ const PetMap: React.FC = () => {
   };
 
   const { mutate: petMap } = usePetMap({
-    wsg84_x: location.lat,
-    wsg84_y: location.lng,
+    wgs84_x: location.lat,
+    wgs84_y: location.lng,
+    range: level * 2,
   });
 
   const getMapFeeds = useMemo(() => {
     if (!sideOpen) petMap();
-  }, [location, sideOpen]);
+  }, [location, level, sideOpen]);
 
   return (
     <PetMapContainer>

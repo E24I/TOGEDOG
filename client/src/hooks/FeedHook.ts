@@ -18,23 +18,23 @@ import { enrollMapType } from "../types/mapType";
 import { usePostMap } from "./MapHooks";
 import { useNavigate } from "react-router-dom";
 
-// 피드 전체 조회
-export const useGetFeeds = (page: number) => {
-  return useQuery({
-    queryKey: ["Feeds", page],
-    queryFn: async () => {
-      const response = await getFeeds(page);
-      return response.data;
-    },
-  });
-};
+// // 피드 전체 조회
+// export const useGetFeeds = (page: number) => {
+//   return useQuery({
+//     queryKey: ["Feeds", page],
+//     queryFn: async () => {
+//       const response = await getFeeds(page);
+//       return response.data;
+//     },
+//   });
+// };
 
 // 피드 전체 조회 (무한스크롤)
-export const useInfiniteGetFeeds = () => {
+export const useInfiniteGetFeeds = (accesstoken: string) => {
   return useInfiniteQuery({
-    queryKey: ["Feeds"],
+    queryKey: ["Feeds", accesstoken],
     queryFn: async ({ pageParam = 1 }) => {
-      const response = await getFeeds(pageParam);
+      const response = await getFeeds(pageParam, accesstoken);
       return response;
     },
     getNextPageParam: (lastPage, allPages) => {

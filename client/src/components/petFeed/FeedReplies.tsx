@@ -3,16 +3,20 @@ import { useInfiniteGetReplies } from "../../hooks/ReplyHook";
 import { Replies } from "./Feed.Style";
 import FeedReply from "./FeedReply";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
+import { useRecoilValue } from "recoil";
+import { tokenAtom } from "../../atoms";
 
 interface OwnProps {
   feedId: number;
+  feedOwnerId: number;
 }
 
-const FeedReplies: React.FC<OwnProps> = ({ feedId }) => {
+const FeedReplies: React.FC<OwnProps> = ({ feedId, feedOwnerId }) => {
+  const accesstoken = useRecoilValue(tokenAtom);
   const [moreReplies, setMoreReplies] = useState(false);
   const callbackFn = () => setMoreReplies(false);
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
-    useInfiniteGetReplies(feedId);
+    useInfiniteGetReplies(feedId, accesstoken);
   const repliesData = data?.pages.flat();
 
   const { setTarget } = useIntersectionObserver({
@@ -30,7 +34,11 @@ const FeedReplies: React.FC<OwnProps> = ({ feedId }) => {
   return (
     <Replies>
       {repliesData?.map((reply: any) => (
-        <FeedReply key={reply.replyId} reply={reply} />
+        <FeedReply
+          key={reply.replyId}
+          reply={reply}
+          feedOwnerId={feedOwnerId}
+        />
       ))}
       {moreReplies && <div ref={setTarget}></div>}
       {repliesData && repliesData.length > 0 && hasNextPage && (

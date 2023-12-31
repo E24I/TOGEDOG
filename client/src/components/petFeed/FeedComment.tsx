@@ -69,13 +69,13 @@ const FeedComment: React.FC<OwnProps> = ({ replyId }) => {
           onChange={handleWriteComment}
           onKeyUp={handlePostComment}
         />
-        <AddBtn>게시</AddBtn>
+        <AddBtn onClick={() => postComment()}>게시</AddBtn>
       </AddBox>
       {commentsData?.map((comment: feedCommentType) => (
         <CommentItem key={comment.commentId} comment={comment} />
       ))}
       {moreComments && <div ref={setTarget} />}
-      {hasNextPage && (
+      {commentsData && commentsData.length > 0 && hasNextPage && (
         <button onClick={() => setMoreComments(true)}>답글 더보기</button>
       )}
     </Comments>

@@ -8,8 +8,10 @@ import {
 const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
 // 피드 전체 조회
-export const getFeeds = async (page: number) => {
-  const { data } = await axios.get(`${ROOT_URL}/feed?page=${page}`);
+export const getFeeds = async (page: number, accesstoken: string) => {
+  const { data } = await axios.get(`${ROOT_URL}/feed?page=${page}`, {
+    headers: { Authorization: accesstoken },
+  });
   return data;
 };
 
