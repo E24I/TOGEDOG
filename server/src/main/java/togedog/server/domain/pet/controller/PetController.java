@@ -73,7 +73,10 @@ public class PetController {
     펫 프로필 이미지 추가, 수정
     */
     @PatchMapping("{pet-id}/image/upload")
-    public ResponseEntity<?> uploadPetImage(@PathVariable("pet-id")Long petId){
+    public ResponseEntity<?> uploadPetImage(@PathVariable("pet-id")Long petId,
+                                            @RequestBody PetDto.PatchImage imageDto){
+
+        petService.updatePetImage(petId, imageDto.getImage());
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
