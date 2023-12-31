@@ -17,23 +17,32 @@ import {
   usePatchUserPassword,
 } from "../../../hooks/UserInfoHook";
 
-const PasswordChangeForm: React.FC<{
+type PasswordChangeProps = {
   setLostPw: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ setLostPw }) => {
+  email?: string;
+};
+
+const PasswordChangeForm: React.FC<PasswordChangeProps> = ({
+  setLostPw,
+  email,
+}) => {
   const {
     register,
+    handleSubmit,
     formState: { errors },
     watch,
   } = useForm();
   //각각 input 태그 value 호출
-  const email = watch("email", "");
+  const emailValue = watch("email", "");
   const authentication = watch("authentication", "");
   const password = watch("password", "");
   const pwConfirm = watch("pwConfirm", "");
   const [codeCheck, setCodeCheck] = useState<boolean>(false);
-  const { mutate: postEmailMutate } = usePostUserEmail(email);
+  const { mutate: postEmailMutate } = usePostUserEmail(
+    email ? email : emailValue,
+  );
   const { mutate: postCodeMutate } = usePostUserCode(
-    email,
+    emailValue,
     authentication,
     setCodeCheck,
   );
@@ -41,7 +50,9 @@ const PasswordChangeForm: React.FC<{
     password,
     pwConfirm,
   );
-
+  const onSubmit = () => {
+    patchPasswordMutate();
+  };
   //이메일 유효성
   const emailRegex =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -60,22 +71,25 @@ const PasswordChangeForm: React.FC<{
           <h3>비밀번호변경</h3>
         </Topbox>
         <MiddleBox>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
-          >
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div>
               <TextInput>
                 <Message />
                 <input
                   type="text"
-                  placeholder="이메일을 입력해주세요."
+                  value={email && email}
+                  placeholder="이메일을 입력해주세요"
                   autoComplete="off"
                   {...register("email", {
                     required: true,
                     pattern: emailRegex,
                   })}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      postEmailMutate();
+                    }
+                  }}
                 />
                 <button onClick={() => postEmailMutate()}>인증번호 전송</button>
               </TextInput>
@@ -93,6 +107,12 @@ const PasswordChangeForm: React.FC<{
                   placeholder="인증번호를 입력해주세요."
                   autoComplete="off"
                   {...register("authentication", { required: true })}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      postCodeMutate();
+                    }
+                  }}
                 />
                 <button onClick={() => postCodeMutate()}>인증하기</button>
               </TextInput>
@@ -108,9 +128,14 @@ const PasswordChangeForm: React.FC<{
                     required: true,
                     pattern: passwordRegex,
                   })}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                    }
+                  }}
                 />
               </TextInput>
-              {errors.pwConfirm && (
+              {errors.password && (
                 <ErrorMsg>
                   <p>
                     비밀번호는 숫자 + 문자 + 특수문자 조합 8자 이상이어야
@@ -128,9 +153,13 @@ const PasswordChangeForm: React.FC<{
                   autoComplete="off"
                   {...register("pwConfirm", {
                     required: true,
-                    validate: (value) =>
-                      value === password || "비밀번호가 일치하지 않습니다.",
+                    validate: (value) => value === password,
                   })}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                    }
+                  }}
                 />
               </TextInput>
               {errors.pwConfirm && (
@@ -139,14 +168,11 @@ const PasswordChangeForm: React.FC<{
                 </ErrorMsg>
               )}
             </div>
+            <button className="submitButton" type="submit">
+              비밀번호 변경하기
+            </button>
           </form>
         </MiddleBox>
-        <button
-          className="submitButton"
-          onClick={codeCheck ? () => patchPasswordMutate() : undefined}
-        >
-          비밀번호 변경하기
-        </button>
       </ChangeContainer>
     </ChangeForm>
   );

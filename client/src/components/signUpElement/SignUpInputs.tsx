@@ -22,6 +22,7 @@ import {
 const SignUpInputs = () => {
   const {
     register,
+    handleSubmit,
     formState: { errors },
     setValue,
     watch,
@@ -94,11 +95,7 @@ const SignUpInputs = () => {
         회원가입을 위해
         <br /> 정보를 입력해 주세요.
       </h2>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-        }}
-      >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <TextInput>
             <MessageIcon />
@@ -107,6 +104,12 @@ const SignUpInputs = () => {
               placeholder="이메일을 입력해주세요."
               autoComplete="off"
               {...register("email", { required: true, pattern: emailRegex })}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  emailMutate();
+                }
+              }}
             />
             <button onClick={() => emailMutate()}>인증번호 전송</button>
           </TextInput>
@@ -124,6 +127,12 @@ const SignUpInputs = () => {
               placeholder="인증번호를 입력해주세요."
               autoComplete="off"
               {...register("authentication", { required: true })}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  codeMutate();
+                }
+              }}
             />
             <button onClick={() => codeMutate()}>인증하기</button>
           </TextInput>
@@ -136,6 +145,12 @@ const SignUpInputs = () => {
               placeholder="닉네임을 입력해주세요."
               autoComplete="off"
               {...register("nickname", { required: true })}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  nicknameMutate();
+                }
+              }}
             />
             <button onClick={() => nicknameMutate()}>중복확인</button>
           </TextInput>
@@ -170,7 +185,7 @@ const SignUpInputs = () => {
               autoComplete="off"
               {...register("pwConfirm", {
                 required: true,
-                validate: (value) => value === password || "",
+                validate: (value) => value === password,
               })}
             />
           </TextInput>
@@ -207,9 +222,7 @@ const SignUpInputs = () => {
             </ErrorMsg>
           )}
         </CheckBoxContainer>
-        <SubmitButton type="submit" onClick={onSubmit}>
-          가입하기
-        </SubmitButton>
+        <SubmitButton type="submit">가입하기</SubmitButton>
       </form>
     </InputContainer>
   );

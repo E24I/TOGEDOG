@@ -113,7 +113,7 @@ const PetAddForm: React.FC = () => {
               여자
               <input
                 type="radio"
-                value="FEMAIL"
+                value="FEMALE"
                 {...register("gender", { required: true })}
               />
             </label>

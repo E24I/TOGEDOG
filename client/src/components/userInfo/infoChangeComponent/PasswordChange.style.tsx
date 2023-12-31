@@ -26,6 +26,7 @@ export const ChangeForm = styled.div`
   form {
     width: 100%;
     height: 100%;
+    margin-top: 10%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,7 +54,7 @@ export const ChangeContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: flex-start;
   .submitButton {
     width: 30%;
     color: black;
@@ -72,5 +73,5 @@ export const BackIcon = styled(Backspace)`
 
 export const MiddleBox = styled.div`
   width: 70%;
-  height: 300px;
+  height: 70%;
 `;

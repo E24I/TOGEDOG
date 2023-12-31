@@ -67,10 +67,12 @@ export const ChangeContainer = styled.div`
 export const Topbox = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
+  position: relative;
   h3 {
-    padding: 0 15%;
+    padding: 3% 0;
+    margin: 0 auto;
   }
 `;
 
@@ -79,11 +81,17 @@ export const ProfileBox = styled.div`
   height: 300px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-start;
+  gap: 10px;
   align-items: center;
+  position: relative;
   & > div {
     width: 200px;
     height: 200px;
+  }
+  & > button {
+    position: absolute;
+    bottom: 0;
   }
 `;
 export const ProfileImg = styled.div<{ thumbnail: string | undefined }>`
@@ -123,7 +131,9 @@ export const TextInput = styled.div`
   }
 `;
 //---------아이콘
-export const BackIcon = styled(Backspace)``;
+export const BackIcon = styled(Backspace)`
+  position: absolute;
+`;
 export const PersonIcon = styled(Person)`
   width: 18px;
   height: 18px;
