@@ -115,14 +115,14 @@ public class MemberService {
     public Page<FeedLike> findFeedLike(Pageable pageable, Long memberId){
         Member member = findMember(memberId);
 
-        return feedLikeRepository.findAllByMember(pageable,member);
+        return feedLikeRepository.findAllByMemberAndFeed_DeleteYnIsFalse(pageable,member);
     }
 
     //프로필-북마크 게시글 조회
     public Page<FeedBookmark> findFeedBookmark(Pageable pageable, Long memberId){
         Member member = findMember(memberId);
 
-        return feedBookmarkRepository.findAllByMember(pageable, member);
+        return feedBookmarkRepository.findAllByMemberAndFeed_DeleteYnIsFalse(pageable, member);
     }
 
 
@@ -130,7 +130,7 @@ public class MemberService {
     public Page<Member> findNickname(String nickname, Pageable pageable){
         Long loginMemberId = loginMemberUtil.getLoginMemberId();
 
-        Page<Member> memberPage = memberRepository.findByNicknameContaining(nickname, pageable);
+        Page<Member> memberPage = memberRepository.findByNicknameContainingAndMemberIdIsNot(nickname, loginMemberId, pageable);
 
         return memberPage;
     }

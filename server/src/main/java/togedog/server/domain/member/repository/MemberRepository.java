@@ -16,7 +16,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Boolean existsMemberByNicknameContaining(String nickname);
 
-    Page<Member> findByNicknameContaining(String query, Pageable pageable);
+    Page<Member> findByNicknameContainingAndMemberIdIsNot(String query, Long myId, Pageable pageable);
 
     void deleteMemberByMemberId(Long memberId);
 

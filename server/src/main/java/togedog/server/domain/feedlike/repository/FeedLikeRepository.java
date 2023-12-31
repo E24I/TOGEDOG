@@ -13,7 +13,7 @@ public interface FeedLikeRepository extends JpaRepository<FeedLike, Long> {
 
     Optional<FeedLike> findByMemberAndFeed(Member member, Feed feed);
 
-    Page<FeedLike> findAllByMember(Pageable pageable, Member member);
+    Page<FeedLike> findAllByMemberAndFeed_DeleteYnIsFalse(Pageable pageable, Member member);
 
 //    boolean existByMemberAndFeed(Member member, Feed feed);
 
