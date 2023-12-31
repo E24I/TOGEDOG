@@ -91,7 +91,7 @@ public class MemberService {
     }
 
     //이메일 확인 로직
-    private void verifyExistsEmail(String email){
+    public void verifyExistsEmail(String email){
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         if(optionalMember.isPresent()){
             throw new MemberExistException();

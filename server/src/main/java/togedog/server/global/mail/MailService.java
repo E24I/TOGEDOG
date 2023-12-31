@@ -36,7 +36,7 @@ public class MailService {
             messageHelper.setText(text,true);//이메일의 내용 설정 두 번째 매개 변수에 true를 설정하여 html 설정으로한다.
             emailSender.send(message);
 
-            redisUtil.setDataExpire(authCode,toEmail,60*5L);
+            redisUtil.setDataExpire(authCode,toEmail, 60 * 2L); //2분후 만료
         } catch (MessagingException e) {//이메일 서버에 연결할 수 없거나, 잘못된 이메일 주소를 사용하거나, 인증 오류가 발생하는 등 오류
             // 이러한 경우 MessagingException이 발생
             throw new RuntimeException(e.getMessage());
@@ -57,6 +57,7 @@ public class MailService {
 
 
     public void sendCodeToEmail(String toEmail) {
+
         String title = "Togedog 회원가입 인증 번호입니다.";
         String authCode = this.createCode();
         String text = "본메일은 Togedog 인증 전용 메일입니다." + 	//html 형식으로 작성 !
@@ -104,7 +105,7 @@ public class MailService {
             log.info(title);
             log.info(text);
             emailSender.send(emailForm);
-            redisUtil.setDataExpire(text,toEmail,60*5L); //30분뒤 만료
+            redisUtil.setDataExpire(text,toEmail,60*2L); //30분뒤 만료
 
         } catch (RuntimeException e) {
             log.debug("MailService.sendEmail exception occur toEmail: {}, " +
