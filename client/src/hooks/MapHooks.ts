@@ -22,17 +22,23 @@ export const usePostMap = (enrollMap: enrollMapType): any => {
   });
 };
 
-export const usePetMap = (coordinate: coordinateType) => {
+export const usePetMap = (
+  coordinate: coordinateType,
+  accesstoken: string,
+  successFunc?: (res: any) => void,
+  failFunc?: () => void,
+) => {
   return useMutation({
     mutationFn: async () => {
-      return getPetMap(coordinate);
+      return getPetMap(coordinate, accesstoken);
     },
     onSuccess: (res) => {
-      console.log(res);
+      successFunc && successFunc(res);
       return;
     },
     onError: (err) => {
-      console.log(err);
+      alert("펫지도 피드 업데이트 실패");
+      failFunc && failFunc();
       return;
     },
   });

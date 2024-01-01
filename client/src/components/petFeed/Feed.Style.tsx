@@ -32,7 +32,6 @@ export const Profile = styled.div`
 export const ProfileBox = styled.div`
   width: 50px;
   height: 50px;
-  margin: 0px 15px 0px 0px;
   border-radius: 50%;
   background-color: rgb(215, 215, 215);
   display: flex;
@@ -54,7 +53,7 @@ export const Unknown = styled(Person)`
 `;
 
 export const UserName = styled.div`
-  margin-bottom: 5px;
+  margin: 0px 0px 5px 15px;
   white-space: nowrap;
   font-size: 18px;
   font-weight: 600;

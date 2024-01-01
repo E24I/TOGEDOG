@@ -55,6 +55,8 @@ import {
 } from "../../atoms";
 import { usePostReply } from "../../hooks/ReplyHook";
 import FeedReplies from "./FeedReplies";
+import { UserImgForm } from "../../atoms/imgForm/ImgForm";
+import { useNavigate } from "react-router-dom";
 
 interface OwnProps {
   feedId: number;
@@ -62,6 +64,7 @@ interface OwnProps {
 }
 
 const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
+  const navigate = useNavigate();
   const isLogin = useRecoilValue(isLoginAtom);
   const accesstoken = useRecoilValue(tokenAtom);
   const setAlertModal = useSetRecoilState(alertAtom);
@@ -77,7 +80,8 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
     }
   };
   const handleNextImg = (): void => {
-    if (isImg !== data.images.length) {
+    const noneVideo = data.videos ? 1 : 0;
+    if (isImg !== data.images.length + noneVideo - 1) {
       setImg(isImg + 1);
     }
   };
@@ -164,13 +168,21 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
         <LeftDetail>
           <FeedHeader>
             <Profile>
-              <ProfileBox>
-                {data.member?.imageUrl ? (
-                  <ProfileImg src={data.member?.imageUrl} alt="프로필 사진" />
-                ) : (
+              {data.member.imageUrl ? (
+                <UserImgForm
+                  width={50}
+                  height={50}
+                  radius={50}
+                  URL={data.member.imageUrl}
+                  onClick={() => {
+                    navigate(`/user/${data.member.memberId}`);
+                  }}
+                />
+              ) : (
+                <ProfileBox>
                   <Unknown />
-                )}
-              </ProfileBox>
+                </ProfileBox>
+              )}
               <div>
                 <UserName>{data.member?.nickname}</UserName>
                 {data.address && (
@@ -220,7 +232,10 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
                 )}
                 {data.images.length > 0 &&
                   data.images.map((el: string, idx: number) => {
-                    if (isImg === idx + 1) {
+                    const noneVideo = data.videos
+                      ? isImg === idx + 1
+                      : isImg === idx;
+                    if (noneVideo) {
                       return (
                         <FeedDetailImg
                           key={idx}

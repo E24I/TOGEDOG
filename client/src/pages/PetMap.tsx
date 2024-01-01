@@ -21,8 +21,10 @@ import Toggle from "../atoms/toggle/Toggle";
 import styled from "styled-components";
 import Pagination from "../atoms/pagination/Pagination";
 import { usePetMap } from "../hooks/MapHooks";
-import { useRecoilState } from "recoil";
-import { alertAtom } from "../atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { alertAtom, tokenAtom } from "../atoms";
+import FeedDetail from "../components/petFeed/FeedDetail";
+import MapFeedItem from "../components/petMap/MapFeedItem";
 
 export type MarkerLocation = {
   lat: number;
@@ -34,6 +36,8 @@ export type MyLocation = {
 };
 
 const PetMap: React.FC = () => {
+  const accesstoken = useRecoilValue(tokenAtom);
+
   // kakao map api
   const { kakao } = window;
   const mapRef = useRef<any>(null);
@@ -161,23 +165,41 @@ const PetMap: React.FC = () => {
   // }, []);
 
   // sidebar 열려있는지 유무 state
-  const [sideOpen, setSideOpen] = useState<boolean>(true);
+  const [mapMode, setMapMode] = useState<boolean>(true);
   const handleSidebar = () => {
-    setSideOpen(!sideOpen);
+    setMapMode(!mapMode);
     setData([]);
     setSearchValue("");
   };
 
-  const { mutate: petMap } = usePetMap({
-    wgs84_x: location.lat,
-    wgs84_y: location.lng,
-    range: level * 2,
-  });
+  // 펫지도 좌표에 따른 피드 리스트 조회
+  const [mapData, setMapData] = useState<any>([]);
+  const getMapData = (res: any) => setMapData(res);
+  const {
+    mutate: petMap,
+    isPending,
+    isError,
+  } = usePetMap(
+    {
+      wgs84_y: location.lat,
+      wgs84_x: location.lng,
+      range: level * 2,
+    },
+    accesstoken,
+    getMapData,
+  );
+  console.log(mapData);
 
   const getMapFeeds = useMemo(() => {
-    if (!sideOpen) petMap();
-  }, [location, level, sideOpen]);
+    if (!mapMode) petMap();
+  }, [location, level, mapMode]);
 
+  if (isPending) {
+    return <>로딩중입니다.</>;
+  }
+  if (isError) {
+    return <>페이지를 불러오는데 실패했습니다.</>;
+  }
   return (
     <PetMapContainer>
       <MapContainer>
@@ -199,18 +221,30 @@ const PetMap: React.FC = () => {
             onDragEnd={() => getLocations()}
             onZoomChanged={(map) => setLevel(map.getLevel())}
           >
-            {isData.length > 0 &&
-              isData.map((el: any, idx: number) => (
-                <MapMarker
-                  key={idx}
-                  position={{
-                    lat: parseFloat(el.y),
-                    lng: parseFloat(el.x),
-                  }}
-                  title={el.place_name}
-                />
-              ))}
-            {!sideOpen && (
+            {mapMode
+              ? isData.length > 0 &&
+                isData.map((el: any, idx: number) => (
+                  <MapMarker
+                    key={idx}
+                    position={{
+                      lat: parseFloat(el.y),
+                      lng: parseFloat(el.x),
+                    }}
+                    title={el.place_name}
+                  />
+                ))
+              : mapData.length > 0 &&
+                mapData.map((el: any, idx: number) => (
+                  <MapMarker
+                    key={idx}
+                    position={{
+                      lat: parseFloat(el.wgs84_y),
+                      lng: parseFloat(el.wgs84_x),
+                    }}
+                    title={el.title}
+                  />
+                ))}
+            {/* {!mapMode && (
               <Circle
                 center={location}
                 radius={50}
@@ -221,7 +255,7 @@ const PetMap: React.FC = () => {
                 fillColor={"#dceeff"}
                 fillOpacity={0.5}
               />
-            )}
+            )} */}
             <PlusLevel onClick={() => setLevel(level - 1)}>+</PlusLevel>
             <MinusLevel onClick={() => setLevel(level + 1)}>-</MinusLevel>
           </Map>
@@ -229,49 +263,49 @@ const PetMap: React.FC = () => {
       </MapContainer>
       <SetMode>
         <Toggle
-          isOn={sideOpen}
+          isOn={mapMode}
           handleToggleFunc={handleSidebar}
           positive="일반"
           negative="피드"
         />
       </SetMode>
-      <SideContainer sideOpen={!sideOpen}>
-        <SideSearchBox>
-          <SideSearch
-            placeholder="검색어를 입력하세요."
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            onKeyUp={(e) => {
-              if (e.key === "Enter") {
-                if (!searchValue) {
-                  return alertWrite();
+      <SideContainer>
+        {mapMode && (
+          <SideSearchBox>
+            <SideSearch
+              placeholder="검색어를 입력하세요."
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyUp={(e) => {
+                if (e.key === "Enter") {
+                  if (!searchValue) {
+                    return alertWrite();
+                  }
+                  return getSearchResult();
                 }
-                return getSearchResult();
-              }
-            }}
-          />
-        </SideSearchBox>
-        {/* <SideSortBox>
-          <SideSortBtn onClick={() => setSort("")}>전체</SideSortBtn>
-          {list.map((el, idx) => (
-            <SideSortBtn key={idx} onClick={() => setSort(el)}>
-              {el}
-            </SideSortBtn>
-          ))}
-        </SideSortBox> */}
+              }}
+            />
+          </SideSearchBox>
+        )}
         <SideLists>
-          {isData.map((el: any, idx: number) => (
-            <SideList key={idx}>
-              <SideListNum>{idx + 1}</SideListNum>
-              <SideListContents>
-                <SideListTitle>
-                  {el.place_name}
-                  <SideListCategory>{el.category_group_name}</SideListCategory>
-                </SideListTitle>
-                <SideListAddress>{el.address_name}</SideListAddress>
-              </SideListContents>
-            </SideList>
-          ))}
+          {mapMode
+            ? isData.map((el: any, idx: number) => (
+                <SideList key={idx}>
+                  <SideListNum>{idx + 1}</SideListNum>
+                  <SideListContents>
+                    <SideListTitle>
+                      {el.place_name}
+                      <SideListCategory>
+                        {el.category_group_name}
+                      </SideListCategory>
+                    </SideListTitle>
+                    <SideListAddress>{el.address_name}</SideListAddress>
+                  </SideListContents>
+                </SideList>
+              ))
+            : mapData?.feedIdList?.map((el: any, idx: number) => (
+                <MapFeedItem key={idx} el={el} />
+              ))}
         </SideLists>
         {isData.length > 0 && (
           <SideBottom>

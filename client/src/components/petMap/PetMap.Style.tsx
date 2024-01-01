@@ -6,7 +6,7 @@ export const PetMapContainer = styled.div`
   height: calc(100vh - 80px);
 `;
 
-export const SideContainer = styled.div<{ sideOpen: boolean }>`
+export const SideContainer = styled.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -16,12 +16,10 @@ export const SideContainer = styled.div<{ sideOpen: boolean }>`
   padding: 10px 20px;
   background-color: none;
   z-index: 20;
-  transition: 800ms;
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  display: ${(props) => props.sideOpen && "none"};
 `;
 
 export const SideSearchBox = styled.div`
@@ -139,7 +137,7 @@ export const SetMode = styled.div`
   position: fixed;
   top: 95px;
   right: 10px;
-  z-index: 30;
+  z-index: 10;
 `;
 export const SideBottom = styled.div`
   background-color: white;
