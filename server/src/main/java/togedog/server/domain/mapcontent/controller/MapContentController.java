@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import togedog.server.domain.mapcontent.dto.MapContentFeedIdResponse;
+import togedog.server.domain.mapcontent.dto.MapContentFeedResponse;
 import togedog.server.domain.mapcontent.dto.MapContentGetRequest;
 import togedog.server.domain.mapcontent.dto.MapContentRequest;
 import togedog.server.domain.mapcontent.dto.MapContentResponse;
@@ -36,7 +36,7 @@ public class MapContentController {
     @PostMapping("/coordinate")
     public ResponseEntity getFeedFromCoordinate(@RequestBody MapContentGetRequest request) {
 
-        MapContentFeedIdResponse response = mapContentService.findFeedFromWsg84(request);
+        MapContentFeedResponse response = mapContentService.findFeedFromWsg84(request);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

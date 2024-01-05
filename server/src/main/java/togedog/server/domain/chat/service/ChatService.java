@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import togedog.server.domain.chat.dto.ChatPostRequest;
+import togedog.server.domain.chat.dto.ChatReportRequest;
 import togedog.server.domain.chat.dto.ChatRoomResponse;
 import togedog.server.domain.chat.entity.ChatParticipant;
+import togedog.server.domain.chat.entity.ChatReport;
 import togedog.server.domain.chat.entity.ChatRoom;
 import togedog.server.domain.chat.entity.Message;
 import togedog.server.domain.chat.mapper.ChatMapper;
 import togedog.server.domain.chat.repository.ChatParticipantRepository;
+import togedog.server.domain.chat.repository.ChatReportRepository;
 import togedog.server.domain.chat.repository.ChatRoomRepository;
 import togedog.server.domain.chat.repository.MessageRepository;
 import togedog.server.domain.member.entity.Member;
@@ -35,6 +38,8 @@ public class ChatService {
     private final ChatMapper chatMapper;
 
     private final MessageRepository messageRepository;
+
+    private final ChatReportRepository chatReportRepository;
 
     @Transactional
     public Long createChatRoom(ChatPostRequest chatPostRequest) {
@@ -109,6 +114,20 @@ public class ChatService {
         chatRoomRepository.delete(findChatRoom);
 
         return true;
+    }
+
+    public Long createChatReport(ChatReportRequest chatReportRequest) {
+
+        ChatReport chatReport = ChatReport.builder()
+                .chatRoom(chatRoomRepository.findById(chatReportRequest.getChatRoomId()).orElseThrow(ChatNotFoundException::new))
+                .content(chatReportRequest.getContent())
+                .build();
+
+        return chatReportRepository.save(chatReport).getChatReportId();
+    }
+
+    public void findChatReport(Long chatReportId) {
+        ChatReport chatReport = chatReportRepository.findById(chatReportId).orElseThrow(ChatNotFoundException::new);
     }
 
     private Member findMemberById(Long memberId) {

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import togedog.server.domain.chat.dto.ChatGetRequest;
 import togedog.server.domain.chat.dto.ChatPostRequest;
+import togedog.server.domain.chat.dto.ChatReportRequest;
 import togedog.server.domain.chat.dto.ChatRoomResponse;
 import togedog.server.domain.chat.entity.ChatRoom;
 import togedog.server.domain.chat.service.ChatService;
@@ -60,5 +61,13 @@ public class ChatController {
         chatService.deleteRoom(chatRoomId);
 
         return new ResponseEntity<>("채팅방 삭제 완료", HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/report")
+    public ResponseEntity postChatReport(@RequestBody ChatReportRequest chatReportRequest) {
+
+        Long chatReportId = chatService.createChatReport(chatReportRequest);
+
+        return ResponseEntity.status(HttpStatus.OK).body("신고 접수, chatReportId: " + chatReportId);
     }
 }
