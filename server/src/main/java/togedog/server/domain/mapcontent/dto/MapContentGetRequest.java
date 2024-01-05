@@ -10,4 +10,6 @@ public class MapContentGetRequest {
     private String wgs84_y;
 
     private int range;
+
+    private Long memberId;
 }
