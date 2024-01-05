@@ -6,12 +6,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.feed.repository.FeedRepository;
-import togedog.server.domain.mapcontent.dto.MapContentFeedIdResponse;
+import togedog.server.domain.feed.service.FeedService;
+import togedog.server.domain.feed.service.dto.response.FeedResponse;
+import togedog.server.domain.feedbookmark.entity.FeedBookmark;
+import togedog.server.domain.feedbookmark.repository.FeedBookmarkRepository;
+import togedog.server.domain.feedlike.entity.FeedLike;
+import togedog.server.domain.feedlike.repository.FeedLikeRepository;
+import togedog.server.domain.mapcontent.dto.MapContentFeedResponse;
 import togedog.server.domain.mapcontent.dto.MapContentGetRequest;
 import togedog.server.domain.mapcontent.dto.MapContentRequest;
 import togedog.server.domain.mapcontent.dto.MapContentResponse;
 import togedog.server.domain.mapcontent.entity.MapContent;
 import togedog.server.domain.mapcontent.repository.MapContentRepository;
+import togedog.server.domain.member.entity.Member;
+import togedog.server.domain.member.service.MemberService;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
 import togedog.server.global.exception.businessexception.mapcontentexception.MapContentNotFoundException;
 
@@ -30,6 +38,14 @@ public class MapContentService {
     private final MapContentRepository mapContentRepository;
 
     private final FeedRepository feedRepository;
+
+    private final MemberService memberService;
+
+    private final FeedService feedService;
+
+    private final FeedBookmarkRepository feedBookmarkRepository;
+
+    private final FeedLikeRepository feedLikeRepository;
 
     @Transactional
     public Long createMapContent(MapContentRequest mapContentRequest) {
@@ -78,7 +94,7 @@ public class MapContentService {
                 .build();
     }
 
-    public MapContentFeedIdResponse findFeedFromWsg84(MapContentGetRequest request) {
+    public MapContentFeedResponse findFeedFromWsg84(MapContentGetRequest request) {
 
         double thresholdX = Double.parseDouble(request.getWgs84_x());
         double thresholdY = Double.parseDouble(request.getWgs84_y());
@@ -95,13 +111,34 @@ public class MapContentService {
             throw new MapContentNotFoundException();
         }
 
-        MapContentFeedIdResponse response = new MapContentFeedIdResponse();
+        Member member = memberService.findMember(request.getMemberId());
+
+        MapContentFeedResponse response = new MapContentFeedResponse();
+
+        List<Feed> findFeeds = new ArrayList<>();
 
         for(MapContent mapContent : findMapContent) {
-            List<Feed> findFeeds = mapContent.getFeeds();
-            findFeeds.forEach(o -> response.getFeedIdList().add(o.getFeedId()));
+            for(Feed feed : mapContent.getFeeds()) {
+                findFeeds.add(feedRepository.findByFeedIdAndDeleteYnIsFalse(feed.getFeedId()).orElseThrow(FeedNotFoundException::new));
+            }
+        }
+
+        if(!findFeeds.isEmpty()) {
+            for(Feed feed : findFeeds) {
+                response.getFeedResponses().add(FeedResponse.singleFeedResponse(feed, isFeedBookmarkedByMember(member, feed), isFeedLikedByMember(member, feed)));
+            }
         }
 
         return response;
+    }
+
+    private boolean isFeedBookmarkedByMember(Member member, Feed feed) {
+        Optional<FeedBookmark> optionalFeedBookmark = feedBookmarkRepository.findByMemberAndFeed(member, feed);
+        return optionalFeedBookmark.isPresent();
+    }
+
+    private boolean isFeedLikedByMember(Member member, Feed feed) {
+        Optional<FeedLike> optionalFeedLike = feedLikeRepository.findByMemberAndFeed(member, feed);
+        return optionalFeedLike.isPresent();
     }
 }
