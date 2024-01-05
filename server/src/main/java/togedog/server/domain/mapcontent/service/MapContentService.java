@@ -20,8 +20,10 @@ import togedog.server.domain.mapcontent.entity.MapContent;
 import togedog.server.domain.mapcontent.repository.MapContentRepository;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.service.MemberService;
+import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
 import togedog.server.global.exception.businessexception.mapcontentexception.MapContentNotFoundException;
+import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,8 @@ public class MapContentService {
     private final FeedBookmarkRepository feedBookmarkRepository;
 
     private final FeedLikeRepository feedLikeRepository;
+
+    private final LoginMemberUtil loginMemberUtil;
 
     @Transactional
     public Long createMapContent(MapContentRequest mapContentRequest) {
@@ -111,7 +115,17 @@ public class MapContentService {
             throw new MapContentNotFoundException();
         }
 
-        Member member = memberService.findMember(request.getMemberId());
+        Member member;
+
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+
+        if (loginMemberId == null) {
+            member = new Member();
+            member.setMemberId(0L);
+        }
+        else {
+            member = memberService.findMember(loginMemberId);
+        }
 
         MapContentFeedResponse response = new MapContentFeedResponse();
 
