@@ -1,9 +1,13 @@
 package togedog.server.domain.chat.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import togedog.server.domain.chat.dto.ChatPostRequest;
+import togedog.server.domain.chat.dto.ChatReportPageResponse;
 import togedog.server.domain.chat.dto.ChatReportRequest;
 import togedog.server.domain.chat.dto.ChatRoomResponse;
 import togedog.server.domain.chat.entity.ChatParticipant;
@@ -15,11 +19,15 @@ import togedog.server.domain.chat.repository.ChatParticipantRepository;
 import togedog.server.domain.chat.repository.ChatReportRepository;
 import togedog.server.domain.chat.repository.ChatRoomRepository;
 import togedog.server.domain.chat.repository.MessageRepository;
+import togedog.server.domain.feedreport.entity.FeedReport;
+import togedog.server.domain.feedreport.service.dto.response.FeedReportResponse;
 import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.repository.MemberRepository;
+import togedog.server.global.entity.ReportState;
 import togedog.server.global.exception.businessexception.chatexception.ChatBadRequestException;
 import togedog.server.global.exception.businessexception.chatexception.ChatNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
+import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
 
 import java.util.List;
 import java.util.Optional;
@@ -118,16 +126,36 @@ public class ChatService {
 
     public Long createChatReport(ChatReportRequest chatReportRequest) {
 
+        ChatRoom chatRoom = chatRoomRepository.findById(chatReportRequest.getChatRoomId()).orElseThrow(ChatNotFoundException::new);
+        Long reportedMemberId = 0L;
+
+        if(chatRoom.getChatParticipants().isEmpty()) {
+            throw new ChatBadRequestException();
+        }
+        if(chatRoom.getChatParticipants().get(0).getMember().getMemberId().equals(chatReportRequest.getMemberId())) {
+            reportedMemberId = chatRoom.getChatParticipants().get(1).getMember().getMemberId();
+        }
+        if(reportedMemberId == 0) {
+            throw new MemberNotFoundException();
+        }
+
         ChatReport chatReport = ChatReport.builder()
-                .chatRoom(chatRoomRepository.findById(chatReportRequest.getChatRoomId()).orElseThrow(ChatNotFoundException::new))
+                .chatRoom(chatRoom)
+                .reportedMemberId(reportedMemberId)
+                .reportState(ReportState.PROCEEDING)
                 .content(chatReportRequest.getContent())
                 .build();
 
         return chatReportRepository.save(chatReport).getChatReportId();
     }
 
-    public void findChatReport(Long chatReportId) {
-        ChatReport chatReport = chatReportRepository.findById(chatReportId).orElseThrow(ChatNotFoundException::new);
+    public ChatReportPageResponse findChatReports(int pageNumber, int pageSize) {
+
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        Page<ChatReport> chatReportPage = chatReportRepository.findAll(pageable);
+
+        return chatMapper.chatReportPageToChatReportPageResponses(chatReportPage);
     }
 
     private Member findMemberById(Long memberId) {

@@ -31,9 +31,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MapContentService {
 
-    private static final Double X_COORDINATE_VALUE_PER_100_METERS = 0.0012;
+    private final Double X_COORDINATE_VALUE_PER_100_METERS = 0.0012;
 
-    private static final Double Y_COORDINATE_VALUE_PER_100_METERS = 0.0009;
+    private final Double Y_COORDINATE_VALUE_PER_100_METERS = 0.0009;
 
     private final MapContentRepository mapContentRepository;
 

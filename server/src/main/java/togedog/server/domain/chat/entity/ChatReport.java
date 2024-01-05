@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import togedog.server.domain.chat.entity.ChatRoom;
 import togedog.server.global.entity.BaseEntity;
+import togedog.server.global.entity.ReportState;
 
 import javax.persistence.*;
 
@@ -20,7 +21,12 @@ public class ChatReport extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatReportId;
 
+    private Long reportedMemberId;
+
     private String content;
+
+    @Enumerated(EnumType.STRING)
+    private ReportState reportState;
 
     @ManyToOne
     @JoinColumn(name = "chat_room_id")
