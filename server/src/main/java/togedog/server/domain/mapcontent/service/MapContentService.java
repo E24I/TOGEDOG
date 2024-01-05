@@ -132,8 +132,13 @@ public class MapContentService {
         List<Feed> findFeeds = new ArrayList<>();
 
         for(MapContent mapContent : findMapContent) {
-            for(Feed feed : mapContent.getFeeds()) {
-                findFeeds.add(feedRepository.findByFeedIdAndDeleteYnIsFalse(feed.getFeedId()).orElseThrow(FeedNotFoundException::new));
+            if(!mapContent.getFeeds().isEmpty()) {
+                for(Feed feed : mapContent.getFeeds()) {
+                    Optional<Feed> feedOptional = feedRepository.findByFeedIdAndDeleteYnIsFalse(feed.getFeedId());
+                    if(feedOptional.isPresent()) {
+                        findFeeds.add(feedOptional.get());
+                    }
+                }
             }
         }
 
