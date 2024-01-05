@@ -26,6 +26,18 @@ export const getUserFeed = async (requestObj: userFeedNeedType) => {
   return res.data;
 };
 
+// 유저 프로필사진 삭제
+export const deleteUserImage = async (token: string) => {
+  const url = `${ROOT_URL}/member/image/delete`;
+  const headers = {
+    headers: {
+      Authorization: token,
+    },
+  };
+  const res = await axios.delete(url, headers);
+  return res;
+};
+
 // 닉네임변경
 export const patchUserNickname = async (
   newNickname: string,
@@ -102,6 +114,17 @@ export const deletePetInfo = async (petId: string, token?: string) => {
   };
   const url = `${ROOT_URL}/pet/${petId}/delete`;
   const res = await axios.delete(url, headers);
+  return res;
+};
+
+// 펫 이미지 삭제
+export const deletePetImg = async (petId: number, token: string) => {
+  const headers = {
+    headers: { Authorization: token },
+  };
+  const data = { image: null };
+  const url = `${ROOT_URL}/pet/${petId}/image/upload`;
+  const res = await axios.patch(url, data, headers);
   return res;
 };
 

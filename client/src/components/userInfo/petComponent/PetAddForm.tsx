@@ -20,10 +20,16 @@ import { AttachingInput } from "../../petFeed/writingSpace/CreatingSpace/Upload.
 import { PetImgForm } from "../../../atoms/imgForm/ImgForm";
 import { ChangeImgButton } from "../infoChangeComponent/ProfileChange.style";
 import { getPresignedUrl, uploadToS3 } from "../../../services/feedService";
+import { ErrorMsg } from "../../signUpElement/SignUpInputs.style";
+import { queryClient } from "../../..";
 
 const PetAddForm: React.FC = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [imageFiles, setImageFiles] = useState<{
     file: File | null;
     name: string;
@@ -39,18 +45,25 @@ const PetAddForm: React.FC = () => {
       setImageFiles({ file: file, name: name, type: type });
     }
   };
-  const handelSubmit = async (data: any) => {
-    await getPresignedUrl(imageFiles.name).then((res) => {
-      uploadToS3(res, imageFiles.file, imageFiles.type).then((res) => {
-        if (res.config.url) {
-          imgURL = res.config.url.substring(0, res.config.url.indexOf("?"));
-          const realData = { ...data, image: imgURL };
-          postPetInfo(realData, toekn);
-          console.log(realData);
-          navigate(-1);
-        }
+  const onSubmit = async (data: any) => {
+    if (imageFiles.file !== null) {
+      await getPresignedUrl(imageFiles.name).then((res) => {
+        uploadToS3(res, imageFiles.file, imageFiles.type).then((res) => {
+          if (res.config.url) {
+            imgURL = res.config.url.substring(0, res.config.url.indexOf("?"));
+            const realData = { ...data, image: imgURL };
+            postPetInfo(realData, toekn);
+            navigate(-1);
+            queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+            return;
+          }
+        });
       });
-    });
+    } else {
+      postPetInfo(data, toekn);
+      queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+      navigate(-1);
+    }
   };
   return (
     <PetAddContainer>
@@ -78,7 +91,7 @@ const PetAddForm: React.FC = () => {
           )}
           <ChangeImgButton htmlFor="add_image">프로필사진 추가</ChangeImgButton>
         </ImgBox>
-        <form onSubmit={handleSubmit(handelSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Input
             type="text"
             placeholder="반려동물의 이름 입력해주세요."
@@ -97,12 +110,14 @@ const PetAddForm: React.FC = () => {
             autoComplete="off"
             {...register("age", {
               required: true,
-              pattern: {
-                value: /^[0-9]*$/, // 숫자만 입력할 수 있는 정규식 패턴
-                message: "반려동물의 나이를 숫자로 입력해주세요.", // 숫자가 아닌 경우의 오류 메시지
-              },
+              pattern: /^[0-9]*$/,
             })}
           />
+          {errors.age && (
+            <ErrorMsg>
+              <p>반려동물의 나이를 숫자만 입력해주세요.</p>
+            </ErrorMsg>
+          )}
           <Textarea
             placeholder="반려동물의 소개를 자유롭게 입력해주세요."
             autoComplete="off"

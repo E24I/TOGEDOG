@@ -14,6 +14,7 @@ import {
 import {
   usePatchUserNickname,
   usePatchUserIntro,
+  useDeleteUserImage,
 } from "../../../hooks/UserInfoHook";
 import { ChageData } from "../../../types/userInfoType";
 import { UserImgForm } from "../../../atoms/imgForm/ImgForm";
@@ -79,6 +80,7 @@ const ProfileChange: React.FC<ChageData> = ({
   };
   const { mutate: patchNicknameMutate } = usePatchUserNickname(newNickname);
   const { mutate: patchIntroMutate } = usePatchUserIntro(introduction);
+  const { mutate: deleteUserImage } = useDeleteUserImage();
 
   return (
     <ChangeForm>
@@ -104,7 +106,10 @@ const ProfileChange: React.FC<ChageData> = ({
           ) : (
             <UserImgForm width={100} height={100} radius={50} URL={img} />
           )}
-          <ChangeImgButton htmlFor="add_image">프로필사진 선택</ChangeImgButton>{" "}
+          <ChangeImgButton htmlFor="add_image">프로필사진 선택</ChangeImgButton>
+          <ChangeImgButton onClick={() => deleteUserImage()}>
+            프로필사진 삭제
+          </ChangeImgButton>
           {imageFiles.file !== null && (
             <button className="submitButton" onClick={handelChange}>
               변경하기
