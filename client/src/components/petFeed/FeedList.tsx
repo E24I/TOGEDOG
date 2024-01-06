@@ -6,7 +6,6 @@ import {
   FeedHeader,
   Profile,
   ProfileBox,
-  ProfileImg,
   Unknown,
   UserName,
   FeedAddress,
@@ -45,55 +44,54 @@ import {
   tokenAtom,
 } from "../../atoms";
 import { useNavigate } from "react-router-dom";
+import { UserImgForm } from "../../atoms/imgForm/ImgForm";
 
 interface OwnProps {
   items: feedListsType;
 }
 
 const FeedList: React.FC<OwnProps> = ({ items }) => {
+  const navigate = useNavigate();
   const isLogin = useRecoilValue(isLoginAtom);
   const accesstoken = useRecoilValue(tokenAtom);
   const setAlertModal = useSetRecoilState(alertAtom);
 
   const [isDetail, setDetail] = useState<boolean>(false);
   const [isSetting, setSetting] = useState<boolean>(false);
-  const today = new Date();
-  const createDate = items.createdDate.split("T")[0];
-  const feedDate = createDate.split("-").map((el) => parseInt(el));
-  const createTime = items.createdDate.split("T")[1];
-  const feedTime = createTime.split(":").map((el) => parseInt(el));
   const { mutate: feedLike } = useFeedLike(items.feedId, accesstoken);
   const { mutate: feedBookmark } = useFeedBookmark(items.feedId, accesstoken);
-
   const handleMoreReview = (): void => setDetail(!isDetail);
   const handleSetting = (): void => setSetting(!isSetting);
   const handleCloseDropdown = () => setSetting(false);
 
-  const mediaRef = useRef<any>(null);
-  const imgRef = useRef<any>(items.images?.map(() => createRef()));
+  const mediaBoxRef = useRef<any>(null);
+  const mediaItems = items.videos
+    ? [items.videos].concat(items.images)
+    : items.images;
+  const mediaRef = useRef<any>(mediaItems?.map(() => createRef()));
   const [isMedia, setMedia] = useState<number>(0);
 
   const navigator = useNavigate();
 
-  // 미디어 오른쪽 스크롤 이동 버튼
-  const handleScrollRight = () => {
-    if (isMedia >= 0 && imgRef.current[isMedia + 1]) {
-      mediaRef.current.scrollLeft =
-        mediaRef.current.scrollLeft +
-        imgRef.current[isMedia].current.offsetWidth +
+  // 미디어 왼쪽 스크롤 이동 버튼
+  const handleScrollLeft = () => {
+    if (isMedia > 0 && mediaRef.current[isMedia]) {
+      mediaBoxRef.current.scrollLeft =
+        mediaBoxRef.current.scrollLeft -
+        mediaRef.current[isMedia].current.offsetWidth -
         20;
-      setMedia(isMedia + 1);
+      setMedia(isMedia - 1);
     }
   };
 
-  // 미디어 왼쪽 스크롤 이동 버튼
-  const handleScrollLeft = () => {
-    if (isMedia >= 0 && imgRef.current[isMedia - 1]) {
-      mediaRef.current.scrollLeft =
-        mediaRef.current.scrollLeft -
-        imgRef.current[isMedia - 1].current.offsetWidth -
+  // 미디어 오른쪽 스크롤 이동 버튼
+  const handleScrollRight = () => {
+    if (isMedia >= 0 && mediaRef.current[isMedia + 1]) {
+      mediaBoxRef.current.scrollLeft =
+        mediaBoxRef.current.scrollLeft +
+        mediaRef.current[isMedia].current.offsetWidth +
         20;
-      setMedia(isMedia - 1);
+      setMedia(isMedia + 1);
     }
   };
 
@@ -129,17 +127,56 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
           신고하기: handleReplyReport,
         };
 
+  // 스크롤 방지(모달창 켜져있을때)
+  if (isDetail) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
+  }
+
+  // 피드 시간 경과 계산
+  const setTime = (createdAt: string) => {
+    const currentDate = new Date();
+    const createdDate = new Date(createdAt);
+    const timeDiff = Math.floor(
+      (currentDate.getTime() - createdDate.getTime()) / 1000,
+    );
+    const intervals = {
+      년: 31536000,
+      개월: 2592000,
+      일: 86400,
+      시간: 3600,
+      분: 60,
+      초: 1,
+    };
+    for (const [unit, seconds] of Object.entries(intervals)) {
+      const diff = Math.floor(timeDiff / seconds);
+      if (diff >= 1) {
+        return `${diff}${unit} 전`;
+      }
+    }
+    return "1초 전";
+  };
+
   return (
     <Feed>
       <FeedHeader>
         <Profile>
-          <ProfileBox>
-            {items.member.imageUrl ? (
-              <ProfileImg src={items.member.imageUrl} alt="프로필 사진" />
-            ) : (
+          {items.member.imageUrl ? (
+            <UserImgForm
+              width={50}
+              height={50}
+              radius={50}
+              URL={items.member.imageUrl}
+              onClick={() => {
+                navigate(`/user/${items.member.memberId}`);
+              }}
+            />
+          ) : (
+            <ProfileBox>
               <Unknown />
-            )}
-          </ProfileBox>
+            </ProfileBox>
+          )}
           <div>
             <UserName>{items.member.nickname}</UserName>
             {items.address && (
@@ -150,19 +187,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
             )}
           </div>
         </Profile>
-        <UploadTime>
-          {today.getFullYear() !== feedDate[0]
-            ? `${today.getFullYear() - feedDate[0]}년 전`
-            : today.getMonth() + 1 !== feedDate[1]
-            ? `${today.getMonth() + 1 - feedDate[1]}개월 전`
-            : today.getDate() !== feedDate[0]
-            ? `${today.getDate() - feedDate[2]}일 전`
-            : today.getHours() !== feedTime[0]
-            ? `${today.getHours() - feedTime[0]}시간 전`
-            : today.getMinutes() !== feedTime[1]
-            ? `${today.getMinutes() - feedTime[1]}분 전`
-            : `${today.getSeconds() - feedTime[2]}초 전`}
-        </UploadTime>
+        <UploadTime>{setTime(items.createdDate)}</UploadTime>
         <SettingBox onClick={handleSetting} onBlur={() => setSetting(false)}>
           <Setting />
           {isSetting && (
@@ -181,28 +206,23 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
       {(items.images.length > 0 || items.videos) && (
         <FeedMedia>
           <LeftScroll onClick={() => handleScrollLeft()} />
-          <FeedImgs ref={mediaRef}>
+          <FeedImgs ref={mediaBoxRef}>
             {items.videos && (
               <FeedVideo
-                ref={imgRef.current[0]}
+                ref={mediaRef.current[0]}
                 src={items.videos}
                 controls={true}
                 muted={false}
-                onClick={() => {
-                  console.log(items.videos);
-                }}
               />
             )}
             {items.images.length > 0 &&
               items.images.map((el, idx) => (
                 <FeedImg
                   key={idx}
-                  ref={imgRef.current[idx + 1]}
+                  ref={mediaRef.current[items.videos ? idx + 1 : idx]}
                   src={el}
-                  alt={`피드 이미지${idx + 1}`}
-                  onClick={() => {
-                    handleMoreReview();
-                  }}
+                  alt={`피드 이미지${items.videos ? idx + 1 : idx}`}
+                  onClick={handleMoreReview}
                 />
               ))}
           </FeedImgs>

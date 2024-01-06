@@ -8,10 +8,16 @@ export const postMap = async (enrollMap: enrollMapType) => {
 };
 
 // 피드 조회 (좌표 사용)
-export const getPetMap = async (coordinate: coordinateType) => {
+export const getPetMap = async (
+  coordinate: coordinateType,
+  accesstoken: string,
+) => {
   const response = await axios.post(
     `${ROOT_URL}/map/content/coordinate`,
     coordinate,
+    {
+      headers: { Authorization: accesstoken },
+    },
   );
   return response.data;
 };

@@ -3,7 +3,7 @@ import { ReactComponent as Circle } from "../../assets/images/icons/Circle.svg";
 
 export const PaginationContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 `;
 
@@ -21,7 +21,7 @@ export const PaginationBtn = styled.button<{ page?: boolean }>`
 export const CircleBtn = styled(Circle)<{ page?: boolean }>`
   min-width: 10px;
   height: 10px;
-  margin: 0px 1px;
+  margin: 0px 3px;
   cursor: pointer;
   circle {
     fill: ${(props) => props.page && "rgb(255, 255, 255)"};

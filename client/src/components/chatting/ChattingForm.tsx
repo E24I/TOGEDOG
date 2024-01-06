@@ -44,6 +44,7 @@ const ChattingLists: React.FC = () => {
   };
 
   const setTime = (createdAt: string) => {
+    console.log(createdAt);
     const currentDate = new Date();
     const createdDate = new Date(createdAt);
 
