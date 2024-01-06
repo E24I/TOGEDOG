@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import togedog.server.domain.feed.entity.Feed;
+import togedog.server.domain.mapcontent.entity.MapContent;
 import togedog.server.domain.member.mapper.MemberInfo;
 import togedog.server.domain.reply.entity.Reply;
 import togedog.server.global.response.PageInformation;
@@ -32,6 +33,10 @@ public class FeedResponse {
     private Boolean replyFix;
     private String address;
     private Integer repliesCount;
+
+    //MapContent 에 기준 좌표로 Feed 조회시 필요한 필드
+    private String wgs84_x;
+    private String wgs84_y;
 
     @Getter
     @AllArgsConstructor
@@ -66,6 +71,33 @@ public class FeedResponse {
                 .bookmarkYn(isBookmarkedByCurrentUser)
                 .replyFix(feed.getReplyFix())
                 .likeYn(isLikedByCurrentUser)
+                .build();
+
+    }
+
+    public static FeedResponse mapContentFeedResponse(Feed feed, boolean isBookmarkedByCurrentUser, boolean isLikedByCurrentUser, MapContent mapContent) {
+
+        List<String> feedImagesUrls = feed.getFeedImages().stream()
+                .map(FeedImage::getFeedImageUrl)
+                .collect(Collectors.toList());
+
+        return FeedResponse.builder()
+                .feedId(feed.getFeedId())
+                .title(feed.getTitle())
+                .content(feed.getContent())
+                .member(MemberInfo.of(feed.getMember()))
+                .images(feedImagesUrls)// 객체로 받으니까 에러뜬다..
+                .videos(feed.getVideos())
+                .updatedDate(feed.getModifiedDateTime())
+                .createdDate(feed.getCreatedDateTime())
+                .likeCount(feed.getLikeCount())
+                .repliesCount(feed.getRepliesCount())
+                .address(feed.getAddress())
+                .bookmarkYn(isBookmarkedByCurrentUser)
+                .replyFix(feed.getReplyFix())
+                .likeYn(isLikedByCurrentUser)
+                .wgs84_x(mapContent.getWgs84x().toString())
+                .wgs84_y(mapContent.getWgs84y().toString())
                 .build();
 
     }
