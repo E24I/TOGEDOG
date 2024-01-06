@@ -15,7 +15,7 @@ import {
   ImgBox,
 } from "./PetAdd.style";
 import { postPetInfo } from "../../../services/userInfoService";
-import { tokenAtom } from "../../../atoms";
+import { tokenAtom, memberIdAtom } from "../../../atoms";
 import { AttachingInput } from "../../petFeed/writingSpace/CreatingSpace/Upload.Style";
 import { PetImgForm } from "../../../atoms/imgForm/ImgForm";
 import { ChangeImgButton } from "../infoChangeComponent/ProfileChange.style";
@@ -36,6 +36,7 @@ const PetAddForm: React.FC = () => {
     type: string;
   }>({ file: null, name: "", type: "" });
   const toekn = useRecoilValue(tokenAtom);
+  const memberId = useRecoilValue(memberIdAtom);
   let imgURL = "";
   const uploadImg = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
@@ -62,7 +63,7 @@ const PetAddForm: React.FC = () => {
     } else {
       postPetInfo(data, toekn);
       queryClient.invalidateQueries({ queryKey: ["userInfo"] });
-      navigate(-1);
+      navigate(`/user/${memberId}`);
     }
   };
   return (
