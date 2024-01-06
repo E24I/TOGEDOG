@@ -129,22 +129,16 @@ public class MapContentService {
 
         MapContentFeedResponse response = new MapContentFeedResponse();
 
-        List<Feed> findFeeds = new ArrayList<>();
-
         for(MapContent mapContent : findMapContent) {
             if(!mapContent.getFeeds().isEmpty()) {
                 for(Feed feed : mapContent.getFeeds()) {
                     Optional<Feed> feedOptional = feedRepository.findByFeedIdAndDeleteYnIsFalse(feed.getFeedId());
+
                     if(feedOptional.isPresent()) {
-                        findFeeds.add(feedOptional.get());
+                        Feed findFeed = feedOptional.get();
+                        response.getFeedResponses().add(FeedResponse.mapContentFeedResponse(findFeed, isFeedBookmarkedByMember(member, findFeed), isFeedLikedByMember(member, findFeed), mapContent));
                     }
                 }
-            }
-        }
-
-        if(!findFeeds.isEmpty()) {
-            for(Feed feed : findFeeds) {
-                response.getFeedResponses().add(FeedResponse.singleFeedResponse(feed, isFeedBookmarkedByMember(member, feed), isFeedLikedByMember(member, feed)));
             }
         }
 
