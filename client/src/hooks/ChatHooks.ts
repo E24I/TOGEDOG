@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import {
   createNewChat,
   exitARoom,
@@ -59,16 +59,26 @@ export const GetAllRoomsQuery = () => {
   });
 };
 
-//특정 채팅방 대화 내용 조회
-export const GetAllMessagesQuery = (roomId?: number) => {
+// 채팅 내용 무한스크롤
+export const useInfiniteGetMessages = (roomId?: number) => {
   const token = useRecoilValue(tokenAtom);
-  return useQuery({
-    queryKey: ["messages", roomId, token],
-    queryFn: async () => {
-      const response = await getAllMessages(token, roomId);
-      return response.data;
+  return useInfiniteQuery({
+    queryKey: ["messages", token, roomId],
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await getAllMessages(token, pageParam, roomId);
+      return response;
     },
-    enabled: !!roomId,
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.data.pageInformation.page !==
+        allPages[0].data.pageInformation.totalPage
+        ? lastPage.data.pageInformation.page + 1
+        : undefined;
+    },
+    select: (data) => ({
+      pages: data?.pages.map((page) => page.data),
+      pageParams: data.pageParams,
+    }),
+    initialPageParam: 1,
   });
 };
 

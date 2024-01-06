@@ -12,8 +12,8 @@ export type messagesType = {
   messageId: number;
   memberId: number;
   content: string;
-  createdAt: string;
-}[];
+  createAt: string;
+};
 export type searchedUserType = {
   memberId: number;
   nickname: string;

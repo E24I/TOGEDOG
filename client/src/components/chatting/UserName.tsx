@@ -16,7 +16,7 @@ const UserName: React.FC<UserNameType> = ({ id, component }) => {
       ) : error ? (
         <>error</>
       ) : (
-        <Name data={component}>{userInfo.nickname}</Name>
+        <Name data={component}>{userInfo?.nickname}</Name>
       )}
     </>
   );

@@ -74,7 +74,7 @@ const Header: React.FC = () => {
           </Link>
           <NotificationsContainer
             onClick={() =>
-              loginState ? convertToRead : alert("로그인이 필요합니다.")
+              loginState ? convertToRead() : alert("로그인이 필요합니다.")
             }
           >
             {isRead === false ? <RedPointStyle /> : <NotificationsStyle />}

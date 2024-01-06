@@ -14,12 +14,12 @@ import {
   TimeStamp,
 } from "./ChattingForm.Style";
 import DropDown from "../../atoms/dropdown/DropDown";
-import { GetAllMessagesQuery, GetAllRoomsQuery } from "../../hooks/ChatHooks";
+import { GetAllRoomsQuery } from "../../hooks/ChatHooks";
 import { roomsDataType } from "../../types/chatType";
 import SearchUser from "./SearchUsers";
 import ChattingDetail from "./ChattingDetail";
-import UserName from "./otherUserName";
-import UserImage from "./otherUserImage";
+import UserName from "./UserName";
+import UserImage from "./UserImage";
 
 const ChattingLists: React.FC = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -32,7 +32,6 @@ const ChattingLists: React.FC = () => {
     isLoading: roomsLoading,
     error: roomsError,
   } = GetAllRoomsQuery();
-  const { data, isLoading, error } = GetAllMessagesQuery(roomId);
 
   const openDropDown = (e: MouseEvent, idx: number) => {
     e.stopPropagation();
@@ -127,14 +126,7 @@ const ChattingLists: React.FC = () => {
           <DefaultBack />
         </DefaultBackGroundWrapper>
       ) : (
-        roomId && (
-          <ChattingDetail
-            roomId={roomId}
-            data={data}
-            isLoading={isLoading}
-            error={error}
-          />
-        )
+        roomId && <ChattingDetail roomId={roomId} />
       )}
     </ChattingFormContainer>
   );

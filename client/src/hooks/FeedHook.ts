@@ -114,7 +114,7 @@ export const usePostFeed = (
       }
       return;
     },
-    onError: (err) => {
+    onError: () => {
       alert("제목과 내용을 알맞게 입력하세요");
       return;
     },

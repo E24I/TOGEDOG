@@ -20,13 +20,13 @@ const UserImage: React.FC<UserNameType> = ({ id, component }) => {
         <>error</>
       ) : (
         <ProfileContainer onClick={() => navigator(`/user/${id}`)}>
-          {userInfo.image === null ? (
+          {userInfo?.image === null ? (
             <ProfileWrap data={component}>
               <ProfileImage />
             </ProfileWrap>
           ) : (
             <ImageWrap data={component}>
-              <Image src={userInfo.image} />
+              <Image src={userInfo?.image} />
             </ImageWrap>
           )}
         </ProfileContainer>
@@ -46,9 +46,12 @@ export const ProfileImage = styled(Profile)`
 //component
 export const Image = styled.img<{ data?: string }>`
   position: absolute;
-  left: 12%;
-  width: fit-content;
+  top: 0;
+  left: 0%;
+  width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: center;
   border-radius: 1000px;
 `;
 
@@ -60,13 +63,16 @@ export const ProfileWrap = styled.div<{ data?: string }>`
   position: relative;
   background-color: #f8d259;
   width: ${(props) => (props["data"] === "list" ? 40 : 60)}px;
-  width: ${(props) => (props["data"] === "list" ? 40 : 60)}px;
   height: ${(props) => (props["data"] === "list" ? 40 : 60)}px;
   border-radius: 100px;
+  margin-right: 20px;
 `;
 
-export const ImageWrap = styled(ProfileWrap)`
+export const ImageWrap = styled(ProfileWrap)<{ data?: string }>`
   background-color: transparent;
+  width: ${(props) => (props["data"] === "list" ? 40 : 60)}px;
+  height: ${(props) => (props["data"] === "list" ? 40 : 60)}px;
+  margin-right: 20px;
 `;
 
 export default UserImage;

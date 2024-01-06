@@ -6,11 +6,10 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 import * as C from "./CreatingSpace.Style";
 import UploadSpace from "./Upload";
-import UserName from "../../../chatting/otherUserName";
+import UserName from "../../../chatting/UserName";
 import { useRecoilValue } from "recoil";
 import { memberIdAtom } from "../../../../atoms";
-import UserImage from "../../../chatting/otherUserImage";
-import { Id } from "../updatingSpace/UpdatingSpace.Style";
+import UserImage from "../../../chatting/UserImage";
 
 interface CreatingSpaceProps {
   handleInputChange: (
@@ -26,6 +25,8 @@ interface CreatingSpaceProps {
       }[]
     >
   >;
+  contentLength: number;
+  setContentLength: React.Dispatch<React.SetStateAction<number>>;
 }
 
 //react-query modules - toolbar제거
@@ -36,10 +37,11 @@ const modules = {
 const CreatingSpace: React.FC<CreatingSpaceProps> = ({
   handleInputChange,
   setAttachments,
+  contentLength,
+  setContentLength,
 }) => {
   const [quillValue, setQuillValue] = useState("");
   const contentRef = useRef<any>();
-  const [contentLength, sendContentLength] = useState<number>(0);
   const [alert, setAlert] = useState<string>("");
   const myMemberId = useRecoilValue(memberIdAtom);
 
@@ -72,7 +74,7 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({
       handleInputChange("content", editor);
       setQuillValue(editor);
     }
-    sendContentLength(textLength);
+    setContentLength(textLength);
   };
 
   return (

@@ -6,9 +6,11 @@ import "react-quill/dist/quill.bubble.css";
 import { useGetFeed } from "../../../../hooks/FeedHook";
 import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { tokenAtom } from "../../../../atoms";
+import { memberIdAtom, tokenAtom } from "../../../../atoms";
 import { feedDetailType } from "../../../../types/feedDataType";
 import { Alert } from "../CreatingSpace/CreatingSpace.Style";
+import UserImage from "../../../chatting/UserImage";
+import UserName from "../../../chatting/UserName";
 
 interface UpdatingSpace {
   handleUpdatedInfoChange: (
@@ -17,6 +19,7 @@ interface UpdatingSpace {
   ) => void;
   setFeedId: React.Dispatch<React.SetStateAction<number>>;
   setFeedPublic: React.Dispatch<React.SetStateAction<boolean>>;
+  setContentLength: React.Dispatch<React.SetStateAction<number>>;
 }
 
 //react-query modules - toolbar제거
@@ -28,7 +31,9 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
   handleUpdatedInfoChange,
   setFeedId,
   setFeedPublic,
+  setContentLength,
 }) => {
+  const mymemberId = useRecoilValue(memberIdAtom);
   const token = useRecoilValue(tokenAtom);
   const { feedId } = useParams();
   const { data, error, isLoading } = useGetFeed(Number(feedId), token);
@@ -66,13 +71,22 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
       setAlert("제목은 두 단어 이상으로 작성해야 합니다.");
     } else {
       setAlert("");
-      handleUpdatedInfoChange("title", e.target.value);
     }
+    handleUpdatedInfoChange("title", e.target.value);
   };
   //수정한 본문을 WritingSpace로 전달
   const setContent = (editor: string) => {
-    setQuillValue(editor);
-    handleUpdatedInfoChange("content", editor);
+    const p = "</p>";
+    //본문 글자 수
+    const textLength = editor
+      .replace(/<br>/g, "")
+      .replace(/<p>/g, "")
+      .replace(new RegExp(p, "g"), "").length;
+    if (textLength <= 200) {
+      setQuillValue(editor);
+      handleUpdatedInfoChange("content", editor);
+    }
+    setContentLength(textLength);
   };
   console.log(data);
 
@@ -85,9 +99,9 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
       ) : (
         <>
           <U.FeedOwner>
-            <U.FeedOwnerImg />
+            <UserImage id={mymemberId} />
             <U.IdAndAddress>
-              <U.Id>{feedData.member.nickname}</U.Id>
+              <UserName id={mymemberId} />
               <U.Address>위치정보</U.Address>
             </U.IdAndAddress>
           </U.FeedOwner>
