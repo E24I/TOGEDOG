@@ -60,7 +60,9 @@ export const ChangeContainer = styled.div`
   align-items: center;
   gap: 20px;
   .submitButton {
-    color: black;
+    color: white;
+    background: #494949;
+    bottom: -40px;
   }
 `;
 
@@ -105,8 +107,19 @@ export const ProfileImg = styled.div<{ thumbnail: string | undefined }>`
   background-repeat: no-repeat;
   background-position: center;
 `;
+
+export const SelectImgBox = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 export const ChangeImgButton = styled.label`
   font-size: 16px;
+  background: #494949;
+  margin-top: 10px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  color: white;
   cursor: pointer;
 `;
 

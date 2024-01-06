@@ -10,6 +10,8 @@ import {
   Hearts,
   BookMarks,
   FeedContainer,
+  NoneFeedBox,
+  LogoImg,
 } from "./UserFeedForm.style";
 import FeedCard from "./feedCardComponent/FeedCard";
 import { MyInfoFormProps } from "../../types/memberType";
@@ -89,7 +91,7 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
         )}
       </TapContainer>
       <FeedContainer>
-        {feedsData ? (
+        {feedsData?.length ? (
           feedsData?.map((feed) => (
             <FeedCard
               image={feed.images}
@@ -100,7 +102,10 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
             />
           ))
         ) : (
-          <p>등록된 피드가 없습니다.</p>
+          <NoneFeedBox>
+            <LogoImg />
+            <p>등록된 피드가 없습니다.</p>
+          </NoneFeedBox>
         )}
         <div ref={setTarget} />
       </FeedContainer>

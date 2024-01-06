@@ -82,3 +82,14 @@ export const ImgBox = styled.div`
   background-size: cover;
   background-position: center;
 `;
+// {"web":{"client_id":"859204905435-56c8h2c738bsesqf03uicq8t6p2th8f7.apps.googleusercontent.com",
+//         "project_id":"togedogproject",
+//         "auth_uri":"https://accounts.google.com/o/oauth2/auth",
+//         "token_uri":"https://oauth2.googleapis.com/token",
+//         "auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
+//         "client_secret":"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",
+//         "redirect_uris":["http://localhost:8080/login/oauth2/code/google",
+//                          "http://localhost:3000/login/oauth2/code/google"],
+//         "javascript_origins":["http://localhost:3000"]
+//       }
+// }

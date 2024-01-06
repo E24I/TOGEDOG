@@ -67,8 +67,8 @@ export const usePostEmail = (email: string) => {
     onSuccess: () => {
       alert("인증코드를 메일로 보냈습니다.");
     },
-    onError: (err: AxiosResponse) => {
-      console.log(err, "실패");
+    onError: (err: any) => {
+      alert(err.response.data.message);
     },
   });
 };

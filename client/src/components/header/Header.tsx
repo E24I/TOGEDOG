@@ -47,7 +47,7 @@ const Header: React.FC = () => {
       setRead(false);
     }
   };
-  const { data } = useQuery<any>({
+  const { data } = useQuery({
     queryKey: ["userInfo", memberId, token],
     queryFn: () => getUserInfo(Number(memberId), token),
   });
@@ -84,7 +84,7 @@ const Header: React.FC = () => {
           width={50}
           height={50}
           radius={50}
-          URL={data?.data.image ? data?.data.image : null}
+          URL={loginState ? data?.data.image : null}
           onClick={openModal}
         />
         {isModalOpen && (

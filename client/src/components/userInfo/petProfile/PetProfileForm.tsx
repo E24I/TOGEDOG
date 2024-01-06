@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -19,7 +19,7 @@ import {
   Form,
   CategoryForm,
 } from "./PetProfileForm.style";
-import { usePatchPetIntro } from "../../../hooks/UserInfoHook";
+import { useDeletePetImg, usePatchPetIntro } from "../../../hooks/UserInfoHook";
 import { confirmAtom, tokenAtom } from "../../../atoms";
 import {
   getPetInfo,
@@ -27,14 +27,17 @@ import {
 } from "../../../services/userInfoService";
 import { PetImgForm } from "../../../atoms/imgForm/ImgForm";
 import { petIntro } from "../../../types/userInfoType";
-import { ChangeImgButton } from "../infoChangeComponent/ProfileChange.style";
+import {
+  ChangeImgButton,
+  SelectImgBox,
+} from "../infoChangeComponent/ProfileChange.style";
 import { AttachingInput } from "../../petFeed/writingSpace/CreatingSpace/Upload.Style";
 import { getPresignedUrl, uploadToS3 } from "../../../services/feedService";
 import { queryClient } from "../../..";
 
 const PetProfileForm = () => {
   const navigate = useNavigate();
-
+  const [alertModal, setAlertModal] = useRecoilState(confirmAtom);
   const { petId } = useParams<{ petId: string }>();
   const currentPetId = petId || "";
   const token = useRecoilValue(tokenAtom);
@@ -51,6 +54,7 @@ const PetProfileForm = () => {
   };
   const { register, handleSubmit } = useForm();
   const { mutate: patchPet } = usePatchPetIntro(petData, currentPetId);
+  const { mutate: deletePetImg } = useDeletePetImg(Number(petId));
 
   //수정 누르고 수정후 저장버튼을 누르면 실행
   const onSubmit = (data: any) => {
@@ -78,21 +82,21 @@ const PetProfileForm = () => {
   };
   let imgURL = "";
   const handelChange = async () => {
-    await getPresignedUrl(imageFiles.name).then((res) => {
-      uploadToS3(res, imageFiles.file, imageFiles.type).then((res) => {
-        if (res.config.url) {
-          imgURL = res.config.url.substring(0, res.config.url.indexOf("?"));
-          patchPetProfileImg(imgURL, token, Number(currentPetId)).then(() => {
-            queryClient.invalidateQueries({ queryKey: ["petInfo"] });
-            console.log(data);
-          });
-        }
+    if (imageFiles.file !== null) {
+      await getPresignedUrl(imageFiles.name).then((res) => {
+        uploadToS3(res, imageFiles.file, imageFiles.type).then((res) => {
+          if (res.config.url) {
+            imgURL = res.config.url.substring(0, res.config.url.indexOf("?"));
+            patchPetProfileImg(imgURL, token, Number(currentPetId)).then(() => {
+              queryClient.invalidateQueries({ queryKey: ["petInfo"] });
+              navigate(-1);
+            });
+          }
+        });
       });
-    });
+    }
   };
 
-  // 펫 삭제
-  const [alertModal, setAlertModal] = useRecoilState(confirmAtom);
   // 펫 삭제 컨펌모달
   const handleDeleteAlert = () =>
     setAlertModal({
@@ -149,9 +153,14 @@ const PetProfileForm = () => {
               />
             )}
             {isEditing && (
-              <ChangeImgButton htmlFor="add_image">
-                프로필사진 바꾸기
-              </ChangeImgButton>
+              <SelectImgBox>
+                <ChangeImgButton htmlFor="add_image">
+                  프로필사진 선택
+                </ChangeImgButton>
+                <ChangeImgButton onClick={() => deletePetImg()}>
+                  프로필사진 삭제
+                </ChangeImgButton>
+              </SelectImgBox>
             )}
             <NameText>
               <strong>{data?.data.name}</strong> ∙ {data?.data.age}살

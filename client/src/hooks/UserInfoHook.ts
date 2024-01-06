@@ -16,6 +16,8 @@ import {
   postPetInfo,
   patchPetInfo,
   patchProfileImg,
+  deletePetImg,
+  deleteUserImage,
 } from "../services/userInfoService";
 import {
   createPet,
@@ -57,7 +59,7 @@ export const useGetUserFeeds = (
       return response;
     },
     getNextPageParam: (lastPage, allPages) => {
-      return lastPage.pageInfo.page === 0 &&
+      return lastPage.pageInfo.page === 0 ||
         lastPage.pageInfo.page !== allPages[0].pageInfo.totalPages
         ? lastPage.pageInfo.page + 1
         : undefined;
@@ -68,6 +70,23 @@ export const useGetUserFeeds = (
     }),
     initialPageParam: 1,
   });
+};
+
+// 닉네임 변경
+export const useDeleteUserImage = () => {
+  const token = useRecoilValue(tokenAtom);
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      await deleteUserImage(token);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+    },
+    onError: (err: any) => {
+      alert(err.response.data.message);
+    },
+  });
+  return { mutate };
 };
 
 // 닉네임 변경
@@ -200,6 +219,24 @@ export const useDeletePetInfo = (petId: string | undefined) => {
   });
 };
 
+// 펫 이미지 삭제
+export const useDeletePetImg = (petId: number) => {
+  const token = useRecoilValue(tokenAtom);
+  const navigate = useNavigate();
+  return useMutation({
+    mutationFn: async () => {
+      deletePetImg(petId, token);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+      navigate(-1);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+};
+
 //펫 등록
 export const usePostPet = (requestObj: createPet) => {
   const token = useRecoilValue(tokenAtom);
@@ -209,6 +246,7 @@ export const usePostPet = (requestObj: createPet) => {
       return postPetInfo(requestObj, token);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userInfo"] });
       navigator(-1);
     },
     onError: (err) => {
