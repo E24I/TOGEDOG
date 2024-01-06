@@ -6,7 +6,6 @@ import {
   FeedHeader,
   Profile,
   ProfileBox,
-  ProfileImg,
   Unknown,
   UserName,
   FeedAddress,
@@ -59,14 +58,8 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
 
   const [isDetail, setDetail] = useState<boolean>(false);
   const [isSetting, setSetting] = useState<boolean>(false);
-  const today = new Date();
-  const createDate = items.createdDate.split("T")[0];
-  const feedDate = createDate.split("-").map((el) => parseInt(el));
-  const createTime = items.createdDate.split("T")[1];
-  const feedTime = createTime.split(":").map((el) => parseInt(el));
   const { mutate: feedLike } = useFeedLike(items.feedId, accesstoken);
   const { mutate: feedBookmark } = useFeedBookmark(items.feedId, accesstoken);
-
   const handleMoreReview = (): void => setDetail(!isDetail);
   const handleSetting = (): void => setSetting(!isSetting);
   const handleCloseDropdown = () => setSetting(false);
@@ -134,11 +127,36 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
           신고하기: handleReplyReport,
         };
 
+  // 스크롤 방지(모달창 켜져있을때)
   if (isDetail) {
     document.body.style.overflow = "hidden";
   } else {
     document.body.style.overflow = "auto";
   }
+
+  // 피드 시간 경과 계산
+  const setTime = (createdAt: string) => {
+    const currentDate = new Date();
+    const createdDate = new Date(createdAt);
+    const timeDiff = Math.floor(
+      (currentDate.getTime() - createdDate.getTime()) / 1000,
+    );
+    const intervals = {
+      년: 31536000,
+      개월: 2592000,
+      일: 86400,
+      시간: 3600,
+      분: 60,
+      초: 1,
+    };
+    for (const [unit, seconds] of Object.entries(intervals)) {
+      const diff = Math.floor(timeDiff / seconds);
+      if (diff >= 1) {
+        return `${diff}${unit} 전`;
+      }
+    }
+    return "1초 전";
+  };
 
   return (
     <Feed>
@@ -169,19 +187,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
             )}
           </div>
         </Profile>
-        <UploadTime>
-          {today.getFullYear() !== feedDate[0]
-            ? `${today.getFullYear() - feedDate[0]}년 전`
-            : today.getMonth() + 1 !== feedDate[1]
-            ? `${today.getMonth() + 1 - feedDate[1]}개월 전`
-            : today.getDate() !== feedDate[0]
-            ? `${today.getDate() - feedDate[2]}일 전`
-            : today.getHours() !== feedTime[0]
-            ? `${today.getHours() - feedTime[0]}시간 전`
-            : today.getMinutes() !== feedTime[1]
-            ? `${today.getMinutes() - feedTime[1]}분 전`
-            : `${today.getSeconds() - feedTime[2]}초 전`}
-        </UploadTime>
+        <UploadTime>{setTime(items.createdDate)}</UploadTime>
         <SettingBox onClick={handleSetting} onBlur={() => setSetting(false)}>
           <Setting />
           {isSetting && (
@@ -216,9 +222,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
                   ref={mediaRef.current[items.videos ? idx + 1 : idx]}
                   src={el}
                   alt={`피드 이미지${items.videos ? idx + 1 : idx}`}
-                  onClick={() => {
-                    handleMoreReview();
-                  }}
+                  onClick={handleMoreReview}
                 />
               ))}
           </FeedImgs>

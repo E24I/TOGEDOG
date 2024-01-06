@@ -33,7 +33,7 @@ export const usePetMap = (
       return getPetMap(coordinate, accesstoken);
     },
     onSuccess: (res) => {
-      successFunc && successFunc(res);
+      successFunc && successFunc(res.feedResponses);
       return;
     },
     onError: (err) => {

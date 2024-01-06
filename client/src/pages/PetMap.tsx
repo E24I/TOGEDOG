@@ -183,12 +183,12 @@ const PetMap: React.FC = () => {
     {
       wgs84_y: location.lat,
       wgs84_x: location.lng,
-      range: level * 2,
+      range: level * 2.6,
     },
     accesstoken,
     getMapData,
   );
-  console.log(mapData);
+  console.log("mapData", mapData);
 
   const getMapFeeds = useMemo(() => {
     if (!mapMode) petMap();
@@ -244,18 +244,6 @@ const PetMap: React.FC = () => {
                     title={el.title}
                   />
                 ))}
-            {/* {!mapMode && (
-              <Circle
-                center={location}
-                radius={50}
-                strokeWeight={3}
-                strokeColor={"#75B8FA"}
-                strokeOpacity={1}
-                strokeStyle={"solid"}
-                fillColor={"#dceeff"}
-                fillOpacity={0.5}
-              />
-            )} */}
             <PlusLevel onClick={() => setLevel(level - 1)}>+</PlusLevel>
             <MinusLevel onClick={() => setLevel(level + 1)}>-</MinusLevel>
           </Map>
@@ -303,7 +291,7 @@ const PetMap: React.FC = () => {
                   </SideListContents>
                 </SideList>
               ))
-            : mapData?.feedIdList?.map((el: any, idx: number) => (
+            : mapData?.map((el: any, idx: number) => (
                 <MapFeedItem key={idx} el={el} />
               ))}
         </SideLists>

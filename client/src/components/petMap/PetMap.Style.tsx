@@ -99,6 +99,26 @@ export const SideList = styled.li`
   align-items: center;
 `;
 
+export const SideFeedList = styled.li`
+  background-color: white;
+  border: 1px solid rgb(215, 215, 215);
+  box-shadow: 2px 2px 8px 0.01px rgb(131, 131, 131);
+  border-radius: 12px;
+  width: 98%;
+  margin-bottom: 25px;
+  padding: 18px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  &:hover {
+    box-shadow: 2px 2px 8px 0.02px rgb(79, 79, 79);
+  }
+`;
+
+export const SideListHeader = styled.div``;
+
 export const SideListNum = styled.span`
   padding: 0px 20px;
   font-weight: 600;
@@ -107,17 +127,20 @@ export const SideListNum = styled.span`
 export const SideListContents = styled.div`
   width: 100%;
   height: 100%;
-  margin-left: 15px;
+  padding: 10px 10px;
   display: flex;
   flex-direction: column;
   justify-content: start;
-  align-items: center;
+  align-items: start;
 `;
 
 export const SideListTitle = styled.div`
   width: 100%;
   padding: 5px 0px;
   font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const SideListCategory = styled.span`
@@ -133,12 +156,61 @@ export const SideListAddress = styled.div`
   color: rgb(119, 119, 119);
 `;
 
+export const SideListContent = styled.div`
+  width: 100%;
+  padding: 5px 0px;
+  color: rgb(119, 119, 119);
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+export const SideMedia = styled.div`
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+`;
+
+export const SideImageBox = styled.div`
+  position: relative;
+  border-radius: 12px;
+  width: 48%;
+  aspect-ratio: 1/1;
+`;
+
+export const SideImage = styled.img`
+  border-radius: 12px;
+  width: 48%;
+  aspect-ratio: 1/1;
+`;
+
+export const SideNoneImage = styled.img`
+  background-position: center;
+  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+`;
+
+export const SideImageCover = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgb(215, 215, 215, 50%);
+  border-radius: 12px;
+  width: 100%;
+  aspect-ratio: 1/1;
+`;
+
 export const SetMode = styled.div`
   position: fixed;
   top: 95px;
   right: 10px;
   z-index: 10;
 `;
+
 export const SideBottom = styled.div`
   background-color: white;
   border: 1px solid rgb(215, 215, 215);
