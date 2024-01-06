@@ -41,6 +41,7 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     openYn: boolean;
   }>({ title: "", content: "", openYn: isFeedPublic });
   const [feedId, setFeedId] = useState<number>(0);
+  const [contentLength, setContentLength] = useState<number>(0);
 
   const token = useRecoilValue(tokenAtom);
 
@@ -116,14 +117,33 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
   //게시 버튼 눌렀을 때
   const send = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElement = e.target as HTMLElement;
+    const textContent = targetElement.textContent;
 
     if (targetElement.textContent) {
-      const textContent = targetElement.textContent;
-
       if (textContent === "게시") {
-        await s3presigned().then(() => postFeedMutate());
+        const trimmedValue = postInformation.title.trim();
+        const words = trimmedValue.split(/\s+/);
+        if (words.length < 2 && 200 >= contentLength) {
+          alert("제목은 두 단어 이상으로 작성해 주세요");
+        } else if (words.length >= 2 && contentLength > 200) {
+          alert("내용은 200자 이하로 작성해 주세요");
+        } else if (words.length < 2 && 200 < contentLength) {
+          alert("제목과 내용을 형식에 맞게 입력해 주세요");
+        } else {
+          await s3presigned().then(() => postFeedMutate());
+        }
       } else if (textContent === "완료") {
-        updateFeedMutate();
+        const trimmedValue = updateInformation.title.trim();
+        const words = trimmedValue.split(/\s+/);
+        if (words.length < 2 && 200 >= contentLength) {
+          alert("제목은 두 단어 이상으로 작성해 주세요");
+        } else if (words.length >= 2 && contentLength > 200) {
+          alert("내용은 200자 이하로 작성해 주세요");
+        } else if (words.length < 2 && 200 < contentLength) {
+          alert("제목과 내용을 형식에 맞게 입력해 주세요");
+        } else {
+          updateFeedMutate();
+        }
       }
     }
   };
@@ -172,12 +192,15 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
         <CreatingSpace
           handleInputChange={handleInputChange}
           setAttachments={setAttachments}
+          contentLength={contentLength}
+          setContentLength={setContentLength}
         />
       ) : (
         <UpdatingSpace
           handleUpdatedInfoChange={handleUpdatedInfoChange}
           setFeedId={setFeedId}
           setFeedPublic={setFeedPublic}
+          setContentLength={setContentLength}
         />
       )}
       <W.FeedBottomContainer>

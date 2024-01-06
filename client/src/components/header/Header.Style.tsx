@@ -66,6 +66,9 @@ export const HeaderContainer = styled.div`
   height: 70px; //추후 수정 부분
   border-bottom: 1px solid #d8d8d8; //구분을 위한 임시 코드 입니다
   padding: 0 20px; //임시 코드 입니다
+  .icon {
+    height: 100%;
+  }
 `;
 
 export const HeaderBox = styled.div`

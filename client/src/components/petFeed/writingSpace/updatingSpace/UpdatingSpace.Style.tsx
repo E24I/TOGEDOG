@@ -12,25 +12,18 @@ export const RightButton = styled(RightBtn)`
 
 //components
 export const UpdateSpace = styled.div`
-  border: 2px solid #a06cb7; //구분선 입니다
   width: 80%; // 임시 사이징
   margin: 108px auto; //임시사이징
+  input {
+    width: 100%;
+  }
 `;
 
 //수정 페이지 - 프로필 래핑
 export const FeedOwner = styled.div`
   display: flex;
   flex-direction: row;
-  border: 2px solid #34c2ff; // 구분선 입니다
   height: 60px;
-`;
-
-export const FeedOwnerImg = styled.img`
-  display: block;
-  width: 60px;
-  height: 100%;
-  border: 2px solid #111111;
-  margin-right: 15px;
 `;
 
 //수정 페이지 - 피드 소유자 아이디와 등록된 주소 flexbox
@@ -38,10 +31,6 @@ export const IdAndAddress = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-`;
-
-export const Id = styled.p`
-  font-size: 16px;
 `;
 
 export const Address = styled.div`
@@ -53,8 +42,9 @@ export const FeedItems = styled.div``;
 
 export const FeedTitle = styled.div`
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 300;
   margin: 10px 0 10px 75px;
+  color: #444444;
 `;
 export const DefaultTitle = styled.p``;
 
@@ -71,7 +61,7 @@ export const DefaultContent = styled.div`
   }
   p {
     font-size: 16px;
-    font-weight: 800;
+    font-weight: 400;
   }
 `;
 
@@ -82,6 +72,7 @@ export const FeedFilesContainer = styled.div`
   width: 100%;
   height: 280px;
   overflow: scroll;
+  margin-top: 50px;
 `;
 export const FeedFiles = styled.div`
   display: flex;
@@ -89,7 +80,6 @@ export const FeedFiles = styled.div`
   height: 280px;
   width: fit-content;
   margin: auto;
-  border: 2px solid #999999; //구분선 입니다
   :nth-child(n + 2) {
     margin-left: 30px;
   }

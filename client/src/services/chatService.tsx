@@ -43,9 +43,13 @@ export const getAllRooms = async (memberId: number, token: string) => {
 };
 
 //특정 채팅방의 모든 대화 내용 조회
-export const getAllMessages = async (token: string, roomId?: number) => {
+export const getAllMessages = async (
+  token: string,
+  pageParam?: number,
+  roomId?: number,
+) => {
   const res = await axios.get(
-    `${ROOT_URL}/chat/${roomId}/message?page_number=1&page_size=10`,
+    `${ROOT_URL}/chat/${roomId}/message?page_number=${pageParam}&page_size=10`,
     {
       headers: { Authorization: token },
     },

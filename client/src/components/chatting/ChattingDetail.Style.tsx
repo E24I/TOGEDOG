@@ -3,8 +3,6 @@ import styled from "styled-components";
 //components
 export const ChattingContentContainer = styled.div`
   position: relative;
-  display: flex;
-  flex-direction: column;
   justify-content: space-between;
   width: 100%;
   height: 100vh;
@@ -14,7 +12,6 @@ export const TopFlex = styled.div`
   display: flex;
   flex-direction: row;
   height: 107px; //임시 사이징
-  padding: 24px 0; // 임시 사이징
   border-bottom: 1px solid #d7d7d7;
   align-items: center;
   justify-content: space-between;
@@ -27,10 +24,13 @@ export const ProfileWrap = styled.div`
   align-items: center;
 `;
 
-export const MiddleFlex = styled.div`
+export const MiddleFlex = styled.div<{ data?: number }>`
+  display: flex;
+  flex-direction: column-reverse;
   flex-grow: 1;
-  overflow: scroll;
+  overflow-y: auto;
   padding: 23px 20px;
+  height: 70%;
 `;
 
 export const BottomFlex = styled.form`

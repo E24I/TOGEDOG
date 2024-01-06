@@ -16,30 +16,34 @@ import DropDown from "../../atoms/dropdown/DropDown";
 import { SeeMoreButton } from "./ChattingForm.Style";
 import { useRecoilValue } from "recoil";
 import { memberIdAtom } from "../../atoms";
-import UserName from "./otherUserName";
-import UserImage from "./otherUserImage";
+import UserName from "./UserName";
+import UserImage from "./UserImage";
 import { queryClient } from "../..";
+import { useInfiniteGetMessages } from "../../hooks/ChatHooks";
+import useIntersectionObserver from "../../hooks/useIntersectionObserver";
+// import { GetAllMessagesQuery } from "../../hooks/ChatHooks";
 
 interface ChattingDetailprops {
-  isLoading: boolean;
-  error: Error | null;
-  data: any;
   roomId: number | undefined;
 }
 
-const ChattingDetail: React.FC<ChattingDetailprops> = ({
-  roomId,
-  data,
-  isLoading,
-  error,
-}) => {
+const ChattingDetail: React.FC<ChattingDetailprops> = ({ roomId }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   //이전대화기록과, 실시간 추가 기록을 모두 합친 데이터를 detailform으로 전달해야 함
   //타입 정의를 위해서 실시간 응답 데이터의 형태를 알아야함 - 이전 기록과 같으면 좋음
   const [inputMessage, setInputMessage] = useState<string>("");
   const [client, setClient] = useState<any>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
   const myMemberId = useRecoilValue(memberIdAtom);
+
+  // const { data, isLoading, error } = GetAllMessagesQuery(roomId);
+  const { data, isLoading, error, fetchNextPage, hasNextPage } =
+    useInfiniteGetMessages(roomId);
+  const messages = data?.pages.flat();
+
+  const { setTarget } = useIntersectionObserver({
+    hasNextPage,
+    fetchNextPage,
+  });
 
   useEffect(() => {
     const client = new Client({
@@ -60,10 +64,7 @@ const ChattingDetail: React.FC<ChattingDetailprops> = ({
       // 구독할 특정 주제(topic)에 대한 구독
       const subscription = client.subscribe(`/sub/chat/${roomId}`, () => {
         queryClient.invalidateQueries({ queryKey: ["messages"] });
-        scrollRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "end",
-        });
+        queryClient.invalidateQueries({ queryKey: ["rooms"] });
       });
       return subscription;
     };
@@ -126,11 +127,17 @@ const ChattingDetail: React.FC<ChattingDetailprops> = ({
         <>error</>
       ) : (
         <>
-          <MiddleFlex>
-            <DetailForm
-              messages={data.messages}
-              myMemberId={myMemberId ? myMemberId : 0}
-            />
+          <MiddleFlex data={messages?.length}>
+            {messages?.map((message, idx) => {
+              return (
+                <DetailForm
+                  key={idx}
+                  data={message}
+                  myMemberId={myMemberId ? myMemberId : 0}
+                  setTarget={setTarget}
+                />
+              );
+            })}
           </MiddleFlex>
           <BottomFlex id="chatting" onSubmit={(e) => sendMessage(e)}>
             <TextInput

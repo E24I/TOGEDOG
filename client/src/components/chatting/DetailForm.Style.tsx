@@ -2,18 +2,18 @@ import styled from "styled-components";
 
 //componenets
 export const ContentForm = styled.div`
-  &:nth-child(n + 2) {
-    margin-top: 60px;
-  }
   height: fit-content;
 `;
 
 export const Date = styled.div`
-  font-size: 13px;
+  font-size: 20px;
   text-align: center;
+  margin-top: 50px;
+  color: #6e6e6e;
 `;
 
 export const ContentContainer = styled.div`
+  position: relative;
   display: flex;
   flex-direction: row;
   margin-top: 20px;
@@ -23,8 +23,8 @@ export const ContentContainer = styled.div`
 export const Wrap = styled.div`
   display: flex;
   flex-direction: column;
-  min-width: 50px; //대화 내용 길이 임시
-  max-width: fit-content; //대화 내용 길이 임시
+  min-width: fit-content; //대화 내용 길이 임시
+  max-width: 300px; //대화 내용 길이 임시
   height: 100%;
   margin-left: 11px;
 `;
@@ -43,3 +43,21 @@ export const Talk = styled.p`
   background-color: #ffeaa7;
   border-radius: 20px;
 `;
+
+export const BottomDiv = styled.div<{ time?: string }>`
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  ${(props) => props["time"] === "my" && "right"}:0px;
+  margin-top: 6px;
+  font-size: 8px;
+  color: #6e6e6e;
+`;
+
+export const ReportButton = styled.button`
+  color: #6e6e6e;
+  font-size: 8px;
+  margin-right: 5px;
+`;
+
+export const Time = styled.div``;
