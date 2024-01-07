@@ -54,10 +54,4 @@ export const BottomDiv = styled.div<{ time?: string }>`
   color: #6e6e6e;
 `;
 
-export const ReportButton = styled.button`
-  color: #6e6e6e;
-  font-size: 8px;
-  margin-right: 5px;
-`;
-
 export const Time = styled.div``;

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect, FormEvent, useRef } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import { Client } from "@stomp/stompjs";
 import {
   BottomFlex,
@@ -90,7 +90,7 @@ const ChattingDetail: React.FC<ChattingDetailprops> = ({ roomId }) => {
     e.preventDefault();
     const content = inputMessage;
     const memberId = myMemberId;
-    if (client && client.connected) {
+    if (client && client.connected && content.length > 0) {
       client.publish({
         destination: `/pub/chat/${roomId}`,
         body: JSON.stringify({ content, memberId }),

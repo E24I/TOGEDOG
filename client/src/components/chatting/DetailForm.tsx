@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   ContentForm,
   Date,
@@ -7,7 +7,6 @@ import {
   ContentContainer,
   Wrap,
   Time,
-  ReportButton,
   BottomDiv,
 } from "./DetailForm.Style";
 import { messagesType } from "../../types/chatType";
@@ -27,8 +26,6 @@ const DetailForm: React.FC<DetailFormType> = ({
   myMemberId,
   setTarget,
 }) => {
-  const [isModalOpen, setModalOpen] = useState<boolean>(false);
-
   const changeDate = (createAt: string) => {
     for (let i = 0; i < data.messages.length; i++) {
       if (
@@ -37,12 +34,6 @@ const DetailForm: React.FC<DetailFormType> = ({
       ) {
         return createAt.substring(0, createAt.indexOf("T"));
       }
-    }
-  };
-
-  const modalHandler = () => {
-    if (isModalOpen) {
-      setModalOpen(!isModalOpen);
     }
   };
 
@@ -71,9 +62,6 @@ const DetailForm: React.FC<DetailFormType> = ({
                         <Talks data="mate">
                           <Talk>{message.content}</Talk>
                           <BottomDiv>
-                            <ReportButton onClick={() => modalHandler}>
-                              신고 하기
-                            </ReportButton>
                             <Time>{message.createAt.substring(11, 16)}</Time>
                           </BottomDiv>
                         </Talks>
@@ -84,9 +72,6 @@ const DetailForm: React.FC<DetailFormType> = ({
                     <Talks data="my">
                       <Talk>{message.content}</Talk>
                       <BottomDiv time="my">
-                        <ReportButton onClick={modalHandler}>
-                          신고 하기
-                        </ReportButton>
                         <Time>{message.createAt.substring(11, 16)}</Time>
                       </BottomDiv>
                     </Talks>

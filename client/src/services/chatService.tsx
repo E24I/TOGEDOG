@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { createNewChatType } from "../types/chatType";
+import { useRecoilValue } from "recoil";
+import { memberIdAtom } from "../atoms";
 
 const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
@@ -68,9 +70,22 @@ export const exitARoom = async (token: string, roomId?: number) => {
 };
 
 //채팅 신고
-export const reportAMessage = async (roomId: number, token: string) => {
-  const res = axios.post(`${ROOT_URL}/chat/${roomId}`, {
-    headers: { Authorization: token },
-  });
+export const reportChat = async (
+  token: string,
+  reason: string,
+  memberId?: number,
+  roomId?: number,
+) => {
+  const res = axios.post(
+    `${ROOT_URL}/chat/report`,
+    {
+      memberId: memberId,
+      chatRoomId: roomId,
+      content: reason,
+    },
+    {
+      headers: { Authorization: token },
+    },
+  );
   return res;
 };

@@ -49,6 +49,7 @@ type reportType = {
   feedId: number | undefined;
   replyId: number | undefined;
   commentId: number | undefined;
+  chatRoomId: number | undefined;
 };
 
 export const reportAtom = atom<reportType>({
@@ -58,5 +59,6 @@ export const reportAtom = atom<reportType>({
     feedId: undefined,
     replyId: undefined,
     commentId: undefined,
+    chatRoomId: undefined,
   },
 });
