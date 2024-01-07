@@ -20,12 +20,15 @@ import SearchUser from "./SearchUsers";
 import ChattingDetail from "./ChattingDetail";
 import UserName from "./UserName";
 import UserImage from "./UserImage";
+import { useRecoilState } from "recoil";
+import { reportAtom } from "../../atoms";
 
 const ChattingLists: React.FC = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [roomId, setRoomId] = useState<number | undefined>(undefined);
   const [isEntered, setEnter] = useState<boolean>(false);
   const [listIndex, setListIndex] = useState<number>(0);
+  const [reportModal, setReportModal] = useRecoilState(reportAtom);
 
   const {
     data: roomsData,

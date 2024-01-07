@@ -4,7 +4,7 @@ import {
   exitARoom,
   getAllMessages,
   getAllRooms,
-  reportAMessage,
+  reportChat,
   searchUsers,
 } from "../services/chatService";
 import { createNewChatType } from "../types/chatType";
@@ -123,17 +123,27 @@ export const useExitRoom = (roomId?: number) => {
 };
 
 //채팅 신고
-export const useReportChat = (roomId: number, token: string) => {
+export const useReportChat = (
+  reason: string,
+  roomId?: number,
+  successFunc?: () => void,
+  failFunc?: () => void,
+) => {
+  const token = useRecoilValue(tokenAtom);
+  const memberId = useRecoilValue(memberIdAtom);
+
   return useMutation({
     mutationFn: async () => {
-      reportAMessage(roomId, token);
+      return reportChat(token, reason, memberId, roomId);
     },
-    onSuccess: (res) => {
-      console.log("성공", res);
+    onSuccess: () => {
+      alert("채팅 신고 완료");
+      successFunc && successFunc();
       return;
     },
-    onError: (err) => {
-      console.log("실패", err);
+    onError: () => {
+      alert("채팅 신고 실패");
+      failFunc && failFunc();
       return;
     },
   });

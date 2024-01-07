@@ -1,6 +1,8 @@
-import React, { MouseEvent } from "react";
+import React from "react";
 import { Menu, DropDownContainer } from "./DropDown.Style";
 import { useExitRoom } from "../../hooks/ChatHooks";
+import { useRecoilState } from "recoil";
+import { reportAtom } from "../../atoms";
 
 interface DropDownProps {
   component: string;
@@ -10,14 +12,13 @@ interface DropDownProps {
 const DropDown: React.FC<DropDownProps> = ({ component, roomId }) => {
   const menus = ["채팅방 나가기", "알림 끄기", "채팅방 신고"];
   const { mutate: exitRoom } = useExitRoom(roomId);
+  const [reportModal, setReportModal] = useRecoilState(reportAtom);
 
-  if (component === "content") {
-    menus[0] = "채팅방 삭제";
-  }
-
-  const onClickController = (menu: string) => {
+  const onClickController = (menu: string, chatRoomId: number | undefined) => {
     if (menu === "채팅방 나가기") {
       exitRoom();
+    } else if (menu === "채팅방 신고") {
+      setReportModal({ ...reportModal, sort: "chat", chatRoomId: chatRoomId });
     }
   };
 
@@ -25,7 +26,7 @@ const DropDown: React.FC<DropDownProps> = ({ component, roomId }) => {
     <DropDownContainer data={component}>
       {menus.map((menu, idx) => {
         return (
-          <Menu key={idx} onMouseDown={() => onClickController(menu)}>
+          <Menu key={idx} onMouseDown={() => onClickController(menu, roomId)}>
             {menu}
           </Menu>
         );

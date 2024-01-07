@@ -13,6 +13,7 @@ import { reportAtom, tokenAtom } from "../../atoms";
 import { useFeedReport } from "../../hooks/FeedHook";
 import { useReportReply } from "../../hooks/ReplyHook";
 import { useReportComment } from "../../hooks/CommentHook";
+import { useReportChat } from "../../hooks/ChatHooks";
 
 const ReportModal: React.FC = () => {
   const accesstoken = useRecoilValue(tokenAtom);
@@ -49,6 +50,13 @@ const ReportModal: React.FC = () => {
     handleResetReport,
   );
 
+  const { mutate: reportChat } = useReportChat(
+    inputValue,
+    reportModal.chatRoomId,
+    handleResetReport,
+    handleResetReport,
+  );
+
   // positive 버튼 클릭 시
   const handlePositiveFunc = () => {
     switch (reportModal.sort) {
@@ -66,6 +74,10 @@ const ReportModal: React.FC = () => {
         console.log("대댓글 신고버튼 클릭");
         reportComment();
         return;
+
+      case "chat":
+        console.log("채팅 신고버튼 클릭");
+        reportChat();
     }
   };
 

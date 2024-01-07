@@ -12,7 +12,7 @@ export const DropDownContainer = styled.div<{ data?: string }>`
   z-index: 10;
 `;
 
-export const Menu = styled.button`
+export const Menu = styled.div`
   background-color: #63b89c;
   border-radius: 10px;
   padding: 5% 0;
