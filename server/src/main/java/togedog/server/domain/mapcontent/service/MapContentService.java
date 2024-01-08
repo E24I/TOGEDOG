@@ -22,8 +22,6 @@ import togedog.server.domain.member.entity.Member;
 import togedog.server.domain.member.service.MemberService;
 import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
-import togedog.server.global.exception.businessexception.mapcontentexception.MapContentNotFoundException;
-import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,10 +107,12 @@ public class MapContentService {
         double thresholdYMin = thresholdY - ( Y_COORDINATE_VALUE_PER_100_METERS * request.getRange() );
         double thresholdYMax = thresholdY + ( Y_COORDINATE_VALUE_PER_100_METERS * request.getRange() );
 
+        MapContentFeedResponse response = new MapContentFeedResponse();
+
         List<MapContent> findMapContent = mapContentRepository.findMapContentByThreshold(thresholdXMin, thresholdXMax, thresholdYMin, thresholdYMax);
 
         if(findMapContent.isEmpty()) {
-            throw new MapContentNotFoundException();
+            return response;
         }
 
         Member member;
@@ -126,8 +126,6 @@ public class MapContentService {
         else {
             member = memberService.findMember(loginMemberId);
         }
-
-        MapContentFeedResponse response = new MapContentFeedResponse();
 
         for(MapContent mapContent : findMapContent) {
             if(!mapContent.getFeeds().isEmpty()) {
