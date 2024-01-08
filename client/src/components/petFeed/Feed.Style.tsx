@@ -27,6 +27,7 @@ export const Profile = styled.div`
   display: flex;
   justify-content: start;
   align-items: center;
+  cursor: pointer;
 `;
 
 export const ProfileBox = styled.div`
@@ -112,29 +113,28 @@ export const FeedContent = styled.div`
 export const FeedMedia = styled.div`
   border: 1px solid rgb(215, 215, 215);
   border-radius: 15px;
-  /* width: 980px; */
   margin: 0px 0px 5px 0px;
   padding: 15px 5px;
   display: flex;
-  justify-content: space-around;
+  justify-content: start;
   align-items: center;
 `;
 
 export const FeedImgs = styled.div`
-  max-width: 830px;
-  min-width: 830px;
+  width: 100%;
   display: flex;
   justify-content: start;
   align-items: center;
   white-space: nowrap;
   overflow-x: auto;
+  margin: 10px;
 `;
 
 export const FeedVideo = styled.video`
   border: 1px solid rgb(215, 215, 215);
   border-radius: 15px;
   height: 300px;
-  margin: 10px;
+  margin-right: 20px;
   background-color: rgb(215, 215, 215);
 `;
 
@@ -142,7 +142,7 @@ export const FeedImg = styled.img`
   border: 1px solid rgb(215, 215, 215);
   border-radius: 15px;
   height: 300px;
-  margin: 10px;
+  margin-right: 20px;
   background-color: rgb(215, 215, 215);
   /* aspect-ratio: 7/6; */
   /* min-width: 350px; */
@@ -181,8 +181,16 @@ export const FeedBottom = styled.div`
   padding: 0px 50px;
 `;
 
-export const ReviewCount = styled.span`
-  cursor: pointer;
+export const ReviewCount = styled.button`
+  padding: 2px;
+  font-size: 16px;
+  font-weight: 600;
+  &:hover {
+    color: rgb(101, 101, 101);
+  }
+  &:active {
+    color: rgb(138, 138, 138);
+  }
 `;
 
 export const ModalBackground = styled.div`
@@ -334,6 +342,7 @@ export const ReplyLeft = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `;
 
 export const ReplyProfile = styled.img`

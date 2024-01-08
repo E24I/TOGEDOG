@@ -161,31 +161,24 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   return (
     <Feed>
       <FeedHeader>
-        <Profile>
+        <Profile
+          onClick={() => {
+            navigate(`/user/${items.member.memberId}`);
+          }}
+        >
           {items.member.imageUrl ? (
             <UserImgForm
               width={50}
               height={50}
               radius={50}
               URL={items.member.imageUrl}
-              onClick={() => {
-                navigate(`/user/${items.member.memberId}`);
-              }}
             />
           ) : (
             <ProfileBox>
               <Unknown />
             </ProfileBox>
           )}
-          <div>
-            <UserName>{items.member.nickname}</UserName>
-            {items.address && (
-              <FeedAddress>
-                <PinPoint />
-                {items.address}
-              </FeedAddress>
-            )}
-          </div>
+          <UserName>{items.member.nickname}</UserName>
         </Profile>
         <UploadTime>{setTime(items.createdDate)}</UploadTime>
         <SettingBox onClick={handleSetting} onBlur={() => setSetting(false)}>

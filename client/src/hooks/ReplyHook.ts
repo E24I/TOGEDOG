@@ -110,14 +110,13 @@ export const useDeleteReply = (
       return deleteReply(replyId, accesstoken);
     },
     onSuccess: (res) => {
-      console.log(res);
       alert("댓글 삭제 완료");
+      queryClient.invalidateQueries({ queryKey: ["Feed"] });
       queryClient.invalidateQueries({ queryKey: ["Replies"] });
       successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log(err);
       alert("댓글 삭제 실패");
       failFunc && failFunc();
       return;

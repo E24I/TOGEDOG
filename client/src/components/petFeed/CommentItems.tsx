@@ -23,6 +23,7 @@ import {
   reportAtom,
   tokenAtom,
 } from "../../atoms";
+import { UserImgForm } from "../../atoms/imgForm/ImgForm";
 
 interface OwnProps {
   comment: feedCommentType;
@@ -99,7 +100,12 @@ const CommentItem: React.FC<OwnProps> = ({ comment }) => {
     <Comment>
       <CommentLeft>
         {comment.member.imageUrl ? (
-          <CommentProfile src={comment.member.imageUrl} alt="프로필 사진" />
+          <UserImgForm
+            width={50}
+            height={50}
+            radius={50}
+            URL={comment.member.imageUrl}
+          />
         ) : (
           <Unknown />
         )}

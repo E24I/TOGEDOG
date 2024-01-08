@@ -34,6 +34,8 @@ import {
   reportAtom,
   tokenAtom,
 } from "../../atoms";
+import { UserImgForm } from "../../atoms/imgForm/ImgForm";
+import { useNavigate } from "react-router-dom";
 
 interface OwnProps {
   reply: any;
@@ -41,6 +43,7 @@ interface OwnProps {
 }
 
 const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
+  const navigate = useNavigate();
   const isLogin = useRecoilValue(isLoginAtom);
   const accesstoken = useRecoilValue(tokenAtom);
   const setAlertModal = useSetRecoilState(alertAtom);
@@ -106,25 +109,57 @@ const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
             삭제하기: handleReplyDelete,
           }
       : feedOwnerId === myId
-      ? {
-          신고하기: handleReplyReport,
-          댓글고정: handleReplyFix,
-        }
+      ? reply?.fix
+        ? {
+            신고하기: handleReplyReport,
+            고정취소: handleReplyFix,
+          }
+        : {
+            신고하기: handleReplyReport,
+            댓글고정: handleReplyFix,
+          }
       : {
           신고하기: handleReplyReport,
         };
 
-  const today = new Date();
-  const createDate = reply?.createdDate.split("T")[0];
-  const feedDate = createDate?.split("-").map((el: string) => parseInt(el));
-  const createTime = reply?.createdDate.split("T")[1];
-  const feedTime = createTime?.split(":").map((el: string) => parseInt(el));
+  // 피드 시간 경과 계산
+  const setTime = (createdAt: string) => {
+    const currentDate = new Date();
+    const createdDate = new Date(createdAt);
+    const timeDiff = Math.floor(
+      (currentDate.getTime() - createdDate.getTime()) / 1000,
+    );
+    const intervals = {
+      년: 31536000,
+      개월: 2592000,
+      일: 86400,
+      시간: 3600,
+      분: 60,
+      초: 1,
+    };
+    for (const [unit, seconds] of Object.entries(intervals)) {
+      const diff = Math.floor(timeDiff / seconds);
+      if (diff >= 1) {
+        return `${diff}${unit} 전`;
+      }
+    }
+    return "1초 전";
+  };
 
   return (
     <Reply>
-      <ReplyLeft>
+      <ReplyLeft
+        onClick={() => {
+          navigate(`/user/${reply.member.memberId}`);
+        }}
+      >
         {reply.member.imageUrl ? (
-          <ReplyProfile src={reply.member.imageUrl} alt="프로필 사진" />
+          <UserImgForm
+            width={50}
+            height={50}
+            radius={50}
+            URL={reply.member.imageUrl}
+          />
         ) : (
           <Unknown />
         )}
@@ -144,19 +179,7 @@ const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
           />
         )}
         <ReplySetting>
-          <ReplyDate>
-            {today.getFullYear() !== feedDate[0]
-              ? `${today.getFullYear() - feedDate[0]}년 전`
-              : today.getMonth() + 1 !== feedDate[1]
-              ? `${today.getMonth() + 1 - feedDate[1]}개월 전`
-              : today.getDate() !== feedDate[0]
-              ? `${today.getDate() - feedDate[2]}일 전`
-              : today.getHours() !== feedTime[0]
-              ? `${today.getHours() - feedTime[0]}시간 전`
-              : today.getMinutes() !== feedTime[1]
-              ? `${today.getMinutes() - feedTime[1]}분 전`
-              : `${today.getSeconds() - feedTime[2]}초 전`}
-          </ReplyDate>
+          <ReplyDate>{setTime(reply.createdDate)}</ReplyDate>
           <Heart
             width="18px"
             height="18px"
