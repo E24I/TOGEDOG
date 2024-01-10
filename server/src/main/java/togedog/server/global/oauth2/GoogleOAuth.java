@@ -77,6 +77,10 @@ public class GoogleOAuth {
             String accessToken = "Bearer" + delegateAccessToken(newMember);
             return accessToken;
         }else {
+            Member member = existMember.orElseThrow();
+            Authentication authentication = new UsernamePasswordAuthenticationToken(member.getEmail(), null, customAuthorityUtils.createAuthorities(member.getRoles()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
             return "Bearer" + delegateAccessToken(existMember.orElseThrow());
         }
 
