@@ -7,16 +7,16 @@ spring:
       host: ${REDIS_HOST}
       port: 6379
 
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${G_CLIENT_ID}
-            client-secret: ${G_CLIENT_SECRET}
-            scope:
-              - email
-              - profile
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: ${G_CLIENT_ID}
+#            client-secret: ${G_CLIENT_SECRET}
+#            scope:
+#              - email
+#              - profile
 
 
   #### ?? ?? ?? ####
