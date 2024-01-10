@@ -1,8 +1,10 @@
 package togedog.server.global.auth.config;
 
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.global.auth.filter.JwtAuthenticationFilter;
 import togedog.server.global.auth.filter.JwtVerificationFilter;
 import togedog.server.global.auth.handler.MemberAccessDeniedHandler;
@@ -27,15 +30,19 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity(debug = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JWTokenizer jwTokenizer;
     private final CustomAuthorityUtils authorityUtils;
+    private final MemberRepository memberRepository;
+//    private final OAuthService oAuthService;
 
-    public SecurityConfig(JWTokenizer jwTokenizer, CustomAuthorityUtils authorityUtils) {
-        this.jwTokenizer = jwTokenizer;
-        this.authorityUtils = authorityUtils;
-    }
+//    public SecurityConfig(JWTokenizer jwTokenizer, CustomAuthorityUtils authorityUtils, MemberRepository memberRepository) {
+//        this.jwTokenizer = jwTokenizer;
+//        this.authorityUtils = authorityUtils;
+//        this.memberRepository = memberRepository;
+//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -91,7 +98,13 @@ public class SecurityConfig {
 //                                .antMatchers(HttpMethod.PATCH, "/chat/**").hasAnyRole("ADMIN", "USER")
 //                                /** ---------------------------------- admin 접근 권한 설정 ---------------------------------- **/
 //                                .antMatchers(HttpMethod.GET, "/admin/**").hasAnyRole("ADMIN")
+                                .antMatchers(HttpMethod.DELETE, "/*/orders").hasRole("USER")
                                 .anyRequest().permitAll()
+//                )
+//                .oauth2Login(oauth2 -> oauth2
+//                        .successHandler(new OAuth2MemberSuccessHandler(jwTokenizer, authorityUtils, memberRepository))
+//                        .userInfoEndpoint()
+//                        .userService(oAuthService)
                 );
 
         return http.build();
@@ -100,6 +113,7 @@ public class SecurityConfig {
     public class CustomFilterConfigurer extends AbstractHttpConfigurer<CustomFilterConfigurer, HttpSecurity>{
         @Override
         public void configure(HttpSecurity builder) throws Exception {
+
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwTokenizer);
