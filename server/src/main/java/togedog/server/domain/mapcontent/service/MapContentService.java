@@ -6,14 +6,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.feed.repository.FeedRepository;
-import togedog.server.domain.mapcontent.dto.MapContentFeedIdResponse;
+import togedog.server.domain.feed.service.FeedService;
+import togedog.server.domain.feed.service.dto.response.FeedResponse;
+import togedog.server.domain.feedbookmark.entity.FeedBookmark;
+import togedog.server.domain.feedbookmark.repository.FeedBookmarkRepository;
+import togedog.server.domain.feedlike.entity.FeedLike;
+import togedog.server.domain.feedlike.repository.FeedLikeRepository;
+import togedog.server.domain.mapcontent.dto.MapContentFeedResponse;
 import togedog.server.domain.mapcontent.dto.MapContentGetRequest;
 import togedog.server.domain.mapcontent.dto.MapContentRequest;
 import togedog.server.domain.mapcontent.dto.MapContentResponse;
 import togedog.server.domain.mapcontent.entity.MapContent;
 import togedog.server.domain.mapcontent.repository.MapContentRepository;
+import togedog.server.domain.member.entity.Member;
+import togedog.server.domain.member.service.MemberService;
+import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.feedexception.FeedNotFoundException;
-import togedog.server.global.exception.businessexception.mapcontentexception.MapContentNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +31,23 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MapContentService {
 
+    private final Double X_COORDINATE_VALUE_PER_100_METERS = 0.0012;
+
+    private final Double Y_COORDINATE_VALUE_PER_100_METERS = 0.0009;
+
     private final MapContentRepository mapContentRepository;
 
     private final FeedRepository feedRepository;
+
+    private final MemberService memberService;
+
+    private final FeedService feedService;
+
+    private final FeedBookmarkRepository feedBookmarkRepository;
+
+    private final FeedLikeRepository feedLikeRepository;
+
+    private final LoginMemberUtil loginMemberUtil;
 
     @Transactional
     public Long createMapContent(MapContentRequest mapContentRequest) {
@@ -46,8 +68,8 @@ public class MapContentService {
         utm_kToWgs.transform(new ProjCoordinate(utm_x, utm_y), result);
 
         MapContent mapContent = MapContent.builder()
-                .wsg84x(Double.toString(result.x))
-                .wsg84y(Double.toString(result.y))
+                .wgs84x(result.x)
+                .wgs84y(result.y)
                 .feeds(new ArrayList<>())
                 .build();
 
@@ -69,24 +91,65 @@ public class MapContentService {
         MapContent mapContent = mapContentRepository.findById(feed.getMapContent().getMapContentId()).orElseThrow();
 
         return MapContentResponse.builder()
-                .wgs84_x(mapContent.getWsg84x())
-                .wgs84_y(mapContent.getWsg84y())
+                .wgs84_x(Double.toString(mapContent.getWgs84x()))
+                .wgs84_y(Double.toString(mapContent.getWgs84y()))
                 .build();
     }
 
-    public MapContentFeedIdResponse findFeedFromWsg84(MapContentGetRequest request) {
+    public MapContentFeedResponse findFeedFromWsg84(MapContentGetRequest request) {
 
+        double thresholdX = Double.parseDouble(request.getWgs84_x());
+        double thresholdY = Double.parseDouble(request.getWgs84_y());
 
-        Optional<MapContent> findMapContent = mapContentRepository.findByWsg84xAndWsg84y(request.getWgs84_x(), request.getWgs84_y());
+        double thresholdXMin = thresholdX - ( X_COORDINATE_VALUE_PER_100_METERS * request.getRange() );
+        double thresholdXMax = thresholdX + ( X_COORDINATE_VALUE_PER_100_METERS * request.getRange() );
+
+        double thresholdYMin = thresholdY - ( Y_COORDINATE_VALUE_PER_100_METERS * request.getRange() );
+        double thresholdYMax = thresholdY + ( Y_COORDINATE_VALUE_PER_100_METERS * request.getRange() );
+
+        MapContentFeedResponse response = new MapContentFeedResponse();
+
+        List<MapContent> findMapContent = mapContentRepository.findMapContentByThreshold(thresholdXMin, thresholdXMax, thresholdYMin, thresholdYMax);
 
         if(findMapContent.isEmpty()) {
-            throw new MapContentNotFoundException();
+            return response;
         }
 
-        List<Feed> findFeeds = findMapContent.get().getFeeds();
-        MapContentFeedIdResponse response = new MapContentFeedIdResponse();
-        findFeeds.forEach(o -> response.getFeedIdList().add(o.getFeedId()));
+        Member member;
+
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+
+        if (loginMemberId == null) {
+            member = new Member();
+            member.setMemberId(0L);
+        }
+        else {
+            member = memberService.findMember(loginMemberId);
+        }
+
+        for(MapContent mapContent : findMapContent) {
+            if(!mapContent.getFeeds().isEmpty()) {
+                for(Feed feed : mapContent.getFeeds()) {
+                    Optional<Feed> feedOptional = feedRepository.findByFeedIdAndDeleteYnIsFalse(feed.getFeedId());
+
+                    if(feedOptional.isPresent()) {
+                        Feed findFeed = feedOptional.get();
+                        response.getFeedResponses().add(FeedResponse.mapContentFeedResponse(findFeed, isFeedBookmarkedByMember(member, findFeed), isFeedLikedByMember(member, findFeed), mapContent));
+                    }
+                }
+            }
+        }
 
         return response;
+    }
+
+    private boolean isFeedBookmarkedByMember(Member member, Feed feed) {
+        Optional<FeedBookmark> optionalFeedBookmark = feedBookmarkRepository.findByMemberAndFeed(member, feed);
+        return optionalFeedBookmark.isPresent();
+    }
+
+    private boolean isFeedLikedByMember(Member member, Feed feed) {
+        Optional<FeedLike> optionalFeedLike = feedLikeRepository.findByMemberAndFeed(member, feed);
+        return optionalFeedLike.isPresent();
     }
 }

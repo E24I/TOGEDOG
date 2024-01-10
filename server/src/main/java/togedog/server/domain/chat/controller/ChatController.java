@@ -1,17 +1,18 @@
 package togedog.server.domain.chat.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import togedog.server.domain.chat.dto.ChatGetRequest;
-import togedog.server.domain.chat.dto.ChatPostRequest;
-import togedog.server.domain.chat.dto.ChatRoomResponse;
+import togedog.server.domain.chat.dto.*;
+import togedog.server.domain.chat.entity.ChatReport;
 import togedog.server.domain.chat.entity.ChatRoom;
 import togedog.server.domain.chat.service.ChatService;
 import togedog.server.domain.member.service.MemberService;
 import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.dto.SingleResponseDto;
+import togedog.server.global.response.ApiPageResponse;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class ChatController {
     }
 
     //채팅방 조회
-    @GetMapping("/{chatroom-id}")
+    @PostMapping("/{chatroom-id}")
     public ResponseEntity<ChatRoomResponse> getChatRoom(@PathVariable("chatroom-id") Long chatRoomId, @RequestBody ChatGetRequest chatGetRequest) {
 
         ChatRoomResponse response = chatService.findChatRoom(chatGetRequest.getMemberId(), chatRoomId);
@@ -60,5 +61,21 @@ public class ChatController {
         chatService.deleteRoom(chatRoomId);
 
         return new ResponseEntity<>("채팅방 삭제 완료", HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/report")
+    public ResponseEntity postChatReport(@RequestBody ChatReportRequest chatReportRequest) {
+
+        Long chatReportId = chatService.createChatReport(chatReportRequest);
+
+        return ResponseEntity.status(HttpStatus.OK).body("신고 접수, chatReportId: " + chatReportId);
+    }
+
+    @GetMapping("/report")
+    public ResponseEntity getChatReport(@RequestParam("page_number") int pageNumber, @RequestParam("page_size") int pageSize) {
+
+        ChatReportPageResponse result =  chatService.findChatReports(pageNumber, pageSize);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

@@ -6,8 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import togedog.server.domain.chat.entity.Message;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
     Page<Message> findByChatRoomChatRoomId(Long chatRoomId, Pageable pageable);
+
+    List<Message> findByChatRoomChatRoomId(Long chatRoomId);
 }

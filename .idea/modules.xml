@@ -3,8 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/TOGEDOG.iml" filepath="$PROJECT_DIR$/.idea/TOGEDOG.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/server.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/togedog.server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/togedog.server.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TOGEDOG.server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/TOGEDOG.server.main.iml" />
     </modules>
   </component>
 </project>
