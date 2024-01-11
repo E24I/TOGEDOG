@@ -294,11 +294,6 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
             </ReviewCount>
           </FeedReviewTop>
           <FeedReplies feedId={feedId} feedOwnerId={data.member.memberId} />
-          {/* <Replies>
-            {data.replies.replies.map((reply: any) => (
-              <FeedReply key={reply.replyId} reply={reply} />
-            ))}
-          </Replies> */}
           <AddBox>
             <AddReply
               placeholder="댓글 달기..."

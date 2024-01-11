@@ -1,72 +1,85 @@
 import { styled } from "styled-components";
 import { ReactComponent as LogoV2 } from "../../assets/images/logos/LogoV2.svg";
+import Background from "../../assets/images/backgrounds/Background.svg";
 
 export const YellowLogo = styled(LogoV2)`
   margin-top: 50px;
 `;
 
 export const LoginButtonOn = styled.button`
-  color: #ffffff;
-  display: block;
-  width: 268px;
-  padding: 10px 0;
+  background: #494949;
   border: none;
   border-radius: 100px;
-  background: #494949;
+  width: 268px;
   margin-top: 20px;
+  padding: 10px 0;
+  display: block;
+  color: #ffffff;
   cursor: pointer;
 `;
 export const LoginButtonOff = styled.div`
+  background: #d7d7d7;
+  border: none;
+  border-radius: 100px;
+  width: 268px;
+  margin-top: 20px;
+  padding: 10.5px 0;
   color: #a4a4a4;
   font-size: 13px;
   display: block;
-  width: 268px;
-  padding: 10.5px 0;
-  border: none;
-  border-radius: 100px;
-  background: #d7d7d7;
-  margin-top: 20px;
 `;
 export const LostPassword = styled.div`
+  background: none;
+  border: none;
   color: #a4a4a4;
   font-size: 12px;
   font-weight: 600;
-  background: none;
-  border: none;
   cursor: pointer;
 `;
 
 export const SignUpMove = styled.button`
+  background: none;
+  border: none;
   color: #a4a4a4;
   font-size: 12px;
   font-weight: 600;
-  background: none;
-  border: none;
   cursor: pointer;
 `;
 
 export const LoginInput = styled.input`
-  display: flex;
   width: 268px;
+  margin-bottom: 20px;
   padding: 10px 13px;
+  border: 1px solid #f8d259;
+  border-radius: 100px;
+  display: flex;
   align-items: center;
   gap: 10px;
-  border-radius: 100px;
-  border: 1px solid #f8d259;
-  margin-bottom: 20px;
+`;
+
+export const LoginContainer = styled.div`
+  background-image: url(${Background});
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  width: 100vw;
+  height: calc(100vh - 70px); // header의 높이를 제외
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const InputContainer = styled.div`
-  box-sizing: border-box;
+  background-color: white;
+  border-radius: 30px;
   width: 514px;
+  height: 632px;
+  margin-left: 50px;
+  text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  text-align: center;
-  border: 1px solid #a4a4a4;
-  border-left: none;
-  border-radius: 0 30px 30px 0;
   & > p {
     color: #404040;
     font-size: 12px;
@@ -82,6 +95,7 @@ export const ImgBox = styled.div`
   background-size: cover;
   background-position: center;
 `;
+
 // {"web":{"client_id":"859204905435-56c8h2c738bsesqf03uicq8t6p2th8f7.apps.googleusercontent.com",
 //         "project_id":"togedogproject",
 //         "auth_uri":"https://accounts.google.com/o/oauth2/auth",

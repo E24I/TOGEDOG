@@ -111,8 +111,6 @@ export const FeedContent = styled.div`
 `;
 
 export const FeedMedia = styled.div`
-  border: 1px solid rgb(215, 215, 215);
-  border-radius: 15px;
   margin: 0px 0px 5px 0px;
   padding: 15px 5px;
   display: flex;
@@ -322,7 +320,7 @@ export const Replies = styled.ul`
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  overflow: visible auto;
+  overflow-y: auto;
 `;
 
 export const Reply = styled.li`
