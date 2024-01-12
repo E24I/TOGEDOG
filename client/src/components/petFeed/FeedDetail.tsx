@@ -185,12 +185,12 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
   }
   return (
     <ModalBackground onClick={handleMoreReview}>
+      <CloseModal onClick={handleMoreReview} />
       <DetailContainer
         onClick={(e) => {
           e.stopPropagation();
         }}
       >
-        <CloseModal onClick={handleMoreReview} />
         <LeftDetail>
           <FeedHeader>
             <Profile>
@@ -293,7 +293,6 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
               댓글 {data.replies.pageInformation.totalSize}개
             </ReviewCount>
           </FeedReviewTop>
-          <FeedReplies feedId={feedId} feedOwnerId={data.member.memberId} />
           <AddBox>
             <AddReply
               placeholder="댓글 달기..."
@@ -303,6 +302,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
             />
             <AddBtn onClick={handleSendReply}>게시</AddBtn>
           </AddBox>
+          <FeedReplies feedId={feedId} feedOwnerId={data.member.memberId} />
         </RightDetail>
       </DetailContainer>
       {bigImage && <FeedImage url={imgUrl} handleFunc={handleBigImg} />}

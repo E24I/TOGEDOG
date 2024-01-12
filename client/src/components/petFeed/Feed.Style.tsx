@@ -196,7 +196,6 @@ export const ModalBackground = styled.div`
   z-index: 40;
   width: 100vw;
   height: 100vh;
-  overflow: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -215,15 +214,39 @@ export const DetailContainer = styled.div`
   background-color: white;
   border-radius: 20px;
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  justify-items: center;
+
+  @media screen and (max-width: 1200px) {
+    grid-template-columns: repeat(1, 100%);
+    overflow-y: auto;
+    overflow-x: visible;
+
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      height: 30%;
+      background: gray;
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgb(0, 0, 0, 0);
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    grid-template-columns: repeat(2, 50%);
+    grid-template-rows: repeat(1, 100%);
+  }
 `;
 
 export const CloseModal = styled(Cancel)`
   position: absolute;
-  top: 0;
-  right: -10%;
+  top: 10px;
+  right: 10px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -234,23 +257,30 @@ export const CloseModal = styled(Cancel)`
 
 export const LeftDetail = styled.div`
   width: 100%;
-  max-width: 40vw;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
+
+  @media screen and (min-width: 1200px) {
+    max-width: 40vw;
+  }
 `;
 
 export const RightDetail = styled.div`
-  border-left: 1px solid rgb(215, 215, 215);
   width: 100%;
-  max-width: 40vw;
   height: 100%;
+  padding-left: 10px;
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
+
+  @media screen and (min-width: 1200px) {
+    max-width: 40vw;
+    border-left: 1px solid rgb(215, 215, 215);
+  }
 `;
 
 export const FeedDetailMedia = styled.div`
@@ -321,6 +351,7 @@ export const Replies = styled.ul`
   justify-content: start;
   align-items: center;
   overflow-y: auto;
+  overflow-x: visible;
 `;
 
 export const Reply = styled.li`
