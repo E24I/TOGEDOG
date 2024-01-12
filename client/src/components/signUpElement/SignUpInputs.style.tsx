@@ -2,6 +2,7 @@ import { styled } from "styled-components";
 import { ReactComponent as Message } from "../../assets/images/icons/signUpIcons/Message.svg";
 import { ReactComponent as Person } from "../../assets/images/icons/signUpIcons/Person.svg";
 import { ReactComponent as Lock } from "../../assets/images/icons/signUpIcons/Lock.svg";
+import { ReactComponent as Checked } from "../../assets/images/icons/Check.svg";
 
 export const InputContainer = styled.div`
   display: flex;
@@ -13,12 +14,12 @@ export const InputContainer = styled.div`
   }
   form {
     width: 100%;
-    height: 240px;
+    height: 13rem;
     display: flex;
     flex-wrap: wrap;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-around;
     position: relative;
-    align-items: center;
     margin-bottom: 76px;
 
     button {
@@ -31,7 +32,7 @@ export const InputContainer = styled.div`
       font-size: 10px;
       font-weight: 400;
     }
-    & > div {
+    & > div > div {
       margin-bottom: 25px;
     }
   }
@@ -99,4 +100,7 @@ export const LockIcon = styled(Lock)`
   path {
     fill: #494949;
   }
+`;
+export const CheckIcon = styled(Checked)`
+  margin-left: 1rem;
 `;

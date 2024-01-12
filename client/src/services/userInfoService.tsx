@@ -164,6 +164,7 @@ export const patchProfileImg = async (imgURL: string, token: string) => {
   const res = await axios.patch(url, URL, headers);
   return res;
 };
+
 // 펫 프로필 이미지 변경
 export const patchPetProfileImg = async (
   imgURL: string,

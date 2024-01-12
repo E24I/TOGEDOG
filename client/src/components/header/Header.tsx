@@ -10,6 +10,8 @@ import {
   RedPointStyle,
   NotificationsStyle,
   HeaderBox,
+  MoveLogin,
+  UserProfile,
 } from "./Header.Style";
 
 import { Link } from "react-router-dom";
@@ -72,21 +74,31 @@ const Header: React.FC = () => {
               }
             />
           </Link>
-          <NotificationsContainer
-            onClick={() =>
-              loginState ? convertToRead() : alert("로그인이 필요합니다.")
-            }
-          >
-            {isRead === false ? <RedPointStyle /> : <NotificationsStyle />}
-          </NotificationsContainer>
+          {loginState && (
+            <NotificationsContainer
+              onClick={() =>
+                loginState ? convertToRead() : alert("로그인이 필요합니다.")
+              }
+            >
+              {isRead === false ? <RedPointStyle /> : <NotificationsStyle />}
+            </NotificationsContainer>
+          )}
         </MiddleButtonContainer>
-        <UserImgForm
-          width={50}
-          height={50}
-          radius={50}
-          URL={loginState ? data?.data.image : null}
-          onClick={openModal}
-        />
+        {loginState ? (
+          <UserProfile>
+            <UserImgForm
+              width={50}
+              height={50}
+              radius={50}
+              URL={loginState ? data?.data.image : null}
+              onClick={openModal}
+            />
+          </UserProfile>
+        ) : (
+          <Link to="/">
+            <MoveLogin>Login</MoveLogin>
+          </Link>
+        )}
         {isModalOpen && (
           <Modal
             setModalOpen={setModalOpen}

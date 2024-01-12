@@ -3,14 +3,15 @@ import { ProFileBoxProps } from "../atomsType";
 import { ReactComponent as Person } from "../../assets/images/icons/Person.svg";
 import { ReactComponent as ImageCover } from "../../assets/images/icons/ImageCover.svg";
 import { ReactComponent as ChattingDefaultBackground } from "../../assets/images/icons/ChattingDefaultBackground.svg";
+import { ReactComponent as Profile } from "../../assets/images/icons/headerIcons/ProfileImage.svg";
 
-export const ProFileBox = styled.div<ProFileBoxProps>`
+export const ProFileBox = styled.span<ProFileBoxProps>`
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;
   border-radius: ${(props) => props.radius}%;
   overflow: hidden;
   position: relative;
-  background: gray;
+  background: #f8d259;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,4 +47,8 @@ export const FeedUnknown = styled(ImageCover)`
   path {
     fill: white;
   }
+`;
+export const ProfileUnknown = styled(Profile)`
+  width: 50%;
+  height: 50%;
 `;

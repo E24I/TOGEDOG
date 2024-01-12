@@ -51,6 +51,7 @@ const PasswordChangeForm: React.FC<PasswordChangeProps> = ({
     pwConfirm,
   );
   const onSubmit = () => {
+    setLostPw(false);
     patchPasswordMutate();
   };
   //이메일 유효성

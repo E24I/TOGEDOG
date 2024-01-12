@@ -22,10 +22,11 @@ export const TopBox = styled.div`
   width: 100%;
   height: 50px;
   display: flex;
-  justify-content: space-around;
   align-items: center;
 `;
-export const HeadText = styled.h2``;
+export const HeadText = styled.h2`
+  margin: 0 auto;
+`;
 export const BackIcon = styled(BackSpace)``;
 export const ModifyButton = styled.button`
   font-size: 20px;

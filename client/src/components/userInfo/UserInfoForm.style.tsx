@@ -11,20 +11,36 @@ export const MyInfoContainer = styled.div`
   }
 `;
 
+export const HeadBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin: 50px 0 20px 0;
+`;
+
 export const NickName = styled.h2`
   text-align: center;
-  margin: 50px 0 15px 0;
+`;
+
+export const MessageButton = styled.button`
+  color: #ffffff;
+  width: 5rem;
+  height: 40px;
+  background: #494949;
+  border-radius: 5px;
 `;
 
 export const TopContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 `;
 
 export const Introduction = styled.p`
   width: 100%;
   display: block;
-  margin-top: 10px;
+  margin: 1rem 0;
+  text-align: center;
 `;
 
 export const SectionBox = styled.div`
@@ -43,20 +59,14 @@ export const ButtonSection = styled.div`
   position: relative;
 `;
 
-export const Button1 = styled.button`
+export const MyButton = styled.button`
   color: #ffffff;
   width: 160px;
   height: 40px;
   background: #494949;
   border-radius: 5px;
 `;
-export const Button2 = styled.button`
-  color: #ffffff;
-  width: 160px;
-  height: 40px;
-  background: #494949;
-  border-radius: 5px;
-`;
+
 export const MoreButton = styled.button`
   width: 50px;
   height: 40px;

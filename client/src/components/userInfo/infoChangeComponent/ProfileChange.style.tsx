@@ -62,7 +62,7 @@ export const ChangeContainer = styled.div`
   .submitButton {
     color: white;
     background: #494949;
-    bottom: -40px;
+    bottom: -1.5rem;
   }
 `;
 
@@ -116,7 +116,7 @@ export const SelectImgBox = styled.div`
 export const ChangeImgButton = styled.label`
   font-size: 16px;
   background: #494949;
-  margin-top: 10px;
+  margin-top: 5px 0;
   padding: 7px 10px;
   border-radius: 10px;
   color: white;

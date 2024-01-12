@@ -20,7 +20,7 @@ import {
   CategoryForm,
 } from "./PetProfileForm.style";
 import { useDeletePetImg, usePatchPetIntro } from "../../../hooks/UserInfoHook";
-import { confirmAtom, tokenAtom } from "../../../atoms";
+import { confirmAtom, tokenAtom, memberIdAtom } from "../../../atoms";
 import {
   getPetInfo,
   patchPetProfileImg,
@@ -41,6 +41,7 @@ const PetProfileForm = () => {
   const { petId } = useParams<{ petId: string }>();
   const currentPetId = petId || "";
   const token = useRecoilValue(tokenAtom);
+  const memberId = useRecoilValue(memberIdAtom);
   const [petData, setPetData] = useState<petIntro>({ petIntro: "" });
   const [imageFiles, setImageFiles] = useState<{
     file: File | null;
@@ -97,6 +98,34 @@ const PetProfileForm = () => {
     }
   };
 
+  // 입력받아온 값으로 나이 계산
+  const calculateAge = (birthdate: string) => {
+    // 'YYYYMMDD' 형식의 문자열을 'YYYY-MM-DD' 형식으로 변환
+    const formattedBirthdate = birthdate.replace(
+      /(\d{4})(\d{2})(\d{2})/,
+      "$1-$2-$3",
+    );
+
+    // 생일을 기반으로 Date 생성
+    const birthDate = new Date(formattedBirthdate);
+
+    // 현재 날짜를 기반으로 Date 생성
+    const today = new Date();
+
+    // 나이 계산
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    return age;
+  };
+
   // 펫 삭제 컨펌모달
   const handleDeleteAlert = () =>
     setAlertModal({
@@ -116,13 +145,15 @@ const PetProfileForm = () => {
       <TopBox>
         <BackIcon onClick={() => navigate(-1)} />
         <HeadText>{`${data?.data.name}`} 프로필</HeadText>
-        <div>
-          {!isEditing ? (
-            <ModifyButton onClick={handleEdit}>수정</ModifyButton>
-          ) : (
-            <ModifyButton onClick={handleSubmit(onSubmit)}>저장</ModifyButton>
-          )}
-        </div>
+        {data?.data.memberInfo.memberId === memberId && (
+          <div>
+            {!isEditing ? (
+              <ModifyButton onClick={handleEdit}>수정</ModifyButton>
+            ) : (
+              <ModifyButton onClick={handleSubmit(onSubmit)}>저장</ModifyButton>
+            )}
+          </div>
+        )}
       </TopBox>
       <ContentBox>
         <Form
@@ -163,7 +194,8 @@ const PetProfileForm = () => {
               </SelectImgBox>
             )}
             <NameText>
-              <strong>{data?.data.name}</strong> ∙ {data?.data.age}살
+              <strong>{data?.data.name}</strong> ∙
+              {calculateAge(data?.data.age.toString())}살
             </NameText>
             {isEditing ? (
               <textarea
@@ -185,8 +217,12 @@ const PetProfileForm = () => {
                 {<p>{data?.data.type ?? "등록된 견종이 없습니다."}</p>}
               </CategoryForm>
               <CategoryForm>
-                <h3>나이</h3>
-                {<p>{data?.data.age} 살</p>}
+                <h3>생일</h3>
+                <p>
+                  {data?.data.age
+                    .toString()
+                    .replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3")}
+                </p>
               </CategoryForm>
               <CategoryForm>
                 <h3>성별</h3>

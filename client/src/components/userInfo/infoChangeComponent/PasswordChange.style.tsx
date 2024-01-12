@@ -57,8 +57,8 @@ export const ChangeContainer = styled.div`
   justify-content: flex-start;
   .submitButton {
     width: 30%;
-    color: black;
-    background: gray;
+    color: white;
+    background: #494949;
   }
 `;
 

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useRecoilValue } from "recoil";
-import { memberIdAtom, tokenAtom } from "../../atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { memberIdAtom, tokenAtom, alertAtom } from "../../atoms";
 import {
   MyInfoContainer,
   NickName,
@@ -9,10 +9,11 @@ import {
   Introduction,
   SectionBox,
   ButtonSection,
-  Button1,
-  Button2,
+  MyButton,
   PetListBox,
   PetAdd,
+  HeadBox,
+  MessageButton,
 } from "./UserInfoForm.style";
 import PetList from "./petComponent/PetList";
 import ProfileChange from "./infoChangeComponent/ProfileChange";
@@ -28,13 +29,18 @@ const MyInfoForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
   const [lostPw, setLostPw] = useState<boolean>(false); //비번변경
   const memberId = useRecoilValue(memberIdAtom);
   const token = useRecoilValue(tokenAtom);
+  const setAlertModal = useSetRecoilState(alertAtom);
+  // 프로필수정 모달 열기
   const handleInfoModal = () => {
-    //모달열기
     setChangeInfo(!changeInfo);
   };
+  // 비밀번로 변경 모달 열기
   const handlePasswordModal = () => {
-    //모달열기
     setLostPw(!lostPw);
+  };
+  // 신고하기 모달 열기
+  const handleReadyModal = () => {
+    setAlertModal("준비중인 서비스입니다.");
   };
   const { data, isLoading, error } = useQuery<any>({
     queryKey: ["userInfo", pageMemberId, token],
@@ -48,7 +54,9 @@ const MyInfoForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
   }
   return (
     <MyInfoContainer>
-      <NickName>{data?.data.nickname}</NickName>
+      <HeadBox>
+        <NickName>{data?.data.nickname}</NickName>
+      </HeadBox>
       <TopContainer>
         <UserImgForm
           width={150}
@@ -58,12 +66,16 @@ const MyInfoForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
         />
         <SectionBox>
           <ButtonSection>
-            <Button1 onClick={handlePasswordModal}>
-              {Number(pageMemberId) === memberId ? "비밀번호 변경" : "메시지"}
-            </Button1>
-            <Button2 onClick={handleInfoModal}>
-              {Number(pageMemberId) === memberId ? "프로필 수정" : "신고하기"}
-            </Button2>
+            {Number(pageMemberId) === memberId ? (
+              <MyButton onClick={handlePasswordModal}>비밀번호 변경</MyButton>
+            ) : (
+              <MyButton>메세지</MyButton>
+            )}
+            {Number(pageMemberId) === memberId ? (
+              <MyButton onClick={handleInfoModal}>프로필 수정</MyButton>
+            ) : (
+              <MyButton onClick={handleReadyModal}>신고하기</MyButton>
+            )}
           </ButtonSection>
         </SectionBox>
       </TopContainer>
