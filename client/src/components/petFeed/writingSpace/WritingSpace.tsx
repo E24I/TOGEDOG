@@ -10,12 +10,14 @@ import { useRecoilValue } from "recoil";
 import { tokenAtom } from "../../../atoms";
 import { usePostFeed, useUpdateFeed } from "../../../hooks/FeedHook";
 import { enrollMapType } from "../../../types/mapType";
+import UploadSpace from "./CreatingSpace/Upload";
 
 interface WritingSpaceProps {
   page: string;
 }
 
 const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
+  const [isAttach, setAttach] = useState<boolean>(false);
   const [isFeedPublic, setFeedPublic] = useState<boolean>(false);
   const [isMapAssign, setMapAssign] = useState<boolean>(false);
   const [isMarked, setMark] = useState<boolean>(false);
@@ -76,6 +78,14 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     setEnrollMapInfo((prev) => {
       return { ...prev, [key]: value };
     });
+  };
+  //파일 첨부 여부
+  const attachmentToggleCheck = () => {
+    if (!isAttach) {
+      setAttach(true);
+    } else {
+      setAttach(false);
+    }
   };
   //피드 공개 여부
   const feedToggleCheck = () => {
@@ -217,6 +227,12 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
           )}
         </W.AddressContainer>
         <W.Toggles>
+          <W.ToggleWrap onClick={() => attachmentToggleCheck()}>
+            파일 첨부
+            <W.ToggleContainer data={isAttach.toString()}>
+              <W.ToggleCircle data={isAttach.toString()} />
+            </W.ToggleContainer>
+          </W.ToggleWrap>
           <W.ToggleWrap onClick={() => feedToggleCheck()}>
             피드 공개
             <W.ToggleContainer data={isFeedPublic.toString()}>
@@ -233,6 +249,7 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
           )}
         </W.Toggles>
       </W.FeedBottomContainer>
+      {isAttach && <UploadSpace setAttachments={setAttachments} />}
       {isMapAssign && (
         <Map enrollCoordinate={enrollCoordinate} setMark={setMark} />
       )}

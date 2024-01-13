@@ -25,8 +25,8 @@ export const DeleteButton = styled(Delete)`
 export const AttachmentSpaceWrap = styled.div`
   display: flex;
   flex-direction: row;
-
   overflow: auto;
+  margin-bottom: 30px;
 `;
 
 export const AttachmentSpaceContainer = styled.div`
@@ -38,7 +38,7 @@ export const AttachmentSpaceContainer = styled.div`
 export const AttachmentWrap = styled.div`
   flex-basis: 300px;
   width: fit-content;
-  height: 280px;
+  height: 300px;
   position: relative;
   padding: 10px;
 `;

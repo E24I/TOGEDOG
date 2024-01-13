@@ -21,7 +21,6 @@ import { alertAtom, confirmAtom, reportAtom } from "./atoms";
 import AlertModal from "./atoms/modal/AlertModal";
 import ConfirmModal from "./atoms/modal/ConfirmModal";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import ChattingDetail from "./components/chatting/ChattingRoom";
 
 const App: React.FC = () => {
   const alertModal = useRecoilValue(alertAtom);

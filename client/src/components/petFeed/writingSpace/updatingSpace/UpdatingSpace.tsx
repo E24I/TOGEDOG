@@ -99,9 +99,9 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
       ) : (
         <>
           <U.FeedOwner>
-            <UserImage id={mymemberId} />
+            <UserImage id={mymemberId} page="update" />
             <U.IdAndAddress>
-              <UserName id={mymemberId} />
+              <UserName id={mymemberId} page="update" />
               <U.Address>위치정보</U.Address>
             </U.IdAndAddress>
           </U.FeedOwner>
