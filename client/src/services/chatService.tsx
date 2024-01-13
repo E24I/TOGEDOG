@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
-import { createNewChatType } from "../types/chatType";
-import { useRecoilValue } from "recoil";
-import { memberIdAtom } from "../atoms";
 
 const ROOT_URL = process.env.REACT_APP_ROOT_URL;
 
@@ -25,14 +22,22 @@ export const searchUsers = async (
 
 //채팅방 생성
 export const createNewChat = async (
-  participants: createNewChatType,
   token: string,
+  myMemberId?: number,
+  inviteMemberId?: number,
 ) => {
-  const res = await axios.post(`${ROOT_URL}/chat`, participants, {
-    headers: {
-      Authorization: token,
+  const res = await axios.post(
+    `${ROOT_URL}/chat`,
+    {
+      requestMemberId: myMemberId,
+      inviteMemberId: inviteMemberId,
     },
-  });
+    {
+      headers: {
+        Authorization: token,
+      },
+    },
+  );
   return res;
 };
 

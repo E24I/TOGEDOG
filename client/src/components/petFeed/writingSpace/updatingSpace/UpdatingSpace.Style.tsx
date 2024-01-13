@@ -71,7 +71,7 @@ export const FeedFilesContainer = styled.div`
   flex-direction: row;
   width: 100%;
   height: 280px;
-  overflow: scroll;
+  overflow: auto;
   margin-top: 50px;
 `;
 export const FeedFiles = styled.div`

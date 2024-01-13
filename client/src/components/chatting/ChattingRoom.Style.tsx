@@ -24,11 +24,11 @@ export const ProfileWrap = styled.div`
   align-items: center;
 `;
 
-export const MiddleFlex = styled.div<{ data?: number }>`
+export const MiddleFlex = styled.div`
   display: flex;
   flex-direction: column-reverse;
   flex-grow: 1;
-  overflow-y: auto;
+  overflow: auto;
   padding: 23px 20px;
   height: 70%;
 `;
