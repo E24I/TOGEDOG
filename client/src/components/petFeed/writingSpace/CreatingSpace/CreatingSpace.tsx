@@ -80,10 +80,9 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({
   return (
     <C.CreateSpace>
       <C.ProfileWrap>
-        <UserImage id={myMemberId} />
-        <UserName id={myMemberId} />
+        <UserImage id={myMemberId} page="create" />
+        <UserName id={myMemberId} page="create" />
       </C.ProfileWrap>
-      <UploadSpace setAttachments={setAttachments} />
       <C.CreateTitleWrap>
         <C.CreateTitle
           placeholder="제목을 입력하세요"
@@ -104,6 +103,7 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({
           /200 <div>{contentLength}</div>
         </C.TextCount>
       </C.CreateContentWrap>
+      {/* <UploadSpace setAttachments={setAttachments} /> */}
     </C.CreateSpace>
   );
 };
