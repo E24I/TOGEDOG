@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Header from "./components/header/Header";
@@ -20,8 +20,8 @@ import { useRecoilValue } from "recoil";
 import { alertAtom, confirmAtom, reportAtom } from "./atoms";
 import AlertModal from "./atoms/modal/AlertModal";
 import ConfirmModal from "./atoms/modal/ConfirmModal";
-import SearchUsers from "./pages/SearchUsers";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import ChattingDetail from "./components/chatting/ChattingRoom";
 
 const App: React.FC = () => {
   const alertModal = useRecoilValue(alertAtom);
@@ -47,7 +47,6 @@ const App: React.FC = () => {
           <Route path="/user/:pageMemberId" element={<UserInfo />} />
           <Route path="/petProfile/:petId" element={<PetProfile />} />
           <Route path="/user/:id/petAdd" element={<PetAdd />} />
-          <Route path="/search" element={<SearchUsers />} />
         </Routes>
         <Footer />
         {alertModal !== "" && <AlertModal />}

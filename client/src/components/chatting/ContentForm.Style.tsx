@@ -55,3 +55,9 @@ export const BottomDiv = styled.div<{ time?: string }>`
 `;
 
 export const Time = styled.div``;
+
+export const NoContents = styled.p`
+  position: absolute;
+  top: 50%;
+  left: 45%;
+`;

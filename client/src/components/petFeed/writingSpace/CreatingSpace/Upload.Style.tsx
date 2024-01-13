@@ -25,9 +25,8 @@ export const DeleteButton = styled(Delete)`
 export const AttachmentSpaceWrap = styled.div`
   display: flex;
   flex-direction: row;
-  width: 100%;
-  height: 100%;
-  overflow: scroll;
+
+  overflow: auto;
 `;
 
 export const AttachmentSpaceContainer = styled.div`
@@ -38,14 +37,15 @@ export const AttachmentSpaceContainer = styled.div`
 //첨부파일 래핑
 export const AttachmentWrap = styled.div`
   flex-basis: 300px;
-  width: 300px;
+  width: fit-content;
+  height: 280px;
   position: relative;
   padding: 10px;
 `;
 
 export const AttachedImg = styled.img`
-  width: 100%;
-  height: 275px;
+  width: fit-content;
+  height: 100%;
   border-radius: 30px;
 `;
 
@@ -77,6 +77,4 @@ export const AttachingInput = styled.input`
   display: none;
 `;
 
-export const FilesCount = styled.p`
-  margin: 0 0 -1.3% 2%;
-`;
+export const FilesCount = styled.p``;

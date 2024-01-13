@@ -25,14 +25,6 @@ export const SearchedUser = styled.div<{ page?: string }>`
   justify-content: space-between;
   background-color: white;
 `;
-export const ProfileImg = styled.img`
-  width: 50px;
-  height: 50px;
-  border-radius: 100px;
-  background-color: antiquewhite;
-`;
-
-export const Nickname = styled.div``;
 
 export const CreateNewChatButton = styled.button`
   background-color: #c0c0e9;
