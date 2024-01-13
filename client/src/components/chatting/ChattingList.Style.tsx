@@ -28,8 +28,8 @@ export const ChattingFormContainer = styled.div`
 export const ChattingListsContainer = styled.div<{ fold: boolean }>`
   width: ${(props) => (props.fold === true ? "0%" : "35%")};
   height: 100vh;
-  border-right: 1px solid #d7d7d7;
-  transition: width 0.3s;
+  border-right: ${(props) => (props.fold === true ? "" : "1px solid #d7d7d7")};
+  transition: all 0.3s;
 `;
 
 export const AccordionButton = styled.button<{ fold: boolean }>`
