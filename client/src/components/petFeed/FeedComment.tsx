@@ -53,6 +53,12 @@ const FeedComment: React.FC<OwnProps> = ({ replyId }) => {
       postComment();
     }
   };
+  const handleSendComment = () => {
+    if (!isLogin) {
+      return setAlertModal("로그인 후 이용해주세요.");
+    }
+    postComment();
+  };
 
   if (isLoading) {
     return <>로딩중</>;
@@ -69,7 +75,7 @@ const FeedComment: React.FC<OwnProps> = ({ replyId }) => {
           onChange={handleWriteComment}
           onKeyUp={handlePostComment}
         />
-        <AddBtn onClick={() => postComment()}>게시</AddBtn>
+        <AddBtn onClick={handleSendComment}>게시</AddBtn>
       </AddBox>
       {commentsData?.map((comment: feedCommentType) => (
         <CommentItem key={comment.commentId} comment={comment} />

@@ -32,41 +32,39 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <>
-      <InputContainer>
-        <YellowLogo />
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <LoginInput
-            type="text"
-            placeholder="이메일을 입력하세요."
-            {...register("email", { required: true })}
-          />
-          <LoginInput
-            type="password"
-            placeholder="비밀번호를 입력하세요."
-            {...register("password", { required: true })}
-          />
-          <LostPassword onClick={handleModal}>
-            비밀번호를 잊으셨나요?
-          </LostPassword>
-          {lostPw && <PasswordChangeForm setLostPw={setLostPw} />}
-          <LoginButtonOn onClick={handleLogin}>Login</LoginButtonOn>
-        </form>
-        <div>
-          <Oauth />
-          <p>
-            계정이 없으신가요?{" "}
-            <Link to="/SignUp">
-              <SignUpMove>가입하기</SignUpMove>
-            </Link>
-          </p>
-        </div>
-      </InputContainer>
-    </>
+    <InputContainer>
+      <YellowLogo />
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <LoginInput
+          type="text"
+          placeholder="이메일을 입력하세요."
+          {...register("email", { required: true })}
+        />
+        <LoginInput
+          type="password"
+          placeholder="비밀번호를 입력하세요."
+          {...register("password", { required: true })}
+        />
+        <LostPassword onClick={handleModal}>
+          비밀번호를 잊으셨나요?
+        </LostPassword>
+        {lostPw && <PasswordChangeForm setLostPw={setLostPw} />}
+        <LoginButtonOn onClick={handleLogin}>Login</LoginButtonOn>
+      </form>
+      <div>
+        <Oauth />
+        <p>
+          계정이 없으신가요?{" "}
+          <Link to="/SignUp">
+            <SignUpMove>가입하기</SignUpMove>
+          </Link>
+        </p>
+      </div>
+    </InputContainer>
   );
 };
 

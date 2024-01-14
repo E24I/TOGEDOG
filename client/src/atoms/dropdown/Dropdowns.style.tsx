@@ -13,6 +13,7 @@ export const DropDownContainer = styled.div<DropdownPosition>`
   border-radius: 12px;
   overflow: hidden;
   position: absolute;
+  z-index: 30;
   top: 5px;
   left: 35px;
   min-width: 90px;

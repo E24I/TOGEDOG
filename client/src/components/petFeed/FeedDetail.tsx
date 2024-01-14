@@ -112,6 +112,12 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
       postReply();
     }
   };
+  const handleSendReply = () => {
+    if (!isLogin) {
+      return setAlertModal("로그인 후 이용해주세요.");
+    }
+    postReply();
+  };
 
   // 피드 수정
   const handleReplyPatch = () => {
@@ -145,11 +151,31 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
           신고하기: handleReplyReport,
         };
 
-  const today = new Date();
-  const createDate = data?.createdDate.split("T")[0];
-  const feedDate = createDate?.split("-").map((el: string) => parseInt(el));
-  const createTime = data?.createdDate.split("T")[1];
-  const feedTime = createTime?.split(":").map((el: string) => parseInt(el));
+  // 피드 시간 경과 계산
+  const setTime = (createdAt: string) => {
+    const currentDate = new Date();
+    const createdDate = new Date(createdAt);
+    const timeDiff = Math.floor(
+      (currentDate.getTime() - createdDate.getTime()) / 1000,
+    );
+    const intervals = {
+      년: 31536000,
+      개월: 2592000,
+      일: 86400,
+      시간: 3600,
+      분: 60,
+      초: 1,
+    };
+    for (const [unit, seconds] of Object.entries(intervals)) {
+      const diff = Math.floor(timeDiff / seconds);
+      if (diff >= 1) {
+        return `${diff}${unit} 전`;
+      }
+    }
+    return "1초 전";
+  };
+
+  console.log(isImg);
 
   if (isLoading) {
     return <>로딩중</>;
@@ -159,12 +185,12 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
   }
   return (
     <ModalBackground onClick={handleMoreReview}>
+      <CloseModal onClick={handleMoreReview} />
       <DetailContainer
         onClick={(e) => {
           e.stopPropagation();
         }}
       >
-        <CloseModal onClick={handleMoreReview} />
         <LeftDetail>
           <FeedHeader>
             <Profile>
@@ -183,29 +209,9 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
                   <Unknown />
                 </ProfileBox>
               )}
-              <div>
-                <UserName>{data.member?.nickname}</UserName>
-                {data.address && (
-                  <FeedAddress>
-                    <PinPoint />
-                    {data.address}
-                  </FeedAddress>
-                )}
-              </div>
+              <UserName>{data.member?.nickname}</UserName>
             </Profile>
-            <UploadTime>
-              {today.getFullYear() !== feedDate[0]
-                ? `${today.getFullYear() - feedDate[0]}년 전`
-                : today.getMonth() + 1 !== feedDate[1]
-                ? `${today.getMonth() + 1 - feedDate[1]}개월 전`
-                : today.getDate() !== feedDate[0]
-                ? `${today.getDate() - feedDate[2]}일 전`
-                : today.getHours() !== feedTime[0]
-                ? `${today.getHours() - feedTime[0]}시간 전`
-                : today.getMinutes() !== feedTime[1]
-                ? `${today.getMinutes() - feedTime[1]}분 전`
-                : `${today.getSeconds() - feedTime[2]}초 전`}
-            </UploadTime>
+            <UploadTime>{setTime(data.createdDate)}</UploadTime>
             <SettingBox
               onClick={handleOpenDropdown}
               onBlur={handleCloseDropdown}
@@ -257,7 +263,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
                     data.videos ? 1 + data.images.length : data.images.length
                   }
                   handleFunc={(el) => {
-                    setImg(el);
+                    setImg(el - 1);
                   }}
                 />
               </PaginationImage>
@@ -287,12 +293,6 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
               댓글 {data.replies.pageInformation.totalSize}개
             </ReviewCount>
           </FeedReviewTop>
-          <FeedReplies feedId={feedId} feedOwnerId={data.member.memberId} />
-          {/* <Replies>
-            {data.replies.replies.map((reply: any) => (
-              <FeedReply key={reply.replyId} reply={reply} />
-            ))}
-          </Replies> */}
           <AddBox>
             <AddReply
               placeholder="댓글 달기..."
@@ -300,8 +300,9 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
               onChange={handleChangeReply}
               onKeyUp={handleEnterReply}
             />
-            <AddBtn onClick={() => postReply()}>게시</AddBtn>
+            <AddBtn onClick={handleSendReply}>게시</AddBtn>
           </AddBox>
+          <FeedReplies feedId={feedId} feedOwnerId={data.member.memberId} />
         </RightDetail>
       </DetailContainer>
       {bigImage && <FeedImage url={imgUrl} handleFunc={handleBigImg} />}
