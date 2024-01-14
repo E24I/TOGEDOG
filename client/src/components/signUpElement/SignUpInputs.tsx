@@ -89,7 +89,7 @@ const SignUpInputs = () => {
     /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 
   const { mutate: signUpMutate } = usePostSignUp(signUpInfo);
-  const { mutate: emailMutate } = usePostEmail(email);
+  const { mutate: emailMutate, isPending } = usePostEmail(email);
   const { mutate: codeMutate } = usePostCode({
     email,
     authNum,
@@ -135,7 +135,11 @@ const SignUpInputs = () => {
                   emailCheck();
                 }}
               />
-              <button onClick={() => emailMutate()}>인증번호 전송</button>
+              {isPending ? (
+                <button>대기중</button>
+              ) : (
+                <button onClick={() => emailMutate()}>인증번호 전송</button>
+              )}
             </TextInput>
             {!isEmail && (
               <ErrorMsg>

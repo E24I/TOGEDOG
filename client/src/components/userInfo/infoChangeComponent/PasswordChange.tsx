@@ -38,7 +38,7 @@ const PasswordChangeForm: React.FC<PasswordChangeProps> = ({
   const password = watch("password", "");
   const pwConfirm = watch("pwConfirm", "");
   const [codeCheck, setCodeCheck] = useState<boolean>(false);
-  const { mutate: postEmailMutate } = usePostUserEmail(
+  const { mutate: postEmailMutate, isPending } = usePostUserEmail(
     email ? email : emailValue,
   );
   const { mutate: postCodeMutate } = usePostUserCode(
@@ -46,6 +46,7 @@ const PasswordChangeForm: React.FC<PasswordChangeProps> = ({
     authentication,
     setCodeCheck,
   );
+
   const { mutate: patchPasswordMutate } = usePatchUserPassword(
     password,
     pwConfirm,
@@ -88,11 +89,16 @@ const PasswordChangeForm: React.FC<PasswordChangeProps> = ({
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
-                      postEmailMutate();
                     }
                   }}
                 />
-                <button onClick={() => postEmailMutate()}>인증번호 전송</button>
+                {isPending ? (
+                  <button>대기중</button>
+                ) : (
+                  <button onClick={() => postEmailMutate()}>
+                    인증번호 전송
+                  </button>
+                )}
               </TextInput>
               {errors.email && (
                 <ErrorMsg>

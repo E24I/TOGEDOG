@@ -133,4 +133,3 @@ export const ImgBox = styled.div`
   background-size: cover;
   background-position: center;
 `;
-
