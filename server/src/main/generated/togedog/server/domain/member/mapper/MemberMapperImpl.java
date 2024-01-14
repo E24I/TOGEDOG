@@ -7,7 +7,7 @@ import togedog.server.domain.member.entity.Member;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-01-05T18:09:25+0900",
+    date = "2024-01-14T07:41:49+0900",
     comments = "version: 1.5.1.Final, compiler: javac, environment: Java 11.0.19 (Azul Systems, Inc.)"
 )
 @Component

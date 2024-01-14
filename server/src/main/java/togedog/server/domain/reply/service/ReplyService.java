@@ -7,6 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import togedog.server.domain.alarm.entity.Alarm;
+import togedog.server.domain.alarm.repository.AlarmRepository;
+import togedog.server.domain.alarm.service.AlarmService;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.feed.repository.FeedRepository;
 import togedog.server.domain.feed.service.dto.response.FeedResponse;
@@ -44,6 +47,8 @@ public class ReplyService {
     private final FeedRepository feedRepository;
     private final LoginMemberUtil loginMemberUtil;
     private final ReplyLikeRepository replyLikeRepository;
+    private final AlarmService alarmService;
+    private final AlarmRepository alarmRepository;
 
 
     public Long createReply(ReplyServiceCreateApiRequest request, Long feedId) {
@@ -61,6 +66,23 @@ public class ReplyService {
 
         feed.setRepliesCount(feed.getRepliesCount() + 1);
         // 리팩토링 시 getset 쓰지 않기, ( 연관관계 테이블 없애던가, or feed 메서드 만들기
+
+        //이재우: Reply 알림 추가
+        String feedTitle = feed.getTitle();
+        if(feedTitle.length() > 10) {
+            feedTitle = feedTitle.substring(0, 10) + "...";
+        }
+
+        String alarmUrl = "http://togedog.kr/feed/" + feedId;
+        String alarmContent = "\"" + feedTitle + "\" 에 댓글이 달렸습니다.";
+        alarmService.notify(feed.getMember().getMemberId(), alarmContent, alarmUrl);
+        Alarm alarm = Alarm.builder()
+                .content(alarmContent)
+                .url(alarmUrl)
+                .sender(member)
+                .receiver(feed.getMember())
+                .build();
+        alarmRepository.save(alarm);
 
         return reply.getReplyId();
 
