@@ -5,7 +5,6 @@ import {
   AddReply,
   CloseModal,
   DetailContainer,
-  FeedAddress,
   FeedContent,
   FeedContents,
   FeedDetailImg,
@@ -21,10 +20,8 @@ import {
   LikeBox,
   ModalBackground,
   PaginationImage,
-  PinPoint,
   Profile,
   ProfileBox,
-  ProfileImg,
   ReviewCount,
   RightDetail,
   RightScroll,
@@ -65,6 +62,7 @@ interface OwnProps {
 
 const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
   const navigate = useNavigate();
+  const navigator = useNavigate();
   const isLogin = useRecoilValue(isLoginAtom);
   const accesstoken = useRecoilValue(tokenAtom);
   const setAlertModal = useSetRecoilState(alertAtom);
@@ -119,13 +117,9 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
     postReply();
   };
 
-  const navigator = useNavigate();
-
   // 피드 수정
   const handleReplyPatch = () => {
     navigator(`/update/${feedId}`);
-    document.body.style.overflow = "auto";
-
     return;
   };
 
@@ -180,8 +174,6 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
     return "1초 전";
   };
 
-  console.log(isImg);
-
   if (isLoading) {
     return <>로딩중</>;
   }
@@ -198,16 +190,17 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
       >
         <LeftDetail>
           <FeedHeader>
-            <Profile>
+            <Profile
+              onClick={() => {
+                navigate(`/user/${data.member.memberId}`);
+              }}
+            >
               {data.member.imageUrl ? (
                 <UserImgForm
                   width={50}
                   height={50}
                   radius={50}
                   URL={data.member.imageUrl}
-                  onClick={() => {
-                    navigate(`/user/${data.member.memberId}`);
-                  }}
                 />
               ) : (
                 <ProfileBox>

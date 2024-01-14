@@ -102,9 +102,8 @@ export const MainPicture = styled.li`
 `;
 
 export const MainImage = styled.img`
-  background-color: rgb(215, 177, 135);
-  width: 200px;
-  height: 210px;
+  width: 220px;
+  height: 220px;
 `;
 
 export const InputContainer = styled.div`
@@ -133,4 +132,3 @@ export const ImgBox = styled.div`
   background-size: cover;
   background-position: center;
 `;
-

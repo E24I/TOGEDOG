@@ -148,11 +148,7 @@ const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
 
   return (
     <Reply>
-      <ReplyLeft
-        onClick={() => {
-          navigate(`/user/${reply.member.memberId}`);
-        }}
-      >
+      <ReplyLeft onClick={() => navigate(`/user/${reply.member.memberId}`)}>
         {reply.member.imageUrl ? (
           <UserImgForm
             width={50}
@@ -165,7 +161,9 @@ const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
         )}
       </ReplyLeft>
       <ReplyContents>
-        <ReplyNickname>
+        <ReplyNickname
+          onClick={() => navigate(`/user/${reply.member.memberId}`)}
+        >
           {reply.member.nickname}
           {reply.fix && <FixedReply>(고정된 댓글)</FixedReply>}
         </ReplyNickname>

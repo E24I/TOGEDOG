@@ -326,7 +326,7 @@ export const LevelBtn = styled.button`
   font-size: 24px;
   text-align: center;
   font-weight: bold;
-  z-index: 35;
+  z-index: 20;
 `;
 
 export const PlusLevel = styled(LevelBtn)`

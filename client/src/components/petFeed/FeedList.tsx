@@ -1,4 +1,4 @@
-import React, { createRef, useRef, useState } from "react";
+import React, { createRef, useEffect, useRef, useState } from "react";
 import { feedListsType } from "../../types/feedDataType";
 import FeedDetail from "./FeedDetail";
 import {
@@ -8,8 +8,6 @@ import {
   ProfileBox,
   Unknown,
   UserName,
-  FeedAddress,
-  PinPoint,
   UploadTime,
   FeedContents,
   FeedTitle,
@@ -128,11 +126,16 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
         };
 
   // 스크롤 방지(모달창 켜져있을때)
-  if (isDetail) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "auto";
-  }
+  useEffect(() => {
+    if (isDetail) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isDetail]);
 
   // 피드 시간 경과 계산
   const setTime = (createdAt: string) => {
