@@ -20,9 +20,9 @@ import { ChageData } from "../../../types/userInfoType";
 import { UserImgForm } from "../../../atoms/imgForm/ImgForm";
 import { AttachingInput } from "../../petFeed/writingSpace/CreatingSpace/Upload.Style";
 import { getPresignedUrl, uploadToS3 } from "../../../services/feedService";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { patchProfileImg } from "../../../services/userInfoService";
-import { tokenAtom } from "../../../atoms";
+import { alertAtom, tokenAtom } from "../../../atoms";
 import { queryClient } from "../../..";
 
 const ProfileChange: React.FC<ChageData> = ({
@@ -46,6 +46,7 @@ const ProfileChange: React.FC<ChageData> = ({
     setChangeInfo(false);
   };
   const token = useRecoilValue(tokenAtom);
+  const setAlertModal = useSetRecoilState(alertAtom);
 
   const uploadImg = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
@@ -55,7 +56,7 @@ const ProfileChange: React.FC<ChageData> = ({
       setImageFiles({ file: file, name: name, type: type });
     }
   };
-  const handelChange = async () => {
+  const handelImgChange = async () => {
     await getPresignedUrl(imageFiles.name).then((res) => {
       uploadToS3(res, imageFiles.file, imageFiles.type).then((res) => {
         if (res.config.url) {
@@ -63,12 +64,12 @@ const ProfileChange: React.FC<ChageData> = ({
           if (imgURL) {
             patchProfileImg(imgURL, token).then(() => {
               queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+              setAlertModal("이미지를 변경 했습니다.");
             });
           }
         }
       });
     });
-    setChangeInfo(false);
   };
   const handleNickname = () => {
     newNickname ? patchNicknameMutate() : alert("닉네임을 입력해주세요.");
@@ -98,20 +99,20 @@ const ProfileChange: React.FC<ChageData> = ({
           />
           {imageFiles.file ? (
             <UserImgForm
-              width={100}
-              height={100}
+              width={190}
+              height={190}
               radius={50}
               URL={URL.createObjectURL(imageFiles.file)}
             />
           ) : (
-            <UserImgForm width={100} height={100} radius={50} URL={img} />
+            <UserImgForm width={190} height={190} radius={50} URL={img} />
           )}
           <ChangeImgButton htmlFor="add_image">프로필사진 선택</ChangeImgButton>
           <ChangeImgButton onClick={() => deleteUserImage()}>
             프로필사진 삭제
           </ChangeImgButton>
           {imageFiles.file !== null && (
-            <button className="submitButton" onClick={handelChange}>
+            <button className="submitButton" onClick={handelImgChange}>
               변경하기
             </button>
           )}

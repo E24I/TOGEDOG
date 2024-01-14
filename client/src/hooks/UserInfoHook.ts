@@ -1,7 +1,7 @@
 import { AxiosResponse, AxiosError } from "axios";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { tokenAtom, isLoginAtom, memberIdAtom } from "../atoms";
+import { tokenAtom, isLoginAtom, memberIdAtom, alertAtom } from "../atoms";
 import { useNavigate } from "react-router-dom";
 import {
   getUserInfo,
@@ -19,13 +19,7 @@ import {
   deletePetImg,
   deleteUserImage,
 } from "../services/userInfoService";
-import {
-  createPet,
-  feedDataType,
-  infoType,
-  petIntro,
-} from "../types/userInfoType";
-import { LoadingContainer } from "../pages/PetFeed";
+import { createPet, infoType, petIntro } from "../types/userInfoType";
 import { queryClient } from "..";
 
 //유저 정보 가져오기
@@ -72,8 +66,9 @@ export const useGetUserFeeds = (
   });
 };
 
-// 닉네임 변경
+// 프로필 이미지 삭제
 export const useDeleteUserImage = () => {
+  const setAlertModal = useSetRecoilState(alertAtom);
   const token = useRecoilValue(tokenAtom);
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -81,6 +76,7 @@ export const useDeleteUserImage = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+      setAlertModal("이미지가 삭제 되었습니다.");
     },
     onError: (err: any) => {
       alert(err.response.data.message);
@@ -92,16 +88,17 @@ export const useDeleteUserImage = () => {
 // 닉네임 변경
 export const usePatchUserNickname = (newNickname: string) => {
   const token = useRecoilValue(tokenAtom);
+  const setAlertModal = useSetRecoilState(alertAtom);
   const { mutate } = useMutation({
     mutationFn: async () => {
       await patchUserNickname(newNickname, token);
     },
     onSuccess: () => {
-      alert("닉네임이 변경되었습니다.");
+      setAlertModal("닉네임이 변경 되었습니다.");
       queryClient.invalidateQueries({ queryKey: ["userInfo"] });
     },
     onError: (err: any) => {
-      alert(err.response.data.message);
+      setAlertModal(err.response.data.message);
     },
   });
   return { mutate };
@@ -110,12 +107,13 @@ export const usePatchUserNickname = (newNickname: string) => {
 // 소개글 변경
 export const usePatchUserIntro = (newMyIntro: string) => {
   const token = useRecoilValue(tokenAtom);
+  const setAlertModal = useSetRecoilState(alertAtom);
   const { mutate } = useMutation({
     mutationFn: async () => {
       patchUserIntro(newMyIntro, token);
     },
     onSuccess: () => {
-      alert("자기 소개가 변경되었습니다.");
+      setAlertModal("소개글이 변경 되었습니다.");
       queryClient.invalidateQueries({ queryKey: ["userInfo"] });
     },
     onError: (err) => {
@@ -127,12 +125,13 @@ export const usePatchUserIntro = (newMyIntro: string) => {
 
 // 비밀번호 변경 인증코드 메일보내기
 export const usePostUserEmail = (email: string) => {
+  const setAlertModal = useSetRecoilState(alertAtom);
   return useMutation({
     mutationFn: async () => {
       return postUserEmail(email);
     },
     onSuccess: () => {
-      alert("이메일로 인증코드를 보내드렸습니다.");
+      setAlertModal("이메일로 인증코드를 보내드렸습니다.");
     },
     onError: (err: AxiosError<any>) => {
       console.log(err);
@@ -146,12 +145,13 @@ export const usePostUserCode = (
   authNum: number,
   setCodeCheck: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
+  const setAlertModal = useSetRecoilState(alertAtom);
   return useMutation({
     mutationFn: async () => {
       return postUserCode(email, authNum);
     },
     onSuccess: () => {
-      alert("인증을 완료했습니다.");
+      setAlertModal("인증을 완료했습니다.");
       setCodeCheck(true);
     },
     onError: (err: AxiosError<any>) => {
@@ -167,12 +167,13 @@ export const usePatchUserPassword = (password: string, pwConfirm: string) => {
   const setToken = useSetRecoilState(tokenAtom);
   const setMemberId = useSetRecoilState(memberIdAtom);
   const navigate = useNavigate();
+  const setAlertModal = useSetRecoilState(alertAtom);
   return useMutation({
     mutationFn: async () => {
       return patchUserPassword(password, pwConfirm, token);
     },
     onSuccess: () => {
-      alert("비밀번호를 변경했습니다. 다시 로그인을 해야 합니다.");
+      setAlertModal("비밀번호를 변경했습니다. 다시 로그인을 해야 합니다.");
       navigate("/");
       setLoginState(false);
       setToken("");
@@ -280,7 +281,6 @@ export const usePatchImg = (imgURL: string) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["userInfo"] });
-      console.log(imgURL);
     },
     onError: (err) => {
       console.log(err);

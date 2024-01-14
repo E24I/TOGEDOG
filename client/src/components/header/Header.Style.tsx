@@ -76,7 +76,6 @@ export const HeaderBox = styled.div`
   margin: 0 auto;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
 `;
 
@@ -86,12 +85,25 @@ export const MiddleButtonContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 33.3%;
-  margin-right: 70px;
+  margin: 0 auto;
 `;
 
 export const NotificationsContainer = styled.button`
   background-color: transparent;
   border: none;
   outline: none;
+  cursor: pointer;
+`;
+
+export const MoveLogin = styled.button`
+  color: white;
+  border-radius: 1rem;
+  width: 6rem;
+  height: 1.8rem;
+  background: #494949;
+  float: right;
+`;
+
+export const UserProfile = styled.div`
   cursor: pointer;
 `;

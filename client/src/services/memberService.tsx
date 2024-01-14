@@ -41,3 +41,11 @@ export const postNickname = async (requestObj: nicknameProps) => {
   const res = await axios.post(url);
   return res;
 };
+
+// google 로그인
+export const googleLoginAPI = async (access_token: string) => {
+  const url = `${ROOT_URL}/oauth/login/google`;
+  const data = { token: access_token };
+  const res = await axios.post(url, data);
+  return res;
+};

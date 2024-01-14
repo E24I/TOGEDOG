@@ -11,6 +11,7 @@ import {
   MessageIcon,
   PersonIcon,
   LockIcon,
+  CheckIcon,
 } from "./SignUpInputs.style";
 import {
   usePostSignUp,
@@ -28,9 +29,12 @@ const SignUpInputs = () => {
     watch,
   } = useForm();
 
-  const [allSelected, setAllSelected] = useState<boolean>(false); //agree 상태
-  const [isAuthentication, setIsAuthentication] = useState<boolean>(false); //인증 코드 상태
+  const [isEmail, setIsEmail] = useState<boolean>(false); //이메일 value 상태
+  const [isAuthentication, setIsAuthentication] = useState<boolean>(false); //이메일 인증 상태
   const [isNickName, setIsNickName] = useState<boolean>(false); //닉네임 중복확인 상태
+  const [isPassword, setIsPassword] = useState<boolean>(false); //비밀번호 value 상태
+  const [isPwConfirm, setIsPwConfirm] = useState<boolean>(false); //비밀번호 컨펌 상태
+  const [allSelected, setAllSelected] = useState<boolean>(false); //agree 상태
 
   //각각 input 태그 value 호출
   const email = watch("email", "");
@@ -51,12 +55,30 @@ const SignUpInputs = () => {
     }
   }, [[agree1, agree2]]);
 
+  //이메일 인풋의value 정규식 체크
+  const emailCheck = () => {
+    emailRegex.test(email) ? setIsEmail(true) : setIsEmail(false);
+  };
+  //비밀번호 인풋의value 정규식 체크
+  const passwordCheck = () => {
+    passwordRegex.test(password) ? setIsPassword(true) : setIsPassword(false);
+  };
+  //비밀번호 컨펌 인풋의value === 비밀번호 인풋의value 체크
+  const pwConfirmCheck = () => {
+    password === pwConfirm ? setIsPwConfirm(true) : setIsPwConfirm(false);
+  };
+
   // 체크박스 전체 선택 누르면 둘다 true or false 함수
-  const handleAllSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const isChecked = e.target.checked;
-    setAllSelected(isChecked);
-    setValue("agree1", isChecked);
-    setValue("agree2", isChecked);
+  const handleAllSelect = () => {
+    if (allSelected === false) {
+      setValue("agree1", true);
+      setValue("agree2", true);
+      setAllSelected(true);
+    } else {
+      setValue("agree1", false);
+      setValue("agree2", false);
+      setAllSelected(false);
+    }
   };
 
   //이메일 유효성
@@ -97,131 +119,160 @@ const SignUpInputs = () => {
       </h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <TextInput>
-            <MessageIcon />
-            <input
-              type="text"
-              placeholder="이메일을 입력해주세요."
-              autoComplete="off"
-              {...register("email", { required: true, pattern: emailRegex })}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  emailMutate();
-                }
-              }}
-            />
-            <button onClick={() => emailMutate()}>인증번호 전송</button>
-          </TextInput>
-          {errors.email && (
-            <ErrorMsg>
-              <p>올바르지 않은 이메일 형식입니다.</p>
-            </ErrorMsg>
-          )}
+          <div>
+            <TextInput>
+              <MessageIcon />
+              <input
+                type="text"
+                placeholder="이메일을 입력해주세요."
+                autoComplete="off"
+                {...register("email", { required: true, pattern: emailRegex })}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    emailMutate();
+                  }
+                  emailCheck();
+                }}
+              />
+              <button onClick={() => emailMutate()}>인증번호 전송</button>
+            </TextInput>
+            {!isEmail && (
+              <ErrorMsg>
+                <p>올바르지 않은 이메일 형식입니다.</p>
+              </ErrorMsg>
+            )}
+          </div>
+          <div>
+            <TextInput>
+              <MessageIcon />
+              <input
+                type="text"
+                placeholder="인증번호를 입력해주세요."
+                autoComplete="off"
+                {...register("authentication", { required: true })}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    codeMutate();
+                  }
+                }}
+              />
+              {isAuthentication ? (
+                <CheckIcon />
+              ) : (
+                <button onClick={() => codeMutate()}>인증하기</button>
+              )}
+            </TextInput>
+            {!isAuthentication && (
+              <ErrorMsg>
+                <p>이메일 인증은 필수 입니다.</p>
+              </ErrorMsg>
+            )}
+          </div>
+          <div>
+            <TextInput>
+              <PersonIcon />
+              <input
+                type="text"
+                placeholder="닉네임을 입력해주세요."
+                autoComplete="off"
+                {...register("nickname", { required: true })}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    nicknameMutate();
+                  }
+                }}
+              />
+              {isNickName ? (
+                <CheckIcon />
+              ) : (
+                <button onClick={() => nicknameMutate()}>중복확인</button>
+              )}
+            </TextInput>
+            {!isNickName && (
+              <ErrorMsg>
+                <p>닉네임 중복확인은 필수 입니다.</p>
+              </ErrorMsg>
+            )}
+          </div>
         </div>
         <div>
-          <TextInput>
-            <MessageIcon />
-            <input
-              type="text"
-              placeholder="인증번호를 입력해주세요."
-              autoComplete="off"
-              {...register("authentication", { required: true })}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  codeMutate();
-                }
-              }}
-            />
-            <button onClick={() => codeMutate()}>인증하기</button>
-          </TextInput>
+          <div>
+            <TextInput>
+              <LockIcon />
+              <input
+                type="password"
+                placeholder="비밀번호를 입력해주세요."
+                autoComplete="off"
+                {...register("password", {
+                  required: true,
+                  pattern: passwordRegex,
+                })}
+                onKeyUp={() => {
+                  passwordCheck();
+                }}
+              />
+            </TextInput>
+            {!isPassword && (
+              <ErrorMsg>
+                <p>
+                  비밀번호는 숫자 + 문자 + 특수문자 조합 8자 이상이어야 합니다.
+                </p>
+              </ErrorMsg>
+            )}
+          </div>
+          <div>
+            <TextInput>
+              <LockIcon />
+              <input
+                type="password"
+                placeholder="비밀번호를 확인해주세요."
+                autoComplete="off"
+                {...register("pwConfirm", {
+                  required: true,
+                  validate: (value) => value === password,
+                })}
+                onKeyUp={() => {
+                  pwConfirmCheck();
+                }}
+              />
+            </TextInput>
+            {!isPwConfirm && (
+              <ErrorMsg>
+                <p>비밀번호가 일치하지 않습니다.</p>
+              </ErrorMsg>
+            )}
+          </div>
+          <CheckBoxContainer>
+            <CheckInputBox>
+              <CheckInput
+                type="checkbox"
+                checked={allSelected}
+                onChange={handleAllSelect}
+              />
+              <p>전체선택</p>
+            </CheckInputBox>
+            <CheckInputBox>
+              <CheckInput
+                type="checkbox"
+                {...register("agree1", { required: true })}
+              />
+              <p>이용약관 (필수)</p>
+              <CheckInput
+                type="checkbox"
+                {...register("agree2", { required: true })}
+              />
+              <p>개인정보 수집 및 이용 동의 (필수)</p>
+            </CheckInputBox>
+            {!allSelected && (
+              <ErrorMsg>
+                <p>이용약관, 개인정보 수집은 필수 항목입니다.</p>
+              </ErrorMsg>
+            )}
+          </CheckBoxContainer>
         </div>
-        <div>
-          <TextInput>
-            <PersonIcon />
-            <input
-              type="text"
-              placeholder="닉네임을 입력해주세요."
-              autoComplete="off"
-              {...register("nickname", { required: true })}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  nicknameMutate();
-                }
-              }}
-            />
-            <button onClick={() => nicknameMutate()}>중복확인</button>
-          </TextInput>
-        </div>
-        <div>
-          <TextInput>
-            <LockIcon />
-            <input
-              type="password"
-              placeholder="비밀번호를 입력해주세요."
-              autoComplete="off"
-              {...register("password", {
-                required: true,
-                pattern: passwordRegex,
-              })}
-            />
-          </TextInput>
-          {errors.password && (
-            <ErrorMsg>
-              <p>
-                비밀번호는 숫자 + 문자 + 특수문자 조합 8자 이상이어야 합니다.
-              </p>
-            </ErrorMsg>
-          )}
-        </div>
-        <div>
-          <TextInput>
-            <LockIcon />
-            <input
-              type="password"
-              placeholder="비밀번호를 확인해주세요."
-              autoComplete="off"
-              {...register("pwConfirm", {
-                required: true,
-                validate: (value) => value === password,
-              })}
-            />
-          </TextInput>
-          {errors.pwConfirm && (
-            <ErrorMsg>
-              <p>비밀번호가 일치하지 않습니다.</p>
-            </ErrorMsg>
-          )}
-        </div>
-        <CheckBoxContainer>
-          <CheckInputBox>
-            <CheckInput
-              type="checkbox"
-              checked={allSelected}
-              onChange={handleAllSelect}
-            />
-            <p>전체선택</p>
-          </CheckInputBox>
-          <CheckInputBox>
-            <CheckInput
-              type="checkbox"
-              {...register("agree1", { required: true })}
-            />
-            <p>이용약관 (필수)</p>
-            <CheckInput
-              type="checkbox"
-              {...register("agree2", { required: true })}
-            />
-            <p>개인정보 수집 및 이용 동의 (필수)</p>
-          </CheckInputBox>
-          {(errors.agree1 || errors.agree2) && (
-            <ErrorMsg>
-              <p>이용약관, 개인정보 수집은 필수 항목입니다.</p>
-            </ErrorMsg>
-          )}
-        </CheckBoxContainer>
         <SubmitButton type="submit">가입하기</SubmitButton>
       </form>
     </InputContainer>

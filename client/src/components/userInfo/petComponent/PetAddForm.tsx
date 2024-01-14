@@ -24,19 +24,21 @@ import { ErrorMsg } from "../../signUpElement/SignUpInputs.style";
 import { queryClient } from "../../..";
 
 const PetAddForm: React.FC = () => {
+  const toekn = useRecoilValue(tokenAtom);
+  const memberId = useRecoilValue(memberIdAtom);
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  //펫이미지 등록
   const [imageFiles, setImageFiles] = useState<{
     file: File | null;
     name: string;
     type: string;
   }>({ file: null, name: "", type: "" });
-  const toekn = useRecoilValue(tokenAtom);
-  const memberId = useRecoilValue(memberIdAtom);
   let imgURL = "";
   const uploadImg = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
@@ -61,11 +63,26 @@ const PetAddForm: React.FC = () => {
         });
       });
     } else {
+      data.age = data.age.replace(/-/g, "");
       postPetInfo(data, toekn);
       queryClient.invalidateQueries({ queryKey: ["userInfo"] });
       navigate(`/user/${memberId}`);
     }
   };
+  // 오늘날짜 (YYYY-MM-DD)
+  const todayDate = new Date().toISOString().split("T")[0];
+
+  // 오늘날짜 (YYMMDD)
+  // const today = new Date();
+  // const year = today.getFullYear().toString().substr(-2);
+  // let month = (today.getMonth() + 1).toString();
+  // month = month.length === 1 ? "0" + month : month;
+  // let day = today.getDate().toString();
+  // day = day.length === 1 ? "0" + day : day;
+  // const YYMMDD = year + month + day;
+  //console.log(YYMMDD)  240111 - 220111 = 20000
+  //(0 === 1살, 10000 ~ 19999 = 2살, 20000 29999 3살)
+
   return (
     <PetAddContainer>
       <TopBox>
@@ -106,17 +123,16 @@ const PetAddForm: React.FC = () => {
             {...register("type")}
           />
           <Input
-            type="text"
-            placeholder="반려동물의 나이를 입력해주세요."
+            type="date"
+            max={todayDate}
             autoComplete="off"
             {...register("age", {
               required: true,
-              pattern: /^[0-9]*$/,
             })}
           />
           {errors.age && (
             <ErrorMsg>
-              <p>반려동물의 나이를 숫자만 입력해주세요.</p>
+              <p>YY/MM/DD 로 입력해주셔야 합니다.(ex.200505)</p>
             </ErrorMsg>
           )}
           <Textarea
