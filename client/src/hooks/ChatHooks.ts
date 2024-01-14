@@ -8,10 +8,16 @@ import {
   searchUsers,
 } from "../services/chatService";
 import { createNewChatType } from "../types/chatType";
-import { useRecoilValue } from "recoil";
-import { memberIdAtom, tokenAtom } from "../atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  chatRoomIdAtom,
+  memberIdAtom,
+  theOtherMemberIdAtom,
+  tokenAtom,
+} from "../atoms";
 import { queryClient } from "..";
 import { getUserInfo } from "../services/userInfoService";
+import { useNavigate } from "react-router-dom";
 
 //유저 검색
 export const GetUsersQuery = (
@@ -83,17 +89,21 @@ export const useInfiniteGetMessages = (roomId?: number) => {
 };
 
 //채팅방 생성
-export const useCreateChattingRoom = (participants: createNewChatType) => {
+export const useCreateChattingRoom = () => {
   const token = useRecoilValue(tokenAtom);
-  const memberId = useRecoilValue(memberIdAtom);
-  participants.requestMemberId = memberId !== undefined ? memberId : 0;
+  const myMemberId = useRecoilValue(memberIdAtom);
+  const inviteMemberId = useRecoilValue(theOtherMemberIdAtom);
+  const setRoomId = useSetRecoilState(chatRoomIdAtom);
+  const setInviteMemberId = useSetRecoilState(theOtherMemberIdAtom);
   return useMutation({
     mutationFn: async () => {
-      return createNewChat(participants, token);
+      return createNewChat(token, myMemberId, inviteMemberId);
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["rooms"] });
-      participants.inviteMemberId = 0;
+      setInviteMemberId(undefined);
+      setRoomId(res.data.substring(12));
+
       return;
     },
     onError: (err) => {
@@ -106,13 +116,14 @@ export const useCreateChattingRoom = (participants: createNewChatType) => {
 //채팅방 나가기
 export const useExitRoom = (roomId?: number) => {
   const token = useRecoilValue(tokenAtom);
+  const setRoomId = useSetRecoilState(chatRoomIdAtom);
   return useMutation({
     mutationFn: async () => {
       return exitARoom(token, roomId);
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["rooms"] });
-      console.log("성공", res);
+      setRoomId(undefined);
       return;
     },
     onError: (err) => {

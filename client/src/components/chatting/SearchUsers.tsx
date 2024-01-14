@@ -1,14 +1,21 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import {
   CreateNewChatButton,
-  Nickname,
-  ProfileImg,
   SearchBar,
   SearchUsersContainer,
   SearchedUser,
 } from "./SearchUsers.Style";
 import { searchedUserType } from "../../types/chatType";
 import { GetUsersQuery, useCreateChattingRoom } from "../../hooks/ChatHooks";
+import UserName from "./UserName";
+import UserImage from "./UserImage";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  alreadyExistChatMemberAtom,
+  theOtherMemberIdAtom,
+  tokenAtom,
+} from "../../atoms";
+import { useNavigate } from "react-router-dom";
 
 interface SearchUserType {
   page?: string;
@@ -18,16 +25,13 @@ const SearchUser: React.FC<SearchUserType> = ({ page }) => {
   const [isSearched, setSearched] = useState<string>("");
   const [isSubmit, setSubmit] = useState<boolean>(false);
 
-  const [participants] = useState<{
-    requestMemberId: number;
-    inviteMemberId: number;
-  }>({
-    requestMemberId: 0,
-    inviteMemberId: 3,
-    //유저검색을 통해 추가
-  });
+  const setInviteMemberId = useSetRecoilState(theOtherMemberIdAtom);
+  const alreadyExistChatMember = useRecoilValue(alreadyExistChatMemberAtom);
+  const token = useRecoilValue(tokenAtom);
 
-  const { mutate: createChattingRoom } = useCreateChattingRoom(participants);
+  const navigator = useNavigate();
+
+  const { mutate: createChattingRoom } = useCreateChattingRoom();
   const {
     data: usersData,
     isLoading,
@@ -37,7 +41,12 @@ const SearchUser: React.FC<SearchUserType> = ({ page }) => {
   //엔터키 누르면 실행
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
-    setSubmit(true);
+    if (token) {
+      setSubmit(true);
+    } else {
+      alert("로그인이 해제 되었습니다. 로그인 페이지로 이동합니다");
+      navigator("/login");
+    }
   };
   //검색어 핸들러
   const searchValueHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +55,7 @@ const SearchUser: React.FC<SearchUserType> = ({ page }) => {
   };
   //검색된 채팅 상대 클릭
   const onClickHandler = (otherMemberId: number) => {
-    participants.inviteMemberId = otherMemberId;
+    setInviteMemberId(otherMemberId);
     createChattingRoom();
     setSubmit(false);
     setSearched("");
@@ -67,19 +76,24 @@ const SearchUser: React.FC<SearchUserType> = ({ page }) => {
         <>error</>
       ) : (
         isSubmit &&
+        alreadyExistChatMember &&
         usersData.data.data.map((user: searchedUserType, idx: number) => {
           return (
-            <SearchedUser key={idx} page={page}>
-              <ProfileImg src={user.imageUrl} />
-              <Nickname>{user.nickname}</Nickname>
-              <CreateNewChatButton
-                onClick={() => {
-                  onClickHandler(user.memberId);
-                }}
-              >
-                채팅하기
-              </CreateNewChatButton>
-            </SearchedUser>
+            !Object.keys(alreadyExistChatMember).includes(
+              user.memberId.toString(),
+            ) && (
+              <SearchedUser key={idx} page={page}>
+                <UserImage id={user.memberId} />
+                <UserName id={user.memberId} />
+                <CreateNewChatButton
+                  onClick={() => {
+                    onClickHandler(user.memberId);
+                  }}
+                >
+                  채팅하기
+                </CreateNewChatButton>
+              </SearchedUser>
+            )
           );
         })
       )}

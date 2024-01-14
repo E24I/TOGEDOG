@@ -70,9 +70,12 @@ export const FeedFilesContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 280px;
-  overflow: scroll;
+  height: 341px;
+  overflow: auto;
   margin-top: 50px;
+  padding: 30px;
+  border: 0.75px solid #2b2b2b;
+  border-radius: 20px;
 `;
 export const FeedFiles = styled.div`
   display: flex;

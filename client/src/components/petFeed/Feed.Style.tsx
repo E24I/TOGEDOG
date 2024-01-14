@@ -27,6 +27,7 @@ export const Profile = styled.div`
   display: flex;
   justify-content: start;
   align-items: center;
+  cursor: pointer;
 `;
 
 export const ProfileBox = styled.div`
@@ -110,31 +111,28 @@ export const FeedContent = styled.div`
 `;
 
 export const FeedMedia = styled.div`
-  border: 1px solid rgb(215, 215, 215);
-  border-radius: 15px;
-  /* width: 980px; */
   margin: 0px 0px 5px 0px;
   padding: 15px 5px;
   display: flex;
-  justify-content: space-around;
+  justify-content: start;
   align-items: center;
 `;
 
 export const FeedImgs = styled.div`
-  max-width: 830px;
-  min-width: 830px;
+  width: 100%;
   display: flex;
   justify-content: start;
   align-items: center;
   white-space: nowrap;
   overflow-x: auto;
+  margin: 10px;
 `;
 
 export const FeedVideo = styled.video`
   border: 1px solid rgb(215, 215, 215);
   border-radius: 15px;
   height: 300px;
-  margin: 10px;
+  margin-right: 20px;
   background-color: rgb(215, 215, 215);
 `;
 
@@ -142,7 +140,7 @@ export const FeedImg = styled.img`
   border: 1px solid rgb(215, 215, 215);
   border-radius: 15px;
   height: 300px;
-  margin: 10px;
+  margin-right: 20px;
   background-color: rgb(215, 215, 215);
   /* aspect-ratio: 7/6; */
   /* min-width: 350px; */
@@ -181,8 +179,16 @@ export const FeedBottom = styled.div`
   padding: 0px 50px;
 `;
 
-export const ReviewCount = styled.span`
-  cursor: pointer;
+export const ReviewCount = styled.button`
+  padding: 2px;
+  font-size: 16px;
+  font-weight: 600;
+  &:hover {
+    color: rgb(101, 101, 101);
+  }
+  &:active {
+    color: rgb(138, 138, 138);
+  }
 `;
 
 export const ModalBackground = styled.div`
@@ -190,7 +196,6 @@ export const ModalBackground = styled.div`
   z-index: 40;
   width: 100vw;
   height: 100vh;
-  overflow: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -209,15 +214,39 @@ export const DetailContainer = styled.div`
   background-color: white;
   border-radius: 20px;
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  justify-items: center;
+
+  @media screen and (max-width: 1200px) {
+    grid-template-columns: repeat(1, 100%);
+    overflow-y: auto;
+    overflow-x: visible;
+
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      height: 30%;
+      background: gray;
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgb(0, 0, 0, 0);
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    grid-template-columns: repeat(2, 50%);
+    grid-template-rows: repeat(1, 100%);
+  }
 `;
 
 export const CloseModal = styled(Cancel)`
   position: absolute;
-  top: 0;
-  right: -10%;
+  top: 10px;
+  right: 10px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -228,23 +257,30 @@ export const CloseModal = styled(Cancel)`
 
 export const LeftDetail = styled.div`
   width: 100%;
-  max-width: 40vw;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
+
+  @media screen and (min-width: 1200px) {
+    max-width: 40vw;
+  }
 `;
 
 export const RightDetail = styled.div`
-  border-left: 1px solid rgb(215, 215, 215);
   width: 100%;
-  max-width: 40vw;
   height: 100%;
+  padding-left: 10px;
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
+
+  @media screen and (min-width: 1200px) {
+    max-width: 40vw;
+    border-left: 1px solid rgb(215, 215, 215);
+  }
 `;
 
 export const FeedDetailMedia = styled.div`
@@ -314,7 +350,8 @@ export const Replies = styled.ul`
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  overflow: visible auto;
+  overflow-y: auto;
+  overflow-x: visible;
 `;
 
 export const Reply = styled.li`
@@ -334,6 +371,7 @@ export const ReplyLeft = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `;
 
 export const ReplyProfile = styled.img`

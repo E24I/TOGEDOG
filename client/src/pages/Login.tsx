@@ -1,19 +1,34 @@
 import React from "react";
-import { styled } from "styled-components";
 import LoginForm from "../components/loginElement/LoginForm";
-import { ImgBox } from "../components/loginElement/LoginForm.style";
-
-const LoginContainer = styled.div`
-  padding-top: 100px;
-  width: 1028px;
-  display: flex;
-  margin: 0 auto;
-`;
+import {
+  LoginContainer,
+  MainContainer,
+  MainImage,
+  MainPicture,
+  MainPictures,
+} from "../components/loginElement/LoginForm.style";
 
 const Login: React.FC = () => {
   return (
     <LoginContainer>
-      <ImgBox />
+      <MainContainer>
+        <MainPictures>
+          {[0, 1, 2, 3, 4, 5].map((_, idx) => (
+            <MainPicture key={idx}>
+              <MainImage />
+            </MainPicture>
+          ))}
+        </MainPictures>
+      </MainContainer>
+      <MainContainer>
+        <MainPictures top="-129px">
+          {[6, 7, 8, 9, 10, 11].map((_, idx) => (
+            <MainPicture key={idx}>
+              <MainImage />
+            </MainPicture>
+          ))}
+        </MainPictures>
+      </MainContainer>
       <LoginForm />
     </LoginContainer>
   );

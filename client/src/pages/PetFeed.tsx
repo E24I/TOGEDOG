@@ -46,7 +46,7 @@ export const Loadings = styled.img``;
 export const FeedContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
 `;
 

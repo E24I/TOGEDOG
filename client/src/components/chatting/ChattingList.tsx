@@ -1,5 +1,7 @@
-import React, { MouseEvent, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { MouseEvent, useEffect, useState } from "react";
 import {
+  AccordionButton,
   ChattingFlexBox,
   ChattingFormContainer,
   ChattingList,
@@ -7,28 +9,40 @@ import {
   ChattingListsContainer,
   DefaultBack,
   DefaultBackGroundWrapper,
+  FoldButton,
   Message,
   MiddleWrap,
   RecentConversation,
   SeeMoreButton,
   TimeStamp,
-} from "./ChattingForm.Style";
+  UnfoldButton,
+} from "./ChattingList.Style";
 import DropDown from "../../atoms/dropdown/DropDown";
 import { GetAllRoomsQuery } from "../../hooks/ChatHooks";
 import { roomsDataType } from "../../types/chatType";
 import SearchUser from "./SearchUsers";
-import ChattingDetail from "./ChattingDetail";
+import ChattingRoom from "./ChattingRoom";
 import UserName from "./UserName";
 import UserImage from "./UserImage";
-import { useRecoilState } from "recoil";
-import { reportAtom } from "../../atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  alreadyExistChatMemberAtom,
+  chatRoomIdAtom,
+  reportAtom,
+  theOtherMemberIdAtom,
+} from "../../atoms";
 
 const ChattingLists: React.FC = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
-  const [roomId, setRoomId] = useState<number | undefined>(undefined);
-  const [isEntered, setEnter] = useState<boolean>(false);
-  const [listIndex, setListIndex] = useState<number>(0);
+  const [listNumber, setlistNumber] = useState<number>(0);
+  const [isFold, setFold] = useState<boolean>(false);
   const [reportModal, setReportModal] = useRecoilState(reportAtom);
+
+  const setExistChatMember = useSetRecoilState(alreadyExistChatMemberAtom);
+  const setTheOtherMemberId = useSetRecoilState(theOtherMemberIdAtom);
+  const setRoomId = useSetRecoilState(chatRoomIdAtom);
+  const roomId = useRecoilValue(chatRoomIdAtom);
+  const otherMemberId = useRecoilValue(theOtherMemberIdAtom);
 
   const {
     data: roomsData,
@@ -36,9 +50,22 @@ const ChattingLists: React.FC = () => {
     error: roomsError,
   } = GetAllRoomsQuery();
 
-  const openDropDown = (e: MouseEvent, idx: number) => {
+  useEffect(() => {
+    setRoomId(undefined);
+    if (roomsData) {
+      setExistChatMember(
+        Object.fromEntries(
+          roomsData.map((room: roomsDataType) => {
+            return [room.otherMemberId, room.chatRoomId];
+          }),
+        ),
+      );
+    }
+  }, []);
+
+  const openDropDown = (e: MouseEvent, id: number) => {
     e.stopPropagation();
-    setListIndex(idx);
+    setlistNumber(id);
     if (isOpen !== false) {
       setOpen(false);
     } else {
@@ -47,7 +74,6 @@ const ChattingLists: React.FC = () => {
   };
 
   const setTime = (createdAt: string) => {
-    console.log(createdAt);
     const currentDate = new Date();
     const createdDate = new Date(createdAt);
 
@@ -76,7 +102,7 @@ const ChattingLists: React.FC = () => {
 
   return (
     <ChattingFormContainer>
-      <ChattingListsContainer>
+      <ChattingListsContainer fold={isFold}>
         <ChattingFlexBox>
           <Message>Message</Message>
           <SearchUser />
@@ -87,13 +113,13 @@ const ChattingLists: React.FC = () => {
               <>참여중인 대화방이 없습니다</>
             ) : (
               roomsData &&
-              roomsData.map((room: roomsDataType, idx: number) => {
+              roomsData.map((room: roomsDataType) => {
                 return (
                   <ChattingListContainer
                     key={room.chatRoomId}
                     onClick={() => {
                       setRoomId(room.chatRoomId);
-                      setEnter(true);
+                      setTheOtherMemberId(room.otherMemberId);
                     }}
                   >
                     <UserImage id={room.otherMemberId} component="list" />
@@ -109,12 +135,12 @@ const ChattingLists: React.FC = () => {
                     <button
                       onBlur={() => setOpen(false)}
                       onClick={(e) => {
-                        openDropDown(e, idx);
+                        openDropDown(e, room.chatRoomId);
                         setOpen(true);
                       }}
                     >
                       <SeeMoreButton />
-                      {idx === listIndex && isOpen && (
+                      {room.chatRoomId === listNumber && isOpen && (
                         <DropDown component="list" roomId={room.chatRoomId} />
                       )}
                     </button>
@@ -125,12 +151,16 @@ const ChattingLists: React.FC = () => {
           </ChattingList>
         </ChattingFlexBox>
       </ChattingListsContainer>
-      {!isEntered ? (
+      <AccordionButton onClick={() => setFold(!isFold)} fold={isFold}>
+        {!isFold ? <FoldButton /> : <UnfoldButton />}
+      </AccordionButton>
+
+      {!roomId ? (
         <DefaultBackGroundWrapper>
           <DefaultBack />
         </DefaultBackGroundWrapper>
       ) : (
-        roomId && <ChattingDetail roomId={roomId} />
+        <ChattingRoom roomId={roomId} otherMemberId={otherMemberId} />
       )}
     </ChattingFormContainer>
   );

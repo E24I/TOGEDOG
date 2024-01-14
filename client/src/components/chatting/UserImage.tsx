@@ -7,9 +7,10 @@ import { useNavigate } from "react-router-dom";
 interface UserNameType {
   id?: number;
   component?: string;
+  page?: string;
 }
 
-const UserImage: React.FC<UserNameType> = ({ id, component }) => {
+const UserImage: React.FC<UserNameType> = ({ id, component, page }) => {
   const { data: userInfo, isLoading, error } = GetUserInfoQuery(Number(id));
   const navigator = useNavigate();
   return (
@@ -19,7 +20,10 @@ const UserImage: React.FC<UserNameType> = ({ id, component }) => {
       ) : error ? (
         <>error</>
       ) : (
-        <ProfileContainer onClick={() => navigator(`/user/${id}`)}>
+        <ProfileContainer
+          page={page}
+          onClick={() => !page && navigator(`/user/${id}`)}
+        >
           {userInfo?.image === null ? (
             <ProfileWrap data={component}>
               <ProfileImage />
@@ -55,8 +59,8 @@ export const Image = styled.img<{ data?: string }>`
   border-radius: 1000px;
 `;
 
-export const ProfileContainer = styled.div<{ data?: string }>`
-  cursor: pointer;
+export const ProfileContainer = styled.div<{ page?: string }>`
+  cursor: ${(props) => (!props.page ? "pointer" : "none")}px;
 `;
 
 export const ProfileWrap = styled.div<{ data?: string }>`

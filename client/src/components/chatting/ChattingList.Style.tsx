@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { ReactComponent as SeeMore } from "../../assets/images/icons/SeeMore.svg";
 import { ReactComponent as DefaultBackGround } from "../../assets/images/icons/ChattingDefaultBackground.svg";
+import { ReactComponent as Unfold } from "../../assets/images/icons/RightArrow.svg";
+import { ReactComponent as Fold } from "../../assets/images/icons/LeftArrow.svg";
 
 //assets
 export const DefaultBack = styled(DefaultBackGround)`
@@ -14,6 +16,8 @@ export const SeeMoreButton = styled(SeeMore)`
   margin-left: 27px;
   z-index: 20px;
 `;
+export const UnfoldButton = styled(Unfold)``;
+export const FoldButton = styled(Fold)``;
 
 //chatting whole container
 export const ChattingFormContainer = styled.div`
@@ -21,11 +25,27 @@ export const ChattingFormContainer = styled.div`
   flex-direction: row;
 `;
 
-export const ChattingListsContainer = styled.div`
-  min-width: 310px;
-  width: 35%;
+export const ChattingListsContainer = styled.div<{ fold: boolean }>`
+  width: ${(props) => (props.fold === true ? "0%" : "35%")};
   height: 100vh;
-  border-right: 1px solid #d7d7d7;
+  border-right: ${(props) => (props.fold === true ? "" : "1px solid #d7d7d7")};
+  transition: all 0.3s;
+`;
+
+export const AccordionButton = styled.button<{ fold: boolean }>`
+  fill-opacity: 0;
+  &:hover {
+    fill-opacity: 100;
+    background: linear-gradient(to right, #d7fff2, #ffffff);
+    svg {
+      transform: ${(props) =>
+        props.fold ? "translateX(10px)" : "translateX(-10px)"};
+      transition: transform 0.6s;
+    }
+    path {
+      fill: #78aa99;
+    }
+  }
 `;
 
 export const ChattingFlexBox = styled.div`
@@ -33,7 +53,7 @@ export const ChattingFlexBox = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: scroll;
+  overflow: auto;
 `;
 
 export const Message = styled.div`
@@ -74,8 +94,8 @@ export const MiddleWrap = styled.div`
   margin-left: 11px;
 `;
 
-export const RecentConversation = styled.p`
-  width: 100%;
+export const RecentConversation = styled.div`
+  width: 130px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -83,7 +103,7 @@ export const RecentConversation = styled.p`
 `;
 
 export const TimeStamp = styled.div`
-  width: 80px; //임시 사이징
+  min-width: 80px; //임시 사이징
   height: 60px;
   font-size: 13px;
   line-height: 60px;
