@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import togedog.server.domain.alarm.entity.Alarm;
+import togedog.server.domain.alarm.repository.AlarmRepository;
+import togedog.server.domain.alarm.service.AlarmService;
 import togedog.server.domain.comment.controller.dto.CommentUpdateApiRequest;
 import togedog.server.domain.comment.entity.Comment;
 import togedog.server.domain.comment.repository.CommentRepository;
@@ -36,6 +39,8 @@ public class CommentService {
     private final ReplyRepository replyRepository;
     private final CommentRepository commentRepository;
     private final LoginMemberUtil loginMemberUtil;
+    private final AlarmService alarmService;
+    private final AlarmRepository alarmRepository;
 
     public Long createComment(CommentCreateServiceRequest request, Long replyId) {
 
@@ -52,6 +57,23 @@ public class CommentService {
 
     Comment comment = postComment(request, reply, member);
         commentRepository.save(comment);
+
+        //이재우: Comment 알림 추가
+        String replyContent = reply.getContent();
+        if(replyContent.length() > 10) {
+            replyContent = replyContent.substring(10) + "...";
+        }
+
+        String alarmUrl = "http://togedog.kr/feed/" + reply.getFeed().getFeedId();
+        String alarmContent = "\"" + replyContent + "\" 에 댓글이 달렸습니다.";
+        alarmService.notify(reply.getMember().getMemberId(), alarmContent, alarmUrl);
+        Alarm alarm = Alarm.builder()
+                .content(alarmContent)
+                .url(alarmUrl)
+                .sender(member)
+                .receiver(reply.getMember())
+                .build();
+        alarmRepository.save(alarm);
 
         reply.setCommentCount(reply.getCommentCount() + 1);
 

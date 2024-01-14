@@ -2,6 +2,9 @@ package togedog.server.domain.feedlike.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import togedog.server.domain.alarm.entity.Alarm;
+import togedog.server.domain.alarm.repository.AlarmRepository;
+import togedog.server.domain.alarm.service.AlarmService;
 import togedog.server.domain.feed.entity.Feed;
 import togedog.server.domain.feed.repository.FeedRepository;
 import togedog.server.domain.feed.service.FeedService;
@@ -26,7 +29,8 @@ public class FeedLikeService {
     private final MemberRepository memberRepository;
     private final FeedLikeRepository feedLikeRepository;
     private final LoginMemberUtil loginMemberUtil;
-
+    private final AlarmService alarmService;
+    private final AlarmRepository alarmRepository;
 
     public void likeFeed(Long feedId) {
 
@@ -62,6 +66,17 @@ public class FeedLikeService {
 
         feedRepository.save(feed);
 
+        //이재우: Feed 좋아요 알림 추가
+        String alarmUrl = "http://togedog.kr/feed/" + feed.getFeedId();
+        String alarmContent = "\"" + feed.getTitle() + "\" 에 좋아요를 받았습니다.";
+        alarmService.notify(member.getMemberId(), alarmContent, alarmUrl);
+        Alarm alarm = Alarm.builder()
+                .content(alarmContent)
+                .url(alarmUrl)
+                .sender(member)
+                .receiver(member)
+                .build();
+        alarmRepository.save(alarm);
     }
 
     private Feed addLike(Long loginMemberId, Long feedId) {
