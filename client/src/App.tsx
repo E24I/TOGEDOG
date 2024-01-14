@@ -20,7 +20,6 @@ import { useRecoilValue } from "recoil";
 import { alertAtom, confirmAtom, reportAtom } from "./atoms";
 import AlertModal from "./atoms/modal/AlertModal";
 import ConfirmModal from "./atoms/modal/ConfirmModal";
-import SearchUsers from "./pages/SearchUsers";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const App: React.FC = () => {
@@ -47,7 +46,6 @@ const App: React.FC = () => {
           <Route path="/user/:pageMemberId" element={<UserInfo />} />
           <Route path="/petProfile/:petId" element={<PetProfile />} />
           <Route path="/user/:id/petAdd" element={<PetAdd />} />
-          <Route path="/search" element={<SearchUsers />} />
         </Routes>
         <Footer />
         {alertModal !== "" && <AlertModal />}

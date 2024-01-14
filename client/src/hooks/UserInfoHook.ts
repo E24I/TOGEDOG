@@ -59,7 +59,7 @@ export const useGetUserFeeds = (
       return response;
     },
     getNextPageParam: (lastPage, allPages) => {
-      return lastPage.pageInfo.page === 0 ||
+      return allPages[0].pageInfo.totalPages !== 0 &&
         lastPage.pageInfo.page !== allPages[0].pageInfo.totalPages
         ? lastPage.pageInfo.page + 1
         : undefined;

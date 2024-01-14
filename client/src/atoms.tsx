@@ -24,6 +24,21 @@ export const memberIdAtom = atom<number | undefined>({
   effects_UNSTABLE: [persistAtom],
 });
 
+export const theOtherMemberIdAtom = atom<number | undefined>({
+  key: "theOtherMemberId",
+  default: undefined,
+});
+
+export const chatRoomIdAtom = atom<number | undefined>({
+  key: "chatRoomId",
+  default: undefined,
+});
+
+export const alreadyExistChatMemberAtom = atom<object>({
+  key: "chatMembers",
+  default: undefined,
+});
+
 export const alertAtom = atom<string>({
   key: "alert",
   default: "",

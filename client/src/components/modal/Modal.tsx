@@ -30,7 +30,6 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen, setAlarmSetting }) => {
     },
     { menu: "메시지", icon: <ChatButton className="icon" /> },
     { menu: "알림설정", icon: <AlarmButton className="icon" /> },
-    { menu: "검색", icon: <SearchButton className="icon" /> },
     { menu: "모드전환", icon: <ModeButton className="icon" /> },
   ];
   const setLoginState = useSetRecoilState(isLoginAtom);
@@ -74,9 +73,6 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen, setAlarmSetting }) => {
         }
         break;
       case 4:
-        navigator("/search");
-        break;
-      case 5:
         "";
     }
     setModalOpen(false);

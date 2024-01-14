@@ -119,8 +119,13 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
     postReply();
   };
 
+  const navigator = useNavigate();
+
   // 피드 수정
   const handleReplyPatch = () => {
+    navigator(`/update/${feedId}`);
+    document.body.style.overflow = "auto";
+
     return;
   };
 
