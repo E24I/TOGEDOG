@@ -38,73 +38,75 @@ const MapFeedItem: React.FC<OwnProps> = ({ el }) => {
   const { mutate: feedBookmark } = useFeedBookmark(el.feedId, accesstoken);
 
   return (
-    <SideFeedList>
-      <SideListHeader>
-        <Profile>
-          {el.member.imageUrl ? (
-            <UserImgForm
-              width={50}
-              height={50}
-              radius={50}
-              URL={el.member.imageUrl}
-              onClick={() => {
-                navigate(`/user/${el.member.memberId}`);
-              }}
-            />
-          ) : (
-            <ProfileBox>
-              <Unknown />
-            </ProfileBox>
-          )}
-          <UserName>
-            {el.member.nickname}
-            <SideListCategory>댓글 {el.repliesCount}</SideListCategory>
-          </UserName>
-        </Profile>
-      </SideListHeader>
-      <SideListContents>
-        <SideListTitle>{el.title}</SideListTitle>
-        <SideListContent dangerouslySetInnerHTML={{ __html: el.content }} />
-      </SideListContents>
-      {el.images[0] && (
-        <SideMedia>
-          <SideImage src={el.images[0]} alt="" />
-          <SideImageBox>
-            {moreImg && el.images[2] && (
-              <SideImageCover onMouseOut={() => setMoreImg(false)} />
+    <>
+      <SideFeedList>
+        <SideListHeader>
+          <Profile>
+            {el.member.imageUrl ? (
+              <UserImgForm
+                width={50}
+                height={50}
+                radius={50}
+                URL={el.member.imageUrl}
+                onClick={() => {
+                  navigate(`/user/${el.member.memberId}`);
+                }}
+              />
+            ) : (
+              <ProfileBox>
+                <Unknown />
+              </ProfileBox>
             )}
-            <SideNoneImage
-              onMouseOver={() => setMoreImg(true)}
-              src={el.images[0]}
-              alt=""
+            <UserName>
+              {el.member.nickname}
+              <SideListCategory>댓글 {el.repliesCount}</SideListCategory>
+            </UserName>
+          </Profile>
+        </SideListHeader>
+        <SideListContents>
+          <SideListTitle>{el.title}</SideListTitle>
+          <SideListContent dangerouslySetInnerHTML={{ __html: el.content }} />
+        </SideListContents>
+        {el.images[0] && (
+          <SideMedia>
+            <SideImage src={el.images[0]} alt="" />
+            <SideImageBox>
+              {moreImg && el.images[2] && (
+                <SideImageCover onMouseOut={() => setMoreImg(false)} />
+              )}
+              <SideNoneImage
+                onMouseOver={() => setMoreImg(true)}
+                src={el.images[0]}
+                alt=""
+              />
+            </SideImageBox>
+          </SideMedia>
+        )}
+        <SideStatus>
+          <SideHeart>
+            <Heart
+              width="20px"
+              height="20px"
+              isLike={el.likeYn}
+              handleFunc={feedLike}
             />
-          </SideImageBox>
-        </SideMedia>
-      )}
-      <SideStatus>
-        <SideHeart>
-          <Heart
+            <span>{el.likeCount}</span>
+          </SideHeart>
+          <Bookmark
             width="20px"
             height="20px"
-            isLike={el.likeYn}
-            handleFunc={feedLike}
+            isBookmark={el.bookmarkYn}
+            handleFunc={feedBookmark}
           />
-          <span>{el.likeCount}</span>
-        </SideHeart>
-        <Bookmark
-          width="20px"
-          height="20px"
-          isBookmark={el.bookmarkYn}
-          handleFunc={feedBookmark}
-        />
-      </SideStatus>
-      <SideMoreDetail onClick={() => setDetail(true)}>
-        [상세보기]
-      </SideMoreDetail>
+        </SideStatus>
+        <SideMoreDetail onClick={() => setDetail(true)}>
+          [상세보기]
+        </SideMoreDetail>
+      </SideFeedList>
       {isDetail && (
         <FeedDetail feedId={el.feedId} handleMoreReview={handleMoreReview} />
       )}
-    </SideFeedList>
+    </>
   );
 };
 

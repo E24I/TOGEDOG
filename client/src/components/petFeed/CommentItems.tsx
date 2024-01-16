@@ -6,7 +6,6 @@ import {
   CommentHeader,
   CommentLeft,
   CommentNickname,
-  CommentProfile,
   Mentions,
   Setting,
   SettingBox,
@@ -24,12 +23,14 @@ import {
   tokenAtom,
 } from "../../atoms";
 import { UserImgForm } from "../../atoms/imgForm/ImgForm";
+import { useNavigate } from "react-router-dom";
 
 interface OwnProps {
   comment: feedCommentType;
 }
 
 const CommentItem: React.FC<OwnProps> = ({ comment }) => {
+  const navigate = useNavigate();
   const isLogin = useRecoilValue(isLoginAtom);
   const accesstoken = useRecoilValue(tokenAtom);
   const setAlertModal = useSetRecoilState(alertAtom);
@@ -98,7 +99,7 @@ const CommentItem: React.FC<OwnProps> = ({ comment }) => {
 
   return (
     <Comment>
-      <CommentLeft>
+      <CommentLeft onClick={() => navigate(`/user/${comment.member.memberId}`)}>
         {comment.member.imageUrl ? (
           <UserImgForm
             width={50}
@@ -112,7 +113,11 @@ const CommentItem: React.FC<OwnProps> = ({ comment }) => {
       </CommentLeft>
       <CommentContents>
         <CommentHeader>
-          <CommentNickname>{comment.member.nickname}</CommentNickname>
+          <CommentNickname
+            onClick={() => navigate(`/user/${comment.member.memberId}`)}
+          >
+            {comment.member.nickname}
+          </CommentNickname>
           <SettingBox onClick={handleSetting} onBlur={handleCloseDropdown}>
             <Setting />
             {isSetting && (

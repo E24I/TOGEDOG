@@ -193,7 +193,7 @@ export const ReviewCount = styled.button`
 
 export const ModalBackground = styled.div`
   background-color: rgb(215, 215, 215, 50%);
-  z-index: 40;
+  z-index: 50;
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -387,10 +387,16 @@ export const ReplyContents = styled.div`
 export const ReplyNickname = styled.div`
   padding: 5px 0px;
   font-weight: 600;
+  cursor: pointer;
+`;
+
+export const FixedReply = styled.span`
+  margin-left: 10px;
+  font-size: 12px;
+  font-weight: 400;
 `;
 
 export const ReplyContent = styled.div`
-  width: 100%;
   padding: 5px 0px;
 `;
 
@@ -461,9 +467,3 @@ export const CommentHeader = styled.div`
 `;
 export const CommentNickname = styled(ReplyNickname)``;
 export const CommentContent = styled(ReplyContent)``;
-
-export const FixedReply = styled.span`
-  margin-left: 10px;
-  font-size: 12px;
-  font-weight: 400;
-`;
