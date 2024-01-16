@@ -111,6 +111,8 @@ export const ProfileImg = styled.div<{ thumbnail: string | undefined }>`
 export const SelectImgBox = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top: 5px;
+  gap: 0.5rem;
 `;
 
 export const ChangeImgButton = styled.label`

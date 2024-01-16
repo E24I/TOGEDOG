@@ -37,7 +37,7 @@ export const ContentBox = styled.div`
   width: 80%;
   margin: 0 auto;
   height: 450px;
-  margin-top: 100px;
+  margin-top: 7rem;
 `;
 export const ImgInfo = styled.div`
   width: 400px;

@@ -11,7 +11,11 @@ import { ReactComponent as NotificationsRedPoint } from "../../assets/images/ico
 import { ReactComponent as Profile } from "../../assets/images/icons/headerIcons/ProfileImage.svg";
 
 //assets style
-export const Logo = styled(Home)``;
+export const Logo = styled(Home)`
+  @media (max-width: 375px) {
+    width: 10rem;
+  }
+`;
 export const MainButtonStyle = styled(Main)`
   width: 39px;
   height: 36px;
@@ -77,6 +81,9 @@ export const HeaderBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  @media (max-width: 375px) {
+    justify-content: space-between;
+  }
 `;
 
 export const MiddleButtonContainer = styled.div`
@@ -86,6 +93,14 @@ export const MiddleButtonContainer = styled.div`
   align-items: center;
   width: 33.3%;
   margin: 0 auto;
+  @media (max-width: 375px) {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    background: white;
+    border-top: 0.1px solid #f0ece2;
+  }
 `;
 
 export const NotificationsContainer = styled.button`
@@ -106,4 +121,6 @@ export const MoveLogin = styled.button`
 
 export const UserProfile = styled.div`
   cursor: pointer;
+  @media (max-width: 375px) {
+  }
 `;
