@@ -106,10 +106,10 @@ const PetProfileForm = () => {
       "$1-$2-$3",
     );
 
-    // 생일을 기반으로 Date 생성
+    // 생일 기준 Date 생성
     const birthDate = new Date(formattedBirthdate);
 
-    // 현재 날짜를 기반으로 Date 생성
+    // 현재 날짜 기준 Date 생성
     const today = new Date();
 
     // 나이 계산

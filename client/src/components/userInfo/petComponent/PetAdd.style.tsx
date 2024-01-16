@@ -42,6 +42,7 @@ export const MiddleBox = styled.div`
 export const ImgBox = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 `;
 
 export const Input = styled.input`

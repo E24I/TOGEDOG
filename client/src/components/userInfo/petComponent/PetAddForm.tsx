@@ -54,6 +54,7 @@ const PetAddForm: React.FC = () => {
         uploadToS3(res, imageFiles.file, imageFiles.type).then((res) => {
           if (res.config.url) {
             imgURL = res.config.url.substring(0, res.config.url.indexOf("?"));
+            data.age = data.age.replace(/-/g, "");
             const realData = { ...data, image: imgURL };
             postPetInfo(realData, toekn);
             navigate(-1);
