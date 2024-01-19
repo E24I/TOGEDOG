@@ -89,11 +89,10 @@ public class AlarmService {
 
         Pageable pageable = PageRequest.of(pageNum - 1, 10, Sort.by("createdDateTime").descending());
 
-//        Long loginMemberId = loginMemberUtil.getLoginMemberId();
-//        if(loginMemberId == null) {
-//            return null;
-//        }
-        Long loginMemberId = 25L;
+        Long loginMemberId = loginMemberUtil.getLoginMemberId();
+        if(loginMemberId == null) {
+            return null;
+        }
 
         Page<Alarm> alarmList = alarmRepository.findByReceiverMemberId(loginMemberId, pageable);
 
