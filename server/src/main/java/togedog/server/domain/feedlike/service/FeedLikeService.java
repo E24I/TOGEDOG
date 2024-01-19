@@ -67,14 +67,19 @@ public class FeedLikeService {
         feedRepository.save(feed);
 
         //이재우: Feed 좋아요 알림 추가
-        String alarmUrl = "http://togedog.kr/feed/" + feed.getFeedId();
-        String alarmContent = "\"" + feed.getTitle() + "\" 에 좋아요를 받았습니다.";
-        alarmService.notify(member.getMemberId(), alarmContent, alarmUrl);
+        Long alarmFeedId = feed.getFeedId();
+        String alarmContent = member.getNickname() + "님이 " + "\"" + feed.getTitle() + "\" 에 좋아요 했습니다.";
+        String feedThumbnailUrl = null;
+        if(!feed.getFeedImages().isEmpty()) {
+            feedThumbnailUrl = feed.getFeedImages().get(0).getFeedImageUrl();
+        }
+        alarmService.notify(member.getMemberId(), alarmContent);
         Alarm alarm = Alarm.builder()
                 .content(alarmContent)
-                .url(alarmUrl)
+                .feedId(alarmFeedId)
                 .sender(member)
-                .receiver(member)
+                .receiver(feed.getMember())
+                .feedThumbnailUrl(feedThumbnailUrl)
                 .build();
         alarmRepository.save(alarm);
     }
