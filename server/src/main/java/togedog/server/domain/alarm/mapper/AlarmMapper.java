@@ -24,10 +24,14 @@ public class AlarmMapper {
             return AlarmResponse.builder()
                     .alarmId(alarm.getAlarmId())
                     .content(alarm.getContent())
+                    .feedId(alarm.getFeedId())
+                    .feedThumbnailUrl(alarm.getFeedThumbnailUrl())
+                    .replyId(alarm.getReplyId())
+                    .commentId(alarm.getCommentId())
                     .senderId(alarm.getSender().getMemberId())
                     .receiverId(alarm.getReceiver().getMemberId())
-                    .url(alarm.getUrl())
                     .isRead(alarm.getIsRead())
+                    .createdAt(alarm.getCreatedDateTime().toString())
                     .build();
         }
     }

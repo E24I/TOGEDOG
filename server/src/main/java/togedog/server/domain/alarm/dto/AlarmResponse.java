@@ -17,11 +17,21 @@ public class AlarmResponse {
 
     private String content;
 
-    private String url;
+    private Long feedId;
+
+    private String feedThumbnailUrl;
+
+    private Long replyId;
+
+    private Long commentId;
 
     private Long senderId;
+
+    private Long senderName;
 
     private Long receiverId;
 
     private String isRead;
+
+    private String createdAt;
 }

@@ -55,8 +55,8 @@ public class CommentService {
 
         Reply reply = findReplyRepository(replyId);
 
-    Comment comment = postComment(request, reply, member);
-        commentRepository.save(comment);
+        Comment comment = postComment(request, reply, member);
+        comment = commentRepository.save(comment);
 
         //이재우: Comment 알림 추가
         String replyContent = reply.getContent();
@@ -64,14 +64,23 @@ public class CommentService {
             replyContent = replyContent.substring(10) + "...";
         }
 
-        String alarmUrl = "http://togedog.kr/feed/" + reply.getFeed().getFeedId();
-        String alarmContent = "\"" + replyContent + "\" 에 댓글이 달렸습니다.";
-        alarmService.notify(reply.getMember().getMemberId(), alarmContent, alarmUrl);
+        Long alarmFeedId = reply.getFeed().getFeedId();
+        Long alarmReplyId = replyId;
+        Long alarmCommentId = comment.getCommentId();
+        String alarmContent = member.getNickname() + "님이 " + "\"" + replyContent + "\" 에 대댓글을 달았습니다.";
+        String feedThumbnailUrl = null;
+        if(!reply.getFeed().getFeedImages().isEmpty()) {
+            feedThumbnailUrl = reply.getFeed().getFeedImages().get(0).getFeedImageUrl();
+        }
+        alarmService.notify(reply.getMember().getMemberId(), alarmContent);
         Alarm alarm = Alarm.builder()
                 .content(alarmContent)
-                .url(alarmUrl)
+                .feedId(alarmFeedId)
+                .replyId(alarmReplyId)
+                .commentId(alarmCommentId)
                 .sender(member)
                 .receiver(reply.getMember())
+                .feedThumbnailUrl(feedThumbnailUrl)
                 .build();
         alarmRepository.save(alarm);
 
