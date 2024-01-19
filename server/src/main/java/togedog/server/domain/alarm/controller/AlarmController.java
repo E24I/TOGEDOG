@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import togedog.server.domain.alarm.dto.AlarmPageResponse;
 import togedog.server.domain.alarm.dto.AlarmResponse;
 import togedog.server.domain.alarm.service.AlarmService;
 
@@ -32,9 +33,9 @@ public class AlarmController {
     }
 
     @GetMapping("/alarm")
-    public ResponseEntity<List<AlarmResponse>> getAlarm() {
+    public ResponseEntity<AlarmPageResponse> getAlarm(@RequestParam("page_number") int pageNum) {
 
-        return ResponseEntity.ok().body(alarmService.findAlarm());
+        return ResponseEntity.ok().body(alarmService.findAlarm(pageNum));
     }
 
     @DeleteMapping("/alarm/{alarm-id}")

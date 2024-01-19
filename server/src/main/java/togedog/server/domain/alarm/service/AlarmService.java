@@ -1,8 +1,13 @@
 package togedog.server.domain.alarm.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import togedog.server.domain.alarm.dto.AlarmPageResponse;
 import togedog.server.domain.alarm.dto.AlarmResponse;
 import togedog.server.domain.alarm.entity.Alarm;
 import togedog.server.domain.alarm.mapper.AlarmMapper;
@@ -80,14 +85,16 @@ public class AlarmService {
         return sseEmitter;
     }
 
-    public List<AlarmResponse> findAlarm() {
+    public AlarmPageResponse findAlarm(int pageNum) {
+
+        Pageable pageable = PageRequest.of(pageNum - 1, 10, Sort.by("createdDateTime").descending());
 
         Long loginMemberId = loginMemberUtil.getLoginMemberId();
         if(loginMemberId == null) {
             return null;
         }
 
-        List<Alarm> alarmList = alarmRepository.findByReceiverMemberId(loginMemberId);
+        Page<Alarm> alarmList = alarmRepository.findByReceiverMemberId(loginMemberId, pageable);
 
         return alarmMapper.alarmListToResponseList(alarmList);
     }
