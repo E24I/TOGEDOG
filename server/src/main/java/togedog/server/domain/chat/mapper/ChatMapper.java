@@ -14,6 +14,7 @@ import togedog.server.global.dto.SingleResponseDto;
 import togedog.server.global.exception.businessexception.chatexception.ChatNotFoundException;
 import togedog.server.global.response.PageInformation;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,7 @@ public class ChatMapper {
             return null;
         }
         else {
-            return chatRooms.stream().map(o -> chatRoomToResponse(o, currentMemberId)).collect(Collectors.toList());
+            return chatRooms.stream().map(o -> chatRoomToResponse(o, currentMemberId)).sorted(Comparator.comparing(ChatRoomResponse::getModifiedAt).reversed()).collect(Collectors.toList());
         }
     }
 
@@ -74,6 +75,7 @@ public class ChatMapper {
                     .otherMemberId(otherMemberId)
                     .latestMessage(chatRoom.getLatestMessage())
                     .createdAt(chatRoom.getCreatedDateTime().toString())
+                    .modifiedAt(chatRoom.getModifiedDateTime().toString())
                     .build();
         }
     }

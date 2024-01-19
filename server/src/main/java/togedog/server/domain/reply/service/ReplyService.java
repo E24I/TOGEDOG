@@ -62,7 +62,7 @@ public class ReplyService {
         Feed feed = findFeedRepository(feedId);
 
         Reply reply = postReply(request, member, feed);
-        replyRepository.save(reply);
+        reply = replyRepository.save(reply);
 
         feed.setRepliesCount(feed.getRepliesCount() + 1);
         // 리팩토링 시 getset 쓰지 않기, ( 연관관계 테이블 없애던가, or feed 메서드 만들기
@@ -73,14 +73,21 @@ public class ReplyService {
             feedTitle = feedTitle.substring(0, 10) + "...";
         }
 
-        String alarmUrl = "http://togedog.kr/feed/" + feedId;
-        String alarmContent = "\"" + feedTitle + "\" 에 댓글이 달렸습니다.";
-        alarmService.notify(feed.getMember().getMemberId(), alarmContent, alarmUrl);
+        Long alarmFeedId = feedId;
+        Long alarmReplyId = reply.getReplyId();
+        String alarmContent = member.getNickname() + "님이 " + "\"" + feedTitle + "\" 에 댓글을 달았습니다.";
+        String feedThumbnailUrl = null;
+        if(!feed.getFeedImages().isEmpty()) {
+            feedThumbnailUrl = feed.getFeedImages().get(0).getFeedImageUrl();
+        }
+        alarmService.notify(feed.getMember().getMemberId(), alarmContent);
         Alarm alarm = Alarm.builder()
                 .content(alarmContent)
-                .url(alarmUrl)
+                .feedId(alarmFeedId)
+                .replyId(alarmReplyId)
                 .sender(member)
                 .receiver(feed.getMember())
+                .feedThumbnailUrl(feedThumbnailUrl)
                 .build();
         alarmRepository.save(alarm);
 

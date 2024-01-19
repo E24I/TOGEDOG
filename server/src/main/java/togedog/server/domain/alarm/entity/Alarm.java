@@ -20,7 +20,13 @@ public class Alarm extends BaseEntity {
 
     private String content;
 
-    private String url;
+    private Long feedId;
+
+    private String feedThumbnailUrl;
+
+    private Long replyId;
+
+    private Long commentId;
 
     @ManyToOne
     @JoinColumn(name = "sender_id")

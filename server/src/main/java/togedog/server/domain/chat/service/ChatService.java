@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import togedog.server.domain.chat.dto.ChatPostRequest;
@@ -29,6 +30,7 @@ import togedog.server.global.exception.businessexception.chatexception.ChatNotFo
 import togedog.server.global.exception.businessexception.memberexception.MemberNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberNotLoginException;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -151,7 +153,7 @@ public class ChatService {
 
     public ChatReportPageResponse findChatReports(int pageNumber, int pageSize) {
 
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, Sort.by("modifiedDateTime").descending());
 
         Page<ChatReport> chatReportPage = chatReportRepository.findAll(pageable);
 

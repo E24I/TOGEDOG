@@ -18,4 +18,6 @@ public class ChatRoomResponse {
     private String latestMessage;
 
     private String createdAt;
+
+    private String modifiedAt;
 }

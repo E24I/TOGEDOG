@@ -28,7 +28,7 @@ public class AlarmController {
     @PostMapping("/send-data/{member-id}")
     public void sendData(@PathVariable("member-id") Long memberId) {
 
-        alarmService.notify(memberId, "test data", "test url");
+        alarmService.notify(memberId, "test data");
     }
 
     @GetMapping("/alarm")

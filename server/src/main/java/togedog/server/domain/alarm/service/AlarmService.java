@@ -8,6 +8,8 @@ import togedog.server.domain.alarm.entity.Alarm;
 import togedog.server.domain.alarm.mapper.AlarmMapper;
 import togedog.server.domain.alarm.repository.AlarmRepository;
 import togedog.server.domain.alarm.repository.SseEmitterRepository;
+import togedog.server.domain.member.entity.Member;
+import togedog.server.domain.member.repository.MemberRepository;
 import togedog.server.global.auth.utils.LoginMemberUtil;
 import togedog.server.global.exception.businessexception.alarmexception.AlarmNotFoundException;
 import togedog.server.global.exception.businessexception.memberexception.MemberAccessDeniedException;
@@ -30,6 +32,8 @@ public class AlarmService {
 
     private final AlarmMapper alarmMapper;
 
+    private final MemberRepository memberRepository;
+
     public SseEmitter subscribe(Long memberId) {
 
         SseEmitter sseEmitter = createEmitter(memberId);
@@ -41,16 +45,16 @@ public class AlarmService {
 //다른 서비스 로직에서 이 메서드를 사용해 데이터를 Object event에 넣고 전송하면 된다
 //@param memberId - 메세지를 전송할 사용자의 아이디
 //@param event  - 전송할 이벤트 객체
-    public void notify(Long memberId, String message, String url) {
+    public void notify(Long memberId, String message) {
 
-        sendToClient(memberId, message, url);
+        sendToClient(memberId, message);
     }
 
 //클라이언트에게 데이터를 전송
 //
 //@param id   - 데이터를 받을 사용자의 아이디
 //@param event - 전송할 이벤트
-    private void sendToClient(Long memberId, String message, String url) {
+    private void sendToClient(Long memberId, String message) {
         SseEmitter sseEmitter = sseEmitterRepository.get(memberId);
 
         if(sseEmitter != null) {
