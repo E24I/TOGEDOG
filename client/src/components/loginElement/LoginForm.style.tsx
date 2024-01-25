@@ -1,18 +1,20 @@
 import { styled } from "styled-components";
 import { ReactComponent as LogoV2 } from "../../assets/images/logos/LogoV2.svg";
+import { ReactComponent as LogoV4 } from "../../assets/images/logos/LogoV4.svg";
 import Background from "../../assets/images/backgrounds/Background.svg";
 
 export const YellowLogo = styled(LogoV2)`
   margin-top: 50px;
 `;
+export const LoginLogo = styled(LogoV4)``;
 
 export const LoginButtonOn = styled.button`
   background: #494949;
   border: none;
   border-radius: 100px;
-  width: 268px;
+  width: 80%;
   margin-top: 20px;
-  padding: 10px 0;
+  padding: 15px 0;
   display: block;
   color: #ffffff;
   cursor: pointer;
@@ -55,6 +57,9 @@ export const LoginInput = styled.input`
   display: flex;
   align-items: center;
   gap: 10px;
+  @media (max-width: 432px) {
+    width: 70vw;
+  }
 `;
 
 export const LoginContainer = styled.div`
@@ -63,15 +68,20 @@ export const LoginContainer = styled.div`
   background-position: center;
   background-size: cover;
   width: 100vw;
-  height: calc(100vh - 70px); // header의 높이를 제외
+  height: calc(100vh); // header의 높이를 제외
   display: flex;
   justify-content: center;
   align-items: center;
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 export const MainContainer = styled.div`
   width: 260px;
-  height: calc(100vh - 70px);
+  height: calc(100vh);
   overflow-y: scroll;
   position: relative;
 
@@ -79,6 +89,16 @@ export const MainContainer = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+  @media (max-width: 1110px) {
+    display: none;
+  }
+`;
+
+export const UnLogin = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #a4a4a4;
 `;
 
 export const MainPictures = styled.ul<{ top?: string }>`
@@ -117,11 +137,25 @@ export const InputContainer = styled.div`
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
+  position: relative;
   & > p {
     color: #404040;
     font-size: 12px;
     font-style: normal;
   }
+  @media (max-width: 1110px) {
+    margin: 0 auto;
+  }
+  @media (max-width: 545px) {
+    width: 400px;
+  }
+`;
+
+export const ButtonMenu = styled.div`
+  display: flex;
+  border: 1px solid red;
+  justify-content: space-around;
+  align-items: center;
 `;
 
 export const ImgBox = styled.div`

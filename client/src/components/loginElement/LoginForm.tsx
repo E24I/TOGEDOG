@@ -10,6 +10,8 @@ import {
   SignUpMove,
   LoginInput,
   YellowLogo,
+  UnLogin,
+  LoginLogo,
 } from "./LoginForm.style";
 import { usePostLogin } from "../../hooks/MemberHook";
 
@@ -33,7 +35,10 @@ const LoginForm: React.FC = () => {
 
   return (
     <InputContainer>
-      <YellowLogo />
+      <Link to="/feeds" className="unLogin">
+        <UnLogin>비회원으로 시작하기</UnLogin>
+      </Link>
+      <LoginLogo />
       <form
         onSubmit={(e) => {
           e.preventDefault();

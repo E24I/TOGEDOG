@@ -9,8 +9,18 @@ export const InputContainer = styled.div`
   flex-wrap: wrap;
   flex-direction: column;
   width: 100%;
+  padding-top: 120px;
+  margin: 0 auto;
+  @media (max-width: 715px) {
+    padding-bottom: 40px;
+  }
   h2 {
     margin: 0 0 50px 63px;
+    @media (max-width: 715px) {
+      margin: 0 auto;
+      padding: 40px 0;
+      text-align: center;
+    }
   }
   form {
     width: 100%;
@@ -21,6 +31,13 @@ export const InputContainer = styled.div`
     justify-content: space-around;
     position: relative;
     margin-bottom: 76px;
+    @media (max-width: 715px) {
+      width: 100%;
+      height: auto;
+      margin: 0 auto;
+      flex-direction: column;
+      align-items: center;
+    }
 
     button {
       width: 100px;
@@ -34,6 +51,9 @@ export const InputContainer = styled.div`
     }
     & > div > div {
       margin-bottom: 25px;
+      @media (max-width: 715px) {
+        margin-bottom: 5vh;
+      }
     }
   }
 `;
@@ -44,10 +64,15 @@ export const TextInput = styled.div`
   width: 320px;
   flex-direction: row;
   align-items: center;
+  @media (max-width: 715px) {
+  }
   input {
     width: 70%;
     background: none;
     padding: 10px;
+    @media (max-width: 715px) {
+      padding: 10px 0;
+    }
   }
 `;
 

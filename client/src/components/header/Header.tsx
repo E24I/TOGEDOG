@@ -14,7 +14,7 @@ import {
   UserProfile,
 } from "./Header.Style";
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Modal from "../modal/Modal";
 import Alarm from "../alarm/Alarm";
 import SetAlarm from "../alarm/SetAlarm";
@@ -31,6 +31,8 @@ const Header: React.FC = () => {
   const [isRead, setRead] = useState<boolean>(false);
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [isAlarmSetting, setAlarmSetting] = useState<boolean>(false);
+  const location = useLocation();
+  const isLoginPage = location.pathname === "/";
 
   const openModal = () => {
     if (isModalOpen !== false) {
@@ -53,7 +55,9 @@ const Header: React.FC = () => {
     queryKey: ["userInfo", memberId, token],
     queryFn: () => getUserInfo(Number(memberId), token),
   });
-
+  if (isLoginPage) {
+    return null;
+  }
   return (
     <HeaderContainer>
       <HeaderBox>

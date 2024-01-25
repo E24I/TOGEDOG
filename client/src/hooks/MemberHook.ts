@@ -123,6 +123,7 @@ export const usePostNickname = (requestObj: nicknameProps) => {
 
 // google 로그인
 export const useGoogleLogin = () => {
+  // const setAlertModal = useSetRecoilState(alertAtom);
   const setLoginState = useSetRecoilState(isLoginAtom);
   const setToken = useSetRecoilState(tokenAtom);
   const setMemberId = useSetRecoilState(memberIdAtom);
@@ -135,7 +136,6 @@ export const useGoogleLogin = () => {
           setToken(res.headers.authorization);
           setMemberId(Number(res.headers.id));
           navigate("/feeds");
-          console.log("구글 로그인 성공");
         })
         .catch((e) => console.log(e));
     },
