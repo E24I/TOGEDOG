@@ -22,7 +22,7 @@ export const SignUpBox = styled.div`
 `;
 
 export const Head = styled.div`
-  margin: 0 auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,6 +30,11 @@ export const Head = styled.div`
 export const BottomText = styled.p`
   font-size: 12px;
   text-align: center;
+  margin-bottom: 10px;
 `;
 
-export const Logo = styled(LogoV3)``;
+export const Logo = styled(LogoV3)`
+  @media (max-width: 715px) {
+    width: 150px;
+  }
+`;

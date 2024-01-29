@@ -33,6 +33,7 @@ const Header: React.FC = () => {
   const [isAlarmSetting, setAlarmSetting] = useState<boolean>(false);
   const location = useLocation();
   const isLoginPage = location.pathname === "/";
+  const isSignUpPage = location.pathname === "/SignUp";
 
   const openModal = () => {
     if (isModalOpen !== false) {
@@ -55,7 +56,7 @@ const Header: React.FC = () => {
     queryKey: ["userInfo", memberId, token],
     queryFn: () => getUserInfo(Number(memberId), token),
   });
-  if (isLoginPage) {
+  if (isLoginPage || isSignUpPage) {
     return null;
   }
   return (

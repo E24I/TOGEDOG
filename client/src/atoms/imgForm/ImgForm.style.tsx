@@ -11,7 +11,6 @@ export const ProFileBox = styled.span<ProFileBoxProps>`
   border-radius: ${(props) => props.radius}%;
   overflow: hidden;
   position: relative;
-  background: #f8d259;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,8 +27,8 @@ export const ProFileImg = styled.img`
 `;
 
 export const UserUnknown = styled(Person)`
-  width: 50%;
-  height: 50%;
+  width: 100%;
+  height: 100%;
   path {
     fill: white;
   }

@@ -12,7 +12,7 @@ export const InputContainer = styled.div`
   padding-top: 120px;
   margin: 0 auto;
   @media (max-width: 715px) {
-    padding-bottom: 40px;
+    padding: 0px 0 40px 0;
   }
   h2 {
     margin: 0 0 50px 63px;
@@ -42,17 +42,23 @@ export const InputContainer = styled.div`
     button {
       width: 100px;
       height: 36px;
-      padding: 10px 13px;
-      border-radius: 100px;
-      border: 1px solid #494949;
-      color: #818181;
+      border-radius: 10px;
+      background: #494949;
+      color: white;
       font-size: 10px;
       font-weight: 400;
+    }
+    & > div {
+      @media (max-width: 715px) {
+        width: 100%;
+      }
     }
     & > div > div {
       margin-bottom: 25px;
       @media (max-width: 715px) {
-        margin-bottom: 5vh;
+        margin: 0 auto;
+        width: 70%;
+        margin-bottom: 3vh;
       }
     }
   }
@@ -65,6 +71,7 @@ export const TextInput = styled.div`
   flex-direction: row;
   align-items: center;
   @media (max-width: 715px) {
+    width: 100%;
   }
   input {
     width: 70%;
@@ -88,6 +95,7 @@ export const CheckBoxContainer = styled.div`
   width: 320px;
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
 `;
 export const CheckInputBox = styled.div`
   margin-top: 10px;
