@@ -3,7 +3,6 @@ import {
   MiddleButtonContainer,
   HeaderContainer,
   NotificationsContainer,
-  Logo,
   MainButtonStyle,
   MapButtonStyle,
   CreateFeedButtonStyle,
@@ -12,6 +11,8 @@ import {
   HeaderBox,
   MoveLogin,
   UserProfile,
+  LogoDark,
+  LogoUnDark,
 } from "./Header.Style";
 
 import { Link, useLocation } from "react-router-dom";
@@ -19,7 +20,7 @@ import Modal from "../modal/Modal";
 import Alarm from "../alarm/Alarm";
 import SetAlarm from "../alarm/SetAlarm";
 import { useRecoilValue } from "recoil";
-import { isLoginAtom, memberIdAtom, tokenAtom } from "../../atoms";
+import { darkAtom, isLoginAtom, memberIdAtom, tokenAtom } from "../../atoms";
 import { UserImgForm } from "../../atoms/imgForm/ImgForm";
 import { useQuery } from "@tanstack/react-query";
 import { getUserInfo } from "../../services/userInfoService";
@@ -28,6 +29,7 @@ const Header: React.FC = () => {
   const token = useRecoilValue(tokenAtom);
   const memberId = useRecoilValue(memberIdAtom);
   const loginState = useRecoilValue(isLoginAtom);
+  const darkState = useRecoilValue(darkAtom);
   const [isRead, setRead] = useState<boolean>(false);
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [isAlarmSetting, setAlarmSetting] = useState<boolean>(false);
@@ -63,7 +65,7 @@ const Header: React.FC = () => {
     <HeaderContainer>
       <HeaderBox>
         <Link to={loginState ? "/feeds" : "/"}>
-          <Logo />
+          {darkState ? <LogoDark /> : <LogoUnDark />}
         </Link>
         <MiddleButtonContainer>
           <Link to="/feeds">

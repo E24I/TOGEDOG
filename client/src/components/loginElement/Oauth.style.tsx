@@ -3,7 +3,7 @@ import { ReactComponent as KakaoIcon } from "../../assets/images/icons/oauthIcon
 import { ReactComponent as GoogleIcon } from "../../assets/images/icons/oauthIcons/GoogleIcon.svg";
 import { ReactComponent as NaverIcon } from "../../assets/images/icons/oauthIcons/NaverIcon.svg";
 
-export const OauthContainer = styled.div`
+export const OauthContainer = styled.div<{ isDark: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -13,6 +13,7 @@ export const OauthContainer = styled.div`
     margin: 20px 0;
   }
   p {
+    color: ${(props) => props.isDark && `white`};
     margin-bottom: 13px;
   }
 `;
