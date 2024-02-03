@@ -124,7 +124,7 @@ const SignUpInputs = () => {
               <MessageIcon />
               <input
                 type="text"
-                placeholder="이메일을 입력해주세요."
+                placeholder="이메일"
                 autoComplete="off"
                 {...register("email", { required: true, pattern: emailRegex })}
                 onKeyDown={(e) => {
@@ -152,7 +152,7 @@ const SignUpInputs = () => {
               <MessageIcon />
               <input
                 type="text"
-                placeholder="인증번호를 입력해주세요."
+                placeholder="인증번호"
                 autoComplete="off"
                 {...register("authentication", { required: true })}
                 onKeyDown={(e) => {
@@ -179,7 +179,7 @@ const SignUpInputs = () => {
               <PersonIcon />
               <input
                 type="text"
-                placeholder="닉네임을 입력해주세요."
+                placeholder="닉네임"
                 autoComplete="off"
                 {...register("nickname", { required: true })}
                 onKeyDown={(e) => {
@@ -208,7 +208,7 @@ const SignUpInputs = () => {
               <LockIcon />
               <input
                 type="password"
-                placeholder="비밀번호를 입력해주세요."
+                placeholder="비밀번호"
                 autoComplete="off"
                 {...register("password", {
                   required: true,
@@ -232,7 +232,7 @@ const SignUpInputs = () => {
               <LockIcon />
               <input
                 type="password"
-                placeholder="비밀번호를 확인해주세요."
+                placeholder="비밀번호 확인"
                 autoComplete="off"
                 {...register("pwConfirm", {
                   required: true,

@@ -77,3 +77,8 @@ export const reportAtom = atom<reportType>({
     chatRoomId: undefined,
   },
 });
+
+export const darkAtom = atom<boolean>({
+  key: "isDark",
+  default: false,
+});

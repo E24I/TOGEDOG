@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { memberIdAtom, tokenAtom, alertAtom } from "../../atoms";
 import {
   MyInfoContainer,
@@ -13,6 +13,7 @@ import {
   PetListBox,
   PetAdd,
   HeadBox,
+  Logo,
   MessageButton,
 } from "./UserInfoForm.style";
 import PetList from "./petComponent/PetList";
@@ -55,12 +56,13 @@ const MyInfoForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
   return (
     <MyInfoContainer>
       <HeadBox>
+        <Logo />
         <NickName>{data?.data.nickname}</NickName>
       </HeadBox>
       <TopContainer>
         <UserImgForm
-          width={150}
-          height={150}
+          width={140}
+          height={140}
           radius={50}
           URL={data?.data.image}
         />

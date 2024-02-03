@@ -6,7 +6,8 @@ import { useParams } from "react-router-dom";
 
 const MyPageContainer = styled.div`
   margin: 0 auto;
-  width: 1188px;
+  max-width: 1024px;
+  border: 1px solid black;
 `;
 
 const MyPage = () => {

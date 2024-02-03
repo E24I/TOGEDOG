@@ -1,5 +1,11 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import "./App.css";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
@@ -27,6 +33,7 @@ const App: React.FC = () => {
   const confirmModal = useRecoilValue(confirmAtom);
   const reportModal = useRecoilValue(reportAtom);
   const GOOGLE_OAUTH_CLIENTID = process.env.REACT_APP_GOOGLE_OAUTH_CLIENTID;
+
   return (
     <GoogleOAuthProvider
       clientId={GOOGLE_OAUTH_CLIENTID ? GOOGLE_OAUTH_CLIENTID : ""}

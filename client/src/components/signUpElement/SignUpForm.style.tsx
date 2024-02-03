@@ -3,7 +3,7 @@ import { ReactComponent as LogoV3 } from "../../assets/images/logos/LogoV3.svg";
 
 export const SignUpBox = styled.div`
   width: 100%;
-  height: 1024px;
+  margin: 0 auto;
   input {
     border: none;
     padding: 10px;
@@ -22,15 +22,19 @@ export const SignUpBox = styled.div`
 `;
 
 export const Head = styled.div`
-  margin: 0 auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 0 120px 0;
 `;
 export const BottomText = styled.p`
   font-size: 12px;
   text-align: center;
+  margin-bottom: 10px;
 `;
 
-export const Logo = styled(LogoV3)``;
+export const Logo = styled(LogoV3)`
+  @media (max-width: 715px) {
+    width: 150px;
+  }
+`;

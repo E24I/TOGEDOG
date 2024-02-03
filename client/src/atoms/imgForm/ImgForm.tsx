@@ -27,7 +27,7 @@ export const UserImgForm: React.FC<ImgFormProps> = ({
 }) => {
   return (
     <ProFileBox width={width} height={height} radius={radius} onClick={onClick}>
-      {URL ? <ProFileImg src={URL} /> : <ProfileUnknown />}
+      {URL ? <ProFileImg src={URL} /> : <UserUnknown />}
     </ProFileBox>
   );
 };

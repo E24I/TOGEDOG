@@ -1,8 +1,6 @@
-//헤더 스타일 컴포넌트
-
 import { styled } from "styled-components";
-
-import { ReactComponent as Home } from "../../assets/images/icons/headerIcons/Home.svg";
+import { ReactComponent as LogoGradient } from "../../assets/images/logos/LogoGradient.svg";
+import { ReactComponent as LogoYellow } from "../../assets/images/logos/LogoV3.svg";
 import { ReactComponent as Main } from "../../assets/images/icons/headerIcons/Main.svg";
 import { ReactComponent as Map } from "../../assets/images/icons/headerIcons/Map.svg";
 import { ReactComponent as CreateFeed } from "../../assets/images/icons/headerIcons/CreateFeed.svg";
@@ -11,10 +9,13 @@ import { ReactComponent as NotificationsRedPoint } from "../../assets/images/ico
 import { ReactComponent as Profile } from "../../assets/images/icons/headerIcons/ProfileImage.svg";
 
 //assets style
-export const Logo = styled(Home)`
-  @media (max-width: 375px) {
-    width: 10rem;
-  }
+export const LogoUnDark = styled(LogoGradient)`
+  width: 10rem;
+  height: auto;
+`;
+export const LogoDark = styled(LogoYellow)`
+  width: 10rem;
+  height: auto;
 `;
 export const MainButtonStyle = styled(Main)`
   width: 39px;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   AlarmButton,
   ChatButton,
@@ -11,8 +11,8 @@ import {
   MypageButton,
   SearchButton,
 } from "./Modal.Style";
-import { isLoginAtom, tokenAtom, memberIdAtom } from "../../atoms";
-import { useSetRecoilState, useRecoilValue } from "recoil";
+import { isLoginAtom, tokenAtom, memberIdAtom, darkAtom } from "../../atoms";
+import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 
 interface ModalProps {
@@ -30,13 +30,19 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen, setAlarmSetting }) => {
     },
     { menu: "메시지", icon: <ChatButton className="icon" /> },
     { menu: "알림설정", icon: <AlarmButton className="icon" /> },
-    { menu: "모드전환", icon: <ModeButton className="icon" /> },
+    { menu: "다크모드", icon: <ModeButton className="icon" /> },
   ];
   const setLoginState = useSetRecoilState(isLoginAtom);
   const setToken = useSetRecoilState(tokenAtom);
   const setMemberId = useSetRecoilState(memberIdAtom);
   const loginState = useRecoilValue(isLoginAtom);
   const memberId = useRecoilValue(memberIdAtom);
+  const [isDark, setIsDark] = useRecoilState(darkAtom);
+
+  const darkMode = () => {
+    setIsDark(!isDark);
+  };
+
   const Logout = () => {
     setLoginState(false);
     setToken("");
@@ -73,7 +79,8 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen, setAlarmSetting }) => {
         }
         break;
       case 4:
-        "";
+        darkMode();
+        break;
     }
     setModalOpen(false);
   };
