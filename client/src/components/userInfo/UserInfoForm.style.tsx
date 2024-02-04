@@ -10,7 +10,6 @@ export const Logo = styled(LogoGradient)`
 export const MyInfoContainer = styled.div`
   width: 50%;
   margin: 0 auto;
-  border: 1px solid red;
 `;
 
 export const HeadBox = styled.div`

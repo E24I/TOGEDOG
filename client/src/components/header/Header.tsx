@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MiddleButtonContainer,
   HeaderContainer,
@@ -31,11 +31,17 @@ const Header: React.FC = () => {
   const loginState = useRecoilValue(isLoginAtom);
   const darkState = useRecoilValue(darkAtom);
   const [isRead, setRead] = useState<boolean>(false);
+  const [scrolled, setScrolled] = useState(false);
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [isAlarmSetting, setAlarmSetting] = useState<boolean>(false);
   const location = useLocation();
   const isLoginPage = location.pathname === "/";
   const isSignUpPage = location.pathname === "/SignUp";
+
+  const handleScroll = () => {
+    const isScrolled = window.scrollY > 0;
+    setScrolled(isScrolled);
+  };
 
   const openModal = () => {
     if (isModalOpen !== false) {
@@ -45,7 +51,12 @@ const Header: React.FC = () => {
       setModalOpen(true);
     }
   };
-
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   const convertToRead = () => {
     if (isRead !== true) {
       setModalOpen(false);
@@ -62,7 +73,7 @@ const Header: React.FC = () => {
     return null;
   }
   return (
-    <HeaderContainer>
+    <HeaderContainer scrolled={scrolled} isDark={darkState}>
       <HeaderBox>
         <Link to={loginState ? "/feeds" : "/"}>
           {darkState ? <LogoDark /> : <LogoUnDark />}

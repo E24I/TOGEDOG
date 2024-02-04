@@ -7,6 +7,7 @@ import { ReactComponent as CreateFeed } from "../../assets/images/icons/headerIc
 import { ReactComponent as Notifications } from "../../assets/images/icons/headerIcons/Notifications.svg";
 import { ReactComponent as NotificationsRedPoint } from "../../assets/images/icons/headerIcons/NotificationsRedpoint.svg";
 import { ReactComponent as Profile } from "../../assets/images/icons/headerIcons/ProfileImage.svg";
+import { HeaderProps } from "../../types/headerType";
 
 //assets style
 export const LogoUnDark = styled(LogoGradient)`
@@ -59,21 +60,21 @@ export const ProfileStyle = styled(Profile)`
   cursor: pointer;
 `;
 
-//component style
-export const HeaderContainer = styled.div`
+export const HeaderContainer = styled.div<HeaderProps>`
   position: sticky;
   top: 0;
-  background-color: white;
+  background-color: ${(props) => (props.isDark ? `#222222` : `white`)};
   z-index: 20;
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 70px; //추후 수정 부분
-  border-bottom: 1px solid #d8d8d8; //구분을 위한 임시 코드 입니다
-  padding: 0 20px; //임시 코드 입니다
-  .icon {
-    height: 100%;
-  }
+  height: 70px;
+  padding: 0 20px;
+  box-shadow: ${({ scrolled }) =>
+    scrolled ? "0 4px 8px rgba(0, 0, 0, 0.1)" : "none"};
+  transition:
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
 `;
 
 export const HeaderBox = styled.div`
