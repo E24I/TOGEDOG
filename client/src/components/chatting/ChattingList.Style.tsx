@@ -25,21 +25,22 @@ export const ChattingFormContainer = styled.div`
   flex-direction: row;
 `;
 
-export const ChattingListsContainer = styled.div<{ fold: boolean }>`
-  width: ${(props) => (props.fold === true ? "0%" : "35%")};
+export const ChattingListsContainer = styled.div<{ fold: string }>`
+  width: ${(props) => (props.fold === "true" ? "0%" : "35%")};
   height: 100vh;
-  border-right: ${(props) => (props.fold === true ? "" : "1px solid #d7d7d7")};
+  border-right: ${(props) =>
+    props.fold === "true" ? "" : "1px solid #d7d7d7"};
   transition: all 0.3s;
 `;
 
-export const AccordionButton = styled.button<{ fold: boolean }>`
+export const AccordionButton = styled.button<{ fold: string }>`
   fill-opacity: 0;
   &:hover {
     fill-opacity: 100;
     background: linear-gradient(to right, #d7fff2, #ffffff);
     svg {
       transform: ${(props) =>
-        props.fold ? "translateX(10px)" : "translateX(-10px)"};
+        props.fold === "true" ? "translateX(10px)" : "translateX(-10px)"};
       transition: transform 0.6s;
     }
     path {

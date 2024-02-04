@@ -24,34 +24,29 @@ import SearchUser from "./SearchUsers";
 import ChattingRoom from "./ChattingRoom";
 import UserName from "./UserName";
 import UserImage from "./UserImage";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  alreadyExistChatMemberAtom,
-  chatRoomIdAtom,
-  reportAtom,
-  theOtherMemberIdAtom,
-} from "../../atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { alreadyExistChatMemberAtom, chatRoomIdAtom } from "../../atoms";
 
 const ChattingLists: React.FC = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [listNumber, setlistNumber] = useState<number>(0);
   const [isFold, setFold] = useState<boolean>(false);
-  const [reportModal, setReportModal] = useRecoilState(reportAtom);
+  const [otherMemberId, setTheOtherMemberId] = useState<number | undefined>(
+    undefined,
+  );
 
   const setExistChatMember = useSetRecoilState(alreadyExistChatMemberAtom);
-  const setTheOtherMemberId = useSetRecoilState(theOtherMemberIdAtom);
+  const alreadyExistChatMember = useRecoilValue(alreadyExistChatMemberAtom);
   const setRoomId = useSetRecoilState(chatRoomIdAtom);
   const roomId = useRecoilValue(chatRoomIdAtom);
-  const otherMemberId = useRecoilValue(theOtherMemberIdAtom);
 
   const {
     data: roomsData,
     isLoading: roomsLoading,
-    error: roomsError,
+    isError: roomsError,
   } = GetAllRoomsQuery();
 
   useEffect(() => {
-    setRoomId(undefined);
     if (roomsData) {
       setExistChatMember(
         Object.fromEntries(
@@ -61,7 +56,9 @@ const ChattingLists: React.FC = () => {
         ),
       );
     }
-  }, []);
+
+    console.log(alreadyExistChatMember);
+  }, [roomsData, setExistChatMember, setRoomId]);
 
   const openDropDown = (e: MouseEvent, id: number) => {
     e.stopPropagation();
@@ -102,7 +99,7 @@ const ChattingLists: React.FC = () => {
 
   return (
     <ChattingFormContainer>
-      <ChattingListsContainer fold={isFold}>
+      <ChattingListsContainer fold={isFold.toString()}>
         <ChattingFlexBox>
           <Message>Message</Message>
           <SearchUser />
@@ -124,7 +121,7 @@ const ChattingLists: React.FC = () => {
                   >
                     <UserImage id={room.otherMemberId} component="list" />
                     <MiddleWrap>
-                      <UserName id={room.otherMemberId} />
+                      <UserName id={room.otherMemberId} component="list" />
                       <RecentConversation>
                         {room.latestMessage === "not exist"
                           ? "대화 시작하기"
@@ -151,7 +148,10 @@ const ChattingLists: React.FC = () => {
           </ChattingList>
         </ChattingFlexBox>
       </ChattingListsContainer>
-      <AccordionButton onClick={() => setFold(!isFold)} fold={isFold}>
+      <AccordionButton
+        onClick={() => setFold(!isFold)}
+        fold={isFold.toString()}
+      >
         {!isFold ? <FoldButton /> : <UnfoldButton />}
       </AccordionButton>
 

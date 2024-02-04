@@ -23,8 +23,8 @@ export const searchUsers = async (
 //채팅방 생성
 export const createNewChat = async (
   token: string,
-  myMemberId?: number,
-  inviteMemberId?: number,
+  myMemberId: number | undefined,
+  inviteMemberId: number | undefined,
 ) => {
   const res = await axios.post(
     `${ROOT_URL}/chat`,

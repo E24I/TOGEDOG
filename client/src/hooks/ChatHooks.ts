@@ -7,7 +7,6 @@ import {
   reportChat,
   searchUsers,
 } from "../services/chatService";
-import { createNewChatType } from "../types/chatType";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   chatRoomIdAtom,
@@ -17,7 +16,6 @@ import {
 } from "../atoms";
 import { queryClient } from "..";
 import { getUserInfo } from "../services/userInfoService";
-import { useNavigate } from "react-router-dom";
 
 //유저 검색
 export const GetUsersQuery = (
@@ -89,21 +87,19 @@ export const useInfiniteGetMessages = (roomId?: number) => {
 };
 
 //채팅방 생성
-export const useCreateChattingRoom = () => {
+export const useCreateChattingRoom = (inviteMemberId?: number) => {
   const token = useRecoilValue(tokenAtom);
   const myMemberId = useRecoilValue(memberIdAtom);
-  const inviteMemberId = useRecoilValue(theOtherMemberIdAtom);
   const setRoomId = useSetRecoilState(chatRoomIdAtom);
-  const setInviteMemberId = useSetRecoilState(theOtherMemberIdAtom);
+  const setInvitedUserId = useSetRecoilState(theOtherMemberIdAtom);
   return useMutation({
     mutationFn: async () => {
       return createNewChat(token, myMemberId, inviteMemberId);
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ["rooms"] });
-      setInviteMemberId(undefined);
+      setInvitedUserId(inviteMemberId);
       setRoomId(res.data.substring(12));
-
       return;
     },
     onError: (err) => {

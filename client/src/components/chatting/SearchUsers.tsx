@@ -9,29 +9,21 @@ import { searchedUserType } from "../../types/chatType";
 import { GetUsersQuery, useCreateChattingRoom } from "../../hooks/ChatHooks";
 import UserName from "./UserName";
 import UserImage from "./UserImage";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  alreadyExistChatMemberAtom,
-  theOtherMemberIdAtom,
-  tokenAtom,
-} from "../../atoms";
+import { useRecoilValue } from "recoil";
+import { alreadyExistChatMemberAtom, tokenAtom } from "../../atoms";
 import { useNavigate } from "react-router-dom";
 
-interface SearchUserType {
-  page?: string;
-}
-
-const SearchUser: React.FC<SearchUserType> = ({ page }) => {
+const SearchUser: React.FC = () => {
   const [isSearched, setSearched] = useState<string>("");
   const [isSubmit, setSubmit] = useState<boolean>(false);
+  const [inviteId, setInviteId] = useState<number | undefined>(undefined);
 
-  const setInviteMemberId = useSetRecoilState(theOtherMemberIdAtom);
   const alreadyExistChatMember = useRecoilValue(alreadyExistChatMemberAtom);
   const token = useRecoilValue(tokenAtom);
 
   const navigator = useNavigate();
 
-  const { mutate: createChattingRoom } = useCreateChattingRoom();
+  const { mutate: createChattingRoom } = useCreateChattingRoom(inviteId);
   const {
     data: usersData,
     isLoading,
@@ -54,8 +46,7 @@ const SearchUser: React.FC<SearchUserType> = ({ page }) => {
     setSearched(e.target.value);
   };
   //검색된 채팅 상대 클릭
-  const onClickHandler = (otherMemberId: number) => {
-    setInviteMemberId(otherMemberId);
+  const onClickHandler = () => {
     createChattingRoom();
     setSubmit(false);
     setSearched("");
@@ -68,7 +59,6 @@ const SearchUser: React.FC<SearchUserType> = ({ page }) => {
         value={isSearched}
         placeholder="유저 검색"
         onChange={searchValueHandler}
-        page={page}
       />
       {isLoading ? (
         <>loading</>
@@ -82,12 +72,13 @@ const SearchUser: React.FC<SearchUserType> = ({ page }) => {
             !Object.keys(alreadyExistChatMember).includes(
               user.memberId.toString(),
             ) && (
-              <SearchedUser key={idx} page={page}>
+              <SearchedUser key={idx}>
                 <UserImage id={user.memberId} />
                 <UserName id={user.memberId} />
                 <CreateNewChatButton
                   onClick={() => {
-                    onClickHandler(user.memberId);
+                    setInviteId(user.memberId);
+                    onClickHandler();
                   }}
                 >
                   채팅하기
