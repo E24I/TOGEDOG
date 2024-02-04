@@ -22,7 +22,7 @@ const UserName: React.FC<UserNameType> = ({ id, component, page }) => {
         <Name
           data={component}
           page={page}
-          onClick={() => !page && navigator(`/user/${id}`)}
+          onClick={() => component !== "list" && navigator(`/user/${id}`)}
         >
           {userInfo?.nickname}
         </Name>
@@ -31,9 +31,13 @@ const UserName: React.FC<UserNameType> = ({ id, component, page }) => {
   );
 };
 
-export const Name = styled.div<{ data?: string; page?: string }>`
+export const Name = styled.div<{
+  data?: string;
+  page?: string;
+  component?: string;
+}>`
   margin-left: ${(props) => props["data"] === "detail" && 11}px;
-  cursor: ${(props) => (!props.page ? "pointer" : "none")}px;
+  cursor: pointer;
 `;
 
 export default UserName;

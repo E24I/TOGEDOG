@@ -60,7 +60,7 @@ export const Image = styled.img<{ data?: string }>`
 `;
 
 export const ProfileContainer = styled.div<{ page?: string }>`
-  cursor: ${(props) => (!props.page ? "pointer" : "none")}px;
+  cursor: pointer;
 `;
 
 export const ProfileWrap = styled.div<{ data?: string }>`

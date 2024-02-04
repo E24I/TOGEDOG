@@ -15,7 +15,7 @@ import ContentsForm from "./ContentForm";
 import DropDown from "../../atoms/dropdown/DropDown";
 import { SeeMoreButton } from "./ChattingList.Style";
 import { useRecoilValue } from "recoil";
-import { memberIdAtom } from "../../atoms";
+import { memberIdAtom, theOtherMemberIdAtom } from "../../atoms";
 import UserName from "./UserName";
 import UserImage from "./UserImage";
 import { queryClient } from "../..";
@@ -38,6 +38,7 @@ const ChattingRoom: React.FC<ChattingDetailprops> = ({
   const [inputMessage, setInputMessage] = useState<string>("");
   const [client, setClient] = useState<any>(null);
   const myMemberId = useRecoilValue(memberIdAtom);
+  const otherMemberIdAtom = useRecoilValue(theOtherMemberIdAtom);
 
   // const { data, isLoading, error } = GetAllMessagesQuery(roomId);
   const { data, isLoading, error, fetchNextPage, hasNextPage } =
@@ -117,8 +118,11 @@ const ChattingRoom: React.FC<ChattingDetailprops> = ({
     <ChattingContentContainer>
       <TopFlex>
         <ProfileWrap>
-          <UserImage id={otherMemberId} />
-          <UserName id={otherMemberId} component="detail" />
+          <UserImage id={otherMemberId ? otherMemberId : otherMemberIdAtom} />
+          <UserName
+            id={otherMemberId ? otherMemberId : otherMemberIdAtom}
+            component="detail"
+          />
         </ProfileWrap>
         <button onBlur={() => setOpen(false)} onClick={openDropDown}>
           <SeeMoreButton />
