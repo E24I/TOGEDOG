@@ -69,7 +69,8 @@ const SearchUser: React.FC = () => {
         alreadyExistChatMember &&
         usersData.data.data.map((user: searchedUserType, idx: number) => {
           return (
-            !Object.keys(alreadyExistChatMember).includes(
+            alreadyExistChatMember === undefined ||
+            (!Object.keys(alreadyExistChatMember).includes(
               user.memberId.toString(),
             ) && (
               <SearchedUser key={idx}>
@@ -84,7 +85,7 @@ const SearchUser: React.FC = () => {
                   채팅하기
                 </CreateNewChatButton>
               </SearchedUser>
-            )
+            ))
           );
         })
       )}

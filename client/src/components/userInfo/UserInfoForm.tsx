@@ -58,8 +58,9 @@ const MyInfoForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
   const setRoomId = useSetRecoilState(chatRoomIdAtom);
   const navigateMessage = () => {
     if (
-      pageMemberId &&
-      !Object.keys(alreadyExistChatMember).includes(pageMemberId)
+      alreadyExistChatMember === undefined ||
+      (pageMemberId &&
+        !Object.keys(alreadyExistChatMember).includes(pageMemberId))
     ) {
       createChattingRoom();
     } else if (pageMemberId) {
