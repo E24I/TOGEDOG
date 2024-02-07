@@ -14,6 +14,7 @@ import {
   UnLogin,
   LoginLogo,
   BottomMenu,
+  MobileDarkMode,
 } from "./LoginForm.style";
 import { usePostLogin } from "../../hooks/MemberHook";
 
@@ -38,6 +39,7 @@ const LoginForm: React.FC = () => {
 
   return (
     <InputContainer isDark={isDark}>
+      <MobileDarkMode />
       <LoginLogo />
       <form
         onSubmit={(e) => {

@@ -7,6 +7,7 @@ import { ReactComponent as CreateFeed } from "../../assets/images/icons/headerIc
 import { ReactComponent as Notifications } from "../../assets/images/icons/headerIcons/Notifications.svg";
 import { ReactComponent as NotificationsRedPoint } from "../../assets/images/icons/headerIcons/NotificationsRedpoint.svg";
 import { ReactComponent as Profile } from "../../assets/images/icons/headerIcons/ProfileImage.svg";
+import { ReactComponent as Dots } from "../../assets/images/icons/Dots.svg";
 import { HeaderProps } from "../../types/headerType";
 
 //assets style
@@ -21,23 +22,23 @@ export const LogoDark = styled(LogoYellow)`
 export const MainButtonStyle = styled(Main)`
   width: 39px;
   height: 36px;
-  path {
+  /* path {
     fill: #f8d259;
-  }
+  } */
 `;
 export const MapButtonStyle = styled(Map)`
   width: 39px;
   height: 39px;
-  path {
+  /* path {
     fill: #f8d259;
-  }
+  } */
 `;
 export const CreateFeedButtonStyle = styled(CreateFeed)`
   width: 39px;
   height: 39px;
-  path {
+  /* path {
     fill: #f8d259;
-  }
+  } */
 `;
 export const NotificationsStyle = styled(Notifications)`
   width: 48px;
@@ -73,8 +74,8 @@ export const HeaderContainer = styled.div<HeaderProps>`
   box-shadow: ${({ scrolled }) =>
     scrolled ? "0 4px 8px rgba(0, 0, 0, 0.1)" : "none"};
   transition:
-    box-shadow 0.3s ease,
-    background-color 0.3s ease;
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
 `;
 
 export const HeaderBox = styled.div`
@@ -124,5 +125,23 @@ export const MoveLogin = styled.button`
 export const UserProfile = styled.div`
   cursor: pointer;
   @media (max-width: 375px) {
+  }
+`;
+
+export const MoreButton = styled.div<{ isDark: boolean }>`
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background: ${(props) => (props.isDark ? `#F8D259` : `#494949`)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const Dot = styled(Dots)<{ isDark: boolean }>`
+  width: 60%;
+  height: auto;
+  path {
+    fill: ${(props) => (props.isDark ? `black` : `white`)};
   }
 `;
