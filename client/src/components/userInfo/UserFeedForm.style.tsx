@@ -45,18 +45,24 @@ export const TapMenuOn = styled.div`
     align-items: center;
   }
 `;
+
 export const FeedContainer = styled.div`
   border-top: 1px solid #d7d7d7;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 1.5px;
+  & > div {
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5px;
+  }
 `;
 export const NoneFeedBox = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 20px 0 20px 0;
 `;
 export const MyFeeds = styled(Feeds)``;
 export const Hearts = styled(Heart)`

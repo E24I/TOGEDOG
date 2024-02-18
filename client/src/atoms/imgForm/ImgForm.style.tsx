@@ -26,11 +26,11 @@ export const ProFileImg = styled.img`
   left: 0;
 `;
 
-export const UserUnknown = styled(Person)`
+export const UserUnknown = styled(Person)<{ isDark: boolean }>`
   width: 100%;
   height: 100%;
   path {
-    fill: white;
+    fill: ${(props) => props.isDark && `#F8D259`};
   }
 `;
 export const PetUnknown = styled(ChattingDefaultBackground)`

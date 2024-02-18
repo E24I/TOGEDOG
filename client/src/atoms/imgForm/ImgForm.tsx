@@ -5,9 +5,10 @@ import {
   UserUnknown,
   PetUnknown,
   FeedUnknown,
-  ProfileUnknown,
 } from "./ImgForm.style";
 import { ImgFormProps } from "../atomsType";
+import { useRecoilValue } from "recoil";
+import { darkAtom } from "../../atoms";
 
 //프롭스 받아야 하는것
 
@@ -25,9 +26,10 @@ export const UserImgForm: React.FC<ImgFormProps> = ({
   URL,
   onClick,
 }) => {
+  const isDark = useRecoilValue(darkAtom);
   return (
     <ProFileBox width={width} height={height} radius={radius} onClick={onClick}>
-      {URL ? <ProFileImg src={URL} /> : <UserUnknown />}
+      {URL ? <ProFileImg src={URL} /> : <UserUnknown isDark={isDark} />}
     </ProFileBox>
   );
 };

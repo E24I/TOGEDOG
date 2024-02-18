@@ -7,6 +7,8 @@ import { ReactComponent as CreateFeed } from "../../assets/images/icons/headerIc
 import { ReactComponent as Notifications } from "../../assets/images/icons/headerIcons/Notifications.svg";
 import { ReactComponent as NotificationsRedPoint } from "../../assets/images/icons/headerIcons/NotificationsRedpoint.svg";
 import { ReactComponent as Profile } from "../../assets/images/icons/headerIcons/ProfileImage.svg";
+import { ReactComponent as Dots } from "../../assets/images/icons/Dots.svg";
+import { HeaderProps } from "../../types/headerType";
 
 //assets style
 export const LogoUnDark = styled(LogoGradient)`
@@ -17,25 +19,34 @@ export const LogoDark = styled(LogoYellow)`
   width: 10rem;
   height: auto;
 `;
-export const MainButtonStyle = styled(Main)`
+export const MainButtonStyle = styled(Main)<{ isDark: boolean }>`
   width: 39px;
   height: 36px;
   path {
-    fill: #f8d259;
+    fill: ${(props) => (props.isDark ? `#F8D259` : `#494949`)};
   }
 `;
-export const MapButtonStyle = styled(Map)`
+// export const MoreButton = styled.div<{ isDark: boolean }>`
+//   border-radius: 50%;
+//   width: 40px;
+//   height: 40px;
+//   background: ${(props) => (props.isDark ? `#F8D259` : `#494949`)};
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// `;
+export const MapButtonStyle = styled(Map)<{ isDark: boolean }>`
   width: 39px;
   height: 39px;
   path {
-    fill: #f8d259;
+    fill: ${(props) => (props.isDark ? `#F8D259` : `#494949`)};
   }
 `;
-export const CreateFeedButtonStyle = styled(CreateFeed)`
+export const CreateFeedButtonStyle = styled(CreateFeed)<{ isDark: boolean }>`
   width: 39px;
   height: 39px;
   path {
-    fill: #f8d259;
+    fill: ${(props) => (props.isDark ? `#F8D259` : `#494949`)};
   }
 `;
 export const NotificationsStyle = styled(Notifications)`
@@ -59,21 +70,23 @@ export const ProfileStyle = styled(Profile)`
   cursor: pointer;
 `;
 
-//component style
-export const HeaderContainer = styled.div`
+export const HeaderContainer = styled.div<HeaderProps>`
   position: sticky;
   top: 0;
-  background-color: white;
+  background-color: ${(props) => (props.isDark ? `#222222` : `white`)};
   z-index: 20;
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 70px; //추후 수정 부분
-  border-bottom: 1px solid #d8d8d8; //구분을 위한 임시 코드 입니다
-  padding: 0 20px; //임시 코드 입니다
-  .icon {
-    height: 100%;
-  }
+  height: 70px;
+  padding: 0 20px;
+  box-shadow: ${(props) =>
+    props.scrolled
+      ? `0 4px 8px ${props.isDark ? "white" : "rgba(0, 0, 0, 0.1)"}`
+      : "none"};
+  transition:
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
 `;
 
 export const HeaderBox = styled.div`
@@ -123,5 +136,23 @@ export const MoveLogin = styled.button`
 export const UserProfile = styled.div`
   cursor: pointer;
   @media (max-width: 375px) {
+  }
+`;
+
+export const MoreButton = styled.div<{ isDark: boolean }>`
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background: ${(props) => (props.isDark ? `#F8D259` : `#494949`)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const Dot = styled(Dots)<{ isDark: boolean }>`
+  width: 60%;
+  height: auto;
+  path {
+    fill: ${(props) => (props.isDark ? `black` : `white`)};
   }
 `;

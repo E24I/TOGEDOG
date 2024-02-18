@@ -5,8 +5,6 @@ import { ReactComponent as LogoGradient } from "../../assets/images/logos/LogoGr
 import { ReactComponent as ImgText } from "../../assets/images/icons/ImgText.svg";
 import { ReactComponent as DogIllustration } from "../../assets/images/icons/DogIllustration.svg";
 import { ReactComponent as Mode } from "../../assets/images/icons/headerIcons/Mode.svg";
-import BackTextUnDark from "../../assets/images/backgrounds/BackText.svg";
-import BackTextDark from "../../assets/images/backgrounds/BackText2.svg";
 
 export const LoginButtonOn = styled.button`
   background: #494949;
@@ -43,9 +41,9 @@ export const LoginInput = styled.input<{ isDark: boolean }>`
   align-items: center;
   gap: 10px;
   transition:
-    background-color 0.3s ease 0s,
-    border 0.3s ease 0s,
-    color 0.3s ease 0s;
+    background-color 0.2s ease 0s,
+    border 0.2s ease 0s,
+    color 0.2s ease 0s;
   @media (max-width: 432px) {
     width: 70vw;
   }
@@ -71,12 +69,12 @@ export const LoginContainer = styled.div<{ isDark: boolean }>`
     flex-direction: column;
     align-items: center;
   }
-  transition: background-color 0.3s ease 0s;
+  transition: background-color 0.2s ease 0s;
 `;
 
 export const UnLogin = styled.button<{ isDark: boolean }>`
   color: ${(props) => (props.isDark ? `white` : `darkgray`)};
-  transition: color 0.3s ease 0s;
+  transition: color 0.2s ease 0s;
 `;
 
 export const MainPictures = styled.ul<{ top?: string }>`
@@ -106,7 +104,7 @@ export const MainContainer = styled.div`
 export const MainImage = styled.div`
   background: #69d3b0;
   width: 514px;
-  height: 632px;
+  height: 620px;
   border-radius: 30px;
   margin-right: -40px;
   display: flex;
@@ -123,7 +121,7 @@ export const InputContainer = styled.div<{ isDark: boolean }>`
   border: ${(props) => (props.isDark ? `1px solid white` : "none")};
   border-radius: 30px;
   width: 514px;
-  height: 632px;
+  height: 620px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -132,8 +130,8 @@ export const InputContainer = styled.div<{ isDark: boolean }>`
   position: relative;
   padding-left: 45px;
   transition:
-    background-color 0.3s ease 0s,
-    border 0.3s ease 0s;
+    background-color 0.2s ease 0s,
+    border 0.2s ease 0s;
   & > p {
     color: #404040;
     font-size: 12px;
@@ -220,5 +218,25 @@ export const DarkMode = styled(Mode)<{ isDark: boolean }>`
   right: 20px;
   path {
     fill: ${(props) => props.isDark && `#FADF84`};
+    transition: fill 0.2s ease 0s;
+  }
+  @media (max-width: 1023px) {
+    display: none;
+  }
+`;
+export const MobileDarkMode = styled(Mode)<{ isDark: boolean }>`
+  display: none;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  path {
+    fill: ${(props) => props.isDark && `#FADF84`};
+    transition: fill 0.2s ease 0s;
+  }
+  @media (max-width: 1023px) {
+    display: block;
+  }
+  @media (max-width: 432px) {
+    width: 10%;
   }
 `;
