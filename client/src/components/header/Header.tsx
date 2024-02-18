@@ -2,14 +2,10 @@ import React, { useEffect, useState } from "react";
 import {
   MiddleButtonContainer,
   HeaderContainer,
-  NotificationsContainer,
   MainButtonStyle,
   MapButtonStyle,
   CreateFeedButtonStyle,
-  RedPointStyle,
-  NotificationsStyle,
   HeaderBox,
-  MoveLogin,
   UserProfile,
   LogoDark,
   LogoUnDark,
@@ -84,13 +80,14 @@ const Header: React.FC = () => {
         </Link>
         <MiddleButtonContainer>
           <Link to="/feeds">
-            <MainButtonStyle />
+            <MainButtonStyle isDark={isDark} />
           </Link>
           <Link to="/petmap">
-            <MapButtonStyle />
+            <MapButtonStyle isDark={isDark} />
           </Link>
           <Link to={loginState ? "/create" : ""}>
             <CreateFeedButtonStyle
+              isDark={isDark}
               onClick={() =>
                 loginState ? undefined : alert("로그인이 필요합니다.")
               }

@@ -38,6 +38,7 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
         return <BookMarks />;
     }
   };
+
   useEffect(() => {
     if (Number(pageMemberId) !== memberId) {
       setTapList(["feed"]);
@@ -91,23 +92,25 @@ const UserFeedForm: React.FC<MyInfoFormProps> = ({ pageMemberId }) => {
         )}
       </TapContainer>
       <FeedContainer>
-        {feedsData?.length ? (
-          feedsData?.map((feed) => (
-            <FeedCard
-              image={feed.images}
-              likeCount={feed.likeCount}
-              repliesCount={feed.repliesCount}
-              key={feed.feedId}
-              feedId={feed.feedId}
-            />
-          ))
-        ) : (
-          <NoneFeedBox>
-            <LogoImg />
-            <p>등록된 피드가 없습니다.</p>
-          </NoneFeedBox>
-        )}
-        <div ref={setTarget} />
+        <div>
+          {feedsData?.length ? (
+            feedsData?.map((feed) => (
+              <FeedCard
+                image={feed.images}
+                likeCount={feed.likeCount}
+                repliesCount={feed.repliesCount}
+                key={feed.feedId}
+                feedId={feed.feedId}
+              />
+            ))
+          ) : (
+            <NoneFeedBox>
+              <LogoImg />
+              <p>등록된 피드가 없습니다.</p>
+            </NoneFeedBox>
+          )}
+          <div ref={setTarget} />
+        </div>
       </FeedContainer>
     </MyFeedContainer>
   );
