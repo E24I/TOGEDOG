@@ -117,6 +117,7 @@ export const usePostFeed = (
     onError: () => {
       alert("제목과 내용을 알맞게 입력하세요");
       return;
+      console.log('11')
     },
   });
 };
