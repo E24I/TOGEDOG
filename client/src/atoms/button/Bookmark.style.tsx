@@ -11,9 +11,14 @@ export const MarkFalse = styled(BookmarkFalse)<Size>`
   path {
     fill: rgb(200, 200, 200);
   }
+  &:hover {
+    path {
+      fill: rgb(73, 73, 73);
+    }
+  }
   &:active {
     path {
-      fill: yellow;
+      fill: rgb(73, 73, 73);
     }
   }
 `;
@@ -23,7 +28,12 @@ export const MarkTrue = styled(BookmarkTrue)<Size>`
   height: ${(props) => props.height};
   margin: 0px 10px;
   cursor: pointer;
+  &:hover {
+    path {
+      fill: rgb(73, 73, 73);
+    }
+  }
   path {
-    fill: yellow;
+    fill: rgb(73, 73, 73);
   }
 `;

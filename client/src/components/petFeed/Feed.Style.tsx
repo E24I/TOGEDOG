@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { ReactComponent as Dots } from "../../assets/images/icons/Dots.svg";
-import { ReactComponent as Person } from "../../assets/images/icons/Person.svg";
+import { ReactComponent as Person } from "../../assets/images/icons/Person2.svg";
 import { ReactComponent as PinMark } from "../../assets/images/icons/PinMark.svg";
 import { ReactComponent as LeftArrow } from "../../assets/images/icons/LeftArrow.svg";
 import { ReactComponent as RightArrow } from "../../assets/images/icons/RightArrow.svg";
@@ -45,7 +45,7 @@ export const Unknown = styled(Person)`
   width: 50px;
   height: 50px;
   path {
-    fill: white;
+    fill: rgb(248, 210, 89);
   }
 `;
 export const ProfileInfo = styled.div`
@@ -128,7 +128,7 @@ export const FeedContent = styled.div`
   font-size: 14px;
 `;
 
-export const FeedMedia = styled.div`
+export const MediaSection = styled.section`
   width: 100%;
   max-width: 830px;
   margin: 0px 0px 5px 0px;
@@ -138,21 +138,71 @@ export const FeedMedia = styled.div`
   align-items: center;
   position: relative;
 
-  /* border: 1px solid black; */
+  border: 1px solid black;
 `;
 
-export const FeedImgs = styled.div`
+export const MediaBox = styled.div`
   width: 100%;
   display: flex;
   justify-content: start;
   align-items: center;
-  white-space: nowrap;
+  overflow: hidden;
   overflow-x: auto;
 
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
-  &::-webkit-scrollba {
+  &::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
+  }
+
+  border: 1px solid black;
+`;
+
+export const FeedMedia = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  white-space: nowrap;
+  /* scroll-behavior: smooth; */
+
+  video {
+    margin-right: 20px;
+  }
+
+  img {
+    margin-right: 20px;
+
+    &:nth-last-child(1) {
+      margin-right: 0px;
+    }
+  }
+
+  border: 1px solid black;
+
+  &.right {
+    animation: right 1s;
+    animation-play-state: right running; // running
+    @keyframes right {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-50px);
+      }
+    }
+  }
+
+  &.left {
+    animation: left 1s;
+    animation-play-state: left paused;
+    @keyframes left {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(30px);
+      }
+    }
   }
 `;
 
@@ -160,17 +210,18 @@ export const FeedVideo = styled.video`
   background-color: rgb(215, 215, 215);
   border: 1px solid rgb(215, 215, 215);
   border-radius: 15px;
-  height: 300px;
-  margin-right: 20px;
+  width: 309px;
+  height: 309px;
+  object-fit: cover;
 `;
 
 export const FeedImg = styled.img`
   background-color: rgb(215, 215, 215);
   border: 1px solid rgb(215, 215, 215);
   border-radius: 15px;
-  height: 300px;
-  margin-right: 20px;
-  background-size: cover;
+  width: 309px;
+  height: 309px;
+  object-fit: cover;
   background-repeat: no-repeat;
   background-position: center;
 `;
@@ -198,7 +249,7 @@ export const FeedStatus = styled.div`
   justify-content: space-between;
   align-items: start;
 
-  /* border: 1px solid black; */
+  border: 1px solid black;
 `;
 
 export const LeftStatus = styled.div`
@@ -558,7 +609,7 @@ export const UpBtn = styled(Up_Circle)`
   right: 10px;
   cursor: pointer;
   path {
-    fill: rgb(177, 177, 177);
+    fill: rgb(187, 187, 187);
   }
   &:hover {
     path {

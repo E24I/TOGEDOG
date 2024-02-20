@@ -8,7 +8,8 @@ import { ReactComponent as Profile } from "../../assets/images/icons/headerIcons
 export const ProFileBox = styled.span<ProFileBoxProps>`
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;
-  border: 1px solid #f8d259;
+  border: 2px solid rgb(73, 73, 73);
+  /* border: 2px solid rgb(248, 210, 89); */
   border-radius: ${(props) => props.radius}%;
   overflow: hidden;
   position: relative;

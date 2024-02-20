@@ -12,8 +12,8 @@ import {
   FeedContents,
   FeedTitle,
   FeedContent,
+  MediaSection,
   FeedMedia,
-  FeedImgs,
   FeedImg,
   LeftScroll,
   RightScroll,
@@ -30,6 +30,7 @@ import {
   RightStatus,
   ScrollTop,
   UpBtn,
+  MediaBox,
 } from "./Feed.Style";
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
@@ -169,20 +170,29 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   };
 
   const [width, setWidth] = useState(window.innerWidth);
-
   const handleResize = () => {
     setWidth(window.innerWidth);
   };
 
+  const [height, setHeight] = useState(window.scrollY);
+  const handleScrollY = () => {
+    setHeight(window.scrollY);
+  };
+
   useEffect(() => {
     window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScrollY);
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScrollY);
     };
   }, []);
 
   // 맨 위로 스크롤
   const handleScrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+  const scrollLeft = () =>
+    mediaBoxRef.current?.scrollX({ left: 10, behavior: "smooth" });
 
   return (
     <Feed>
@@ -225,30 +235,31 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
       </FeedContents>
 
       {(items.images.length > 0 || items.videos) && (
-        <FeedMedia>
+        <MediaSection>
           {/* <LeftScroll onClick={() => handleScrollLeft()} /> */}
-          <FeedImgs ref={mediaBoxRef}>
-            {items.videos && (
-              <FeedVideo
-                ref={mediaRef.current[0]}
-                src={items.videos}
-                controls={true}
-                muted={false}
-              />
-            )}
-            {items.images.length > 0 &&
-              items.images.map((el, idx) => (
-                <FeedImg
-                  key={idx}
-                  ref={mediaRef.current[items.videos ? idx + 1 : idx]}
-                  src={el}
-                  alt={`피드 이미지${items.videos ? idx + 1 : idx}`}
-                  onClick={handleMoreReview}
+          <MediaBox>
+            <FeedMedia ref={mediaBoxRef} className="">
+              {items.videos && (
+                <FeedVideo
+                  ref={mediaRef.current[0]}
+                  src={items.videos}
+                  disablePictureInPicture={true}
                 />
-              ))}
-          </FeedImgs>
-          {/* <RightScroll onClick={() => handleScrollRight()} />  */}
-        </FeedMedia>
+              )}
+              {items.images.length > 0 &&
+                items.images.map((el, idx) => (
+                  <FeedImg
+                    key={idx}
+                    ref={mediaRef.current[items.videos ? idx + 1 : idx]}
+                    src={el}
+                    alt={`피드 이미지${items.videos ? idx + 1 : idx}`}
+                    onClick={handleMoreReview}
+                  />
+                ))}
+            </FeedMedia>
+          </MediaBox>
+          {/* <RightScroll onClick={() => handleScrollRight()} /> */}
+        </MediaSection>
       )}
 
       <FeedStatus>
@@ -279,12 +290,13 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
       {isDetail && (
         <FeedDetail feedId={items.feedId} handleMoreReview={handleMoreReview} />
       )}
-      {window.scrollY && width <= 375 ? (
-        <ScrollTop onClick={handleScrollTop}>맨 위로</ScrollTop>
-      ) : (
-        <UpBtn onClick={handleScrollTop} />
-      )}
       {isSetting && <Setting elements={settingContent} />}
+      {height >= 500 &&
+        (width <= 375 ? (
+          <ScrollTop onClick={handleScrollTop}>맨 위로</ScrollTop>
+        ) : (
+          <UpBtn onClick={handleScrollTop} />
+        ))}
     </Feed>
   );
 };
