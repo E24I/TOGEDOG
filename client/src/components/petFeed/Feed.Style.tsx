@@ -4,30 +4,67 @@ import { ReactComponent as Person } from "../../assets/images/icons/Person.svg";
 import { ReactComponent as PinMark } from "../../assets/images/icons/PinMark.svg";
 import { ReactComponent as LeftArrow } from "../../assets/images/icons/LeftArrow.svg";
 import { ReactComponent as RightArrow } from "../../assets/images/icons/RightArrow.svg";
-import { ReactComponent as ImageCover } from "../../assets/images/icons/ImageCover.svg";
 import { ReactComponent as Cancel } from "../../assets/images/icons/Cancel.svg";
+import { ReactComponent as MessageIcon } from "../../assets/images/icons/Message.svg";
+import { ReactComponent as Up_Circle } from "../../assets/images/icons/Up_Circle.svg";
 
 export const Feed = styled.li`
-  border-bottom: 1px solid rgb(215, 215, 215);
+  border-bottom: 3px solid rgb(215, 215, 215);
   width: 100%;
-  max-width: 1100px;
-  padding: 50px 70px;
+  max-width: 1000px;
+  padding: 30px 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  position: relative;
+
+  /* border: 1px solid black; */
 `;
 
 export const FeedHeader = styled.div`
-  position: relative;
   width: 100%;
+  max-width: 830px;
+  margin: 0px 0px 5px 0px;
+  padding: 0px 25px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  /* border: 1px solid black; */
+`;
+export const Profile = styled.div`
   max-height: 50px;
+  margin: 5px 0px;
   display: flex;
   justify-content: start;
   align-items: center;
 `;
-
-export const Profile = styled.div`
+export const Unknown = styled(Person)`
+  width: 50px;
+  height: 50px;
+  path {
+    fill: white;
+  }
+`;
+export const ProfileInfo = styled.div`
+  margin-left: 12px;
   display: flex;
+  flex-direction: column;
   justify-content: start;
-  align-items: center;
-  cursor: pointer;
+  align-items: start;
+`;
+export const UserName = styled.button`
+  margin-bottom: 2px;
+  white-space: nowrap;
+  font-size: 17px;
+  font-weight: 600; // 지워달라고 요청함.
+`;
+export const UploadTime = styled.span`
+  color: rgb(150, 150, 150);
+  font-size: 11px;
+  font-weight: 600;
 `;
 
 export const ProfileBox = styled.div`
@@ -38,44 +75,23 @@ export const ProfileBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
 
-export const ProfileImg = styled.img`
-  width: 30px;
-  height: 30px;
+  /* border: 1px solid black; */
 `;
-
-export const Unknown = styled(Person)`
-  width: 30px;
-  height: 30px;
-  path {
-    fill: white;
-  }
-`;
-
-export const UserName = styled.div`
-  margin: 0px 0px 5px 15px;
-  white-space: nowrap;
-  font-size: 18px;
-  font-weight: 600;
-`;
-
-export const FeedAddress = styled.div`
-  font-size: 12px;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-`;
-
+// export const FeedAddress = styled.div`
+//   font-size: 12px;
+//   display: flex;
+//   justify-content: start;
+//   align-items: center;
+// `;
 export const PinPoint = styled(PinMark)`
   width: 15px;
   height: 15px;
-  margin-right: 5px;
-`;
+  margin-left: 5px;
 
-export const UploadTime = styled.div`
-  width: 100%;
-  text-align: right;
+  path {
+    fill: rgb(105, 211, 176);
+  }
 `;
 
 export const SettingBox = styled.button`
@@ -84,8 +100,7 @@ export const SettingBox = styled.button`
   height: 20px;
   margin: 0px 20px;
 `;
-
-export const Setting = styled(Dots)`
+export const SettingIcon = styled(Dots)`
   width: 20px;
   height: 20px;
   path {
@@ -95,27 +110,35 @@ export const Setting = styled(Dots)`
 
 export const FeedContents = styled.div`
   width: 100%;
-  min-height: 100px;
-  padding: 10px 65px;
+  max-width: 830px;
+  padding: 10px 30px;
 `;
 
 export const FeedTitle = styled.div`
   width: 100%;
-  padding: 10px 0px;
+  padding: 0px 5px 10px 5px;
+  font-size: 16px;
   font-weight: 600;
 `;
 
 export const FeedContent = styled.div`
   width: 100%;
-  padding: 10px 0px;
+  min-height: 50px;
+  color: rgb(130, 130, 130);
+  font-size: 14px;
 `;
 
 export const FeedMedia = styled.div`
+  width: 100%;
+  max-width: 830px;
   margin: 0px 0px 5px 0px;
-  padding: 15px 5px;
+  padding: 10px 25px;
   display: flex;
   justify-content: start;
   align-items: center;
+  position: relative;
+
+  /* border: 1px solid black; */
 `;
 
 export const FeedImgs = styled.div`
@@ -125,44 +148,66 @@ export const FeedImgs = styled.div`
   align-items: center;
   white-space: nowrap;
   overflow-x: auto;
-  margin: 10px;
+
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollba {
+    display: none; /* Chrome, Safari, Opera*/
+  }
 `;
 
 export const FeedVideo = styled.video`
+  background-color: rgb(215, 215, 215);
   border: 1px solid rgb(215, 215, 215);
   border-radius: 15px;
   height: 300px;
   margin-right: 20px;
-  background-color: rgb(215, 215, 215);
 `;
 
 export const FeedImg = styled.img`
+  background-color: rgb(215, 215, 215);
   border: 1px solid rgb(215, 215, 215);
   border-radius: 15px;
   height: 300px;
   margin-right: 20px;
-  background-color: rgb(215, 215, 215);
-  /* aspect-ratio: 7/6; */
-  /* min-width: 350px; */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
 `;
 
 export const LeftScroll = styled(LeftArrow)`
-  min-width: 30px;
+  position: absolute;
+  left: 0;
+  width: 30px;
   height: 30px;
   margin: 10px;
 `;
 export const RightScroll = styled(RightArrow)`
-  min-width: 30px;
+  position: absolute;
+  right: 0;
+  width: 30px;
   height: 30px;
   margin: 10px;
 `;
 
 export const FeedStatus = styled.div`
   width: 100%;
-  padding: 20px 50px;
+  max-width: 830px;
+  padding: 5px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+
+  /* border: 1px solid black; */
+`;
+
+export const LeftStatus = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: start;
+`;
+
+export const RightStatus = styled.div`
   display: flex;
   justify-content: start;
   align-items: start;
@@ -173,24 +218,49 @@ export const LikeBox = styled.div`
   flex-direction: column;
   justify-content: start;
   align-items: center;
+
+  span {
+    padding: 2px;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgb(110, 110, 110);
+  }
 `;
 
-export const FeedBottom = styled.div`
-  padding: 0px 50px;
+export const ReviewCount = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+
+  span {
+    padding: 2px;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgb(110, 110, 110);
+  }
 `;
 
-export const ReviewCount = styled.button`
-  padding: 2px;
-  font-size: 16px;
-  font-weight: 600;
+export const Message = styled(MessageIcon)`
+  width: 25px;
+  height: 25px;
+  margin: 0px 10px;
+  cursor: pointer;
+
+  path {
+    fill: rgb(110, 110, 110);
+  }
   &:hover {
-    color: rgb(101, 101, 101);
+    path {
+      fill: rgb(110, 110, 110);
+    }
   }
   &:active {
-    color: rgb(138, 138, 138);
+    path {
+      fill: rgb(110, 110, 110);
+    }
   }
 `;
-
 export const ModalBackground = styled.div`
   background-color: rgb(215, 215, 215, 50%);
   z-index: 50;
@@ -467,3 +537,37 @@ export const CommentHeader = styled.div`
 `;
 export const CommentNickname = styled(ReplyNickname)``;
 export const CommentContent = styled(ReplyContent)``;
+
+export const ScrollTop = styled.button`
+  background-color: rgb(255, 255, 255);
+  box-shadow: 1px 1px 2px 0.1px rgb(150, 150, 150);
+  border-radius: 40px;
+  width: 104px;
+  height: 36px;
+  font-size: 14px;
+  position: fixed;
+  bottom: 55px;
+  left: calc(50vw - 52px);
+`;
+
+export const UpBtn = styled(Up_Circle)`
+  width: 104px;
+  height: 36px;
+  position: fixed;
+  bottom: 40px;
+  right: 10px;
+  cursor: pointer;
+  path {
+    fill: rgb(177, 177, 177);
+  }
+  &:hover {
+    path {
+      fill: rgb(177, 177, 177);
+    }
+  }
+  &:active {
+    path {
+      fill: rgb(177, 177, 177);
+    }
+  }
+`;

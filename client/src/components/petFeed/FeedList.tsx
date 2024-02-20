@@ -19,11 +19,17 @@ import {
   RightScroll,
   FeedStatus,
   LikeBox,
-  FeedBottom,
   ReviewCount,
-  Setting,
+  SettingIcon,
   SettingBox,
   FeedVideo,
+  Message,
+  ProfileInfo,
+  PinPoint,
+  LeftStatus,
+  RightStatus,
+  ScrollTop,
+  UpBtn,
 } from "./Feed.Style";
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
@@ -43,6 +49,7 @@ import {
 } from "../../atoms";
 import { useNavigate } from "react-router-dom";
 import { UserImgForm } from "../../atoms/imgForm/ImgForm";
+import Setting from "../modal/setting/Setting";
 
 interface OwnProps {
   items: feedListsType;
@@ -118,11 +125,11 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   const settingContent =
     items.member?.memberId === myId
       ? {
-          수정하기: handleReplyPatch,
-          삭제하기: handleReplyDelete,
+          수정: handleReplyPatch,
+          삭제: handleReplyDelete,
         }
       : {
-          신고하기: handleReplyReport,
+          신고: handleReplyReport,
         };
 
   // 스크롤 방지(모달창 켜져있을때)
@@ -161,6 +168,22 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
     return "1초 전";
   };
 
+  const [width, setWidth] = useState(window.innerWidth);
+
+  const handleResize = () => {
+    setWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // 맨 위로 스크롤
+  const handleScrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
   return (
     <Feed>
       <FeedHeader>
@@ -177,31 +200,33 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
               URL={items.member.imageUrl}
             />
           ) : (
-            <ProfileBox>
-              <Unknown />
-            </ProfileBox>
+            <Unknown />
           )}
-          <UserName>{items.member.nickname}</UserName>
+
+          <ProfileInfo>
+            <UserName>{items.member.nickname}</UserName>
+            <UploadTime>{setTime(items.createdDate)}</UploadTime>
+          </ProfileInfo>
         </Profile>
-        <UploadTime>{setTime(items.createdDate)}</UploadTime>
+
         <SettingBox onClick={handleSetting} onBlur={() => setSetting(false)}>
-          <Setting />
-          {isSetting && (
-            <Dropdown
-              setting={settingContent}
-              handleCloseDropdown={handleCloseDropdown}
-            />
-          )}
+          <SettingIcon />
         </SettingBox>
       </FeedHeader>
+
       <FeedContents>
-        <FeedTitle>{items.title}</FeedTitle>
-        <FeedContent dangerouslySetInnerHTML={{ __html: items.content }} />
+        <FeedTitle>
+          {items.title}
+          {items.wgs84_y && items.wgs84_x && <PinPoint />}
+        </FeedTitle>
+        {items.content && (
+          <FeedContent dangerouslySetInnerHTML={{ __html: items.content }} />
+        )}
       </FeedContents>
 
       {(items.images.length > 0 || items.videos) && (
         <FeedMedia>
-          <LeftScroll onClick={() => handleScrollLeft()} />
+          {/* <LeftScroll onClick={() => handleScrollLeft()} /> */}
           <FeedImgs ref={mediaBoxRef}>
             {items.videos && (
               <FeedVideo
@@ -222,34 +247,44 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
                 />
               ))}
           </FeedImgs>
-          <RightScroll onClick={() => handleScrollRight()} />
+          {/* <RightScroll onClick={() => handleScrollRight()} />  */}
         </FeedMedia>
       )}
+
       <FeedStatus>
-        <LikeBox>
-          <Heart
-            width="30px"
-            height="30px"
-            isLike={items.likeYn}
-            handleFunc={feedLike}
+        <LeftStatus>
+          <LikeBox>
+            <Heart
+              width="25px"
+              height="25px"
+              isLike={items.likeYn}
+              handleFunc={feedLike}
+            />
+            <span>{items.likeCount}</span>
+          </LikeBox>
+          <ReviewCount>
+            <Message onClick={handleMoreReview} />
+            <span>{items.repliesCount}</span>
+          </ReviewCount>
+        </LeftStatus>
+        <RightStatus>
+          <Bookmark
+            width="25px"
+            height="25px"
+            isBookmark={items.bookmarkYn}
+            handleFunc={feedBookmark}
           />
-          <span>{items.likeCount}</span>
-        </LikeBox>
-        <Bookmark
-          width="30px"
-          height="30px"
-          isBookmark={items.bookmarkYn}
-          handleFunc={feedBookmark}
-        />
+        </RightStatus>
       </FeedStatus>
-      <FeedBottom>
-        <ReviewCount onClick={handleMoreReview}>
-          댓글 {items.repliesCount}개 모두 보기
-        </ReviewCount>
-      </FeedBottom>
       {isDetail && (
         <FeedDetail feedId={items.feedId} handleMoreReview={handleMoreReview} />
       )}
+      {window.scrollY && width <= 375 ? (
+        <ScrollTop onClick={handleScrollTop}>맨 위로</ScrollTop>
+      ) : (
+        <UpBtn onClick={handleScrollTop} />
+      )}
+      {isSetting && <Setting elements={settingContent} />}
     </Feed>
   );
 };

@@ -7,7 +7,7 @@ import {
   CommentLeft,
   CommentNickname,
   Mentions,
-  Setting,
+  SettingIcon,
   SettingBox,
   Unknown,
 } from "./Feed.Style";
@@ -119,7 +119,7 @@ const CommentItem: React.FC<OwnProps> = ({ comment }) => {
             {comment.member.nickname}
           </CommentNickname>
           <SettingBox onClick={handleSetting} onBlur={handleCloseDropdown}>
-            <Setting />
+            <SettingIcon />
             {isSetting && (
               <Dropdown
                 setting={settingContent}

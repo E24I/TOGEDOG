@@ -39,7 +39,7 @@ root.render(
   <RecoilRoot>
     <QueryClientProvider client={queryClient}>
       <App />
-      <ReactQueryDevtools />
+      {/* <ReactQueryDevtools /> */}
     </QueryClientProvider>
   </RecoilRoot>,
 );

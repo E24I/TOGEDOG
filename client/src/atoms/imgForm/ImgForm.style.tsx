@@ -8,6 +8,7 @@ import { ReactComponent as Profile } from "../../assets/images/icons/headerIcons
 export const ProFileBox = styled.span<ProFileBoxProps>`
   width: ${(props) => props.width}px;
   height: ${(props) => props.height}px;
+  border: 1px solid #f8d259;
   border-radius: ${(props) => props.radius}%;
   overflow: hidden;
   position: relative;
@@ -33,6 +34,7 @@ export const UserUnknown = styled(Person)<{ isDark: boolean }>`
     fill: ${(props) => props.isDark && `#F8D259`};
   }
 `;
+
 export const PetUnknown = styled(ChattingDefaultBackground)`
   width: 50%;
   height: 50%;

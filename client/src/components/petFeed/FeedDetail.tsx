@@ -25,7 +25,7 @@ import {
   ReviewCount,
   RightDetail,
   RightScroll,
-  Setting,
+  SettingIcon,
   SettingBox,
   Unknown,
   UploadTime,
@@ -214,7 +214,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
               onClick={handleOpenDropdown}
               onBlur={handleCloseDropdown}
             >
-              <Setting />
+              <SettingIcon />
               {isSetting && (
                 <Dropdown
                   setting={settingContent}
@@ -287,9 +287,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
         </LeftDetail>
         <RightDetail>
           <FeedReviewTop>
-            <ReviewCount>
-              댓글 {data.replies.pageInformation.totalSize}개
-            </ReviewCount>
+            <span>댓글 {data.replies.pageInformation.totalSize}개</span>
           </FeedReviewTop>
           <AddBox>
             <AddReply

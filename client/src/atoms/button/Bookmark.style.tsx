@@ -8,6 +8,9 @@ export const MarkFalse = styled(BookmarkFalse)<Size>`
   height: ${(props) => props.height};
   margin: 0px 10px;
   cursor: pointer;
+  path {
+    fill: rgb(200, 200, 200);
+  }
   &:active {
     path {
       fill: yellow;
