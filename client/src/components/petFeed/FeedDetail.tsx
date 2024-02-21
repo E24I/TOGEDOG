@@ -16,7 +16,7 @@ import {
   FeedReviewTop,
   FeedTitle,
   LeftDetail,
-  LeftScroll,
+  LeftArrow,
   LikeBox,
   ModalBackground,
   PaginationImage,
@@ -24,7 +24,7 @@ import {
   ProfileBox,
   ReviewCount,
   RightDetail,
-  RightScroll,
+  RightArrow,
   SettingIcon,
   SettingBox,
   Unknown,
@@ -229,7 +229,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
           </FeedContents>
           {(data.images.length > 0 || data.videos) && (
             <FeedDetailMedia>
-              <LeftScroll onClick={handlePrevImg} />
+              <LeftArrow onClick={handlePrevImg} />
               <FeedDetailImgs>
                 {data.videos && isImg === 0 && (
                   <FeedDetailVideo src={data.videos} />
@@ -253,7 +253,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
                     }
                   })}
               </FeedDetailImgs>
-              <RightScroll onClick={handleNextImg} />
+              <RightArrow onClick={handleNextImg} />
               <PaginationImage>
                 <PaginationCircle
                   isPage={isImg}

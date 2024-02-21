@@ -35,7 +35,6 @@ export const useInfiniteGetFeeds = (accesstoken: string) => {
     queryKey: ["Feeds", accesstoken],
     queryFn: async ({ pageParam = 1 }) => {
       const response = await getFeeds(pageParam, accesstoken);
-      console.log(response);
       return response;
     },
     getNextPageParam: (lastPage, allPages) => {

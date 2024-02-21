@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { ReactComponent as Dots } from "../../assets/images/icons/Dots.svg";
 import { ReactComponent as Person } from "../../assets/images/icons/Person2.svg";
 import { ReactComponent as PinMark } from "../../assets/images/icons/PinMark.svg";
-import { ReactComponent as LeftArrow } from "../../assets/images/icons/LeftArrow.svg";
-import { ReactComponent as RightArrow } from "../../assets/images/icons/RightArrow.svg";
+import { ReactComponent as LeftArrowIcon } from "../../assets/images/icons/LeftArrow.svg";
+import { ReactComponent as RightArrowIcon } from "../../assets/images/icons/RightArrow.svg";
 import { ReactComponent as Cancel } from "../../assets/images/icons/Cancel.svg";
 import { ReactComponent as MessageIcon } from "../../assets/images/icons/Message.svg";
 import { ReactComponent as Up_Circle } from "../../assets/images/icons/Up_Circle.svg";
@@ -121,9 +121,34 @@ export const FeedTitle = styled.div`
   font-weight: 600;
 `;
 
+export const ContentBox = styled.div`
+  position: relative;
+`;
+
 export const FeedContent = styled.div`
   width: 100%;
-  min-height: 50px;
+  min-height: 41px;
+  max-height: 3rem;
+  line-height: 1.5rem;
+  display: flex;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  color: rgb(130, 130, 130);
+  font-size: 14px;
+  &.show {
+    display: block;
+    max-height: none;
+    overflow: auto;
+    -webkit-line-clamp: unset;
+  }
+
+  /* border: 1px solid black; */
+`;
+
+export const MoreBtn = styled.button`
+  width: 70px;
+  max-height: 1.5rem;
+  line-height: 1.5rem;
   color: rgb(130, 130, 130);
   font-size: 14px;
 `;
@@ -137,8 +162,19 @@ export const MediaSection = styled.section`
   justify-content: start;
   align-items: center;
   position: relative;
+  overflow: hidden;
 
-  border: 1px solid black;
+  /* border: 1px solid black; */
+`;
+
+export const MediaBar = styled.div`
+  border-radius: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
 `;
 
 export const MediaBox = styled.div`
@@ -146,24 +182,18 @@ export const MediaBox = styled.div`
   display: flex;
   justify-content: start;
   align-items: center;
+  scroll-behavior: smooth;
   overflow: hidden;
   overflow-x: auto;
 
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-  &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera*/
-  }
-
-  border: 1px solid black;
+  /* border: 1px solid black; */
 `;
 
 export const FeedMedia = styled.div`
+  white-space: nowrap;
   display: flex;
   justify-content: start;
   align-items: center;
-  white-space: nowrap;
-  /* scroll-behavior: smooth; */
 
   video {
     margin-right: 20px;
@@ -177,33 +207,14 @@ export const FeedMedia = styled.div`
     }
   }
 
-  border: 1px solid black;
+  /* border: 1px solid black; */
 
-  &.right {
-    animation: right 1s;
-    animation-play-state: right running; // running
-    @keyframes right {
-      from {
-        transform: translateX(0);
-      }
-      to {
-        transform: translateX(-50px);
-      }
-    }
-  }
-
-  &.left {
-    animation: left 1s;
-    animation-play-state: left paused;
-    @keyframes left {
-      from {
-        transform: translateX(0);
-      }
-      to {
-        transform: translateX(30px);
-      }
-    }
-  }
+  // 드래그 금지
+  -webkit-touch-callout: none;
+  user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
 `;
 
 export const FeedVideo = styled.video`
@@ -213,6 +224,7 @@ export const FeedVideo = styled.video`
   width: 309px;
   height: 309px;
   object-fit: cover;
+  z-index: 0;
 `;
 
 export const FeedImg = styled.img`
@@ -226,14 +238,52 @@ export const FeedImg = styled.img`
   background-position: center;
 `;
 
-export const LeftScroll = styled(LeftArrow)`
+export const LeftBar = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 100%;
+  z-index: 10;
+  &:hover {
+    background-color: rgb(1, 163, 255);
+    filter: blur(30px);
+    -webkit-filter: blur(30px);
+  }
+  &:active {
+    background-color: rgb(1, 163, 255);
+    filter: blur(20px);
+    -webkit-filter: blur(20px);
+  }
+`;
+export const RightBar = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 100%;
+  z-index: 10;
+
+  &:hover {
+    background-color: rgb(1, 163, 255);
+    filter: blur(30px);
+    -webkit-filter: blur(30px);
+  }
+  &:active {
+    background-color: rgb(1, 163, 255);
+    filter: blur(20px);
+    -webkit-filter: blur(20px);
+  }
+`;
+
+export const LeftArrow = styled(LeftArrowIcon)`
   position: absolute;
   left: 0;
   width: 30px;
   height: 30px;
   margin: 10px;
 `;
-export const RightScroll = styled(RightArrow)`
+export const RightArrow = styled(RightArrowIcon)`
   position: absolute;
   right: 0;
   width: 30px;
@@ -249,7 +299,7 @@ export const FeedStatus = styled.div`
   justify-content: space-between;
   align-items: start;
 
-  border: 1px solid black;
+  /* border: 1px solid black; */
 `;
 
 export const LeftStatus = styled.div`
