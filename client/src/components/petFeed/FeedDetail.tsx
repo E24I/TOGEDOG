@@ -175,7 +175,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
   };
 
   if (isLoading) {
-    return <>로딩중</>;
+    return <></>;
   }
   if (error) {
     return <>오류 발생</>;
