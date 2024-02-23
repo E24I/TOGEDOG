@@ -1,47 +1,5 @@
 import React, { useState } from "react";
-import {
-  AddBox,
-  AddBtn,
-  AddReply,
-  CloseModal,
-  DetailContainer,
-  FeedContent,
-  FeedContents,
-  FeedDetailImg,
-  FeedDetailImgs,
-  FeedDetailMedia,
-  FeedDetailStatus,
-  FeedDetailVideo,
-  FeedHeader,
-  FeedReviewTop,
-  FeedTitle,
-  LeftDetail,
-  LeftArrow,
-  LikeBox,
-  ModalBackground,
-  PaginationImage,
-  Profile,
-  ProfileBox,
-  ReviewCount,
-  RightDetail,
-  RightArrow,
-  SettingIcon,
-  SettingBox,
-  Unknown,
-  UploadTime,
-  UserName,
-} from "./Feed.Style";
-import Heart from "../../atoms/button/Heart";
-import Bookmark from "../../atoms/button/Bookmark";
-import Dropdown from "../../atoms/dropdown/Dropdowns";
-import PaginationCircle from "../../atoms/pagination/PaginationCircle";
-import FeedImage from "./FeedImage";
-import {
-  useDeleteFeed,
-  useFeedBookmark,
-  useFeedLike,
-  useGetFeed,
-} from "../../hooks/FeedHook";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   alertAtom,
@@ -50,10 +8,18 @@ import {
   reportAtom,
   tokenAtom,
 } from "../../atoms";
-import { usePostReply } from "../../hooks/ReplyHook";
+import Heart from "../../atoms/button/Heart";
+import Bookmark from "../../atoms/button/Bookmark";
+import PaginationCircle from "../../atoms/pagination/PaginationCircle";
 import FeedReplies from "./FeedReplies";
-import { UserImgForm } from "../../atoms/imgForm/ImgForm";
-import { useNavigate } from "react-router-dom";
+import FeedImage from "./FeedImage";
+import {
+  useDeleteFeed,
+  useFeedBookmark,
+  useFeedLike,
+  useGetFeed,
+} from "../../hooks/FeedHook";
+import { usePostReply } from "../../hooks/ReplyHook";
 
 interface OwnProps {
   feedId: number;
@@ -67,7 +33,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
   const accesstoken = useRecoilValue(tokenAtom);
   const setAlertModal = useSetRecoilState(alertAtom);
 
-  const { data, error, isLoading } = useGetFeed(feedId, accesstoken);
+  const { data, error: isError, isLoading } = useGetFeed(feedId, accesstoken);
   const { mutate: feedLike } = useFeedLike(feedId, accesstoken);
   const { mutate: feedBookmark } = useFeedBookmark(feedId, accesstoken);
 
@@ -174,59 +140,60 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
     return "1초 전";
   };
 
-  if (isLoading) {
-    return <></>;
-  }
-  if (error) {
+  // if (isLoading) {
+  //   return <></>;
+  // }
+  if (isError) {
     return <>오류 발생</>;
   }
   return (
-    <ModalBackground onClick={handleMoreReview}>
-      <CloseModal onClick={handleMoreReview} />
-      <DetailContainer
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        <LeftDetail>
-          <FeedHeader>
-            <Profile
-              onClick={() => {
-                navigate(`/user/${data.member.memberId}`);
-              }}
+    <DetailBackground onClick={handleMoreReview}>
+      <DetailContainer onClick={(e) => e.stopPropagation()}>
+        <CloseModal onClick={handleMoreReview} />
+        <DetailHeader>
+          <DetailProfile>
+            <DetailUserName
+              onClick={() => navigate(`/user/${data.member.memberId}`)}
             >
-              {data.member.imageUrl ? (
-                <UserImgForm
-                  width={50}
-                  height={50}
-                  radius={50}
-                  URL={data.member.imageUrl}
-                />
-              ) : (
-                <ProfileBox>
-                  <Unknown />
-                </ProfileBox>
-              )}
-              <UserName>{data.member?.nickname}</UserName>
-            </Profile>
-            <UploadTime>{setTime(data.createdDate)}</UploadTime>
-            <SettingBox
-              onClick={handleOpenDropdown}
-              onBlur={handleCloseDropdown}
-            >
-              <SettingIcon />
-              {isSetting && (
-                <Dropdown
-                  setting={settingContent}
-                  handleCloseDropdown={handleCloseDropdown}
-                />
-              )}
-            </SettingBox>
-          </FeedHeader>
-          <FeedContents>
-            <FeedTitle>{data.title}</FeedTitle>
-            <FeedContent dangerouslySetInnerHTML={{ __html: data.content }} />
-          </FeedContents>
+              {data.member?.nickname}
+            </DetailUserName>
+            {/* <DetailAdress></DetailAdress> */}
+            <DetailTime>{setTime(data.createdDate)}</DetailTime>
+          </DetailProfile>
+          <SettingIcon />
+        </DetailHeader>
+        <DetailLeft>
+          <DetailContents>
+            <DetailTitle>{data.title}</DetailTitle>
+            <DetailContent dangerouslySetInnerHTML={{ __html: data.content }} />
+          </DetailContents>
+          <DetailMedia>
+            <DetailVideo />
+            <DetailImage />
+            <PrevMedia />
+            <NextMedia />
+            <SelectMedia />
+          </DetailMedia>
+          <DetailStatus>
+            <LikeBox>
+              <Heart
+                width="30px"
+                height="30px"
+                isLike={data.likeYn}
+                handleFunc={feedLike}
+              />
+              <span>{data.likeCount}</span>
+            </LikeBox>
+            <Bookmark
+              width="30px"
+              height="30px"
+              isBookmark={data.bookmarkYn}
+              handleFunc={feedBookmark}
+            />
+          </DetailStatus>
+        </DetailLeft>
+        <DetailRight></DetailRight>
+        {/* <LeftDetail>
           {(data.images.length > 0 || data.videos) && (
             <FeedDetailMedia>
               <LeftArrow onClick={handlePrevImg} />
@@ -267,25 +234,9 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
               </PaginationImage>
             </FeedDetailMedia>
           )}
-          <FeedDetailStatus>
-            <LikeBox>
-              <Heart
-                width="30px"
-                height="30px"
-                isLike={data.likeYn}
-                handleFunc={feedLike}
-              />
-              <span>{data.likeCount}</span>
-            </LikeBox>
-            <Bookmark
-              width="30px"
-              height="30px"
-              isBookmark={data.bookmarkYn}
-              handleFunc={feedBookmark}
-            />
-          </FeedDetailStatus>
-        </LeftDetail>
-        <RightDetail>
+        </LeftDetail> */}
+
+        {/* <RightDetail>
           <FeedReviewTop>
             <span>댓글 {data.replies.pageInformation.totalSize}개</span>
           </FeedReviewTop>
@@ -299,10 +250,10 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
             <AddBtn onClick={handleSendReply}>게시</AddBtn>
           </AddBox>
           <FeedReplies feedId={feedId} feedOwnerId={data.member.memberId} />
-        </RightDetail>
+        </RightDetail> */}
       </DetailContainer>
       {bigImage && <FeedImage url={imgUrl} handleFunc={handleBigImg} />}
-    </ModalBackground>
+    </DetailBackground>
   );
 };
 

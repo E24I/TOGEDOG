@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import { ReactComponent as Dots } from "../../assets/images/icons/Dots.svg";
+import { ReactComponent as Cancel } from "../../assets/images/icons/Cancel.svg";
 import { ReactComponent as Person } from "../../assets/images/icons/Person2.svg";
 import { ReactComponent as PinMark } from "../../assets/images/icons/PinMark.svg";
-import { ReactComponent as LeftArrowIcon } from "../../assets/images/icons/LeftArrow.svg";
-import { ReactComponent as RightArrowIcon } from "../../assets/images/icons/RightArrow.svg";
-import { ReactComponent as Cancel } from "../../assets/images/icons/Cancel.svg";
 import { ReactComponent as MessageIcon } from "../../assets/images/icons/Message.svg";
 import { ReactComponent as Up_Circle } from "../../assets/images/icons/Up_Circle.svg";
+import { ReactComponent as LeftArrowIcon } from "../../assets/images/icons/LeftArrow.svg";
+import { ReactComponent as RightArrowIcon } from "../../assets/images/icons/RightArrow.svg";
 
 export const Feed = styled.li`
   border-bottom: 3px solid rgb(215, 215, 215);
@@ -137,8 +137,6 @@ export const FeedContent = styled.div`
     overflow: auto;
     -webkit-line-clamp: unset;
   }
-
-  /* border: 1px solid black; */
 `;
 
 export const MoreBtn = styled.button`
@@ -159,8 +157,6 @@ export const MediaSection = styled.section`
   align-items: center;
   position: relative;
   overflow: hidden;
-
-  /* border: 1px solid black; */
 `;
 
 export const MediaBar = styled.div`
@@ -182,7 +178,6 @@ export const MediaBox = styled.div`
   overflow: hidden;
   overflow-x: auto;
 
-  /* border: 1px solid black; */
   &::-webkit-scrollbar {
     display: none;
   }
@@ -205,8 +200,6 @@ export const FeedMedia = styled.div`
       margin-right: 0px;
     }
   }
-
-  /* border: 1px solid black; */
 `;
 
 export const FeedVideo = styled.video`
@@ -290,8 +283,6 @@ export const FeedStatus = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: start;
-
-  /* border: 1px solid black; */
 `;
 
 export const LeftStatus = styled.div`
@@ -355,70 +346,6 @@ export const Message = styled(MessageIcon)`
       fill: rgb(73, 73, 73);
     }
   }
-`;
-
-export const ModalBackground = styled.div`
-  background-color: rgb(215, 215, 215, 50%);
-  z-index: 50;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-`;
-
-export const DetailContainer = styled.div`
-  width: 100%;
-  max-width: 80vw;
-  max-height: 100vh;
-  padding: 50px 50px;
-  aspect-ratio: 1.5/1;
-  background-color: white;
-  border-radius: 20px;
-  position: relative;
-  display: grid;
-  justify-items: center;
-
-  @media screen and (max-width: 1200px) {
-    grid-template-columns: repeat(1, 100%);
-    overflow-y: auto;
-    overflow-x: visible;
-
-    &::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      height: 30%;
-      background: gray;
-      border-radius: 10px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: rgb(0, 0, 0, 0);
-    }
-  }
-
-  @media screen and (min-width: 1200px) {
-    grid-template-columns: repeat(2, 50%);
-    grid-template-rows: repeat(1, 100%);
-  }
-`;
-
-export const CloseModal = styled(Cancel)`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: rgb(215, 215, 215);
-  font-size: 50px;
-  cursor: pointer;
 `;
 
 export const LeftDetail = styled.div`

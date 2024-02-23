@@ -242,6 +242,7 @@ const PetMap: React.FC = () => {
     }
   };
 
+  // 토글버튼 보이기/안보이기
   const setRef = useRef<any>(null);
   const toggleRef = useRef<any>(null);
   const [modeBtn, setModeBtn] = useState(false);
@@ -326,6 +327,14 @@ const PetMap: React.FC = () => {
                         height: 40,
                       },
                     }}
+                    onClick={() => {
+                      setMapMode(false);
+                      setSearchInput(true);
+                      setLoacation({
+                        lat: el.y,
+                        lng: el.x,
+                      });
+                    }}
                   />
                 ))
               : mapData.length > 0 &&
@@ -404,7 +413,15 @@ const PetMap: React.FC = () => {
                 </ResultMsg>
                 <ResultLists>
                   {isData.map((data: any, idx: number) => (
-                    <ResultList key={idx}>
+                    <ResultList
+                      key={idx}
+                      onClick={() =>
+                        setLoacation({
+                          lat: data.y,
+                          lng: data.x,
+                        })
+                      }
+                    >
                       <ResultOrder>{idx + 1}</ResultOrder>
                       <ResultContents>
                         <ResultTitle>

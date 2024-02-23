@@ -179,16 +179,20 @@ export const ResultLists = styled.ul`
 `;
 
 export const ResultList = styled.li`
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   border: 1px solid rgb(215, 215, 215);
   box-shadow: 2px 2px 8px 0.01px rgb(131, 131, 131);
   border-radius: 12px;
   width: 98%;
   margin-bottom: 25px;
   padding: 15px;
+  cursor: pointer;
   display: flex;
   justify-content: start;
   align-items: center;
+  &:hover {
+    background-color: rgb(245, 245, 245);
+  }
 `;
 
 export const ListHeader = styled.div``;

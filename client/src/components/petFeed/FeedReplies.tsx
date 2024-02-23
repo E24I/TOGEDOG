@@ -25,9 +25,6 @@ const FeedReplies: React.FC<OwnProps> = ({ feedId, feedOwnerId }) => {
     callbackFn,
   });
 
-  if (isLoading) {
-    return <>로딩중</>;
-  }
   if (isError) {
     return <>오류 발생</>;
   }
