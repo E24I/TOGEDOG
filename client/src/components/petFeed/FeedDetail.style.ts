@@ -109,7 +109,6 @@ export const DetailMain = styled.section`
   /* display: grid;
   justify-items: center; */
 `;
-
 export const DetailLeft = styled.section`
   width: 50%;
   max-height: calc(100% - 10px);
