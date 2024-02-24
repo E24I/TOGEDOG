@@ -2,22 +2,21 @@ import styled from "styled-components";
 
 export const ImageBackground = styled.div`
   background-color: rgb(59, 57, 51);
-  z-index: 40;
-  width: 100vw;
-  height: 100vh;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  height: 100%;
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 40;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const BigImage = styled.img<{ compare: boolean }>`
-  ${(props) => (props.compare ? "width: 100vw" : "height: 100vh")};
-  background-size: contain;
+  height: 100%;
+  aspect-ratio: 1/1;
+  object-fit: contain;
   background-position: center;
   background-repeat: no-repeat;
 `;

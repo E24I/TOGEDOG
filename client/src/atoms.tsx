@@ -83,3 +83,11 @@ export const darkAtom = atom<boolean>({
   key: "isDark",
   default: false,
 });
+
+export const replyAtom = atom<{
+  replyId: number | undefined;
+  nickname: number | undefined;
+}>({
+  key: "reply",
+  default: { replyId: undefined, nickname: undefined },
+});

@@ -1,41 +1,44 @@
 import React, { useState } from "react";
-import FeedComment from "./FeedComment";
+import { useNavigate } from "react-router-dom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
-  Comments,
-  FixedReply,
-  Reply,
-  ReplyContent,
-  ReplyContents,
-  ReplyDate,
-  ReplyEditBox,
-  ReplyLeft,
-  ReplyLikeCount,
-  ReplyNickname,
-  ReplyProfile,
-  ReplySetting,
-  SettingIcon,
-  SettingBox,
-  ShowComment,
-  Unknown,
-} from "./Feed.Style";
+  alertAtom,
+  isLoginAtom,
+  memberIdAtom,
+  replyAtom,
+  reportAtom,
+  tokenAtom,
+} from "../../atoms";
+import FeedComment from "./FeedComment";
+import { Unknown } from "./Feed.Style";
 import Heart from "../../atoms/button/Heart";
-import Dropdown from "../../atoms/dropdown/Dropdowns";
+import { UserImgForm } from "../../atoms/imgForm/ImgForm";
 import {
   useDeleteReply,
   useFixReply,
   useLikeReply,
   usePatchReply,
 } from "../../hooks/ReplyHook";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
-  alertAtom,
-  isLoginAtom,
-  memberIdAtom,
-  reportAtom,
-  tokenAtom,
-} from "../../atoms";
-import { UserImgForm } from "../../atoms/imgForm/ImgForm";
-import { useNavigate } from "react-router-dom";
+  ReplyFixed,
+  Reply,
+  ReplyContent,
+  ReplyContents,
+  ReplyTime,
+  ReplyEditBox,
+  ReplyProfile,
+  ReplyNickname,
+  ReplyStatus,
+  MoreComment,
+  ReplyHeader,
+  ReplyMain,
+  SendComment,
+  SettingIcon,
+  LikeBox,
+  ReplyPin,
+} from "./FeedReply.style";
+import Dropdown from "../../atoms/dropdown/Dropdowns";
+import Setting from "../modal/setting/Setting";
 
 interface OwnProps {
   reply: any;
@@ -66,7 +69,6 @@ const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
 
   const handleSetting = (): void => setSetting(!isSetting);
   const handleComment = (): void => setComment(!isComment);
-  const handleCloseDropdown = () => setSetting(false);
   const handleEditReply = () => setEditReply(true);
   const handleReplyDelete = () => {
     if (reply.fix) {
@@ -86,6 +88,11 @@ const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
     }
   };
 
+  // 답글달기 버튼 클릭
+  const setReplyId = useSetRecoilState(replyAtom);
+  const handelComment = () =>
+    setReplyId({ replyId: reply.replyId, nickname: reply.member.nickname });
+
   // 댓글 신고
   const [reportModal, setReportModal] = useRecoilState(reportAtom);
   const handleReplyReport = () => {
@@ -97,29 +104,35 @@ const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
 
   const myId = useRecoilValue(memberIdAtom);
   const settingContent =
-    reply?.member.memberId === myId
+    reply.member?.memberId === myId
       ? feedOwnerId === myId
-        ? {
-            수정하기: handleEditReply,
-            삭제하기: handleReplyDelete,
-            댓글고정: handleReplyFix,
-          }
+        ? reply.fix
+          ? {
+              수정: handleEditReply,
+              삭제: handleReplyDelete,
+              "댓글 고정취소": handleReplyFix,
+            }
+          : {
+              수정: handleEditReply,
+              삭제: handleReplyDelete,
+              "댓글 고정": handleReplyFix,
+            }
         : {
-            수정하기: handleEditReply,
-            삭제하기: handleReplyDelete,
+            수정: handleEditReply,
+            삭제: handleReplyDelete,
           }
       : feedOwnerId === myId
-      ? reply?.fix
+      ? reply.fix
         ? {
-            신고하기: handleReplyReport,
-            고정취소: handleReplyFix,
+            신고: handleReplyReport,
+            "댓글 고정취소": handleReplyFix,
           }
         : {
-            신고하기: handleReplyReport,
-            댓글고정: handleReplyFix,
+            신고: handleReplyReport,
+            "댓글 고정": handleReplyFix,
           }
       : {
-          신고하기: handleReplyReport,
+          신고: handleReplyReport,
         };
 
   // 피드 시간 경과 계산
@@ -148,8 +161,8 @@ const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
 
   return (
     <Reply>
-      <ReplyLeft onClick={() => navigate(`/user/${reply.member.memberId}`)}>
-        {reply.member.imageUrl ? (
+      <ReplyProfile onClick={() => navigate(`/user/${reply.member.memberId}`)}>
+        {reply.member?.imageUrl ? (
           <UserImgForm
             width={50}
             height={50}
@@ -159,51 +172,66 @@ const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
         ) : (
           <Unknown />
         )}
-      </ReplyLeft>
+      </ReplyProfile>
       <ReplyContents>
-        <ReplyNickname
-          onClick={() => navigate(`/user/${reply.member.memberId}`)}
-        >
-          {reply.member.nickname}
-          {reply.fix && <FixedReply>(고정된 댓글)</FixedReply>}
-        </ReplyNickname>
-        {!isEditReply ? (
-          <ReplyContent>{reply.content}</ReplyContent>
-        ) : (
-          <ReplyEditBox
-            value={content}
-            onChange={handleChangeReply}
-            onKeyUp={handleReplyPatch}
+        <ReplyHeader>
+          <ReplyNickname
+            onClick={() => navigate(`/user/${reply.member.memberId}`)}
+          >
+            {reply.member.nickname}
+          </ReplyNickname>
+          {reply.fix && (
+            <ReplyFixed>
+              <ReplyPin />
+              고정된 댓글
+            </ReplyFixed>
+          )}
+        </ReplyHeader>
+        <ReplyMain>
+          {isEditReply ? (
+            <ReplyEditBox
+              value={content}
+              onChange={handleChangeReply}
+              onKeyUp={handleReplyPatch}
+            />
+          ) : (
+            <ReplyContent>{reply.content}</ReplyContent>
+          )}
+          <LikeBox>
+            <Heart
+              width="18px"
+              height="18px"
+              isLike={reply.likeYn}
+              handleFunc={replyLike}
+            />
+            <span>{reply.likeCount}</span>
+          </LikeBox>
+        </ReplyMain>
+        <ReplyStatus>
+          <ReplyTime>{setTime(reply.createdDate)}</ReplyTime>
+          <SendComment onClick={handelComment}>답글달기</SendComment>
+          <SettingIcon
+            onClick={handleSetting}
+            onBlur={() => setSetting(false)}
           />
+        </ReplyStatus>
+        {reply.commentCount > 0 && (
+          <MoreComment onClick={handleComment}>
+            {isComment ? "└ 답글 숨기기" : `└ 답글 보기(${reply.commentCount})`}
+          </MoreComment>
         )}
-        <ReplySetting>
-          <ReplyDate>{setTime(reply.createdDate)}</ReplyDate>
-          <Heart
-            width="18px"
-            height="18px"
-            isLike={reply.likeYn}
-            handleFunc={replyLike}
-          />
-          <ReplyLikeCount>{reply.likeCount}</ReplyLikeCount>
-          <SettingBox onClick={handleSetting} onBlur={handleCloseDropdown}>
-            <SettingIcon />
-            {isSetting && (
-              <Dropdown
-                setting={settingContent}
-                handleCloseDropdown={handleCloseDropdown}
-              />
-            )}
-          </SettingBox>
-        </ReplySetting>
-        <ShowComment onClick={handleComment}>
-          {isComment ? "└ 답글 닫기" : `└ 답글 보기(${reply.commentCount})`}
-        </ShowComment>
-        {isComment && (
-          <>
-            <FeedComment replyId={reply.replyId} />
-          </>
-        )}
+        {isComment && <FeedComment replyId={reply.replyId} />}
       </ReplyContents>
+      {isSetting && (
+        <Setting
+          elements={settingContent}
+          handleSetting={handleSetting}
+          width="170px"
+          height="36px"
+          font="12px"
+          icon="15px"
+        />
+      )}
     </Reply>
   );
 };
