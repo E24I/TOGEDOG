@@ -76,3 +76,27 @@ export const BookMarks = styled(BookMark)`
 export const LogoImg = styled(Logo)`
   margin-top: 20px;
 `;
+
+import React, { useEffect, useState } from "react";
+
+const Page = () => {
+  const [nowTime, setNowTime] = useState(Math.floor(new Date().getTime()));
+  const src = `http://grafana.app.vanager.ai/d-solo/c7647705-774b-4b5a-b653-bb007713f532/7JuM7LmY66eI7J28IOuqqOuLiO2EsOungQ?orgId=1&from=1708214977314&to=${nowTime}&panelId=30`;
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setNowTime(Math.floor(new Date().getTime()));
+      console.log(nowTime);
+    }, 5000);
+
+    return () => clearTimeout(timeoutId);
+  }, [nowTime]);
+
+  return (
+    <div>
+      <iframe src={src} width="450" height="350" title="test" frameBorder="0" />
+    </div>
+  );
+};
+
+export default Page;

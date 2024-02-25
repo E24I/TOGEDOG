@@ -17,6 +17,9 @@ const Login: React.FC = () => {
   const darkMode = () => {
     setIsDark(!isDark);
   };
+  const darkModeFn = () => {
+    darkMode();
+  };
   return (
     <LoginContainer isDark={isDark}>
       <MainContainer>
@@ -27,8 +30,8 @@ const Login: React.FC = () => {
         </MainImage>
         <LoginForm />
       </MainContainer>
-      <button onClick={() => darkMode()}>
-        <DarkMode isDark={isDark} />
+      <button onClick={() => darkModeFn()}>
+        <DarkMode />
       </button>
     </LoginContainer>
   );
