@@ -15,7 +15,7 @@ import {
   RecentConversation,
   SeeMoreButton,
   TimeStamp,
-  UnfoldButton,
+  OpenButton,
 } from "./ChattingList.Style";
 import DropDown from "../../atoms/dropdown/DropDown";
 import { GetAllRoomsQuery } from "../../hooks/ChatHooks";
@@ -29,8 +29,9 @@ import { alreadyExistChatMemberAtom, chatRoomIdAtom } from "../../atoms";
 
 const ChattingLists: React.FC = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
-  const [listNumber, setlistNumber] = useState<number>(0);
+  const [listNumber, setlistNumber] = useState<undefined | number>(undefined);
   const [isFold, setFold] = useState<boolean>(false);
+  const [isHover, setHover] = useState<boolean>(false);
   const [otherMemberId, setTheOtherMemberId] = useState<number | undefined>(
     undefined,
   );
@@ -70,6 +71,12 @@ const ChattingLists: React.FC = () => {
     }
   };
 
+  const listNumberhandler = () => {
+    if (listNumber) {
+      setlistNumber(undefined);
+    }
+  };
+
   const setTime = (createdAt: string) => {
     const currentDate = new Date();
     const createdDate = new Date(createdAt);
@@ -101,7 +108,20 @@ const ChattingLists: React.FC = () => {
     <ChattingFormContainer>
       <ChattingListsContainer fold={isFold.toString()}>
         <ChattingFlexBox>
-          <Message>Message</Message>
+          <Message fold={isFold.toString()}>
+            Message
+            {!isFold && (
+              <FoldButton
+                onClick={() => {
+                  setFold(!isFold);
+                  setHover(false);
+                }}
+                onMouseOver={() => setHover(true)}
+                onMouseOut={() => setHover(false)}
+                title="채팅 리스트 숨기기"
+              />
+            )}
+          </Message>
           <SearchUser />
           <ChattingList>
             {roomsLoading ? (
@@ -130,15 +150,15 @@ const ChattingLists: React.FC = () => {
                     </MiddleWrap>
                     <TimeStamp>* {room && setTime(room.createdAt)}</TimeStamp>
                     <button
-                      onBlur={() => setOpen(false)}
+                      onBlur={() => listNumberhandler()}
                       onClick={(e) => {
                         openDropDown(e, room.chatRoomId);
-                        setOpen(true);
+                        listNumberhandler();
                       }}
                     >
                       <SeeMoreButton />
-                      {room.chatRoomId === listNumber && isOpen && (
-                        <DropDown component="list" roomId={room.chatRoomId} />
+                      {room.chatRoomId === listNumber && (
+                        <DropDown component="list" roomId={listNumber} />
                       )}
                     </button>
                   </ChattingListContainer>
@@ -147,14 +167,18 @@ const ChattingLists: React.FC = () => {
             )}
           </ChattingList>
         </ChattingFlexBox>
+        {isHover && (
+          <AccordionButton fold={isFold.toString()}></AccordionButton>
+        )}
       </ChattingListsContainer>
-      <AccordionButton
-        onClick={() => setFold(!isFold)}
-        fold={isFold.toString()}
-      >
-        {!isFold ? <FoldButton /> : <UnfoldButton />}
-      </AccordionButton>
-
+      {isFold && (
+        <OpenButton
+          onClick={() => setFold(!isFold)}
+          onMouseOver={() => setHover(true)}
+          onMouseOut={() => setHover(false)}
+          title="채팅 리스트 펼치기"
+        />
+      )}
       {!roomId ? (
         <DefaultBackGroundWrapper>
           <DefaultBack />

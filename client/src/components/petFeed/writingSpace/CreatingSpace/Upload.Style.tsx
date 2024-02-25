@@ -26,7 +26,6 @@ export const AttachmentSpaceWrap = styled.div`
   display: flex;
   flex-direction: row;
   overflow: auto;
-  margin-bottom: 30px;
 `;
 
 export const AttachmentSpaceContainer = styled.div`

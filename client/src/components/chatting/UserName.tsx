@@ -38,6 +38,8 @@ export const Name = styled.div<{
 }>`
   margin-left: ${(props) => props["data"] === "detail" && 11}px;
   cursor: pointer;
+  color: ${(props) => (props["data"] === "detail" ? "#ffffff" : "#282828")};
+  font-weight: 400;
 `;
 
 export default UserName;

@@ -15,7 +15,6 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Modal from "../modal/Modal";
 import Alarm from "../alarm/Alarm";
-import SetAlarm from "../alarm/SetAlarm";
 import { useRecoilValue } from "recoil";
 import { darkAtom, isLoginAtom, memberIdAtom, tokenAtom } from "../../atoms";
 import { UserImgForm } from "../../atoms/imgForm/ImgForm";
@@ -27,10 +26,9 @@ const Header: React.FC = () => {
   const memberId = useRecoilValue(memberIdAtom);
   const loginState = useRecoilValue(isLoginAtom);
   const isDark = useRecoilValue(darkAtom);
-  const [isRead, setRead] = useState<boolean>(false);
   const [scrolled, setScrolled] = useState(false);
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
-  const [isAlarmSetting, setAlarmSetting] = useState<boolean>(false);
+  const [isAlarm, setAlarm] = useState<boolean>(false);
   const location = useLocation();
   const isLoginPage = location.pathname === "/";
   const isSignUpPage = location.pathname === "/SignUp";
@@ -54,7 +52,7 @@ const Header: React.FC = () => {
     if (isModalOpen !== false) {
       setModalOpen(false);
     } else {
-      setRead(false);
+      setAlarm(false);
       setModalOpen(true);
     }
   };
@@ -114,13 +112,9 @@ const Header: React.FC = () => {
           <Dot isDark={isDark} />
         </MoreButton>
         {isModalOpen && (
-          <Modal
-            setModalOpen={setModalOpen}
-            setAlarmSetting={setAlarmSetting}
-          />
+          <Modal setModalOpen={setModalOpen} setAlarm={setAlarm} />
         )}
-        {isRead && <Alarm setRead={setRead} />}
-        {isAlarmSetting && <SetAlarm setAlarmSetting={setAlarmSetting} />}
+        {isAlarm && <Alarm setAlarm={setAlarm} />}
       </HeaderBox>
     </HeaderContainer>
   );

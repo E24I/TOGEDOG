@@ -1,23 +1,71 @@
 import styled from "styled-components";
 import { ReactComponent as SeeMore } from "../../assets/images/icons/SeeMore.svg";
 import { ReactComponent as DefaultBackGround } from "../../assets/images/icons/ChattingDefaultBackground.svg";
-import { ReactComponent as Unfold } from "../../assets/images/icons/RightArrow.svg";
-import { ReactComponent as Fold } from "../../assets/images/icons/LeftArrow.svg";
+import { ReactComponent as Fold } from "../../assets/images/icons/ArrowBtn.svg";
 
 //assets
 export const DefaultBack = styled(DefaultBackGround)`
   position: absolute;
   top: 40vh;
   width: 100%;
+  path {
+    fill: #ffffff;
+  }
 `;
 export const SeeMoreButton = styled(SeeMore)`
-  height: 100%; // 불필요한 수치일 수 있습니다
   cursor: pointer;
   margin-left: 27px;
-  z-index: 20px;
+  z-index: 20;
 `;
-export const UnfoldButton = styled(Unfold)``;
-export const FoldButton = styled(Fold)``;
+export const OpenButton = styled(Fold)`
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  top: 10vh;
+  left: 0px;
+  z-index: 10;
+  cursor: pointer;
+  circle {
+    fill: none;
+  }
+  path {
+    fill: #ffffff;
+  }
+
+  &:hover {
+    circle {
+      fill: #ffffff;
+    }
+    path {
+      fill: #494949;
+    }
+  }
+`;
+export const FoldButton = styled(Fold)`
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 0px;
+  right: 0px;
+  z-index: 10;
+  transform: rotate(-0.5turn);
+  cursor: pointer;
+  circle {
+    fill: none;
+  }
+  path {
+    fill: #ffffff;
+  }
+
+  &:hover {
+    circle {
+      fill: #ffffff;
+    }
+    path {
+      fill: #494949;
+    }
+  }
+`;
 
 //chatting whole container
 export const ChattingFormContainer = styled.div`
@@ -26,27 +74,26 @@ export const ChattingFormContainer = styled.div`
 `;
 
 export const ChattingListsContainer = styled.div<{ fold: string }>`
+  position: relative;
   width: ${(props) => (props.fold === "true" ? "0%" : "35%")};
   height: 100vh;
   border-right: ${(props) =>
-    props.fold === "true" ? "" : "1px solid #d7d7d7"};
+    props.fold === "true" ? "" : "1px solid #494949"};
   transition: all 0.3s;
 `;
 
 export const AccordionButton = styled.button<{ fold: string }>`
-  fill-opacity: 0;
-  &:hover {
-    fill-opacity: 100;
-    background: linear-gradient(to right, #d7fff2, #ffffff);
-    svg {
-      transform: ${(props) =>
-        props.fold === "true" ? "translateX(10px)" : "translateX(-10px)"};
-      transition: transform 0.6s;
-    }
-    path {
-      fill: #78aa99;
-    }
-  }
+  position: absolute;
+  top: 0px;
+  right: ${(props) => (props.fold === "true" ? -50 : 0)}px;
+  width: 50px;
+  height: 100%;
+  opacity: 25%;
+  background: ${(props) =>
+    props.fold === "true"
+      ? `linear-gradient(to right, #69D3B0, rgba(0, 0, 0, 0))`
+      : `linear-gradient(to left, #69D3B0, rgba(0, 0, 0, 0))`};
+  z-index: 2;
 `;
 
 export const ChattingFlexBox = styled.div`
@@ -57,17 +104,19 @@ export const ChattingFlexBox = styled.div`
   overflow: auto;
 `;
 
-export const Message = styled.div`
-  position: absolute;
-  top: 0;
+export const Message = styled.div<{ fold: string }>`
+  content-visibility: ${(props) => props.fold === "true" && "hidden"};
+  position: sticky;
+  top: 0px;
   left: 0;
-  background-color: white;
-  z-index: 5;
-  width: 100%;
+  color: #ffffff;
+  background-color: #494949;
+  width: ${(props) => (props.fold === "true" ? "0%" : "100%")};
   height: 60px;
-  border-bottom: 1px solid #d7d7d7;
   text-align: center;
   padding-top: 22px;
+  transition: all 0.3s;
+  z-index: 3;
 `;
 
 export const ChattingList = styled.div`
@@ -84,19 +133,20 @@ export const ChattingListContainer = styled.div`
   align-items: center;
   padding: 17px 10px;
   cursor: pointer;
+  justify-content: space-between;
+  border-bottom: 1px solid #d7d7d7;
 `;
 
 export const MiddleWrap = styled.div`
+  position: absolute;
   display: flex;
   flex-direction: column;
-  width: 190px; // 임시 사이징
   height: 60px; //임시 사이징
   justify-content: center;
-  margin-left: 11px;
+  left: 60px;
 `;
 
 export const RecentConversation = styled.div`
-  width: 130px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -104,13 +154,14 @@ export const RecentConversation = styled.div`
 `;
 
 export const TimeStamp = styled.div`
-  min-width: 80px; //임시 사이징
-  height: 60px;
+  position: absolute;
   font-size: 13px;
   line-height: 60px;
+  right: 40px;
 `;
 
 export const DefaultBackGroundWrapper = styled.div`
   position: relative;
+  background-color: #494949;
   width: 100%;
 `;

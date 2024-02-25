@@ -17,10 +17,10 @@ import { useNavigate } from "react-router-dom";
 
 interface ModalProps {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setAlarmSetting: React.Dispatch<React.SetStateAction<boolean>>;
+  setAlarm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Modal: React.FC<ModalProps> = ({ setModalOpen, setAlarmSetting }) => {
+const Modal: React.FC<ModalProps> = ({ setModalOpen, setAlarm }) => {
   const LoginState = useRecoilValue(isLoginAtom);
   const modalInfo = [
     { menu: "마이페이지", icon: <MypageButton className="icon" /> },
@@ -29,7 +29,7 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen, setAlarmSetting }) => {
       icon: <LogoutButton className="icon" />,
     },
     { menu: "메시지", icon: <ChatButton className="icon" /> },
-    { menu: "알림설정", icon: <AlarmButton className="icon" /> },
+    { menu: "알림", icon: <AlarmButton className="icon" /> },
     { menu: "다크모드", icon: <ModeButton className="icon" /> },
   ];
   const setLoginState = useSetRecoilState(isLoginAtom);
@@ -73,7 +73,7 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen, setAlarmSetting }) => {
         break;
       case 3:
         if (loginState) {
-          setAlarmSetting(true);
+          setAlarm(true);
         } else {
           alert("로그인이 필요합니다.");
         }
@@ -87,7 +87,12 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen, setAlarmSetting }) => {
 
   return (
     <ModalContainer>
-      <ModalBackGround onClick={() => setModalOpen(false)} />
+      <ModalBackGround
+        onClick={() => {
+          setModalOpen(false);
+          setAlarm(false);
+        }}
+      />
       <ModalMenus>
         {modalInfo.map((info, idx) => {
           return (

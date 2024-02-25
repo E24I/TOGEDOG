@@ -61,6 +61,7 @@ export const Image = styled.img<{ data?: string }>`
 
 export const ProfileContainer = styled.div<{ page?: string }>`
   cursor: pointer;
+  transition: all 0.5s;
 `;
 
 export const ProfileWrap = styled.div<{ data?: string }>`
@@ -69,14 +70,21 @@ export const ProfileWrap = styled.div<{ data?: string }>`
   width: ${(props) => (props["data"] === "list" ? 40 : 60)}px;
   height: ${(props) => (props["data"] === "list" ? 40 : 60)}px;
   border-radius: 100px;
-  margin-right: 20px;
+
+  @media screen and (min-width: 768px) and (max-width: 1023px) {
+    width: ${(props) => (props["data"] === "list" ? 32 : 42)}px;
+    height: ${(props) => (props["data"] === "list" ? 32 : 42)}px;
+  }
+  @media screen and (max-width: 767px) {
+    width: ${(props) => (props["data"] === "list" ? 25 : 34)}px;
+    height: ${(props) => (props["data"] === "list" ? 25 : 34)}px;
+  }
 `;
 
 export const ImageWrap = styled(ProfileWrap)<{ data?: string }>`
   background-color: transparent;
   width: ${(props) => (props["data"] === "list" ? 40 : 60)}px;
   height: ${(props) => (props["data"] === "list" ? 40 : 60)}px;
-  margin-right: 20px;
 `;
 
 export default UserImage;

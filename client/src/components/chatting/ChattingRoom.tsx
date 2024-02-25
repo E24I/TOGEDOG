@@ -9,19 +9,21 @@ import {
   SendButton,
   TextInput,
   TopFlex,
+  XButton,
 } from "./ChattingRoom.Style";
 
 import ContentsForm from "./ContentForm";
-import DropDown from "../../atoms/dropdown/DropDown";
-import { SeeMoreButton } from "./ChattingList.Style";
-import { useRecoilValue } from "recoil";
-import { memberIdAtom, theOtherMemberIdAtom } from "../../atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  chatRoomIdAtom,
+  memberIdAtom,
+  theOtherMemberIdAtom,
+} from "../../atoms";
 import UserName from "./UserName";
 import UserImage from "./UserImage";
 import { queryClient } from "../..";
 import { useInfiniteGetMessages } from "../../hooks/ChatHooks";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
-// import { GetAllMessagesQuery } from "../../hooks/ChatHooks";
 
 interface ChattingDetailprops {
   roomId?: number;
@@ -32,15 +34,14 @@ const ChattingRoom: React.FC<ChattingDetailprops> = ({
   roomId,
   otherMemberId,
 }) => {
-  const [isOpen, setOpen] = useState<boolean>(false);
   //이전대화기록과, 실시간 추가 기록을 모두 합친 데이터를 detailform으로 전달해야 함
   //타입 정의를 위해서 실시간 응답 데이터의 형태를 알아야함 - 이전 기록과 같으면 좋음
   const [inputMessage, setInputMessage] = useState<string>("");
   const [client, setClient] = useState<any>(null);
   const myMemberId = useRecoilValue(memberIdAtom);
   const otherMemberIdAtom = useRecoilValue(theOtherMemberIdAtom);
+  const setRoomId = useSetRecoilState(chatRoomIdAtom);
 
-  // const { data, isLoading, error } = GetAllMessagesQuery(roomId);
   const { data, isLoading, error, fetchNextPage, hasNextPage } =
     useInfiniteGetMessages(roomId);
   const messages = data?.pages.flat();
@@ -89,6 +90,10 @@ const ChattingRoom: React.FC<ChattingDetailprops> = ({
       console.log("Disconnected");
       // 연결이 끊겼을 때
     };
+    return () => {
+      setRoomId(undefined);
+      client.deactivate();
+    };
   }, [roomId]);
 
   const sendMessage = (e: FormEvent) => {
@@ -107,13 +112,6 @@ const ChattingRoom: React.FC<ChattingDetailprops> = ({
     setInputMessage("");
   };
 
-  const openDropDown = () => {
-    if (isOpen !== false) {
-      setOpen(false);
-    } else {
-      setOpen(true);
-    }
-  };
   return (
     <ChattingContentContainer>
       <TopFlex>
@@ -124,10 +122,12 @@ const ChattingRoom: React.FC<ChattingDetailprops> = ({
             component="detail"
           />
         </ProfileWrap>
-        <button onBlur={() => setOpen(false)} onClick={openDropDown}>
-          <SeeMoreButton />
-        </button>
-        {isOpen && <DropDown component="content" />}
+        <XButton
+          onClick={() => {
+            setRoomId(undefined);
+            client.deactivate();
+          }}
+        />
       </TopFlex>
       {isLoading ? (
         <>loading message...</>

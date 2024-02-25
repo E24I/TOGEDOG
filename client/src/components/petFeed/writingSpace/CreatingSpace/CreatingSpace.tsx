@@ -5,7 +5,6 @@ import React, { ChangeEvent, useState, useRef, KeyboardEvent } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 import * as C from "./CreatingSpace.Style";
-import UploadSpace from "./Upload";
 import UserName from "../../../chatting/UserName";
 import { useRecoilValue } from "recoil";
 import { memberIdAtom } from "../../../../atoms";
@@ -84,6 +83,7 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({
         <UserName id={myMemberId} page="create" />
       </C.ProfileWrap>
       <C.CreateTitleWrap>
+        <C.Title>제목</C.Title>
         <C.CreateTitle
           placeholder="제목을 입력하세요"
           onKeyDown={(e) => enterToContent(e)}
@@ -92,6 +92,10 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({
         {alert && <C.Alert>{alert}</C.Alert>}
       </C.CreateTitleWrap>
       <C.CreateContentWrap className="custom-quill-container">
+        <C.Content length={contentLength}>
+          내용 (<span>{contentLength}</span>/200)
+        </C.Content>
+
         <ReactQuill
           placeholder="내용을 입력하세요"
           ref={contentRef}
@@ -99,11 +103,7 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({
           modules={modules}
           onChange={(editor) => sendContent(editor)}
         />
-        <C.TextCount length={contentLength}>
-          /200 <div>{contentLength}</div>
-        </C.TextCount>
       </C.CreateContentWrap>
-      {/* <UploadSpace setAttachments={setAttachments} /> */}
     </C.CreateSpace>
   );
 };
