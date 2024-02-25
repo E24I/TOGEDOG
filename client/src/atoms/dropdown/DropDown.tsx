@@ -5,7 +5,7 @@ import { useRecoilState } from "recoil";
 import { reportAtom } from "../../atoms";
 
 interface DropDownProps {
-  component: string;
+  component?: string;
   roomId?: number;
 }
 

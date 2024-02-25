@@ -1,6 +1,5 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
-import { roomsDataType } from "./types/chatType";
 
 const { persistAtom } = recoilPersist({
   key: "TOGEDOG",

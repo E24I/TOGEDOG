@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   AlarmBackground,
   AlarmContainer,
   AlarmLists,
   AlarmList,
 } from "./Alarm.Style";
+import { subscribeAlarm } from "../../services/memberService";
 
 //임시 알람 정보
 const alarms = [
@@ -21,12 +22,12 @@ const alarms = [
 ];
 
 interface AlarmProps {
-  setRead: React.Dispatch<React.SetStateAction<boolean>>;
+  setAlarm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Alarm: React.FC<AlarmProps> = ({ setRead }) => {
+const Alarm: React.FC<AlarmProps> = ({ setAlarm }) => {
   const closeAlarm = () => {
-    setRead(false);
+    setAlarm(false);
   };
 
   return (

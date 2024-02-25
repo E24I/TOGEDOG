@@ -1,4 +1,21 @@
 import styled from "styled-components";
+import { ReactComponent as CloseBtn } from "../../assets/images/icons/Xbutton.svg";
+
+//assets
+export const XButton = styled(CloseBtn)`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+
+  &:hover {
+    path {
+      stroke: #fadf84;
+    }
+  }
+`;
 
 //components
 export const ChattingContentContainer = styled.div`
@@ -9,13 +26,15 @@ export const ChattingContentContainer = styled.div`
 `;
 
 export const TopFlex = styled.div`
+  position: relative;
   display: flex;
   flex-direction: row;
-  height: 107px; //임시 사이징
+  height: 110px;
   border-bottom: 1px solid #d7d7d7;
-  align-items: center;
+  align-items: end;
   justify-content: space-between;
-  padding: 0 34px 0 20px;
+  padding: 0 20px 10px;
+  background-color: #494949;
 `;
 
 export const ProfileWrap = styled.div`

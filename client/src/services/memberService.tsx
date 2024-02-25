@@ -49,3 +49,10 @@ export const googleLoginAPI = async (access_token: string) => {
   const res = await axios.post(url, data);
   return res;
 };
+
+//알림 구독
+export const subscribeAlarm = async (memberId: number) => {
+  const url = `${ROOT_URL}/alarm/subscribe/${memberId}`;
+  const res = await axios.get(url);
+  return res;
+};

@@ -214,7 +214,7 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
         />
       )}
       <W.FeedBottomContainer>
-        <W.AddressContainer>
+        {/* <W.AddressContainer>
           {isMarked === false ? (
             ""
           ) : (
@@ -225,34 +225,40 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
               </W.MarkResult>
             </>
           )}
-        </W.AddressContainer>
+        </W.AddressContainer> */}
         <W.Toggles>
-          <W.ToggleWrap onClick={() => attachmentToggleCheck()}>
-            파일 첨부
-            <W.ToggleContainer data={isAttach.toString()}>
-              <W.ToggleCircle data={isAttach.toString()} />
-            </W.ToggleContainer>
-          </W.ToggleWrap>
-          <W.ToggleWrap onClick={() => feedToggleCheck()}>
-            피드 공개
-            <W.ToggleContainer data={isFeedPublic.toString()}>
-              <W.ToggleCircle data={isFeedPublic.toString()} />
-            </W.ToggleContainer>
-          </W.ToggleWrap>
-          {page === "create" && (
-            <W.ToggleWrap onClick={() => mapToggleCheck()}>
-              지도 연동하기
-              <W.ToggleContainer data={isMapAssign.toString()}>
-                <W.ToggleCircle data={isMapAssign.toString()} />
+          <W.ToggleFlex>
+            <W.ToggleWrap onClick={() => attachmentToggleCheck()}>
+              파일 첨부
+              <W.ToggleContainer data={isAttach.toString()}>
+                <W.ToggleCircle data={isAttach.toString()} />
               </W.ToggleContainer>
             </W.ToggleWrap>
+            {isAttach && <UploadSpace setAttachments={setAttachments} />}
+          </W.ToggleFlex>
+          <W.ToggleFlex>
+            <W.ToggleWrap onClick={() => feedToggleCheck()}>
+              피드 공개
+              <W.ToggleContainer data={isFeedPublic.toString()}>
+                <W.ToggleCircle data={isFeedPublic.toString()} />
+              </W.ToggleContainer>
+            </W.ToggleWrap>
+          </W.ToggleFlex>
+          {page === "create" && (
+            <W.ToggleFlex>
+              <W.ToggleWrap onClick={() => mapToggleCheck()}>
+                지도 연동하기
+                <W.ToggleContainer data={isMapAssign.toString()}>
+                  <W.ToggleCircle data={isMapAssign.toString()} />
+                </W.ToggleContainer>
+              </W.ToggleWrap>
+              {isMapAssign && (
+                <Map enrollCoordinate={enrollCoordinate} setMark={setMark} />
+              )}
+            </W.ToggleFlex>
           )}
         </W.Toggles>
       </W.FeedBottomContainer>
-      {isAttach && <UploadSpace setAttachments={setAttachments} />}
-      {isMapAssign && (
-        <Map enrollCoordinate={enrollCoordinate} setMark={setMark} />
-      )}
     </W.CreateFeedContainer>
   );
 };

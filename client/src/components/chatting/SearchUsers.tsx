@@ -1,9 +1,11 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import {
   CreateNewChatButton,
+  NoResult,
   SearchBar,
   SearchUsersContainer,
   SearchedUser,
+  XButton,
 } from "./SearchUsers.Style";
 import { searchedUserType } from "../../types/chatType";
 import { GetUsersQuery, useCreateChattingRoom } from "../../hooks/ChatHooks";
@@ -58,8 +60,16 @@ const SearchUser: React.FC = () => {
         form="search"
         value={isSearched}
         placeholder="유저 검색"
-        onChange={searchValueHandler}
-      />
+        onChange={(e) => searchValueHandler(e)}
+      ></SearchBar>
+      {isSearched.length !== 0 && (
+        <XButton
+          onClick={() => {
+            setSubmit(false);
+            setSearched("");
+          }}
+        />
+      )}
       {isLoading ? (
         <>loading</>
       ) : error ? (
@@ -67,27 +77,31 @@ const SearchUser: React.FC = () => {
       ) : (
         isSubmit &&
         alreadyExistChatMember &&
-        usersData.data.data.map((user: searchedUserType, idx: number) => {
-          return (
-            alreadyExistChatMember === undefined ||
-            (!Object.keys(alreadyExistChatMember).includes(
-              user.memberId.toString(),
-            ) && (
-              <SearchedUser key={idx}>
-                <UserImage id={user.memberId} />
-                <UserName id={user.memberId} />
-                <CreateNewChatButton
-                  onClick={() => {
-                    setInviteId(user.memberId);
-                    onClickHandler();
-                  }}
-                >
-                  채팅하기
-                </CreateNewChatButton>
-              </SearchedUser>
-            ))
-          );
-        })
+        (usersData.data.data.length === 0 ? (
+          <NoResult>검색 결과 없음</NoResult>
+        ) : (
+          usersData.data.data.map((user: searchedUserType, idx: number) => {
+            return (
+              alreadyExistChatMember === undefined ||
+              (!Object.keys(alreadyExistChatMember).includes(
+                user.memberId.toString(),
+              ) && (
+                <SearchedUser key={idx}>
+                  <UserImage id={user.memberId} />
+                  <UserName id={user.memberId} />
+                  <CreateNewChatButton
+                    onClick={() => {
+                      setInviteId(user.memberId);
+                      onClickHandler();
+                    }}
+                  >
+                    채팅하기
+                  </CreateNewChatButton>
+                </SearchedUser>
+              ))
+            );
+          })
+        ))
       )}
     </SearchUsersContainer>
   );

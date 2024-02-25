@@ -4,6 +4,7 @@ import { ReactComponent as Pin } from "../../../assets/images/icons/Marker.svg";
 export const MapContainer = styled.div`
   width: 100%;
   height: 100%;
+  margin-bottom: 10px;
 `;
 
 export const MapInput = styled.div`
