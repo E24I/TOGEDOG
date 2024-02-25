@@ -13,7 +13,7 @@ import {
   ReplyNickname,
   ReplyProfile,
   ReplySetting,
-  Setting,
+  SettingIcon,
   SettingBox,
   ShowComment,
   Unknown,
@@ -186,7 +186,7 @@ const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
           />
           <ReplyLikeCount>{reply.likeCount}</ReplyLikeCount>
           <SettingBox onClick={handleSetting} onBlur={handleCloseDropdown}>
-            <Setting />
+            <SettingIcon />
             {isSetting && (
               <Dropdown
                 setting={settingContent}

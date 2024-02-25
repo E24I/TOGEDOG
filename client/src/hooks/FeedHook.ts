@@ -18,7 +18,7 @@ import { enrollMapType } from "../types/mapType";
 import { usePostMap } from "./MapHooks";
 import { useNavigate } from "react-router-dom";
 
-// // 피드 전체 조회
+// // 피드 전체 조회 (기본)
 // export const useGetFeeds = (page: number) => {
 //   return useQuery({
 //     queryKey: ["Feeds", page],
@@ -157,8 +157,6 @@ export const useFeedLike = (
       return feedLike(feedId, accesstoken);
     },
     onSuccess: (res) => {
-      console.log(res);
-      alert("피드 좋아요 성공");
       queryClient.invalidateQueries({ queryKey: ["Feeds"] });
       queryClient.invalidateQueries({ queryKey: ["Feed"] });
       queryClient.invalidateQueries({ queryKey: ["userFeed"] });
@@ -167,7 +165,6 @@ export const useFeedLike = (
     },
     onError: (err) => {
       console.log(err);
-      alert("피드 좋아요 실패");
       failFunc && failFunc();
       return;
     },
@@ -186,8 +183,6 @@ export const useFeedBookmark = (
       return feedBookmark(feedId, accesstoken);
     },
     onSuccess: (res) => {
-      console.log(res);
-      alert("피드 북마크 성공");
       queryClient.invalidateQueries({ queryKey: ["Feeds"] });
       queryClient.invalidateQueries({ queryKey: ["Feed"] });
       queryClient.invalidateQueries({ queryKey: ["userFeed"] });
@@ -196,7 +191,6 @@ export const useFeedBookmark = (
     },
     onError: (err) => {
       console.log(err);
-      alert("피드 북마크 실패");
       failFunc && failFunc();
       return;
     },

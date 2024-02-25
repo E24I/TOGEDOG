@@ -16,7 +16,7 @@ import {
   FeedReviewTop,
   FeedTitle,
   LeftDetail,
-  LeftScroll,
+  LeftArrow,
   LikeBox,
   ModalBackground,
   PaginationImage,
@@ -24,8 +24,8 @@ import {
   ProfileBox,
   ReviewCount,
   RightDetail,
-  RightScroll,
-  Setting,
+  RightArrow,
+  SettingIcon,
   SettingBox,
   Unknown,
   UploadTime,
@@ -214,7 +214,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
               onClick={handleOpenDropdown}
               onBlur={handleCloseDropdown}
             >
-              <Setting />
+              <SettingIcon />
               {isSetting && (
                 <Dropdown
                   setting={settingContent}
@@ -229,7 +229,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
           </FeedContents>
           {(data.images.length > 0 || data.videos) && (
             <FeedDetailMedia>
-              <LeftScroll onClick={handlePrevImg} />
+              <LeftArrow onClick={handlePrevImg} />
               <FeedDetailImgs>
                 {data.videos && isImg === 0 && (
                   <FeedDetailVideo src={data.videos} />
@@ -253,7 +253,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
                     }
                   })}
               </FeedDetailImgs>
-              <RightScroll onClick={handleNextImg} />
+              <RightArrow onClick={handleNextImg} />
               <PaginationImage>
                 <PaginationCircle
                   isPage={isImg}
@@ -287,9 +287,7 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
         </LeftDetail>
         <RightDetail>
           <FeedReviewTop>
-            <ReviewCount>
-              댓글 {data.replies.pageInformation.totalSize}개
-            </ReviewCount>
+            <span>댓글 {data.replies.pageInformation.totalSize}개</span>
           </FeedReviewTop>
           <AddBox>
             <AddReply

@@ -12,18 +12,30 @@ import {
   FeedContents,
   FeedTitle,
   FeedContent,
+  MediaSection,
   FeedMedia,
-  FeedImgs,
   FeedImg,
-  LeftScroll,
-  RightScroll,
+  LeftArrow,
+  RightArrow,
   FeedStatus,
   LikeBox,
-  FeedBottom,
   ReviewCount,
-  Setting,
+  SettingIcon,
   SettingBox,
   FeedVideo,
+  Message,
+  ProfileInfo,
+  PinPoint,
+  LeftStatus,
+  RightStatus,
+  ScrollTop,
+  UpBtn,
+  MediaBox,
+  LeftBar,
+  RightBar,
+  MediaBar,
+  ContentBox,
+  MoreBtn,
 } from "./Feed.Style";
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
@@ -43,6 +55,7 @@ import {
 } from "../../atoms";
 import { useNavigate } from "react-router-dom";
 import { UserImgForm } from "../../atoms/imgForm/ImgForm";
+import Setting from "../modal/setting/Setting";
 
 interface OwnProps {
   items: feedListsType;
@@ -60,35 +73,32 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   const { mutate: feedBookmark } = useFeedBookmark(items.feedId, accesstoken);
   const handleMoreReview = (): void => setDetail(!isDetail);
   const handleSetting = (): void => setSetting(!isSetting);
-  const handleCloseDropdown = () => setSetting(false);
 
+  // content ref 설정 (더보기)
+  const contentRef = useRef<any>(null);
+
+  // Media ref 설정 (스크롤)
   const mediaBoxRef = useRef<any>(null);
-  const mediaItems = items.videos
-    ? [items.videos].concat(items.images)
-    : items.images;
-  const mediaRef = useRef<any>(mediaItems?.map(() => createRef()));
+  const mediaRef = useRef<any>(null);
   const [isMedia, setMedia] = useState<number>(0);
-
-  const navigator = useNavigate();
 
   // 미디어 왼쪽 스크롤 이동 버튼
   const handleScrollLeft = () => {
-    if (isMedia > 0 && mediaRef.current[isMedia]) {
+    if (isMedia > 0) {
       mediaBoxRef.current.scrollLeft =
-        mediaBoxRef.current.scrollLeft -
-        mediaRef.current[isMedia].current.offsetWidth -
-        20;
+        mediaBoxRef.current.scrollLeft - 390 - 20;
       setMedia(isMedia - 1);
     }
   };
 
   // 미디어 오른쪽 스크롤 이동 버튼
   const handleScrollRight = () => {
-    if (isMedia >= 0 && mediaRef.current[isMedia + 1]) {
+    if (
+      isMedia >= 0 &&
+      isMedia < (items.videos ? 1 : 0) + items.images.length
+    ) {
       mediaBoxRef.current.scrollLeft =
-        mediaBoxRef.current.scrollLeft +
-        mediaRef.current[isMedia].current.offsetWidth +
-        20;
+        mediaBoxRef.current.scrollLeft + 309 + 20;
       setMedia(isMedia + 1);
     }
   };
@@ -110,7 +120,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
 
   // 피드 수정 (핸들러)
   const handleReplyPatch = () => {
-    navigator(`/update/${items.feedId}`);
+    navigate(`/update/${items.feedId}`);
   };
 
   // 설정 드롭다운 버튼 종류 및 핸들러 연결
@@ -118,11 +128,11 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   const settingContent =
     items.member?.memberId === myId
       ? {
-          수정하기: handleReplyPatch,
-          삭제하기: handleReplyDelete,
+          수정: handleReplyPatch,
+          삭제: handleReplyDelete,
         }
       : {
-          신고하기: handleReplyReport,
+          신고: handleReplyReport,
         };
 
   // 스크롤 방지(모달창 켜져있을때)
@@ -161,6 +171,33 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
     return "1초 전";
   };
 
+  const [width, setWidth] = useState(window.innerWidth);
+  const handleResize = () => {
+    setWidth(window.innerWidth);
+  };
+
+  const [height, setHeight] = useState(window.scrollY);
+  const handleScrollY = () => {
+    setHeight(window.scrollY);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScrollY);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScrollY);
+    };
+  }, []);
+
+  // 맨 위로 스크롤
+  const handleScrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+  const scrollLeft = () =>
+    mediaBoxRef.current?.scrollX({ left: 10, behavior: "smooth" });
+
+  const [content, setContent] = useState<boolean>(false);
+
   return (
     <Feed>
       <FeedHeader>
@@ -177,79 +214,125 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
               URL={items.member.imageUrl}
             />
           ) : (
-            <ProfileBox>
-              <Unknown />
-            </ProfileBox>
+            <Unknown />
           )}
-          <UserName>{items.member.nickname}</UserName>
+
+          <ProfileInfo>
+            <UserName>{items.member.nickname}</UserName>
+            <UploadTime>{setTime(items.createdDate)}</UploadTime>
+          </ProfileInfo>
         </Profile>
-        <UploadTime>{setTime(items.createdDate)}</UploadTime>
+
         <SettingBox onClick={handleSetting} onBlur={() => setSetting(false)}>
-          <Setting />
-          {isSetting && (
-            <Dropdown
-              setting={settingContent}
-              handleCloseDropdown={handleCloseDropdown}
-            />
-          )}
+          <SettingIcon />
         </SettingBox>
       </FeedHeader>
+
       <FeedContents>
-        <FeedTitle>{items.title}</FeedTitle>
-        <FeedContent dangerouslySetInnerHTML={{ __html: items.content }} />
+        <FeedTitle>
+          {items.title}
+          {items.wgs84_y && items.wgs84_x && <PinPoint />}
+        </FeedTitle>
+        {items.content && (
+          <ContentBox>
+            <FeedContent
+              ref={contentRef}
+              dangerouslySetInnerHTML={{ __html: items.content }}
+            />
+            {contentRef.current?.clientHeight > 41 && !content && (
+              <MoreBtn
+                onClick={() => {
+                  contentRef.current?.classList.add("show");
+                  setContent(true);
+                }}
+              >
+                ...더보기
+              </MoreBtn>
+            )}
+          </ContentBox>
+        )}
       </FeedContents>
 
       {(items.images.length > 0 || items.videos) && (
-        <FeedMedia>
-          <LeftScroll onClick={() => handleScrollLeft()} />
-          <FeedImgs ref={mediaBoxRef}>
-            {items.videos && (
-              <FeedVideo
-                ref={mediaRef.current[0]}
-                src={items.videos}
-                controls={true}
-                muted={false}
-              />
+        <MediaSection>
+          <MediaBar>
+            <MediaBox ref={mediaBoxRef}>
+              <FeedMedia ref={mediaRef}>
+                {items.videos && (
+                  <FeedVideo
+                    src={items.videos}
+                    disablePictureInPicture={true}
+                  />
+                )}
+                {items.images.length > 0 &&
+                  items.images.map((el, idx) => (
+                    <FeedImg
+                      key={idx}
+                      src={el}
+                      alt={`피드 이미지${items.videos ? idx + 1 : idx}`}
+                    />
+                  ))}
+              </FeedMedia>
+            </MediaBox>
+            {mediaBoxRef.current?.clientWidth <
+              mediaRef.current?.clientWidth && (
+              <>
+                <RightBar onClick={handleScrollRight} />
+                <LeftBar onClick={handleScrollLeft} />
+              </>
             )}
-            {items.images.length > 0 &&
-              items.images.map((el, idx) => (
-                <FeedImg
-                  key={idx}
-                  ref={mediaRef.current[items.videos ? idx + 1 : idx]}
-                  src={el}
-                  alt={`피드 이미지${items.videos ? idx + 1 : idx}`}
-                  onClick={handleMoreReview}
-                />
-              ))}
-          </FeedImgs>
-          <RightScroll onClick={() => handleScrollRight()} />
-        </FeedMedia>
+          </MediaBar>
+        </MediaSection>
       )}
+      {/*
+
+1. 'mediaBox width' vs 'media width' 비교
+  1) 'mediaBox width'가 더 크면
+    (1) leftbar랑 rightbar는 안보임
+
+  2) 'media width'가 더 크면
+    (1) leftbar랑 rightbar가 보임
+    (2) 마우스를 올리면 이벤트 발생
+      a. (mediaBox width - media width) 범위 내에서 좌우 스크롤 가능해야함.
+      b. mediaBox ScrollLeft 값이 (mediaBox width - media width) 범위 안에면 클릭 이벤트 발생
+
+*/}
+
       <FeedStatus>
-        <LikeBox>
-          <Heart
-            width="30px"
-            height="30px"
-            isLike={items.likeYn}
-            handleFunc={feedLike}
+        <LeftStatus>
+          <LikeBox>
+            <Heart
+              width="25px"
+              height="25px"
+              isLike={items.likeYn}
+              handleFunc={feedLike}
+            />
+            <span>{items.likeCount}</span>
+          </LikeBox>
+          <ReviewCount>
+            <Message onClick={handleMoreReview} />
+            <span>{items.repliesCount}</span>
+          </ReviewCount>
+        </LeftStatus>
+        <RightStatus>
+          <Bookmark
+            width="25px"
+            height="25px"
+            isBookmark={items.bookmarkYn}
+            handleFunc={feedBookmark}
           />
-          <span>{items.likeCount}</span>
-        </LikeBox>
-        <Bookmark
-          width="30px"
-          height="30px"
-          isBookmark={items.bookmarkYn}
-          handleFunc={feedBookmark}
-        />
+        </RightStatus>
       </FeedStatus>
-      <FeedBottom>
-        <ReviewCount onClick={handleMoreReview}>
-          댓글 {items.repliesCount}개 모두 보기
-        </ReviewCount>
-      </FeedBottom>
       {isDetail && (
         <FeedDetail feedId={items.feedId} handleMoreReview={handleMoreReview} />
       )}
+      {isSetting && <Setting elements={settingContent} />}
+      {height >= 500 &&
+        (width <= 375 ? (
+          <ScrollTop onClick={handleScrollTop}>맨 위로</ScrollTop>
+        ) : (
+          <UpBtn onClick={handleScrollTop} />
+        ))}
     </Feed>
   );
 };

@@ -18,6 +18,8 @@ export type feedListsType = {
   address: string | null;
   replyFix: false;
   repliesCount: number;
+  wgs84_y: number | null;
+  wgs84_x: number | null;
 };
 
 export type feedReviewsType = {
