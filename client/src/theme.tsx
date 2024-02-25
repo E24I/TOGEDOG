@@ -1,10 +1,12 @@
 export const darkTheme = {
   bgColor: "#222222",
+  bgColorV2: "#222222",
   buttonColor: "#FADF84",
   fontColor: "#ffffff",
 };
 export const lightTheme = {
   bgColor: "#FADF84",
+  bgColorV2: "#ffffff",
   buttonColor: "#494949",
   fontColor: "#494949",
 };

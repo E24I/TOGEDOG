@@ -30,7 +30,7 @@ export const UserUnknown = styled(Person)<{ isDark: boolean }>`
   width: 100%;
   height: 100%;
   path {
-    fill: ${(props) => props.isDark && `#F8D259`};
+    fill: ${(props) => (props.isDark ? `#F8D259` : "white")};
   }
 `;
 export const PetUnknown = styled(ChattingDefaultBackground)`

@@ -12,7 +12,6 @@ import {
   MoreButton,
   Dot,
 } from "./Header.Style";
-
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Modal from "../modal/Modal";
 import Alarm from "../alarm/Alarm";
@@ -35,6 +34,7 @@ const Header: React.FC = () => {
   const location = useLocation();
   const isLoginPage = location.pathname === "/";
   const isSignUpPage = location.pathname === "/SignUp";
+  const isMyPage = /^\/user\/\d+$/.test(location.pathname);
   const navigator = useNavigate();
 
   const handleToLogin = () => {
@@ -56,6 +56,14 @@ const Header: React.FC = () => {
     } else {
       setRead(false);
       setModalOpen(true);
+    }
+  };
+
+  const media1023Boolean = () => {
+    if (window.innerWidth <= 1023) {
+      openModal();
+    } else {
+      handleToLogin();
     }
   };
   useEffect(() => {
@@ -93,10 +101,10 @@ const Header: React.FC = () => {
               }
             />
           </Link>
-          <UserProfile onClick={handleToLogin}>
+          <UserProfile onClick={media1023Boolean} isMyPage={isMyPage}>
             <UserImgForm
-              width={45}
-              height={45}
+              width={39}
+              height={39}
               radius={50}
               URL={loginState ? data?.data.image : null}
             />

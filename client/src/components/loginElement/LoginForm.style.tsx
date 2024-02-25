@@ -225,18 +225,7 @@ export const DarkMode = styled(Mode)`
     display: none;
   }
 `;
-// export const DarkMode = styled(Mode)<{ isDark: boolean }>`
-//   position: absolute;
-//   top: 20px;
-//   right: 20px;
-//   path {
-//     fill: ${(props) => props.isDark && `#FADF84`};
-//     transition: fill 0.2s ease 0s;
-//   }
-//   @media (max-width: 1023px) {
-//     display: none;
-//   }
-// `;
+
 export const MobileDarkMode = styled(Mode)<{ isDark: boolean }>`
   display: none;
   position: absolute;

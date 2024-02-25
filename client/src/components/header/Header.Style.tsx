@@ -24,22 +24,16 @@ export const MainButtonStyle = styled(Main)<{ isDark: boolean }>`
   height: 36px;
   path {
     fill: ${(props) => (props.isDark ? `#F8D259` : `#494949`)};
+    stroke: ${(props) => (props.isDark ? `#494949` : `none`)};
   }
 `;
-// export const MoreButton = styled.div<{ isDark: boolean }>`
-//   border-radius: 50%;
-//   width: 40px;
-//   height: 40px;
-//   background: ${(props) => (props.isDark ? `#F8D259` : `#494949`)};
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-// `;
+
 export const MapButtonStyle = styled(Map)<{ isDark: boolean }>`
   width: 39px;
   height: 39px;
   path {
     fill: ${(props) => (props.isDark ? `#F8D259` : `#494949`)};
+    stroke: ${(props) => (props.isDark ? `#494949` : `none`)};
   }
 `;
 export const CreateFeedButtonStyle = styled(CreateFeed)<{ isDark: boolean }>`
@@ -47,6 +41,7 @@ export const CreateFeedButtonStyle = styled(CreateFeed)<{ isDark: boolean }>`
   height: 39px;
   path {
     fill: ${(props) => (props.isDark ? `#F8D259` : `#494949`)};
+    stroke: ${(props) => (props.isDark ? `#494949` : `none`)};
   }
 `;
 export const NotificationsStyle = styled(Notifications)`
@@ -95,8 +90,8 @@ export const HeaderBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  @media (max-width: 375px) {
-    justify-content: space-between;
+  @media (max-width: 1023px) {
+    justify-content: center;
   }
 `;
 
@@ -107,12 +102,15 @@ export const MiddleButtonContainer = styled.div`
   align-items: center;
   width: 33.3%;
   margin: 0 auto;
-  @media (max-width: 375px) {
+  @media (max-width: 1023px) {
     position: fixed;
+    padding-top: 5px;
+    gap: 15%;
     width: 100%;
     bottom: 0;
     left: 0;
-    background: white;
+    justify-content: center;
+    background: ${(props) => props.theme.bgColorV2};
     border-top: 0.1px solid #f0ece2;
   }
 `;
@@ -133,9 +131,15 @@ export const MoveLogin = styled.button`
   float: right;
 `;
 
-export const UserProfile = styled.div`
+export const UserProfile = styled.div<{ isMyPage: boolean }>`
+  border: ${(props) =>
+    props.isMyPage ? `2px solid ${props.theme.buttonColor}` : "none"};
+  padding: 2px;
+  margin-bottom: 2px;
   cursor: pointer;
-  @media (max-width: 375px) {
+  border-radius: 50%;
+  @media (max-width: 1023px) {
+    margin-bottom: 6px;
   }
 `;
 
@@ -147,6 +151,9 @@ export const MoreButton = styled.div<{ isDark: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
+  @media (max-width: 1023px) {
+    display: none;
+  }
 `;
 
 export const Dot = styled(Dots)<{ isDark: boolean }>`
