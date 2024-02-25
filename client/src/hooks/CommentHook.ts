@@ -44,7 +44,7 @@ export const useInfiniteGetComments = (replyId: number) => {
 
 // 대댓글 등록
 export const usePostComment = (
-  replyId: number,
+  replyId: number | undefined,
   content: string,
   accesstoken: string,
   successFunc?: () => void,
@@ -52,7 +52,7 @@ export const usePostComment = (
 ) => {
   return useMutation({
     mutationFn: async () => {
-      return postComment(replyId, content, accesstoken);
+      if (replyId) return postComment(replyId, content, accesstoken);
     },
     onSuccess: (res) => {
       console.log(res);

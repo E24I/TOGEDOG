@@ -1,6 +1,5 @@
 import React from "react";
-import styled from "styled-components";
-import { ModalBackground } from "../../atoms/layout/Layout.style";
+import { ImageBackground, BigImage } from "./FeedImage.style";
 
 interface OwnProps {
   url: string;
@@ -8,23 +7,22 @@ interface OwnProps {
 }
 
 const FeedImage: React.FC<OwnProps> = ({ url, handleFunc }) => {
+  const image = new Image();
+  image.src = url;
+  const width = image.width;
+  const height = image.height;
+  const compareLength = width > height;
+
   return (
-    <ModalBackground
+    <ImageBackground
       onClick={(e) => {
         e.stopPropagation();
         handleFunc();
       }}
     >
-      <BigImage src={url} alt="피드 이미지 확대" />
-    </ModalBackground>
+      <BigImage compare={compareLength} src={url} alt="피드 이미지 확대" />
+    </ImageBackground>
   );
 };
 
 export default FeedImage;
-
-export const BigImage = styled.img`
-  height: 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-`;

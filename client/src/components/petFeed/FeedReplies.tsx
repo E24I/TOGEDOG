@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useInfiniteGetReplies } from "../../hooks/ReplyHook";
-import { Replies } from "./Feed.Style";
-import FeedReply from "./FeedReply";
-import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import { useRecoilValue } from "recoil";
+import FeedReply from "./FeedReply";
 import { tokenAtom } from "../../atoms";
+import { Replies } from "./FeedReply.style";
+import { useInfiniteGetReplies } from "../../hooks/ReplyHook";
+import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 
 interface OwnProps {
   feedId: number;
@@ -26,7 +26,7 @@ const FeedReplies: React.FC<OwnProps> = ({ feedId, feedOwnerId }) => {
   });
 
   if (isLoading) {
-    return <>로딩중</>;
+    return <></>;
   }
   if (isError) {
     return <>오류 발생</>;

@@ -1,16 +1,5 @@
 import React, { useState } from "react";
-import {
-  Comment,
-  CommentContent,
-  CommentContents,
-  CommentHeader,
-  CommentLeft,
-  CommentNickname,
-  Mentions,
-  SettingIcon,
-  SettingBox,
-  Unknown,
-} from "./Feed.Style";
+import { SettingIcon, SettingBox, Unknown } from "./Feed.Style";
 import { feedCommentType } from "../../types/feedDataType";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
 import { useDeleteComment, usePatchComment } from "../../hooks/CommentHook";
@@ -24,6 +13,16 @@ import {
 } from "../../atoms";
 import { UserImgForm } from "../../atoms/imgForm/ImgForm";
 import { useNavigate } from "react-router-dom";
+import {
+  Comment,
+  CommentContent,
+  CommentContents,
+  CommentEditBox,
+  CommentHeader,
+  CommentLeft,
+  CommentNickname,
+  CommentStatus,
+} from "./FeedComment.style";
 
 interface OwnProps {
   comment: feedCommentType;
@@ -73,15 +72,15 @@ const CommentItem: React.FC<OwnProps> = ({ comment }) => {
   };
 
   const myId = useRecoilValue(memberIdAtom);
-  const settingContent =
-    comment?.member.memberId === myId
-      ? {
-          수정하기: handleEditComment,
-          삭제하기: handleCommentDelete,
-        }
-      : {
-          신고하기: handleReportComment,
-        };
+  // const settingContent =
+  //   comment?.member.memberId === myId
+  //     ? {
+  //         수정: handleEditComment,
+  //         삭제: handleCommentDelete,
+  //       }
+  //     : {
+  //         신고: handleReportComment,
+  //       };
 
   // 대댓글 입력 창 onChange 이벤트
   const handleChangeComment = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -118,7 +117,31 @@ const CommentItem: React.FC<OwnProps> = ({ comment }) => {
           >
             {comment.member.nickname}
           </CommentNickname>
-          <SettingBox onClick={handleSetting} onBlur={handleCloseDropdown}>
+          <CommentStatus className="status">
+            {comment?.member.memberId === myId ? (
+              <>
+                {!isEditMode ? (
+                  <button onClick={handleEditComment}>수정</button>
+                ) : (
+                  <>
+                    <button onClick={() => patchComment()}>확인</button>
+                    <button
+                      onClick={() => {
+                        setEditMode(false);
+                        setContent(comment.content);
+                      }}
+                    >
+                      취소
+                    </button>
+                  </>
+                )}
+                <button onClick={handleCommentDelete}>삭제</button>
+              </>
+            ) : (
+              <button onClick={handleReportComment}>신고</button>
+            )}
+          </CommentStatus>
+          {/* <SettingBox onClick={handleSetting} onBlur={handleCloseDropdown}>
             <SettingIcon />
             {isSetting && (
               <Dropdown
@@ -126,15 +149,12 @@ const CommentItem: React.FC<OwnProps> = ({ comment }) => {
                 handleCloseDropdown={handleCloseDropdown}
               />
             )}
-          </SettingBox>
+          </SettingBox> */}
         </CommentHeader>
         {!isEditMode ? (
-          <CommentContent>
-            {comment.mention && <Mentions>{comment.mention}</Mentions>}
-            {comment.content}
-          </CommentContent>
+          <CommentContent>{comment.content}</CommentContent>
         ) : (
-          <input
+          <CommentEditBox
             value={content}
             onChange={handleChangeComment}
             onKeyUp={handleCommentPatch}

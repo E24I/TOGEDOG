@@ -2,10 +2,11 @@ import styled from "styled-components";
 import { ReactComponent as InsertIcon } from "./../../../assets/images/icons/InsertIcon.svg";
 import { ReactComponent as TrashIcon } from "./../../../assets/images/icons/TrashIcon.svg";
 import { ReactComponent as SirenIcon } from "./../../../assets/images/icons/SirenIcon.svg";
+import { ReactComponent as PinIcon } from "./../../../assets/images/icons/Pin.svg";
 
 export const SettingContainer = styled.div`
   background-color: rgba(34, 34, 34, 0.4);
-  width: 100vw;
+  width: 100%;
   height: calc(100% + 6px);
   display: flex;
   flex-direction: column;
@@ -15,12 +16,16 @@ export const SettingContainer = styled.div`
   top: -3px;
 `;
 
-export const SettingBtn = styled.button`
+export const SettingBtn = styled.button<{
+  width: string;
+  height: string;
+  font: string;
+}>`
   background-color: rgb(255, 255, 255);
   border-bottom: 1px solid black;
-  width: 447px;
-  height: 108px;
-  font-size: 28px;
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
+  font-size: ${(props) => props.font};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,7 +33,7 @@ export const SettingBtn = styled.button`
     border-top-left-radius: 18px;
     border-top-right-radius: 18px;
   }
-  &:nth-last-child(2) {
+  &:nth-last-child(1) {
     border: none;
     border-end-start-radius: 18px;
     border-end-end-radius: 18px;
@@ -49,27 +54,36 @@ export const SettingBtn = styled.button`
   }
 `;
 
-export const Insert = styled(InsertIcon)`
-  width: 25px;
-  height: 25px;
+export const Insert = styled(InsertIcon)<{ icon: string }>`
+  width: ${(props) => props.icon};
+  height: ${(props) => props.icon};
   margin-left: 10px;
   path {
     stroke: rgb(73, 73, 73);
   }
 `;
 
-export const Trash = styled(TrashIcon)`
-  width: 25px;
-  height: 25px;
+export const Trash = styled(TrashIcon)<{ icon: string }>`
+  width: ${(props) => props.icon};
+  height: ${(props) => props.icon};
   margin-left: 10px;
   path {
     fill: rgb(73, 73, 73);
   }
 `;
 
-export const Siren = styled(SirenIcon)`
-  width: 25px;
-  height: 25px;
+export const Siren = styled(SirenIcon)<{ icon: string }>`
+  width: ${(props) => props.icon};
+  height: ${(props) => props.icon};
+  margin-left: 10px;
+  path {
+    fill: rgb(73, 73, 73);
+  }
+`;
+
+export const Pin = styled(PinIcon)<{ icon: string }>`
+  width: ${(props) => props.icon};
+  height: ${(props) => props.icon};
   margin-left: 10px;
   path {
     fill: rgb(73, 73, 73);

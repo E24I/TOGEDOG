@@ -1,11 +1,10 @@
-import React, { createRef, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { feedListsType } from "../../types/feedDataType";
 import FeedDetail from "./FeedDetail";
 import {
   Feed,
   FeedHeader,
   Profile,
-  ProfileBox,
   Unknown,
   UserName,
   UploadTime,
@@ -15,8 +14,6 @@ import {
   MediaSection,
   FeedMedia,
   FeedImg,
-  LeftArrow,
-  RightArrow,
   FeedStatus,
   LikeBox,
   ReviewCount,
@@ -39,7 +36,6 @@ import {
 } from "./Feed.Style";
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
-import Dropdown from "../../atoms/dropdown/Dropdowns";
 import {
   useDeleteFeed,
   useFeedBookmark,
@@ -313,7 +309,15 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
       {isDetail && (
         <FeedDetail feedId={items.feedId} handleMoreReview={handleMoreReview} />
       )}
-      {isSetting && <Setting elements={settingContent} />}
+      {isSetting && (
+        <Setting
+          elements={settingContent}
+          width="300px"
+          height="85px"
+          font="20px"
+          icon="20px"
+        />
+      )}
       {height >= 500 &&
         (width <= 375 ? (
           <ScrollTop onClick={handleScrollTop}>맨 위로</ScrollTop>
