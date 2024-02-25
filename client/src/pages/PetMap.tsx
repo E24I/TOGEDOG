@@ -1,30 +1,49 @@
-import React, { useMemo, useRef, useState } from "react";
-import { Circle, Map, MapMarker } from "react-kakao-maps-sdk";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
 import {
   PetMapContainer,
-  SetMode,
-  SideBottom,
+  Search,
+  SearchBtn,
+  MapMode,
   SideContainer,
-  SideList,
-  SideListAddress,
-  SideListCategory,
-  SideListContents,
-  SideListNum,
-  SideListTitle,
-  SideLists,
-  SideSearch,
-  SideSearchBox,
-  SideSortBox,
-  SideSortBtn,
+  ResultList,
+  ResultAddress,
+  ResultCategory,
+  ResultContents,
+  ResultOrder,
+  ResultTitle,
+  ResultLists,
+  SearchInput,
+  SearchBox,
+  SearchInputBtn,
+  SearchCloseBtn,
+  SearchSection,
+  ResultSection,
+  ResultMsg,
+  SearchContainer,
+  PageSection,
+  LeftPageBtn,
+  RightPageBtn,
+  SideCloseBtn,
+  SideOpenBtn,
+  MapToggle,
+  MapToggleBtn,
+  MapToggleContent,
+  SetMode,
 } from "../components/petMap/PetMap.Style";
-import Toggle from "../atoms/toggle/Toggle";
 import styled from "styled-components";
-import Pagination from "../atoms/pagination/Pagination";
 import { usePetMap } from "../hooks/MapHooks";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { alertAtom, tokenAtom } from "../atoms";
-import FeedDetail from "../components/petFeed/FeedDetail";
 import MapFeedItem from "../components/petMap/MapFeedItem";
+import {
+  MapFeedContainer,
+  MapFeedHeader,
+  MapFeedMsg,
+  MapFeeds,
+} from "../components/petMap/MapFeed.style";
+import MarkerIconG from "./../assets/images/icons/MarkerIconG.svg";
+import MarkerIconY from "./../assets/images/icons/MarkerIconY.svg";
 
 export type MarkerLocation = {
   lat: number;
@@ -48,10 +67,6 @@ const PetMap: React.FC = () => {
 
   // 검색창 value에 대한 state
   const [searchValue, setSearchValue] = useState<string>("");
-
-  // // 검색 sort에 대한 state
-  // const [sort, setSort] = useState<string>("");
-  // const list = ["카페", "공원", "식당", "병원", "숙소"];
 
   // 지도 확대 레벨
   const defaultLevel = 3;
@@ -110,11 +125,18 @@ const PetMap: React.FC = () => {
   // 페이지네이션 정보
   const [isPage, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(5);
+  const [totalCount, setTotalCount] = useState(0);
 
   // 지도 검색
   const getSearchResult = () => {
     const ps = new kakao.maps.services.Places();
     ps.keywordSearch(`${searchValue}`, placesSearchCallBack);
+  };
+  const handleSearch = () => {
+    if (!searchValue) {
+      return alertWrite();
+    }
+    return getSearchResult();
   };
 
   // Alert 창
@@ -126,30 +148,15 @@ const PetMap: React.FC = () => {
   const placesSearchCallBack = (data: any, status: any, pagination: any) => {
     if (status === kakao.maps.services.Status.OK) {
       getData(data);
-      setTotalPage(pagination.last);
       pagination.gotoPage(isPage);
+      setTotalPage(pagination.last);
+      setTotalCount(pagination.totalCount);
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
       alertNothig();
     } else if (status === kakao.maps.services.Status.ERROR) {
       alertError();
     }
   };
-
-  // 페이지네이션 실행
-  const ChangePagination = useMemo(() => {
-    searchValue && getSearchResult();
-  }, [isPage]);
-
-  // 지도 범위 재설정하기
-  const bounds = useMemo(() => {
-    if (isData.length > 0) {
-      const bounds = new kakao.maps.LatLngBounds();
-      isData.forEach((data: any) => {
-        bounds.extend(new kakao.maps.LatLng(data.y, data.x));
-      });
-      if (mapRef.current) mapRef.current.setBounds(bounds);
-    }
-  }, [isData]);
 
   // // http가 아닌 https 주소(localhost도 가능)에서 사용 가능함, 현 위치 탐색 기능
   // useEffect(() => {
@@ -164,16 +171,13 @@ const PetMap: React.FC = () => {
   //   navigator.geolocation.getCurrentPosition(successHandler, errorHandler);
   // }, []);
 
-  // sidebar 열려있는지 유무 state
-  const [mapMode, setMapMode] = useState<boolean>(true);
-  const handleSidebar = () => {
-    setMapMode(!mapMode);
-    setData([]);
-    setSearchValue("");
-  };
+  const sideRef = useRef<any>(null);
+  const [sideOpen, setSideOpen] = useState(true);
+  const [mapMode, setMapMode] = useState(true);
+  const [mapData, setMapData] = useState<any>([]);
+  const [searchInput, setSearchInput] = useState(false);
 
   // 펫지도 좌표에 따른 피드 리스트 조회
-  const [mapData, setMapData] = useState<any>([]);
   const getMapData = (res: any) => setMapData(res);
   const {
     mutate: petMap,
@@ -188,15 +192,102 @@ const PetMap: React.FC = () => {
     accesstoken,
     getMapData,
   );
-  console.log("mapData", mapData);
 
-  const getMapFeeds = useMemo(() => {
+  // SearchInput 창 열고 닫기
+  const handleOpenSearch = () => {
+    if (searchInput) {
+      setSearchInput(false);
+      sideRef.current.style.transform = "translateY(-200%)";
+    } else {
+      setSearchInput(true);
+      sideRef.current.style.transform = "translateY(0%)";
+    }
+  };
+  useEffect(() => {
+    sideRef.current.style.transform = "translateY(-200%)";
+  }, []);
+
+  // SideContainer 열고 닫기
+  const handleOpenSide = () => {
+    if (sideOpen) {
+      setSideOpen(false);
+      sideRef.current.style.transform = "translateX(-100%)";
+    } else {
+      setSideOpen(true);
+      sideRef.current.style.transform = "translateX(0%)";
+    }
+  };
+
+  // Page 변경하기
+  const handlePrevPage = () => {
+    if (isPage > 1) setPage(isPage - 1);
+  };
+
+  const handleNextPage = () => {
+    if (isPage < totalPage) setPage(isPage + 1);
+  };
+
+  // mapMode 변경
+  const handleToggle = () => {
+    if (mapMode) {
+      sideRef.current.style.transform = "translateY(0%)";
+      setMapMode(false);
+      setSearchInput(true);
+      setSearchValue("");
+      setData([]);
+    } else {
+      setMapMode(true);
+      setSearchInput(false);
+      setMapData([]);
+    }
+  };
+
+  const setRef = useRef<any>(null);
+  const toggleRef = useRef<any>(null);
+  const [modeBtn, setModeBtn] = useState(false);
+  const handleOpenToggle = () => {
+    let reset;
+    if (modeBtn) {
+      setModeBtn(false);
+      setRef.current.style.transform = "rotate(0deg)";
+      toggleRef.current.style.transform = "translateX(120%)";
+      clearTimeout(reset);
+    } else {
+      setModeBtn(true);
+      setRef.current.style.transform = "rotate(390deg)";
+      toggleRef.current.style.transform = "translateX(0%)";
+      reset = setTimeout(() => {
+        setModeBtn(false);
+        setRef.current.style.transform = "rotate(0deg)";
+        toggleRef.current.style.transform = "translateX(120%)";
+      }, 3000);
+    }
+  };
+  useEffect(() => {
+    toggleRef.current.style.transform = "translateX(120%)";
+  }, []);
+
+  // 페이지네이션 실행
+  useMemo(() => {
+    searchValue && getSearchResult();
+  }, [isPage]);
+
+  // 지도 범위 재설정하기
+  useMemo(() => {
+    if (mapMode && isData.length > 0) {
+      const bounds = new kakao.maps.LatLngBounds();
+      isData.forEach((data: any) => {
+        bounds.extend(new kakao.maps.LatLng(data.y, data.x));
+      });
+      if (mapRef.current) mapRef.current.setBounds(bounds);
+    }
+  }, [isData]);
+
+  // 펫 맵 피드 data 불러오기
+  useMemo(() => {
     if (!mapMode) petMap();
   }, [location, level, mapMode]);
 
-  if (isPending) {
-    return <>로딩중입니다.</>;
-  }
   if (isError) {
     return <>페이지를 불러오는데 실패했습니다.</>;
   }
@@ -205,13 +296,10 @@ const PetMap: React.FC = () => {
       <MapContainer>
         {location && (
           <Map
-            // 지도의 중심 좌표
-            center={location}
-            // 지도 크기
-            style={{ width: "100vw", height: "calc(100vh - 80px)" }}
-            // 지도 확대 레벨
-            level={level}
             ref={mapRef}
+            center={location}
+            style={{ width: "100vw", height: "calc(100vh - 70px)" }}
+            level={level}
             onClick={(_t, mouseEvent) =>
               setLoacation({
                 lat: mouseEvent.latLng.getLat(),
@@ -231,6 +319,13 @@ const PetMap: React.FC = () => {
                       lng: parseFloat(el.x),
                     }}
                     title={el.place_name}
+                    image={{
+                      src: MarkerIconG,
+                      size: {
+                        width: 40,
+                        height: 40,
+                      },
+                    }}
                   />
                 ))
               : mapData.length > 0 &&
@@ -242,6 +337,13 @@ const PetMap: React.FC = () => {
                       lng: parseFloat(el.wgs84_x),
                     }}
                     title={el.title}
+                    image={{
+                      src: MarkerIconY,
+                      size: {
+                        width: 40,
+                        height: 40,
+                      },
+                    }}
                   />
                 ))}
             <PlusLevel onClick={() => setLevel(level - 1)}>+</PlusLevel>
@@ -249,61 +351,94 @@ const PetMap: React.FC = () => {
           </Map>
         )}
       </MapContainer>
-      <SetMode>
-        <Toggle
-          isOn={mapMode}
-          handleToggleFunc={handleSidebar}
-          positive="일반"
-          negative="피드"
-        />
-      </SetMode>
-      <SideContainer>
-        {mapMode && (
-          <SideSearchBox>
-            <SideSearch
-              placeholder="검색어를 입력하세요."
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              onKeyUp={(e) => {
-                if (e.key === "Enter") {
-                  if (!searchValue) {
-                    return alertWrite();
-                  }
-                  return getSearchResult();
-                }
-              }}
-            />
-          </SideSearchBox>
-        )}
-        <SideLists>
-          {mapMode
-            ? isData.map((el: any, idx: number) => (
-                <SideList key={idx}>
-                  <SideListNum>{idx + 1}</SideListNum>
-                  <SideListContents>
-                    <SideListTitle>
-                      {el.place_name}
-                      <SideListCategory>
-                        {el.category_group_name}
-                      </SideListCategory>
-                    </SideListTitle>
-                    <SideListAddress>{el.address_name}</SideListAddress>
-                  </SideListContents>
-                </SideList>
-              ))
-            : mapData?.map((el: any, idx: number) => (
+
+      <SetMode ref={setRef} onClick={handleOpenToggle} />
+
+      <MapMode ref={toggleRef}>
+        <MapToggle mapMode={mapMode} onClick={handleToggle}>
+          <MapToggleContent>
+            {mapMode ? "위치검색" : "근처피드"}
+          </MapToggleContent>
+          <MapToggleBtn />
+        </MapToggle>
+      </MapMode>
+
+      {!searchInput && (
+        <SearchBtn onClick={handleOpenSearch}>
+          <Search />
+        </SearchBtn>
+      )}
+
+      <SideContainer mapMode={mapMode} ref={sideRef}>
+        {mapMode ? (
+          <SearchContainer>
+            <SearchSection>
+              <SearchBox>
+                <SearchInput
+                  placeholder="장소, 주소로 검색"
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  onKeyUp={(e) => {
+                    if (e.key === "Enter") handleSearch();
+                  }}
+                />
+                <SearchInputBtn onClick={handleSearch} />
+              </SearchBox>
+              {!isData.length && (
+                <SearchCloseBtn onClick={handleOpenSearch}>
+                  &times;
+                </SearchCloseBtn>
+              )}
+            </SearchSection>
+            {isData.length > 0 && (
+              <ResultSection>
+                <ResultMsg>
+                  <span>
+                    {`"${searchValue}"(으)로 검색한 결과입니다.(${totalCount}개)`}
+                  </span>
+                  <PageSection>
+                    <LeftPageBtn onClick={handlePrevPage} />
+                    <span>{`${isPage}/${totalPage}`}</span>
+                    <RightPageBtn onClick={handleNextPage} />
+                  </PageSection>
+                </ResultMsg>
+                <ResultLists>
+                  {isData.map((data: any, idx: number) => (
+                    <ResultList key={idx}>
+                      <ResultOrder>{idx + 1}</ResultOrder>
+                      <ResultContents>
+                        <ResultTitle>
+                          <span>{data.place_name}</span>
+                          <ResultCategory>
+                            {data.category_group_name}
+                          </ResultCategory>
+                        </ResultTitle>
+                        <ResultAddress>{data.address_name}</ResultAddress>
+                      </ResultContents>
+                    </ResultList>
+                  ))}
+                </ResultLists>
+              </ResultSection>
+            )}
+          </SearchContainer>
+        ) : (
+          <MapFeedContainer>
+            <MapFeedMsg>{`지도 중심으로부터 일정 거리에 존재하는 게시글 입니다.`}</MapFeedMsg>
+            <MapFeedHeader>{`총 ${mapData.length}개의 게시글`}</MapFeedHeader>
+            <MapFeeds>
+              {mapData?.map((el: any, idx: number) => (
                 <MapFeedItem key={idx} el={el} />
               ))}
-        </SideLists>
-        {isData.length > 0 && (
-          <SideBottom>
-            <Pagination
-              isPage={isPage}
-              totalPage={totalPage}
-              handleFunc={(page) => setPage(page)}
-            />
-          </SideBottom>
+            </MapFeeds>
+          </MapFeedContainer>
         )}
+
+        {(isData.length > 0 || mapData.length > 0) &&
+          (sideOpen ? (
+            <SideCloseBtn mapMode={mapMode} onClick={handleOpenSide} />
+          ) : (
+            <SideOpenBtn mapMode={mapMode} onClick={handleOpenSide} />
+          ))}
       </SideContainer>
     </PetMapContainer>
   );
@@ -312,17 +447,16 @@ const PetMap: React.FC = () => {
 export default PetMap;
 
 export const MapContainer = styled.div`
-  max-width: 100vw;
-  max-height: calc(100vh - 80px);
+  width: 100%;
+  max-height: 100%;
 `;
 
 export const LevelBtn = styled.button`
-  background-color: white;
-  border: 1px solid rgb(215, 215, 215);
+  background-color: rgb(73, 73, 73);
   box-shadow: 1px 1px 2px 0.01px rgb(131, 131, 131);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 33px;
+  height: 33px;
+  color: rgb(248, 210, 89);
   font-size: 24px;
   text-align: center;
   font-weight: bold;
@@ -330,12 +464,14 @@ export const LevelBtn = styled.button`
 `;
 
 export const PlusLevel = styled(LevelBtn)`
+  border-radius: 8px 8px 0 0;
   position: absolute;
-  bottom: 65px;
-  right: 10px;
+  bottom: 57px;
+  right: 14px;
 `;
 export const MinusLevel = styled(LevelBtn)`
+  border-radius: 0 0 8px 8px;
   position: absolute;
-  bottom: 15px;
-  right: 10px;
+  bottom: 14px;
+  right: 14px;
 `;

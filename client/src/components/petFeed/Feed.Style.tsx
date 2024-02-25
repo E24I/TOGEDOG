@@ -18,8 +18,6 @@ export const Feed = styled.li`
   justify-content: start;
   align-items: center;
   position: relative;
-
-  /* border: 1px solid black; */
 `;
 
 export const FeedHeader = styled.div`
@@ -31,8 +29,6 @@ export const FeedHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  /* border: 1px solid black; */
 `;
 export const Profile = styled.div`
   max-height: 50px;
@@ -187,6 +183,9 @@ export const MediaBox = styled.div`
   overflow-x: auto;
 
   /* border: 1px solid black; */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const FeedMedia = styled.div`
@@ -208,13 +207,6 @@ export const FeedMedia = styled.div`
   }
 
   /* border: 1px solid black; */
-
-  // 드래그 금지
-  -webkit-touch-callout: none;
-  user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
 `;
 
 export const FeedVideo = styled.video`
@@ -349,19 +341,22 @@ export const Message = styled(MessageIcon)`
   cursor: pointer;
 
   path {
-    fill: rgb(110, 110, 110);
+    fill: rgb(187, 187, 187);
   }
   &:hover {
     path {
-      fill: rgb(110, 110, 110);
+      stroke: rgb(73, 73, 73);
+      fill: rgb(73, 73, 73);
     }
   }
   &:active {
     path {
-      fill: rgb(110, 110, 110);
+      stroke: rgb(73, 73, 73);
+      fill: rgb(73, 73, 73);
     }
   }
 `;
+
 export const ModalBackground = styled.div`
   background-color: rgb(215, 215, 215, 50%);
   z-index: 50;
@@ -663,12 +658,12 @@ export const UpBtn = styled(Up_Circle)`
   }
   &:hover {
     path {
-      fill: rgb(177, 177, 177);
+      fill: rgb(73, 73, 73);
     }
   }
   &:active {
     path {
-      fill: rgb(177, 177, 177);
+      fill: rgb(73, 73, 73);
     }
   }
 `;

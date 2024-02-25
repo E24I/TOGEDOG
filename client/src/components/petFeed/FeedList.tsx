@@ -284,19 +284,6 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
           </MediaBar>
         </MediaSection>
       )}
-      {/*
-
-1. 'mediaBox width' vs 'media width' 비교
-  1) 'mediaBox width'가 더 크면
-    (1) leftbar랑 rightbar는 안보임
-
-  2) 'media width'가 더 크면
-    (1) leftbar랑 rightbar가 보임
-    (2) 마우스를 올리면 이벤트 발생
-      a. (mediaBox width - media width) 범위 내에서 좌우 스크롤 가능해야함.
-      b. mediaBox ScrollLeft 값이 (mediaBox width - media width) 범위 안에면 클릭 이벤트 발생
-
-*/}
 
       <FeedStatus>
         <LeftStatus>

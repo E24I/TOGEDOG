@@ -1,5 +1,12 @@
 import React from "react";
-import { SettingBtn, SettingContainer } from "./Setting.style";
+import {
+  Cancel,
+  Insert,
+  SettingBtn,
+  SettingContainer,
+  Siren,
+  Trash,
+} from "./Setting.style";
 
 type SettingType = {
   수정?: () => void;
@@ -26,9 +33,13 @@ const Setting: React.FC<OwnProps> = ({ elements }) => {
         return (
           <SettingBtn key={idx} onMouseDown={content[1]}>
             <span>{content[0]}</span>
+            {content[0] === "수정" && <Insert />}
+            {content[0] === "삭제" && <Trash />}
+            {content[0] === "신고" && <Siren />}
           </SettingBtn>
         );
       })}
+      <Cancel>&times;</Cancel>
     </SettingContainer>
   );
 };

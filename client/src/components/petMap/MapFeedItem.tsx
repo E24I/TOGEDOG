@@ -1,19 +1,21 @@
 import React, { useState } from "react";
 import {
-  SideFeedList,
-  SideImage,
-  SideImageBox,
-  SideImageCover,
-  SideListCategory,
-  SideListContent,
-  SideListContents,
-  SideListHeader,
-  SideListTitle,
-  SideMedia,
-  SideNoneImage,
-} from "./PetMap.Style";
+  MapFeed,
+  MapFeedContent,
+  MapFeedProfile,
+  MapFeedUserName,
+  MapFeedAdress,
+  MapFeedContents,
+  MapFeedTitle,
+  MapFeedMedia,
+  MapFeedStatus,
+  MapFeedCover,
+  MapFeedLike,
+  MapFeedReply,
+  Message,
+} from "./MapFeed.style";
 import FeedDetail from "../petFeed/FeedDetail";
-import { Profile, ProfileBox, Unknown, UserName } from "../petFeed/Feed.Style";
+import { Unknown } from "../petFeed/Feed.Style";
 import { UserImgForm } from "../../atoms/imgForm/ImgForm";
 import { useNavigate } from "react-router-dom";
 import Heart from "../../atoms/button/Heart";
@@ -30,7 +32,6 @@ interface OwnProps {
 const MapFeedItem: React.FC<OwnProps> = ({ el }) => {
   const navigate = useNavigate();
   const accesstoken = useRecoilValue(tokenAtom);
-  const [moreImg, setMoreImg] = useState(false);
   const [isDetail, setDetail] = useState(false);
   const handleMoreReview = (): void => setDetail(!isDetail);
 
@@ -39,51 +40,33 @@ const MapFeedItem: React.FC<OwnProps> = ({ el }) => {
 
   return (
     <>
-      <SideFeedList>
-        <SideListHeader>
-          <Profile>
-            {el.member.imageUrl ? (
-              <UserImgForm
-                width={50}
-                height={50}
-                radius={50}
-                URL={el.member.imageUrl}
-                onClick={() => {
-                  navigate(`/user/${el.member.memberId}`);
-                }}
-              />
-            ) : (
-              <ProfileBox>
-                <Unknown />
-              </ProfileBox>
-            )}
-            <UserName>
-              {el.member.nickname}
-              <SideListCategory>댓글 {el.repliesCount}</SideListCategory>
-            </UserName>
-          </Profile>
-        </SideListHeader>
-        <SideListContents>
-          <SideListTitle>{el.title}</SideListTitle>
-          <SideListContent dangerouslySetInnerHTML={{ __html: el.content }} />
-        </SideListContents>
-        {el.images[0] && (
-          <SideMedia>
-            <SideImage src={el.images[0]} alt="" />
-            <SideImageBox>
-              {moreImg && el.images[2] && (
-                <SideImageCover onMouseOut={() => setMoreImg(false)} />
-              )}
-              <SideNoneImage
-                onMouseOver={() => setMoreImg(true)}
-                src={el.images[0]}
-                alt=""
-              />
-            </SideImageBox>
-          </SideMedia>
-        )}
-        <SideStatus>
-          <SideHeart>
+      <MapFeed>
+        <MapFeedProfile>
+          {el.member.imageUrl ? (
+            <UserImgForm
+              width={50}
+              height={50}
+              radius={50}
+              URL={el.member.imageUrl}
+              onClick={() => {
+                navigate(`/user/${el.member.memberId}`);
+              }}
+            />
+          ) : (
+            <Unknown />
+          )}
+          <MapFeedUserName>{el.member.nickname}</MapFeedUserName>
+          <MapFeedAdress></MapFeedAdress>
+        </MapFeedProfile>
+        <MapFeedContents>
+          <MapFeedTitle>{el.title}</MapFeedTitle>
+          {el.content && (
+            <MapFeedContent dangerouslySetInnerHTML={{ __html: el.content }} />
+          )}
+        </MapFeedContents>
+        {el.images[0] && <MapFeedMedia src={el.images[0]} alt="" />}
+        <MapFeedStatus>
+          <MapFeedLike>
             <Heart
               width="20px"
               height="20px"
@@ -91,18 +74,22 @@ const MapFeedItem: React.FC<OwnProps> = ({ el }) => {
               handleFunc={feedLike}
             />
             <span>{el.likeCount}</span>
-          </SideHeart>
+          </MapFeedLike>
+          <MapFeedReply>
+            <Message />
+            <span>{el.repliesCount}</span>
+          </MapFeedReply>
           <Bookmark
             width="20px"
             height="20px"
             isBookmark={el.bookmarkYn}
             handleFunc={feedBookmark}
           />
-        </SideStatus>
-        <SideMoreDetail onClick={() => setDetail(true)}>
-          [상세보기]
-        </SideMoreDetail>
-      </SideFeedList>
+        </MapFeedStatus>
+        <MapFeedCover className="cover" onClick={() => setDetail(true)}>
+          <span>상세보기</span>
+        </MapFeedCover>
+      </MapFeed>
       {isDetail && (
         <FeedDetail feedId={el.feedId} handleMoreReview={handleMoreReview} />
       )}
