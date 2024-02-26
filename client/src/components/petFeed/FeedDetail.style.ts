@@ -5,7 +5,7 @@ import { ReactComponent as LeftArrowIcon } from "../../assets/images/icons/LeftA
 import { ReactComponent as RightArrowIcon } from "../../assets/images/icons/RightArrow.svg";
 
 export const DetailBackground = styled.div`
-  background-color: rgb(215, 215, 215, 50%);
+  background-color: rgba(34, 34, 34, 0.6);
   width: 100vw;
   height: 100vh;
   padding: 0px 30px;

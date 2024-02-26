@@ -91,13 +91,14 @@ export const PinPoint = styled(PinMark)`
 
 export const SettingBox = styled.button`
   position: relative;
-  width: 25px;
+  width: 20px;
   height: 20px;
   margin: 0px 20px;
 `;
 export const SettingIcon = styled(Dots)`
   width: 20px;
   height: 20px;
+  cursor: pointer;
   path {
     fill: rgb(200, 200, 200);
   }

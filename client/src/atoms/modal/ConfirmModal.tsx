@@ -4,8 +4,8 @@ import {
   ModalContainer,
   ModalContents,
   BtnBox,
-  PositiveBtn,
-  NegativeBtn,
+  SendBtn,
+  CloseBtn,
 } from "./Modal.style";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { confirmAtom } from "../../atoms";
@@ -34,8 +34,8 @@ const ConfirmModal: React.FC = () => {
           <span>{confirmContent.content}</span>
         </ModalContents>
         <BtnBox onClick={handleResetConfirm}>
-          <PositiveBtn onMouseUp={handlePositiveFunc}>예</PositiveBtn>
-          <NegativeBtn>아니오</NegativeBtn>
+          <SendBtn onMouseUp={handlePositiveFunc}>예</SendBtn>
+          <CloseBtn>아니오</CloseBtn>
         </BtnBox>
       </ModalContainer>
     </ModalBackground>

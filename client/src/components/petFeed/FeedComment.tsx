@@ -9,6 +9,7 @@ import { feedCommentType } from "../../types/feedDataType";
 import CommentItem from "./CommentItems";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import { Comments } from "./FeedComment.style";
+import { MoreReply } from "./FeedReply.style";
 
 interface OwnProps {
   replyId: number;
@@ -65,20 +66,12 @@ const FeedComment: React.FC<OwnProps> = ({ replyId }) => {
   }
   return (
     <Comments>
-      {/* <AddBox>
-        <AddReply
-          value={isInput}
-          onChange={handleWriteComment}
-          onKeyUp={handlePostComment}
-        />
-        <AddBtn onClick={handleSendComment}>게시</AddBtn>
-      </AddBox> */}
       {commentsData?.map((comment: feedCommentType) => (
         <CommentItem key={comment.commentId} comment={comment} />
       ))}
       {moreComments && <div ref={setTarget} />}
       {commentsData && commentsData.length > 0 && hasNextPage && (
-        <button onClick={() => setMoreComments(true)}>답글 더보기</button>
+        <MoreReply onClick={() => setMoreComments(true)}>답글 더보기</MoreReply>
       )}
     </Comments>
   );

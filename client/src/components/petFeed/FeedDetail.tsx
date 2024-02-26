@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   useRecoilState,
@@ -64,10 +64,10 @@ import Setting from "../modal/setting/Setting";
 
 interface OwnProps {
   feedId: number;
-  handleMoreReview(): void;
+  handleFeedDetail: () => void;
 }
 
-const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
+const FeedDetail: React.FC<OwnProps> = ({ feedId, handleFeedDetail }) => {
   const navigate = useNavigate();
   const navigator = useNavigate();
   const isLogin = useRecoilValue(isLoginAtom);
@@ -123,6 +123,9 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
   const { mutate: postReply } = usePostReply(feedId, isInput, accesstoken, () =>
     setInput(""),
   );
+  useEffect(() => {
+    return resetReply();
+  }, []);
 
   // 대댓글 등록 훅
   const { mutate: postComment } = usePostComment(
@@ -219,9 +222,9 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
     return <>오류 발생</>;
   }
   return (
-    <DetailBackground onClick={handleMoreReview}>
+    <DetailBackground onClick={handleFeedDetail}>
       <DetailContainer onClick={(e) => e.stopPropagation()}>
-        <CloseModal onClick={handleMoreReview}>
+        <CloseModal onClick={handleFeedDetail}>
           <span>&times;</span>
         </CloseModal>
         <DetailHeader>
@@ -231,7 +234,6 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleMoreReview }) => {
             >
               <span>{data.member?.nickname}</span>님의 게시글
             </DetailUserName>
-            {/* <DetailAdress></DetailAdress> */}
             <DetailTime>{setTime(data.createdDate)}</DetailTime>
           </DetailProfile>
           <SettingIcon onClick={handleSetting} />

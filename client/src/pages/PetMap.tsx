@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   PetMapContainer,
   Search,
@@ -30,10 +31,11 @@ import {
   MapToggleBtn,
   MapToggleContent,
   SetMode,
+  MapContainer,
+  PlusLevel,
+  MinusLevel,
 } from "../components/petMap/PetMap.Style";
-import styled from "styled-components";
 import { usePetMap } from "../hooks/MapHooks";
-import { useRecoilState, useRecoilValue } from "recoil";
 import { alertAtom, tokenAtom } from "../atoms";
 import MapFeedItem from "../components/petMap/MapFeedItem";
 import {
@@ -44,6 +46,7 @@ import {
 } from "../components/petMap/MapFeed.style";
 import MarkerIconG from "./../assets/images/icons/MarkerIconG.svg";
 import MarkerIconY from "./../assets/images/icons/MarkerIconY.svg";
+import FeedDetail from "../components/petFeed/FeedDetail";
 
 export type MarkerLocation = {
   lat: number;
@@ -86,42 +89,6 @@ const PetMap: React.FC = () => {
       lng: mapRef.current?.getCenter().getLng(),
     });
 
-  // // 주소로 변환할 좌표 입력 // 현재 위치의 좌표값을 저장할 상태
-  // const [coordinates, setCoordinates] = useState<MyLocation>({
-  //   center: defaultCoordinate,
-  // });
-
-  // // 현재 중앙 좌표 얻기
-  // const getCoordinates = () =>
-  //   setCoordinates({
-  //     center: {
-  //       lat: mapRef.current?.getCenter().getLat(),
-  //       lng: mapRef.current?.getCenter().getLng(),
-  //     },
-  //   });
-
-  // // 현재 좌표의 주소를 저장할 상태
-  // const [address, setAddress] = useState<any>(null);
-
-  // // 현재 중앙 좌표의 주소 얻기
-  // const getAddress = () => {
-  //   // 좌표 -> 주소로 변환해주는 객체
-  //   const geocoder = new kakao.maps.services.Geocoder();
-
-  //   // 주소로 변환할 좌표 입력
-  //   const coord = new kakao.maps.LatLng(
-  //     coordinates.center.lat,
-  //     coordinates.center.lng,
-  //   );
-
-  //   const callback = function (result: any, status: any) {
-  //     if (status === kakao.maps.services.Status.OK) {
-  //       setAddress(result[0].address);
-  //     }
-  //   };
-  //   geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
-  // };
-
   // 페이지네이션 정보
   const [isPage, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(5);
@@ -157,19 +124,6 @@ const PetMap: React.FC = () => {
       alertError();
     }
   };
-
-  // // http가 아닌 https 주소(localhost도 가능)에서 사용 가능함, 현 위치 탐색 기능
-  // useEffect(() => {
-  //   const successHandler = (response: any): void => {
-  //     const { latitude, longitude } = response.coords;
-  //     setLoacation({ latitude, longitude });
-  //   };
-
-  //   const errorHandler = (error: any): void => {
-  //     console.log(error);
-  //   };
-  //   navigator.geolocation.getCurrentPosition(successHandler, errorHandler);
-  // }, []);
 
   const sideRef = useRef<any>(null);
   const [sideOpen, setSideOpen] = useState(true);
@@ -289,6 +243,11 @@ const PetMap: React.FC = () => {
     if (!mapMode) petMap();
   }, [location, level, mapMode]);
 
+  // 피드 상세 모달창 열기
+  const [feedId, setFeedId] = useState<number | undefined>(undefined);
+  const handleGetFeedId = (id: number) => setFeedId(id);
+  const handleFeedDetail = () => setFeedId(undefined);
+
   if (isError) {
     return <>페이지를 불러오는데 실패했습니다.</>;
   }
@@ -360,9 +319,7 @@ const PetMap: React.FC = () => {
           </Map>
         )}
       </MapContainer>
-
       <SetMode ref={setRef} onClick={handleOpenToggle} />
-
       <MapMode ref={toggleRef}>
         <MapToggle mapMode={mapMode} onClick={handleToggle}>
           <MapToggleContent>
@@ -371,13 +328,11 @@ const PetMap: React.FC = () => {
           <MapToggleBtn />
         </MapToggle>
       </MapMode>
-
       {!searchInput && (
         <SearchBtn onClick={handleOpenSearch}>
           <Search />
         </SearchBtn>
       )}
-
       <SideContainer mapMode={mapMode} ref={sideRef}>
         {mapMode ? (
           <SearchContainer>
@@ -444,51 +399,76 @@ const PetMap: React.FC = () => {
             <MapFeedHeader>{`총 ${mapData.length}개의 게시글`}</MapFeedHeader>
             <MapFeeds>
               {mapData?.map((el: any, idx: number) => (
-                <MapFeedItem key={idx} el={el} />
+                <MapFeedItem
+                  key={idx}
+                  el={el}
+                  handleGetFeedId={handleGetFeedId}
+                />
               ))}
             </MapFeeds>
           </MapFeedContainer>
         )}
-
-        {(isData.length > 0 || mapData.length > 0) &&
+        {(isData.length > 0 || !mapMode) &&
           (sideOpen ? (
             <SideCloseBtn mapMode={mapMode} onClick={handleOpenSide} />
           ) : (
             <SideOpenBtn mapMode={mapMode} onClick={handleOpenSide} />
           ))}
       </SideContainer>
+      {feedId && (
+        <FeedDetail feedId={feedId} handleFeedDetail={handleFeedDetail} />
+      )}
     </PetMapContainer>
   );
 };
 
 export default PetMap;
 
-export const MapContainer = styled.div`
-  width: 100%;
-  max-height: 100%;
-`;
+// // http가 아닌 https 주소(localhost도 가능)에서 사용 가능함, 현 위치 탐색 기능
+// useEffect(() => {
+//   const successHandler = (response: any): void => {
+//     const { latitude, longitude } = response.coords;
+//     setLoacation({ latitude, longitude });
+//   };
 
-export const LevelBtn = styled.button`
-  background-color: rgb(73, 73, 73);
-  box-shadow: 1px 1px 2px 0.01px rgb(131, 131, 131);
-  width: 33px;
-  height: 33px;
-  color: rgb(248, 210, 89);
-  font-size: 24px;
-  text-align: center;
-  font-weight: bold;
-  z-index: 20;
-`;
+//   const errorHandler = (error: any): void => {
+//     console.log(error);
+//   };
+//   navigator.geolocation.getCurrentPosition(successHandler, errorHandler);
+// }, []);
 
-export const PlusLevel = styled(LevelBtn)`
-  border-radius: 8px 8px 0 0;
-  position: absolute;
-  bottom: 57px;
-  right: 14px;
-`;
-export const MinusLevel = styled(LevelBtn)`
-  border-radius: 0 0 8px 8px;
-  position: absolute;
-  bottom: 14px;
-  right: 14px;
-`;
+// // 주소로 변환할 좌표 입력 // 현재 위치의 좌표값을 저장할 상태
+// const [coordinates, setCoordinates] = useState<MyLocation>({
+//   center: defaultCoordinate,
+// });
+
+// // 현재 중앙 좌표 얻기
+// const getCoordinates = () =>
+//   setCoordinates({
+//     center: {
+//       lat: mapRef.current?.getCenter().getLat(),
+//       lng: mapRef.current?.getCenter().getLng(),
+//     },
+//   });
+
+// // 현재 좌표의 주소를 저장할 상태
+// const [address, setAddress] = useState<any>(null);
+
+// // 현재 중앙 좌표의 주소 얻기
+// const getAddress = () => {
+//   // 좌표 -> 주소로 변환해주는 객체
+//   const geocoder = new kakao.maps.services.Geocoder();
+
+//   // 주소로 변환할 좌표 입력
+//   const coord = new kakao.maps.LatLng(
+//     coordinates.center.lat,
+//     coordinates.center.lng,
+//   );
+
+//   const callback = function (result: any, status: any) {
+//     if (status === kakao.maps.services.Status.OK) {
+//       setAddress(result[0].address);
+//     }
+//   };
+//   geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+// };

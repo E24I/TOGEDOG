@@ -31,17 +31,17 @@ export const ModalBackGround = styled.div`
 `;
 
 export const ModalMenus = styled.div`
-  display: flex;
-  flex-direction: column;
+  background-color: rgb(255, 255, 255);
+  border-radius: 20px;
   width: 315px; // 임시사이즈
   height: 450px; //임시사이즈
   padding: 25px; // 임시 설정
   position: absolute;
   top: 20px;
   right: 20px;
+  display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  border-radius: 20px;
-  background-color: #ffffff;
 `;
 
 export const ModalMenu = styled.button`
