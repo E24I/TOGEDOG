@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { SettingIcon, SettingBox, Unknown } from "./Feed.Style";
+import { Unknown } from "./Feed.Style";
 import { feedCommentType } from "../../types/feedDataType";
-import Dropdown from "../../atoms/dropdown/Dropdowns";
 import { useDeleteComment, usePatchComment } from "../../hooks/CommentHook";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
@@ -34,7 +33,6 @@ const CommentItem: React.FC<OwnProps> = ({ comment }) => {
   const accesstoken = useRecoilValue(tokenAtom);
   const setAlertModal = useSetRecoilState(alertAtom);
 
-  const [isSetting, setSetting] = useState<boolean>(false);
   const [isEditMode, setEditMode] = useState<boolean>(false);
   const [content, setContent] = useState<string>(comment.content);
 
@@ -42,6 +40,12 @@ const CommentItem: React.FC<OwnProps> = ({ comment }) => {
   const { mutate: deleteComment } = useDeleteComment(
     comment.commentId,
     accesstoken,
+    () => {
+      setAlertModal("대댓글이 삭제 되었습니다.");
+    },
+    () => {
+      setAlertModal("대댓글 삭제에 실패했습니다.");
+    },
   );
 
   // 대댓글 수정 요청 훅
@@ -49,14 +53,19 @@ const CommentItem: React.FC<OwnProps> = ({ comment }) => {
     comment.commentId,
     content,
     accesstoken,
-    () => setEditMode(false),
-    () => setEditMode(false),
+    () => {
+      setEditMode(false);
+      setAlertModal("대댓글이 수정 되었습니다.");
+    },
+
+    () => {
+      setEditMode(false);
+      setAlertModal("대댓글 수정에 실패했습니다.");
+    },
   );
 
   const handleEditComment = () => setEditMode(true);
   const handleCommentDelete = () => deleteComment();
-  const handleSetting = () => setSetting(!isSetting);
-  const handleCloseDropdown = () => setSetting(false);
 
   // 대댓글 신고
   const [reportModal, setReportModal] = useRecoilState(reportAtom);

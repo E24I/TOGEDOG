@@ -70,8 +70,8 @@ type reportType = {
 export const reportAtom = atom<reportType>({
   key: "report",
   default: {
-    sort: "feed",
-    feedId: 1,
+    sort: "",
+    feedId: undefined,
     replyId: undefined,
     commentId: undefined,
     chatRoomId: undefined,

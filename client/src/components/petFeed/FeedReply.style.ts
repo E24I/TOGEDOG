@@ -5,14 +5,19 @@ import { ReactComponent as PinIcon } from "../../assets/images/icons/Pin.svg";
 export const Replies = styled.ul`
   background-color: rgb(245, 245, 245);
   width: 100%;
-  height: 100%;
   margin-bottom: 20px;
-  overflow-x: visible;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
+  @media screen and (min-width: 1024px) {
+    height: 100%;
+  }
+  @media screen and (max-width: 1024px) {
+    overflow-y: visible;
+    padding-bottom: 60px;
+  }
 `;
 
 export const Reply = styled.li`
@@ -124,4 +129,12 @@ export const MoreReply = styled.button`
 export const MoreComment = styled.button`
   margin-top: 8px;
   font-size: 14px;
+`;
+
+export const Empty = styled.div`
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

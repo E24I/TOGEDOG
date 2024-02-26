@@ -38,7 +38,6 @@ import {
   ReplyPin,
   SettingBox,
 } from "./FeedReply.style";
-import Dropdown from "../../atoms/dropdown/Dropdowns";
 import Setting from "../modal/setting/Setting";
 
 interface OwnProps {
@@ -57,16 +56,28 @@ const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
   const [isEditReply, setEditReply] = useState<boolean>(false);
   const [content, setContent] = useState<string>(reply.content);
 
-  const { mutate: deleteReply } = useDeleteReply(reply.replyId, accesstoken);
   const { mutate: patchReply } = usePatchReply(
     reply.replyId,
     content,
     accesstoken,
-    () => setEditReply(false),
-    () => setEditReply(false),
+    () => {
+      setEditReply(false);
+      setAlertModal("댓글 수정이 되었습니다.");
+    },
+
+    () => {
+      setEditReply(false);
+      setAlertModal("댓글 수정에 실패했습니다.");
+    },
   );
+  const { mutate: deleteReply } = useDeleteReply(reply.replyId, accesstoken);
   const { mutate: replyLike } = useLikeReply(reply.replyId, accesstoken);
-  const { mutate: replyfix } = useFixReply(reply.replyId, accesstoken);
+  const { mutate: replyfix } = useFixReply(
+    reply.replyId,
+    accesstoken,
+    () => setAlertModal("댓글 고정이 되었습니다."),
+    () => setAlertModal("댓글 고정에 실패했습니다."),
+  );
 
   const handleSetting = (): void => setSetting(!isSetting);
   const handleComment = (): void => setComment(!isComment);

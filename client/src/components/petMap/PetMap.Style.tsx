@@ -25,19 +25,27 @@ export const LevelBtn = styled.button`
   font-size: 24px;
   text-align: center;
   font-weight: bold;
-  z-index: 20;
+  position: absolute;
+  z-index: 10;
+  transition: 300ms;
 `;
 export const PlusLevel = styled(LevelBtn)`
   border-radius: 8px 8px 0 0;
-  position: absolute;
   bottom: 57px;
   right: 14px;
+  @media screen and (max-width: 1024px) {
+    bottom: 97px;
+    right: 10px;
+  }
 `;
 export const MinusLevel = styled(LevelBtn)`
   border-radius: 0 0 8px 8px;
-  position: absolute;
   bottom: 14px;
   right: 14px;
+  @media screen and (max-width: 1024px) {
+    bottom: 54px;
+    right: 10px;
+  }
 `;
 
 export const SearchBtn = styled.button`
@@ -88,6 +96,9 @@ export const SearchSection = styled.section`
   width: 100%;
   padding: 17px 23px;
   position: relative;
+  @media screen and (max-width: 1024px) {
+    padding: 10px 10px 20px 10px;
+  }
 `;
 
 export const SearchBox = styled.div`
@@ -145,6 +156,12 @@ export const ResultSection = styled.section`
   height: calc(100vh- 143px);
   padding: 0px 18px 0px 23px;
   position: relative;
+  transition: 300ms;
+
+  @media screen and (max-width: 500px) {
+    height: 160px;
+    padding: 0px 5px 0px 10px;
+  }
 `;
 
 export const ResultMsg = styled.div`
@@ -156,6 +173,10 @@ export const ResultMsg = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media screen and (max-width: 500px) {
+    padding: 0px;
+  }
 `;
 
 export const PageSection = styled.section`
@@ -185,24 +206,45 @@ export const RightPageBtn = styled(RightArrowCircle)`
 `;
 
 export const ResultLists = styled.ul`
-  width: 100%;
-  height: calc(100vh - 188px);
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: start;
-  overflow-y: auto;
+  @media screen and (min-width: 501px) {
+    width: 100%;
+    height: calc(100vh - 188px);
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: 8px; // 스크롤바 너비
+    }
+    &::-webkit-scrollbar-thumb {
+      height: 30%; //스크롤바 높이
+      background: rgb(215, 215, 215); // 스크롤바 색
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-track {
+      background: none; //스크롤바 배경 색
+    }
+  }
 
-  &::-webkit-scrollbar {
-    width: 8px; // 스크롤바 너비
-  }
-  &::-webkit-scrollbar-thumb {
-    height: 30%; //스크롤바 높이
-    background: rgb(215, 215, 215); // 스크롤바 색
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background: none; //스크롤바 배경 색
+  @media screen and (max-width: 500px) {
+    white-space: nowrap;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: start;
+    overflow-x: auto;
+    &::-webkit-scrollbar {
+      height: 8px; // 스크롤바 너비
+    }
+    &::-webkit-scrollbar-thumb {
+      width: 30%; //스크롤바 높이
+      background: rgb(215, 215, 215); // 스크롤바 색
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-track {
+      background: none; //스크롤바 배경 색
+    }
   }
 `;
 
@@ -218,6 +260,12 @@ export const ResultList = styled.li`
   display: flex;
   justify-content: start;
   align-items: center;
+
+  @media screen and (max-width: 500px) {
+    margin: 0px 15px 10px 0px;
+    padding: 10px;
+  }
+
   &:hover {
     background-color: rgb(245, 245, 245);
   }
@@ -276,6 +324,7 @@ export const SideOpenBtn = styled(RightArrow)<{ mapMode: boolean }>`
   position: absolute;
   bottom: 10px;
   right: -55px;
+  transition: 300ms;
   cursor: pointer;
   path {
     fill: ${(props) =>
@@ -290,6 +339,14 @@ export const SideOpenBtn = styled(RightArrow)<{ mapMode: boolean }>`
       stroke: ${(props) =>
         props.mapMode ? "rgb(95, 199, 164)" : "rgb(239, 212, 126)"};
     }
+  }
+  @media screen and (max-width: 1024px) {
+    bottom: 65px;
+    right: -55px;
+  }
+  @media screen and (max-width: 500px) {
+    top: 10px;
+    right: -55px;
   }
 `;
 
@@ -299,6 +356,7 @@ export const SideCloseBtn = styled(LeftArrow)<{ mapMode: boolean }>`
   position: absolute;
   bottom: 10px;
   right: -55px;
+  transition: 300ms;
   cursor: pointer;
   path {
     fill: ${(props) =>
@@ -313,6 +371,14 @@ export const SideCloseBtn = styled(LeftArrow)<{ mapMode: boolean }>`
       stroke: ${(props) =>
         props.mapMode ? "rgb(95, 199, 164)" : "rgb(239, 212, 126)"};
     }
+  }
+  @media screen and (max-width: 1024px) {
+    bottom: 65px;
+    right: -55px;
+  }
+  @media screen and (max-width: 500px) {
+    bottom: -50px;
+    left: 10px;
   }
 `;
 

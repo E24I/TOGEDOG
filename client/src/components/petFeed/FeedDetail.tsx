@@ -120,8 +120,15 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleFeedDetail }) => {
   const handleChangeAnswer = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
-  const { mutate: postReply } = usePostReply(feedId, isInput, accesstoken, () =>
-    setInput(""),
+  const { mutate: postReply } = usePostReply(
+    feedId,
+    isInput,
+    accesstoken,
+    () => {
+      setInput("");
+      setAlertModal("댓글 등록이 되었습니다.");
+    },
+    () => setAlertModal("댓글 등록에 실패했습니다."),
   );
   useEffect(() => {
     return resetReply();
@@ -135,7 +142,9 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleFeedDetail }) => {
     () => {
       setInput("");
       resetReply();
+      setAlertModal("대댓글 등록이 되었습니다.");
     },
+    () => setAlertModal("대댓글 등록에 실패했습니다."),
   );
   const handleEnterAnswer = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && isInput) {
@@ -165,7 +174,12 @@ const FeedDetail: React.FC<OwnProps> = ({ feedId, handleFeedDetail }) => {
   };
 
   // 피드 단일 삭제
-  const { mutate: deleteFeed } = useDeleteFeed(feedId, accesstoken);
+  const { mutate: deleteFeed } = useDeleteFeed(
+    feedId,
+    accesstoken,
+    () => setAlertModal("피드가 삭제 되었습니다."),
+    () => setAlertModal("피드 삭제에 실패했습니다."),
+  );
   const handleReplyDelete = () => {
     return deleteFeed();
   };

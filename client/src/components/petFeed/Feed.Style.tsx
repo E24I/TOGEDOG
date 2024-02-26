@@ -7,6 +7,25 @@ import { ReactComponent as Up_Circle } from "../../assets/images/icons/Up_Circle
 import { ReactComponent as LeftArrowIcon } from "../../assets/images/icons/LeftArrow.svg";
 import { ReactComponent as RightArrowIcon } from "../../assets/images/icons/RightArrow.svg";
 
+export const FeedContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+`;
+
+export const Feeds = styled.ul`
+  width: 100%;
+  max-width: 1170px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  @media screen and (max-width: 1024px) {
+    padding-bottom: 50px;
+  }
+`;
+
 export const Feed = styled.li`
   border-bottom: 3px solid rgb(215, 215, 215);
   width: 100%;
@@ -363,7 +382,7 @@ export const ScrollTop = styled.button`
   height: 36px;
   font-size: 14px;
   position: fixed;
-  bottom: 55px;
+  bottom: 65px;
   left: calc(50vw - 52px);
 `;
 

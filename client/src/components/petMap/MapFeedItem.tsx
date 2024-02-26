@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   MapFeed,
   MapFeedContent,
   MapFeedProfile,
   MapFeedUserName,
-  MapFeedAdress,
   MapFeedContents,
   MapFeedTitle,
   MapFeedMedia,
@@ -13,8 +12,8 @@ import {
   MapFeedLike,
   MapFeedReply,
   Message,
+  MapFeedBottom,
 } from "./MapFeed.style";
-import FeedDetail from "../petFeed/FeedDetail";
 import { Unknown } from "../petFeed/Feed.Style";
 import { UserImgForm } from "../../atoms/imgForm/ImgForm";
 import { useNavigate } from "react-router-dom";
@@ -40,51 +39,52 @@ const MapFeedItem: React.FC<OwnProps> = ({ el, handleGetFeedId }) => {
 
   return (
     <MapFeed>
-      <MapFeedProfile>
-        {el.member.imageUrl ? (
-          <UserImgForm
-            width={50}
-            height={50}
-            radius={50}
-            URL={el.member.imageUrl}
-            onClick={() => {
-              navigate(`/user/${el.member.memberId}`);
-            }}
-          />
-        ) : (
-          <Unknown />
-        )}
-        <MapFeedUserName>{el.member.nickname}</MapFeedUserName>
-        <MapFeedAdress></MapFeedAdress>
-      </MapFeedProfile>
       <MapFeedContents>
+        <MapFeedProfile>
+          {el.member.imageUrl ? (
+            <UserImgForm
+              width={50}
+              height={50}
+              radius={50}
+              URL={el.member.imageUrl}
+              onClick={() => {
+                navigate(`/user/${el.member.memberId}`);
+              }}
+            />
+          ) : (
+            <Unknown />
+          )}
+          <MapFeedUserName>{el.member.nickname}</MapFeedUserName>
+        </MapFeedProfile>
         <MapFeedTitle>{el.title}</MapFeedTitle>
         {el.content && (
           <MapFeedContent dangerouslySetInnerHTML={{ __html: el.content }} />
         )}
       </MapFeedContents>
-      {el.images[0] && <MapFeedMedia src={el.images[0]} alt="" />}
-      <MapFeedStatus>
-        <MapFeedLike>
-          <Heart
+      <MapFeedBottom>
+        {el.images[0] && <MapFeedMedia src={el.images[0]} alt="" />}
+        <MapFeedStatus>
+          <MapFeedLike>
+            <Heart
+              width="20px"
+              height="20px"
+              isLike={el.likeYn}
+              handleFunc={feedLike}
+            />
+            <span>{el.likeCount}</span>
+          </MapFeedLike>
+          <MapFeedReply>
+            <Message />
+            <span>{el.repliesCount}</span>
+          </MapFeedReply>
+          <Bookmark
             width="20px"
             height="20px"
-            isLike={el.likeYn}
-            handleFunc={feedLike}
+            isBookmark={el.bookmarkYn}
+            handleFunc={feedBookmark}
           />
-          <span>{el.likeCount}</span>
-        </MapFeedLike>
-        <MapFeedReply>
-          <Message />
-          <span>{el.repliesCount}</span>
-        </MapFeedReply>
-        <Bookmark
-          width="20px"
-          height="20px"
-          isBookmark={el.bookmarkYn}
-          handleFunc={feedBookmark}
-        />
-      </MapFeedStatus>
+        </MapFeedStatus>
+      </MapFeedBottom>
       <MapFeedCover
         className="cover"
         onClick={() => handleGetFeedId(el.feedId)}
