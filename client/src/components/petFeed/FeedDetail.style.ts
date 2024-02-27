@@ -5,7 +5,7 @@ import { ReactComponent as LeftArrowIcon } from "../../assets/images/icons/LeftA
 import { ReactComponent as RightArrowIcon } from "../../assets/images/icons/RightArrow.svg";
 
 export const DetailBackground = styled.div`
-  background-color: rgba(34, 34, 34, 0.6);
+  background-color: ${({ theme }) => theme.modal_bgColor};
   width: 100vw;
   height: 100vh;
   position: fixed;
@@ -19,7 +19,7 @@ export const DetailBackground = styled.div`
 `;
 
 export const DetailContainer = styled.section`
-  background-color: rgb(255, 255, 255);
+  background-color: ${({ theme }) => theme.feed_bgColor};
   border-radius: 20px 0px 20px 20px;
   width: 100%;
   max-width: 80vw;
@@ -37,10 +37,11 @@ export const DetailContainer = styled.section`
 `;
 
 export const CloseModal = styled.div`
-  background-color: rgb(255, 255, 255);
+  background-color: ${({ theme }) => theme.feed_bgColor};
   border-radius: 0 8px 8px 0;
   width: 60px;
   height: 60px;
+  color: ${({ theme }) => theme.feed_color};
   font-size: 30px;
   cursor: pointer;
   display: flex;
@@ -61,6 +62,10 @@ export const DetailHeader = styled.section`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: 300ms;
+  @media screen and (max-width: 500px) {
+    padding: 0px 30px;
+  }
 `;
 export const DetailProfile = styled.div`
   display: flex;
@@ -68,20 +73,24 @@ export const DetailProfile = styled.div`
   align-items: center;
 `;
 export const DetailUserName = styled.button`
+  color: ${({ theme }) => theme.feed_color};
   font-size: 20px;
   span {
     font-weight: 600;
   }
 `;
 export const DetailTime = styled.div`
+  color: ${({ theme }) => theme.feed_color};
   margin-left: 15px;
   font-size: 12px;
-  color: rgb(130, 130, 130);
 `;
 export const SettingIcon = styled(Dots)`
   width: 16px;
   height: 16px;
   cursor: pointer;
+  path {
+    fill: ${({ theme }) => theme.feed_color};
+  }
 `;
 
 export const DetailMain = styled.section`
@@ -99,12 +108,16 @@ export const DetailLeft = styled.section`
   width: 50%;
   max-height: calc(100% - 10px);
   padding: 0px 60px;
+  transition: 300ms;
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: start;
   @media screen and (max-width: 1024px) {
     width: 100%;
+  }
+  @media screen and (max-width: 500px) {
+    padding: 0px 20px;
   }
 `;
 export const DetailContents = styled.div`
@@ -114,6 +127,7 @@ export const DetailContents = styled.div`
 export const DetailTitle = styled.div`
   width: 100%;
   padding: 0px 5px;
+  color: ${({ theme }) => theme.feed_color};
   font-size: 18px;
   font-weight: 600;
 `;
@@ -121,7 +135,7 @@ export const DetailContent = styled.div`
   width: 100%;
   min-height: 1.5rem;
   margin-top: 5px;
-  color: rgb(130, 130, 130);
+  color: ${({ theme }) => theme.feed_color};
   font-size: 14px;
   line-height: 1.5rem;
   -webkit-line-clamp: 2;
@@ -227,10 +241,11 @@ export const LikeBox = styled.div`
 `;
 
 export const DetailRight = styled.section`
-  border-left: 1px solid rgb(215, 215, 215);
+  border-left: 1px solid ${({ theme }) => theme.feed_border};
   width: 50%;
   height: 100%;
   padding: 0px 40px 40px 40px;
+  transition: 300ms;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -239,10 +254,13 @@ export const DetailRight = styled.section`
     width: 100%;
     padding: 0px 40px 50px 40px;
   }
+  @media screen and (max-width: 500px) {
+    padding: 0px 20px;
+  }
 `;
 
 export const ReplyCount = styled.div`
-  border-bottom: 1px solid rgb(215, 215, 215);
+  border-bottom: 1px solid ${({ theme }) => theme.feed_border};
   width: 100%;
   padding: 10px 10px;
 `;
@@ -253,7 +271,7 @@ export const SendContainer = styled.div`
   align-items: center;
   transition: 300ms;
   @media screen and (max-width: 1024px) {
-    background-color: rgb(255, 255, 255);
+    background-color: ${({ theme }) => theme.feed_bgColor};
     max-width: calc(80vw - 80px);
     padding: 10px;
     position: fixed;
@@ -281,8 +299,8 @@ export const Unknown = styled(Person)`
   }
 `;
 export const SendBox = styled.div`
-  background-color: rgb(250, 250, 250);
-  border: 2px solid rgb(73, 73, 73);
+  background-color: ${({ theme }) => theme.feed_bgColor};
+  border: 2px solid ${({ theme }) => theme.feed_border};
   border-radius: 30px;
   width: 100%;
   height: 40px;
@@ -297,11 +315,13 @@ export const SendBox = styled.div`
   }
 `;
 export const SendInput = styled.input`
-  background-color: rgb(250, 250, 250);
+  background-color: ${({ theme }) => theme.feed_bgColor};
+  color: ${({ theme }) => theme.feed_color};
   width: 100%;
   height: 30px;
 `;
 export const SendBtn = styled.button`
+  color: ${({ theme }) => theme.feed_color};
   width: 50px;
   height: 30px;
 `;

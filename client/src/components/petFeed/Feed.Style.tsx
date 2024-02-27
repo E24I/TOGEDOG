@@ -8,6 +8,8 @@ import { ReactComponent as LeftArrowIcon } from "../../assets/images/icons/LeftA
 import { ReactComponent as RightArrowIcon } from "../../assets/images/icons/RightArrow.svg";
 
 export const FeedContainer = styled.div`
+  background-color: ${({ theme }) => theme.feed_bgColor};
+  color: ${({ theme }) => theme.feed_color};
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -27,7 +29,7 @@ export const Feeds = styled.ul`
 `;
 
 export const Feed = styled.li`
-  border-bottom: 3px solid rgb(215, 215, 215);
+  border-bottom: 2px solid ${({ theme }) => theme.feed_border};
   width: 100%;
   max-width: 1000px;
   padding: 30px 0px;
@@ -72,25 +74,23 @@ export const ProfileInfo = styled.div`
 export const UserName = styled.button`
   margin-bottom: 2px;
   white-space: nowrap;
+  color: ${({ theme }) => theme.feed_color};
   font-size: 17px;
   font-weight: 600; // 지워달라고 요청함.
 `;
 export const UploadTime = styled.span`
-  color: rgb(150, 150, 150);
+  color: ${({ theme }) => theme.feed_color};
   font-size: 11px;
-  font-weight: 600;
 `;
 
 export const ProfileBox = styled.div`
+  background-color: ${({ theme }) => theme.feed_bgColor};
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: rgb(215, 215, 215);
   display: flex;
   justify-content: center;
   align-items: center;
-
-  /* border: 1px solid black; */
 `;
 // export const FeedAddress = styled.div`
 //   font-size: 12px;
@@ -119,7 +119,7 @@ export const SettingIcon = styled(Dots)`
   height: 20px;
   cursor: pointer;
   path {
-    fill: rgb(200, 200, 200);
+    fill: ${({ theme }) => theme.feed_color};
   }
 `;
 
@@ -132,6 +132,7 @@ export const FeedContents = styled.div`
 export const FeedTitle = styled.div`
   width: 100%;
   padding: 0px 5px 10px 5px;
+  color: ${({ theme }) => theme.feed_color};
   font-size: 16px;
   font-weight: 600;
 `;
@@ -146,7 +147,7 @@ export const FeedContent = styled.div`
   max-height: 3rem;
   line-height: 1.5rem;
   -webkit-line-clamp: 2;
-  color: rgb(130, 130, 130);
+  color: ${({ theme }) => theme.feed_color};
   font-size: 14px;
   overflow: hidden;
   display: flex;
@@ -162,7 +163,7 @@ export const MoreBtn = styled.button`
   width: 70px;
   max-height: 1.5rem;
   line-height: 1.5rem;
-  color: rgb(130, 130, 130);
+  color: ${({ theme }) => theme.feed_color};
   font-size: 14px;
 `;
 
@@ -222,8 +223,7 @@ export const FeedMedia = styled.div`
 `;
 
 export const FeedVideo = styled.video`
-  background-color: rgb(215, 215, 215);
-  border: 1px solid rgb(215, 215, 215);
+  background-color: ${({ theme }) => theme.feed_border};
   border-radius: 15px;
   width: 309px;
   height: 309px;
@@ -232,8 +232,7 @@ export const FeedVideo = styled.video`
 `;
 
 export const FeedImg = styled.img`
-  background-color: rgb(215, 215, 215);
-  border: 1px solid rgb(215, 215, 215);
+  background-color: ${({ theme }) => theme.feed_border};
   border-radius: 15px;
   width: 309px;
   height: 309px;
@@ -249,6 +248,7 @@ export const LeftBar = styled.div`
   width: 30px;
   height: 100%;
   z-index: 10;
+  cursor: pointer;
   &:hover {
     background-color: rgb(1, 163, 255);
     filter: blur(30px);
@@ -267,7 +267,7 @@ export const RightBar = styled.div`
   width: 30px;
   height: 100%;
   z-index: 10;
-
+  cursor: pointer;
   &:hover {
     background-color: rgb(1, 163, 255);
     filter: blur(30px);
@@ -321,12 +321,10 @@ export const LikeBox = styled.div`
   flex-direction: column;
   justify-content: start;
   align-items: center;
-
   span {
     padding: 2px;
     font-size: 16px;
-    font-weight: 600;
-    color: rgb(110, 110, 110);
+    color: ${({ theme }) => theme.feed_color};
   }
 `;
 
@@ -335,12 +333,10 @@ export const ReviewCount = styled.div`
   flex-direction: column;
   justify-content: start;
   align-items: center;
-
   span {
     padding: 2px;
     font-size: 16px;
-    font-weight: 600;
-    color: rgb(110, 110, 110);
+    color: ${({ theme }) => theme.feed_color};
   }
 `;
 
@@ -351,7 +347,7 @@ export const Message = styled(MessageIcon)`
   cursor: pointer;
 
   path {
-    fill: rgb(187, 187, 187);
+    fill: rgb(217, 217, 217);
   }
   &:hover {
     path {
@@ -361,8 +357,8 @@ export const Message = styled(MessageIcon)`
   }
   &:active {
     path {
-      stroke: rgb(73, 73, 73);
-      fill: rgb(73, 73, 73);
+      stroke: rgb(110, 110, 110);
+      fill: rgb(109, 109, 109);
     }
   }
 `;

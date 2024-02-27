@@ -81,15 +81,6 @@ const CommentItem: React.FC<OwnProps> = ({ comment }) => {
   };
 
   const myId = useRecoilValue(memberIdAtom);
-  // const settingContent =
-  //   comment?.member.memberId === myId
-  //     ? {
-  //         수정: handleEditComment,
-  //         삭제: handleCommentDelete,
-  //       }
-  //     : {
-  //         신고: handleReportComment,
-  //       };
 
   // 대댓글 입력 창 onChange 이벤트
   const handleChangeComment = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -150,15 +141,6 @@ const CommentItem: React.FC<OwnProps> = ({ comment }) => {
               <button onClick={handleReportComment}>신고</button>
             )}
           </CommentStatus>
-          {/* <SettingBox onClick={handleSetting} onBlur={handleCloseDropdown}>
-            <SettingIcon />
-            {isSetting && (
-              <Dropdown
-                setting={settingContent}
-                handleCloseDropdown={handleCloseDropdown}
-              />
-            )}
-          </SettingBox> */}
         </CommentHeader>
         {!isEditMode ? (
           <CommentContent>{comment.content}</CommentContent>

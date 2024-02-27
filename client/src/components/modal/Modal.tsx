@@ -9,7 +9,6 @@ import {
   ModalMenus,
   ModeButton,
   MypageButton,
-  SearchButton,
 } from "./Modal.Style";
 import { isLoginAtom, tokenAtom, memberIdAtom, darkAtom } from "../../atoms";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";

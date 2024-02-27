@@ -3,13 +3,35 @@ export const darkTheme = {
   bgColorV2: "#222222",
   buttonColor: "#FADF84",
   fontColor: "#ffffff",
+
+  feed_bgColor: "rgb(34, 34, 34)",
+  feed_color: "rgb(255, 255, 255)",
+  feed_border: "rgb(248, 210, 89)",
+
+  modal_bgColor: "rgba(93, 93, 93, 0.6)",
+  setting_bgColor: "rgba(159, 159, 159, 0.4)",
+  button_bgColor: "rgb(248, 210, 89)",
+
+  bookmark_bgColor: "rgb(248, 210, 89)",
 };
+
 export const lightTheme = {
   bgColor: "#FADF84",
   bgColorV2: "#ffffff",
   buttonColor: "#494949",
   fontColor: "#494949",
+
+  feed_bgColor: "rgb(255, 255, 255)",
+  feed_color: "rgb(40, 40, 40)",
+  feed_border: "rgb(73, 73, 73)",
+
+  modal_bgColor: "rgba(73, 73, 73, 0.6)",
+  setting_bgColor: "rgba(34, 34, 34, 0.4)",
+  button_bgColor: "rgb(255, 255, 255)",
+
+  bookmark_bgColor: "rgb(73, 73, 73)",
 };
+
 export const theme = {
   lightTheme,
   darkTheme,
