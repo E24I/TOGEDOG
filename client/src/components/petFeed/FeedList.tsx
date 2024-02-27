@@ -18,7 +18,6 @@ import {
   LikeBox,
   ReviewCount,
   SettingIcon,
-  SettingBox,
   FeedVideo,
   Message,
   ProfileInfo,
@@ -33,6 +32,7 @@ import {
   MediaBar,
   ContentBox,
   MoreBtn,
+  SettingBox,
 } from "./Feed.Style";
 import Heart from "../../atoms/button/Heart";
 import Bookmark from "../../atoms/button/Bookmark";
@@ -189,9 +189,6 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   // 맨 위로 스크롤
   const handleScrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
-  const scrollLeft = () =>
-    mediaBoxRef.current?.scrollX({ left: 10, behavior: "smooth" });
-
   const [content, setContent] = useState<boolean>(false);
 
   return (
@@ -219,7 +216,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
           </ProfileInfo>
         </Profile>
 
-        <SettingBox onClick={handleSetting} onBlur={() => setSetting(false)}>
+        <SettingBox onClick={handleSetting} onBlur={handleSetting}>
           <SettingIcon />
         </SettingBox>
       </FeedHeader>
@@ -307,7 +304,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
         </RightStatus>
       </FeedStatus>
       {isDetail && (
-        <FeedDetail feedId={items.feedId} handleMoreReview={handleMoreReview} />
+        <FeedDetail feedId={items.feedId} handleFeedDetail={handleMoreReview} />
       )}
       {isSetting && (
         <Setting

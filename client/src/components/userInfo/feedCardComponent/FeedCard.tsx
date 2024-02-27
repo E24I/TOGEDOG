@@ -42,7 +42,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
         </ContentBox>
       </div>
       {isDetail && (
-        <FeedDetail feedId={feedId} handleMoreReview={handleMoreReview} />
+        <FeedDetail feedId={feedId} handleFeedDetail={handleMoreReview} />
       )}
     </CardForm>
   );

@@ -17,7 +17,7 @@ export const Replies = styled.ul`
 
 export const Reply = styled.li`
   width: 100%;
-  padding: 15px 10px 15px 10px;
+  padding: 15px 10px 15px 0px;
   position: relative;
   display: flex;
   justify-content: start;
@@ -29,7 +29,7 @@ export const ReplyProfile = styled.button`
   border-radius: 50%;
   width: 50px;
   height: 50px;
-  margin-right: 10px;
+  margin: 0px 10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -103,10 +103,22 @@ export const SendComment = styled.button`
   margin-right: 15px;
   font-size: 12px;
 `;
+
+export const SettingBox = styled.button`
+  position: relative;
+  width: 16px;
+  height: 16px;
+`;
 export const SettingIcon = styled(Dots)`
   width: 16px;
   height: 16px;
   cursor: pointer;
+`;
+
+export const MoreReply = styled.button`
+  margin: 15px 0px;
+  color: rgb(0, 116, 201);
+  font-size: 14px;
 `;
 
 export const MoreComment = styled.button`

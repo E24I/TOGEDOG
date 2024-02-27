@@ -12,6 +12,34 @@ export const PetMapContainer = styled.div`
   height: calc(100vh - 80px);
 `;
 
+export const MapContainer = styled.div`
+  width: 100%;
+  max-height: 100%;
+`;
+export const LevelBtn = styled.button`
+  background-color: rgb(73, 73, 73);
+  box-shadow: 1px 1px 2px 0.01px rgb(131, 131, 131);
+  width: 33px;
+  height: 33px;
+  color: rgb(248, 210, 89);
+  font-size: 24px;
+  text-align: center;
+  font-weight: bold;
+  z-index: 20;
+`;
+export const PlusLevel = styled(LevelBtn)`
+  border-radius: 8px 8px 0 0;
+  position: absolute;
+  bottom: 57px;
+  right: 14px;
+`;
+export const MinusLevel = styled(LevelBtn)`
+  border-radius: 0 0 8px 8px;
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+`;
+
 export const SearchBtn = styled.button`
   background-color: rgb(105, 211, 176);
   box-shadow: 2px 2px 5px 0.1px rgb(150, 150, 150);

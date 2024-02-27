@@ -36,6 +36,7 @@ import {
   SettingIcon,
   LikeBox,
   ReplyPin,
+  SettingBox,
 } from "./FeedReply.style";
 import Dropdown from "../../atoms/dropdown/Dropdowns";
 import Setting from "../modal/setting/Setting";
@@ -210,10 +211,9 @@ const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
         <ReplyStatus>
           <ReplyTime>{setTime(reply.createdDate)}</ReplyTime>
           <SendComment onClick={handelComment}>답글달기</SendComment>
-          <SettingIcon
-            onClick={handleSetting}
-            onBlur={() => setSetting(false)}
-          />
+          <SettingBox onClick={handleSetting} onBlur={handleSetting}>
+            <SettingIcon />
+          </SettingBox>
         </ReplyStatus>
         {reply.commentCount > 0 && (
           <MoreComment onClick={handleComment}>
@@ -225,7 +225,6 @@ const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
       {isSetting && (
         <Setting
           elements={settingContent}
-          handleSetting={handleSetting}
           width="170px"
           height="36px"
           font="12px"

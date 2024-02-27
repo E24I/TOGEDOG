@@ -66,22 +66,21 @@ export const ProfileStyle = styled(Profile)`
 `;
 
 export const HeaderContainer = styled.div<HeaderProps>`
-  position: sticky;
-  top: 0;
   background-color: ${(props) => (props.isDark ? `#222222` : `white`)};
-  z-index: 20;
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 70px;
-  padding: 0 20px;
   box-shadow: ${(props) =>
     props.scrolled
       ? `0 4px 8px ${props.isDark ? "white" : "rgba(0, 0, 0, 0.1)"}`
       : "none"};
+  width: 100%;
+  height: 70px;
+  padding: 0 20px;
   transition:
     box-shadow 0.2s ease,
     background-color 0.2s ease;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
 `;
 
 export const HeaderBox = styled.div`

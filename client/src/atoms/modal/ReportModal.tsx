@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { ModalBackground } from "../layout/Layout.style";
 import {
-  ModalContainer,
+  ReportContainer,
   ModalContents,
   BtnBox,
-  PositiveBtn,
-  NegativeBtn,
+  SendBtn,
+  CloseBtn,
   ModalInput,
 } from "./Modal.style";
 import { useRecoilValue, useResetRecoilState } from "recoil";
@@ -61,38 +61,36 @@ const ReportModal: React.FC = () => {
   const handlePositiveFunc = () => {
     switch (reportModal.sort) {
       case "feed":
-        console.log("피드 신고버튼 클릭");
         reportFeed();
         return;
 
       case "reply":
-        console.log("댓글 신고버튼 클릭");
         reportReply();
         return;
 
       case "comment":
-        console.log("대댓글 신고버튼 클릭");
         reportComment();
         return;
 
       case "chat":
-        console.log("채팅 신고버튼 클릭");
         reportChat();
+        return;
     }
   };
 
   return (
     <ModalBackground onClick={handleResetReport}>
-      <ModalContainer onClick={(e) => e.stopPropagation()}>
-        <ModalContents>
-          <span>신고 사유를 적어주세요.</span>
+      <ReportContainer onClick={(e) => e.stopPropagation()}>
+        <CloseBtn onClick={handleResetReport}>&times;</CloseBtn>
+        <ReportlTitle>
+          {reportModal.sort === "feed" && <span>피드 신고</span>}
+          {reportModal.sort === "reply" && <span>댓글 신고</span>}
+          {reportModal.sort === "comment" && <span>대댓글 신고</span>}
+          {reportModal.sort === "chat" && <span>채팅 신고</span>}
           <ModalInput value={inputValue} onChange={handleChangeInput} />
-        </ModalContents>
-        <BtnBox>
-          <PositiveBtn onMouseUp={handlePositiveFunc}>신고 완료</PositiveBtn>
-          <NegativeBtn onClick={handleResetReport}>신고 취소</NegativeBtn>
-        </BtnBox>
-      </ModalContainer>
+        </ReportlTitle>
+        <SendBtn onMouseUp={handlePositiveFunc}>제출</SendBtn>
+      </ReportContainer>
     </ModalBackground>
   );
 };

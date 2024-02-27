@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import FeedReply from "./FeedReply";
 import { tokenAtom } from "../../atoms";
-import { Replies } from "./FeedReply.style";
+import { MoreReply, Replies } from "./FeedReply.style";
 import { useInfiniteGetReplies } from "../../hooks/ReplyHook";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 
@@ -42,7 +42,7 @@ const FeedReplies: React.FC<OwnProps> = ({ feedId, feedOwnerId }) => {
       ))}
       {moreReplies && <div ref={setTarget}></div>}
       {repliesData && repliesData.length > 0 && hasNextPage && (
-        <button onClick={() => setMoreReplies(true)}>댓글 더보기</button>
+        <MoreReply onClick={() => setMoreReplies(true)}>댓글 더보기</MoreReply>
       )}
     </Replies>
   );
