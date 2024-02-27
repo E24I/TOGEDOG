@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import FeedReply from "./FeedReply";
 import { tokenAtom } from "../../atoms";
-import { MoreReply, Replies } from "./FeedReply.style";
+import { Empty, MoreReply, Replies } from "./FeedReply.style";
 import { useInfiniteGetReplies } from "../../hooks/ReplyHook";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 
@@ -33,13 +33,19 @@ const FeedReplies: React.FC<OwnProps> = ({ feedId, feedOwnerId }) => {
   }
   return (
     <Replies>
-      {repliesData?.map((reply: any) => (
-        <FeedReply
-          key={reply.replyId}
-          reply={reply}
-          feedOwnerId={feedOwnerId}
-        />
-      ))}
+      {repliesData && repliesData.length > 0 ? (
+        repliesData?.map((reply: any) => (
+          <FeedReply
+            key={reply.replyId}
+            reply={reply}
+            feedOwnerId={feedOwnerId}
+          />
+        ))
+      ) : (
+        <Empty>
+          <span>첫 댓글을 남겨보세요!</span>
+        </Empty>
+      )}
       {moreReplies && <div ref={setTarget}></div>}
       {repliesData && repliesData.length > 0 && hasNextPage && (
         <MoreReply onClick={() => setMoreReplies(true)}>댓글 더보기</MoreReply>

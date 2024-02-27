@@ -24,7 +24,6 @@ export const useInfiniteGetReplies = (feedId: number, accesstoken: string) => {
     queryKey: ["Replies", feedId, accesstoken],
     queryFn: async ({ pageParam = 1 }) => {
       const response = await getReplies(feedId, accesstoken, pageParam);
-      console.log("response", response);
       return response;
     },
     getNextPageParam: (lastPage, allPages) => {
@@ -54,16 +53,12 @@ export const usePostReply = (
       return postReply(feedId, content, accesstoken);
     },
     onSuccess: (res) => {
-      console.log(res);
-      alert("댓글 등록 완료");
       queryClient.invalidateQueries({ queryKey: ["Feed"] });
       queryClient.invalidateQueries({ queryKey: ["Replies"] });
       successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log(err);
-      alert("댓글 등록 실패");
       failFunc && failFunc();
       return;
     },
@@ -83,15 +78,11 @@ export const usePatchReply = (
       return patchReply(replyId, content, accesstoken);
     },
     onSuccess: (res) => {
-      console.log(res);
-      alert("댓글 수정 완료");
       queryClient.invalidateQueries({ queryKey: ["Replies"] });
       successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log(err);
-      alert("댓글 수정 실패");
       failFunc && failFunc();
       return;
     },
@@ -110,14 +101,12 @@ export const useDeleteReply = (
       return deleteReply(replyId, accesstoken);
     },
     onSuccess: (res) => {
-      alert("댓글 삭제 완료");
       queryClient.invalidateQueries({ queryKey: ["Feed"] });
       queryClient.invalidateQueries({ queryKey: ["Replies"] });
       successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      alert("댓글 삭제 실패");
       failFunc && failFunc();
       return;
     },
@@ -136,15 +125,11 @@ export const useFixReply = (
       return fixReply(replyId, accesstoken);
     },
     onSuccess: (res) => {
-      console.log(res);
-      alert("댓글 고정 완료");
       queryClient.invalidateQueries({ queryKey: ["Replies"] });
       successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log(err);
-      alert("댓글 고정 실패");
       failFunc && failFunc();
       return;
     },
@@ -163,15 +148,11 @@ export const useLikeReply = (
       return likeReply(replyId, accesstoken);
     },
     onSuccess: (res) => {
-      console.log(res);
-      alert("댓글 좋아요 성공");
       queryClient.invalidateQueries({ queryKey: ["Replies"] });
       successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log(err);
-      alert("댓글 좋아요 실패");
       failFunc && failFunc();
       return;
     },
@@ -193,14 +174,10 @@ export const useReportReply = (
       }
     },
     onSuccess: (res) => {
-      console.log(res);
-      alert("댓글 신고 완료");
       successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log(err);
-      alert("댓글 신고 실패");
       failFunc && failFunc();
       return;
     },

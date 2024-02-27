@@ -25,7 +25,6 @@ export const useInfiniteGetComments = (replyId: number) => {
     queryKey: ["comment", replyId],
     queryFn: async ({ pageParam = 1 }) => {
       const response = await getComments(replyId, pageParam);
-      console.log("response", response);
       return response;
     },
     getNextPageParam: (lastPage, allPages) => {
@@ -55,16 +54,12 @@ export const usePostComment = (
       if (replyId) return postComment(replyId, content, accesstoken);
     },
     onSuccess: (res) => {
-      console.log(res);
-      alert("대댓글 등록 완료");
       queryClient.invalidateQueries({ queryKey: ["comment"] });
       queryClient.invalidateQueries({ queryKey: ["Replies"] });
       successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log(err);
-      alert("대댓글 등록 실패");
       failFunc && failFunc();
       return;
     },
@@ -84,15 +79,11 @@ export const usePatchComment = (
       return patchComment(commentId, content, accesstoken);
     },
     onSuccess: (res) => {
-      console.log(res);
-      alert("대댓글 수정 완료");
       queryClient.invalidateQueries({ queryKey: ["comment"] });
       successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log(err);
-      alert("대댓글 수정 실패");
       failFunc && failFunc();
       return;
     },
@@ -111,15 +102,11 @@ export const useDeleteComment = (
       return deleteComment(commentId, accesstoken);
     },
     onSuccess: (res) => {
-      console.log(res);
-      alert("대댓글 삭제 완료");
       queryClient.invalidateQueries({ queryKey: ["comment"] });
       successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log(err);
-      alert("대댓글 삭제 실패");
       failFunc && failFunc();
       return;
     },
@@ -141,14 +128,10 @@ export const useReportComment = (
       }
     },
     onSuccess: (res) => {
-      console.log(res);
-      alert("대댓글 신고 완료");
       successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log(err);
-      alert("대댓글 신고 실패");
       failFunc && failFunc();
       return;
     },

@@ -133,11 +133,7 @@ const PetMap: React.FC = () => {
 
   // 펫지도 좌표에 따른 피드 리스트 조회
   const getMapData = (res: any) => setMapData(res);
-  const {
-    mutate: petMap,
-    isPending,
-    isError,
-  } = usePetMap(
+  const { mutate: petMap, isError } = usePetMap(
     {
       wgs84_y: location.lat,
       wgs84_x: location.lng,
@@ -145,6 +141,7 @@ const PetMap: React.FC = () => {
     },
     accesstoken,
     getMapData,
+    () => setAlertModal("피드를 불러오는데 실패했습니다."),
   );
 
   // SearchInput 창 열고 닫기

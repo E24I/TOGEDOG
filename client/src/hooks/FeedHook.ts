@@ -74,16 +74,12 @@ export const useDeleteFeed = (
       return deleteFeed(feedId, accesstoken);
     },
     onSuccess: (res) => {
-      console.log(res);
-      alert("피드 삭제 완료");
       queryClient.invalidateQueries({ queryKey: ["Feeds"] });
       queryClient.invalidateQueries({ queryKey: ["userFeed"] });
       successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log(err);
-      alert("피드 삭제 실패");
       failFunc && failFunc();
       return;
     },
@@ -133,13 +129,11 @@ export const useUpdateFeed = (
       return updateFeed(updateInformation, token, feedId);
     },
     onSuccess: (res) => {
-      console.log("성공", res);
       queryClient.invalidateQueries({ queryKey: ["Feeds"] });
       navigator("/feeds");
       return;
     },
     onError: (err) => {
-      console.log("실패", err);
       return;
     },
   });
@@ -164,7 +158,6 @@ export const useFeedLike = (
       return;
     },
     onError: (err) => {
-      console.log(err);
       failFunc && failFunc();
       return;
     },
@@ -190,7 +183,6 @@ export const useFeedBookmark = (
       return;
     },
     onError: (err) => {
-      console.log(err);
       failFunc && failFunc();
       return;
     },
@@ -212,14 +204,10 @@ export const useFeedReport = (
       }
     },
     onSuccess: (res) => {
-      console.log(res);
-      alert("피드 신고 완료");
       successFunc && successFunc();
       return;
     },
     onError: (err) => {
-      console.log(err);
-      alert("피드 신고 실패");
       failFunc && failFunc();
       return;
     },

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation } from "@tanstack/react-query";
 import { coordinateType, enrollMapType } from "../types/mapType";
 import { getPetMap, postMap } from "../services/mapService";
@@ -37,7 +36,6 @@ export const usePetMap = (
       return;
     },
     onError: (err) => {
-      alert("펫지도 피드 업데이트 실패");
       failFunc && failFunc();
       return;
     },

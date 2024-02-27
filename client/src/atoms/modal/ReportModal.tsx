@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { ModalBackground } from "../layout/Layout.style";
 import {
   ReportContainer,
-  ModalContents,
-  BtnBox,
   SendBtn,
   CloseBtn,
-  ModalInput,
+  ReportInput,
+  ReportlTitle,
 } from "./Modal.style";
-import { useRecoilValue, useResetRecoilState } from "recoil";
-import { reportAtom, tokenAtom } from "../../atoms";
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
+import { alertAtom, reportAtom, tokenAtom } from "../../atoms";
 import { useFeedReport } from "../../hooks/FeedHook";
 import { useReportReply } from "../../hooks/ReplyHook";
 import { useReportComment } from "../../hooks/CommentHook";
@@ -18,43 +17,54 @@ import { useReportChat } from "../../hooks/ChatHooks";
 const ReportModal: React.FC = () => {
   const accesstoken = useRecoilValue(tokenAtom);
   const reportModal = useRecoilValue(reportAtom);
+  const setAlertModal = useSetRecoilState(alertAtom);
 
   const [inputValue, setInputValue] = useState<string>("");
-  const handleChangeInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
 
   // 신고 모달 초기화
   const resetReport = useResetRecoilState(reportAtom);
-  const handleResetReport = () => resetReport();
+  const handleResetReport = () => {
+    resetReport();
+  };
+  const handleSuccessReport = () => {
+    resetReport();
+    setAlertModal("신고가 접수 되었습니다.");
+  };
+  const handleFailReport = () => {
+    resetReport();
+    setAlertModal("신고 제출에 실패했습니다.");
+  };
 
   const { mutate: reportFeed } = useFeedReport(
     reportModal.feedId,
     inputValue,
     accesstoken,
-    handleResetReport,
-    handleResetReport,
+    handleSuccessReport,
+    handleFailReport,
   );
   const { mutate: reportReply } = useReportReply(
     reportModal.replyId,
     inputValue,
     accesstoken,
-    handleResetReport,
-    handleResetReport,
+    handleSuccessReport,
+    handleFailReport,
   );
   const { mutate: reportComment } = useReportComment(
     reportModal.commentId,
     inputValue,
     accesstoken,
-    handleResetReport,
-    handleResetReport,
+    handleSuccessReport,
+    handleFailReport,
   );
 
   const { mutate: reportChat } = useReportChat(
     inputValue,
     reportModal.chatRoomId,
-    handleResetReport,
-    handleResetReport,
+    handleSuccessReport,
+    handleFailReport,
   );
 
   // positive 버튼 클릭 시
@@ -87,8 +97,12 @@ const ReportModal: React.FC = () => {
           {reportModal.sort === "reply" && <span>댓글 신고</span>}
           {reportModal.sort === "comment" && <span>대댓글 신고</span>}
           {reportModal.sort === "chat" && <span>채팅 신고</span>}
-          <ModalInput value={inputValue} onChange={handleChangeInput} />
         </ReportlTitle>
+        <ReportInput
+          placeholder="신고 사유를 적어주세요."
+          value={inputValue}
+          onChange={handleChangeInput}
+        />
         <SendBtn onMouseUp={handlePositiveFunc}>제출</SendBtn>
       </ReportContainer>
     </ModalBackground>

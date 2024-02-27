@@ -100,7 +100,12 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
   };
 
   // 피드 단일 삭제
-  const { mutate: deleteFeed } = useDeleteFeed(items.feedId, accesstoken);
+  const { mutate: deleteFeed } = useDeleteFeed(
+    items.feedId,
+    accesstoken,
+    () => setAlertModal("피드가 삭제 되었습니다."),
+    () => setAlertModal("피드 삭제에 실패했습니다."),
+  );
   const handleReplyDelete = () => {
     return deleteFeed();
   };
@@ -316,7 +321,7 @@ const FeedList: React.FC<OwnProps> = ({ items }) => {
         />
       )}
       {height >= 500 &&
-        (width <= 375 ? (
+        (width <= 1024 ? (
           <ScrollTop onClick={handleScrollTop}>맨 위로</ScrollTop>
         ) : (
           <UpBtn onClick={handleScrollTop} />

@@ -7,6 +7,7 @@ import { useInfiniteGetFeeds } from "../hooks/FeedHook";
 import useIntersectionObserver from "../hooks/useIntersectionObserver";
 import { useRecoilValue } from "recoil";
 import { tokenAtom } from "../atoms";
+import { FeedContainer, Feeds } from "../components/petFeed/Feed.Style";
 
 const PetFeed: React.FC = () => {
   const accesstoken = useRecoilValue(tokenAtom);
@@ -42,39 +43,3 @@ const PetFeed: React.FC = () => {
 export default PetFeed;
 
 export const Loadings = styled.img``;
-
-export const FeedContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-`;
-
-export const Feeds = styled.ul`
-  width: 100%;
-  max-width: 1170px;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-`;
-
-export const LoadingContainer = styled.div`
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-`;
-
-export const PetLeftFoot = styled(Pets)`
-  width: 30px;
-  height: 30px;
-  margin-right: 15px;
-`;
-
-export const PetRightFoot = styled(Pets)`
-  width: 30px;
-  height: 30px;
-  margin-left: 15px;
-`;

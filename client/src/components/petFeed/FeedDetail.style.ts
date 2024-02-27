@@ -8,7 +8,6 @@ export const DetailBackground = styled.div`
   background-color: rgba(34, 34, 34, 0.6);
   width: 100vw;
   height: 100vh;
-  padding: 0px 30px;
   position: fixed;
   top: 0;
   left: 0;
@@ -25,34 +24,16 @@ export const DetailContainer = styled.section`
   width: 100%;
   max-width: 80vw;
   height: 100%;
-  /* aspect-ratio: 1.5/1; */
   padding: 25px 0px;
   position: relative;
-
-  /* @media screen and (max-width: 1200px) {
-    grid-template-columns: repeat(1, 100%);
+  transition: 300ms;
+  @media screen and (max-width: 1024px) {
     overflow-y: auto;
-    overflow-x: visible;
-
-    &::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      height: 30%;
-      background: gray;
-      border-radius: 10px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: rgb(0, 0, 0, 0);
-    }
+    border-radius: 0px;
   }
-
-  @media screen and (min-width: 1200px) {
-    grid-template-columns: repeat(2, 50%);
-    grid-template-rows: repeat(1, 100%);
-  } */
+  @media screen and (max-width: 767px) {
+    max-width: 100vw;
+  }
 `;
 
 export const CloseModal = styled.div`
@@ -68,6 +49,9 @@ export const CloseModal = styled.div`
   position: absolute;
   top: 0;
   right: -60px;
+  @media screen and (max-width: 1024px) {
+    right: 0px;
+  }
 `;
 
 export const DetailHeader = styled.section`
@@ -106,8 +90,9 @@ export const DetailMain = styled.section`
   display: flex;
   justify-content: start;
   align-items: start;
-  /* display: grid;
-  justify-items: center; */
+  @media screen and (max-width: 1024px) {
+    flex-direction: column;
+  }
 `;
 
 export const DetailLeft = styled.section`
@@ -118,6 +103,9 @@ export const DetailLeft = styled.section`
   flex-direction: column;
   justify-content: start;
   align-items: start;
+  @media screen and (max-width: 1024px) {
+    width: 100%;
+  }
 `;
 export const DetailContents = styled.div`
   width: 100%;
@@ -242,13 +230,15 @@ export const DetailRight = styled.section`
   border-left: 1px solid rgb(215, 215, 215);
   width: 50%;
   height: 100%;
-  padding: 0px 60px 40px 60px;
+  padding: 0px 40px 40px 40px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-
-  /* border: 1px solid black; */
+  @media screen and (max-width: 1024px) {
+    width: 100%;
+    padding: 0px 40px 50px 40px;
+  }
 `;
 
 export const ReplyCount = styled.div`
@@ -261,6 +251,19 @@ export const SendContainer = styled.div`
   display: flex;
   justify-content: start;
   align-items: center;
+  transition: 300ms;
+  @media screen and (max-width: 1024px) {
+    background-color: rgb(255, 255, 255);
+    max-width: calc(80vw - 80px);
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    left: calc(50% - 40vw + 40px);
+  }
+  @media screen and (max-width: 767px) {
+    max-width: 100vw;
+    left: calc(50% - 50vw);
+  }
 `;
 export const SendProfile = styled.div`
   width: 40px;
