@@ -5,7 +5,7 @@ import { ReactComponent as SirenIcon } from "./../../../assets/images/icons/Sire
 import { ReactComponent as PinIcon } from "./../../../assets/images/icons/Pin.svg";
 
 export const SettingContainer = styled.div`
-  background-color: rgba(34, 34, 34, 0.4);
+  background-color: ${({ theme }) => theme.setting_bgColor};
   width: 100%;
   height: calc(100% + 6px);
   display: flex;
@@ -21,7 +21,7 @@ export const SettingBtn = styled.button<{
   height: string;
   font: string;
 }>`
-  background-color: rgb(255, 255, 255);
+  background-color: ${({ theme }) => theme.buttonColor};
   border-bottom: 1px solid black;
   width: ${(props) => props.width};
   height: ${(props) => props.height};
@@ -30,13 +30,13 @@ export const SettingBtn = styled.button<{
   justify-content: center;
   align-items: center;
   &:nth-child(1) {
-    border-top-left-radius: 18px;
-    border-top-right-radius: 18px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
   }
   &:nth-last-child(1) {
     border: none;
-    border-end-start-radius: 18px;
-    border-end-end-radius: 18px;
+    border-end-start-radius: 12px;
+    border-end-end-radius: 12px;
   }
   &:hover {
     background-color: rgb(73, 73, 73);

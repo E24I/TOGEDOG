@@ -207,7 +207,7 @@ const FeedReply: React.FC<OwnProps> = ({ reply, feedOwnerId }) => {
               onKeyUp={handleReplyPatch}
             />
           ) : (
-            <ReplyContent>{reply.content}</ReplyContent>
+            <ReplyContent onClick={handelComment}>{reply.content}</ReplyContent>
           )}
           <LikeBox>
             <Heart
