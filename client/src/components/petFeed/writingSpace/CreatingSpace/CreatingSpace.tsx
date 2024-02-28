@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 //피드 작성 컴포넌트
-import React, { ChangeEvent, useState, useRef, KeyboardEvent } from "react";
+import React, {
+  ChangeEvent,
+  useState,
+  useRef,
+  KeyboardEvent,
+  useEffect,
+} from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 import * as C from "./CreatingSpace.Style";
@@ -40,14 +46,24 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({
   setContentLength,
 }) => {
   const [quillValue, setQuillValue] = useState("");
-  const contentRef = useRef<any>();
+  const quillRef = useRef<any>();
   const [alert, setAlert] = useState<string>("");
   const myMemberId = useRecoilValue(memberIdAtom);
+
+  useEffect(() => {
+    if (quillRef.current) {
+      const quill = quillRef.current.getEditor();
+
+      quill.root.addEventListener("mousedown", () => {
+        quillRef.current.focus();
+      });
+    }
+  }, []);
 
   //제목 입력칸에서 엔터 누르면 내용 입력칸으로 넘어가게 만든 함수
   const enterToContent = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter") {
-      contentRef.current.focus();
+      quillRef.current.focus();
     }
   };
   //입력한 제목을 검증하여 handleInputChange의 파라미터로 WritingSpace.ts의 postInformation에 전달
@@ -95,10 +111,9 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({
         <C.Content length={contentLength}>
           내용 (<span>{contentLength}</span>/200)
         </C.Content>
-
         <ReactQuill
           placeholder="내용을 입력하세요"
-          ref={contentRef}
+          ref={quillRef}
           value={quillValue}
           modules={modules}
           onChange={(editor) => sendContent(editor)}

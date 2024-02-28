@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import * as U from "./UpdatingSpace.Style";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { memberIdAtom, tokenAtom } from "../../../../atoms";
 import { feedDetailType } from "../../../../types/feedDataType";
-import { Alert } from "../CreatingSpace/CreatingSpace.Style";
+import { Alert } from "../creatingSpace/CreatingSpace.Style";
 import UserImage from "../../../chatting/UserImage";
 import UserName from "../../../chatting/UserName";
 
@@ -42,6 +42,7 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
   const [isContentEdit, setContentEdit] = useState<boolean>(false);
   const [isTitleEdit, setTitleEdit] = useState<boolean>(false);
   const [quillValue, setQuillValue] = useState<feedDetailType["content"]>("");
+  const quillRef = useRef<any>();
   const [alert, setAlert] = useState<string>("");
 
   //피드 수정 시 마운트 되자 마자 초기값(제목, 내용)설정과 feedId를 WritingSpace.tsx로 전달
@@ -55,6 +56,7 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
       setFeedId(feedData.feedId);
     }
   }, [isLoading, error, feedData]);
+
   //제목 편집 ui로 변경
   const changeToEditTitle = () => {
     setTitleEdit(true);
@@ -62,6 +64,13 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
   //본문 편집 ui로 변경
   const changeToEditContent = () => {
     setContentEdit(true);
+    if (quillRef.current) {
+      const quill = quillRef.current.getEditor();
+
+      quill.root.addEventListener("mousedown", () => {
+        quillRef.current.focus();
+      });
+    }
   };
   //수정한 제목을 WritingSpace.tsx로 전달
   const updateTitle = (e: ChangeEvent<HTMLInputElement>) => {
@@ -126,6 +135,7 @@ const UpdatingSpace: React.FC<UpdatingSpace> = ({
                 </U.DefaultContent>
               ) : (
                 <ReactQuill
+                  ref={quillRef}
                   style={{ height: "90px", width: "100%" }}
                   value={quillValue}
                   modules={modules}

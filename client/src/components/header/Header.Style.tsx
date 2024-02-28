@@ -4,8 +4,6 @@ import { ReactComponent as LogoYellow } from "../../assets/images/logos/LogoV3.s
 import { ReactComponent as Main } from "../../assets/images/icons/headerIcons/Main.svg";
 import { ReactComponent as Map } from "../../assets/images/icons/headerIcons/Map.svg";
 import { ReactComponent as CreateFeed } from "../../assets/images/icons/headerIcons/CreateFeed.svg";
-import { ReactComponent as Notifications } from "../../assets/images/icons/headerIcons/Notifications.svg";
-import { ReactComponent as NotificationsRedPoint } from "../../assets/images/icons/headerIcons/NotificationsRedpoint.svg";
 import { ReactComponent as Profile } from "../../assets/images/icons/headerIcons/ProfileImage.svg";
 import { ReactComponent as Dots } from "../../assets/images/icons/Dots.svg";
 import { HeaderProps } from "../../types/headerType";
@@ -44,19 +42,7 @@ export const CreateFeedButtonStyle = styled(CreateFeed)<{ isDark: boolean }>`
     stroke: ${(props) => (props.isDark ? `#494949` : `none`)};
   }
 `;
-export const NotificationsStyle = styled(Notifications)`
-  width: 48px;
-  path {
-    fill: #f8d259;
-  }
-`;
-export const RedPointStyle = styled(NotificationsRedPoint)`
-  width: 48px;
-  height: 58px;
-  path {
-    fill: #f8d259;
-  }
-`;
+
 export const ProfileStyle = styled(Profile)`
   background-color: #d7d7d7;
   border-radius: 100px;

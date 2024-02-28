@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Header from "./components/header/Header";
-import Footer from "./components/footer/Footer";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import CreateFeed from "./pages/FeedCRUD/CreateFeed";
+import CreateFeed from "./pages/CreateFeed";
 import PetFeed from "./pages/PetFeed";
-import UpdateFeed from "./pages/FeedCRUD/UpdateFeed";
+import UpdateFeed from "./pages/UpdateFeed";
 import Chatting from "./pages/Chatting";
 import PetMap from "./pages/PetMap";
 import MapDetail from "./pages/MapDetail";
@@ -52,7 +51,6 @@ const App: React.FC = () => {
             <Route path="/petProfile/:petId" element={<PetProfile />} />
             <Route path="/user/:id/petAdd" element={<PetAdd />} />
           </Routes>
-          <Footer />
           {alertModal !== "" && <AlertModal />}
           {confirmModal.sort !== "" && <ConfirmModal />}
           {reportModal.sort !== "" && <ReportModal />}

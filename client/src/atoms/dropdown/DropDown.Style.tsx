@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const DropDownContainer = styled.div<{ data?: string }>`
+export const DropDownContainer = styled.div`
   position: absolute;
   top: -50px;
   right: 10px;
@@ -8,11 +8,10 @@ export const DropDownContainer = styled.div<{ data?: string }>`
   flex-direction: column;
   width: 35%;
   height: 35%;
-  border-radius: 10px;
-  z-index: 10;
+  z-index: 30;
 `;
 
-export const Menu = styled.div`
+export const DropDownMenu = styled.div`
   background-color: #494949;
   color: #ffffff;
   padding: 5% 0;
@@ -22,7 +21,7 @@ export const Menu = styled.div`
     border-top-left-radius: 10px;
   }
 
-  &:nth-child(3) {
+  &:nth-child(2) {
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
   }

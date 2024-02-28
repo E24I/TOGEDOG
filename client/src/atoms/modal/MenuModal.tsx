@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  AlarmButton,
   ChatButton,
   LogoutButton,
   ModalBackGround,
@@ -9,7 +8,7 @@ import {
   ModalMenus,
   ModeButton,
   MypageButton,
-} from "./Modal.Style";
+} from "./MenuModal.Style";
 import { isLoginAtom, tokenAtom, memberIdAtom, darkAtom } from "../../atoms";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +27,6 @@ const Modal: React.FC<ModalProps> = ({ setModalOpen, setAlarm }) => {
       icon: <LogoutButton className="icon" />,
     },
     { menu: "메시지", icon: <ChatButton className="icon" /> },
-    { menu: "알림", icon: <AlarmButton className="icon" /> },
     { menu: "다크모드", icon: <ModeButton className="icon" /> },
   ];
   const setLoginState = useSetRecoilState(isLoginAtom);

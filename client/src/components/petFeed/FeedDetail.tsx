@@ -60,7 +60,7 @@ import {
 } from "./FeedDetail.style";
 import { UserImgForm } from "../../atoms/imgForm/ImgForm";
 import { usePostComment } from "../../hooks/CommentHook";
-import Setting from "../modal/setting/Setting";
+import Setting from "../../atoms/modal/setting/Setting";
 
 interface OwnProps {
   feedId: number;

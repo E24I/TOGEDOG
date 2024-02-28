@@ -49,7 +49,6 @@ export const Title = styled.p`
 
 export const CreateTitle = styled.input`
   width: 100%;
-  display: block;
   padding: 10px 15px;
 `;
 

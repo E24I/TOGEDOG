@@ -31,7 +31,7 @@ import {
   ChangeImgButton,
   SelectImgBox,
 } from "../infoChangeComponent/ProfileChange.style";
-import { AttachingInput } from "../../petFeed/writingSpace/CreatingSpace/Upload.Style";
+import { AttachingInput } from "../../petFeed/writingSpace/creatingSpace/Upload.Style";
 import { getPresignedUrl, uploadToS3 } from "../../../services/feedService";
 import { queryClient } from "../../..";
 
