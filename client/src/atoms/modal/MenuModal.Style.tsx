@@ -3,16 +3,12 @@ import styled from "styled-components";
 import { ReactComponent as Mypage } from "../../assets/images/icons/headerIcons/Mypage.svg";
 import { ReactComponent as Logout } from "../../assets/images/icons/headerIcons/Logout.svg";
 import { ReactComponent as Chat } from "../../assets/images/icons/headerIcons/Chat.svg";
-import { ReactComponent as Alarm } from "../../assets/images/icons/headerIcons/Alarm.svg";
-import { ReactComponent as Search } from "../../assets/images/icons/headerIcons/Search.svg";
 import { ReactComponent as Mode } from "../../assets/images/icons/headerIcons/Mode.svg";
 
 //assets
 export const MypageButton = styled(Mypage)``;
 export const LogoutButton = styled(Logout)``;
 export const ChatButton = styled(Chat)``;
-export const AlarmButton = styled(Alarm)``;
-export const SearchButton = styled(Search)``;
 export const ModeButton = styled(Mode)``;
 
 //components

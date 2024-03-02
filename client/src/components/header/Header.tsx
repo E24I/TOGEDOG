@@ -13,8 +13,7 @@ import {
   Dot,
 } from "./Header.Style";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import Modal from "../modal/Modal";
-import Alarm from "../alarm/Alarm";
+import Modal from "../../atoms/modal/MenuModal";
 import { useRecoilValue } from "recoil";
 import { darkAtom, isLoginAtom, memberIdAtom, tokenAtom } from "../../atoms";
 import { UserImgForm } from "../../atoms/imgForm/ImgForm";
@@ -114,7 +113,6 @@ const Header: React.FC = () => {
         {isModalOpen && (
           <Modal setModalOpen={setModalOpen} setAlarm={setAlarm} />
         )}
-        {isAlarm && <Alarm setAlarm={setAlarm} />}
       </HeaderBox>
     </HeaderContainer>
   );

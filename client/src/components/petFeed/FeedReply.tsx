@@ -38,7 +38,7 @@ import {
   ReplyPin,
   SettingBox,
 } from "./FeedReply.style";
-import Setting from "../modal/setting/Setting";
+import Setting from "../../atoms/modal/setting/Setting";
 
 interface OwnProps {
   reply: any;

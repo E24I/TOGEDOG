@@ -16,7 +16,7 @@ import {
 } from "./PetAdd.style";
 import { postPetInfo } from "../../../services/userInfoService";
 import { tokenAtom, memberIdAtom } from "../../../atoms";
-import { AttachingInput } from "../../petFeed/writingSpace/CreatingSpace/Upload.Style";
+import { AttachingInput } from "../../petFeed/writingSpace/creatingSpace/Upload.Style";
 import { PetImgForm } from "../../../atoms/imgForm/ImgForm";
 import { ChangeImgButton } from "../infoChangeComponent/ProfileChange.style";
 import { getPresignedUrl, uploadToS3 } from "../../../services/feedService";

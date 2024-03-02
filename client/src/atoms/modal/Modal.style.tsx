@@ -1,19 +1,31 @@
 import styled from "styled-components";
 
+import { ReactComponent as WarningIcon } from "../../assets/images/icons/Warning.svg";
+
+export const Warning = styled(WarningIcon)``;
+
 export const ModalContainer = styled.div`
   border: 1px solid rgb(215, 215, 215);
   box-shadow: 1px 1px 5px 0.1px rgb(131, 131, 131);
   background-color: white;
   border: none;
   border-radius: 18px;
-  width: 100%;
-  max-width: 350px;
-  min-height: 170px;
+  width: 400px;
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
   overflow: hidden;
+  padding: 30px 0;
+  @media screen and (min-width: 768px) and (max-width: 1023px) {
+    width: 380px;
+    padding: 25px 0;
+  }
+  @media screen and (max-width: 768px) {
+    width: 416px;
+    padding: 20px 0;
+    margin: 0 8px;
+  }
 `;
 
 export const ModalContents = styled.div`
@@ -25,6 +37,7 @@ export const ModalContents = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  font-size: 18px;
 `;
 
 export const ModalInput = styled.textarea`
@@ -69,11 +82,23 @@ export const ReportInput = styled.input`
 `;
 
 export const BtnBox = styled.div`
-  border-top: 1px solid rgb(215, 215, 215);
-  width: 100%;
+  background-color: rgba(73, 73, 73);
+  width: 40%;
+  height: 20%;
+  border-radius: 100px;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  &:hover {
+    background-color: rgb(248, 210, 89);
+  }
+  @media screen and (min-width: 768px) and (max-width: 1023px) {
+    height: 18%;
+  }
+
+  @media screen and (max-width: 768px) {
+    height: 16%;
+  }
 `;
 
 export const ModalBtn = styled.button`
@@ -81,14 +106,14 @@ export const ModalBtn = styled.button`
 `;
 
 export const CheckBtn = styled(ModalBtn)`
+  color: white;
   width: 100%;
   height: 50px;
   padding: 10px 0px;
+  font-size: 15px;
   &:hover {
-    background-color: rgb(215, 215, 215);
-  }
-  &:active {
-    background-color: rgb(162, 162, 162);
+    font-weight: 500;
+    color: rgba(73, 73, 73);
   }
 `;
 

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ReactComponent as Pin } from "../../../assets/images/icons/Marker.svg";
+import { ReactComponent as Pin } from "../../../../assets/images/icons/MarkerIconG.svg";
 
 export const MapContainer = styled.div`
   width: 100%;

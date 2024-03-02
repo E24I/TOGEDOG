@@ -27,10 +27,10 @@ export const CancelBtn = styled(Cancel)`
 `;
 
 // 피드 전체 컨테이너
-export const CreateFeedContainer = styled.div`
-  margin: 60px;
+export const WritingSpaceContainer = styled.div`
+  margin: 120px;
   @media screen and (min-width: 768px) and (max-width: 1023px) {
-    margin: 34px;
+    margin: 56px;
   }
   @media screen and (max-width: 767px) {
     margin: 8px;
@@ -39,7 +39,7 @@ export const CreateFeedContainer = styled.div`
 `;
 
 //피드 탑 컨테이너
-export const FeedTopContainer = styled.div`
+export const TopContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -70,10 +70,10 @@ export const CreateButton = styled.button`
 `;
 
 //하단 컨테이너(지도 검색, 토글)
-export const FeedBottomContainer = styled.div`
+export const BottomContainer = styled.div`
   display: flex;
   flex-direction: row;
-  border-top: 1px solid #d7d7d7;
+  border-top: 1px solid #494949;
   padding-top: 5px;
 `;
 

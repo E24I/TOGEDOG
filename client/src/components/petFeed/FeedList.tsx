@@ -51,7 +51,7 @@ import {
 } from "../../atoms";
 import { useNavigate } from "react-router-dom";
 import { UserImgForm } from "../../atoms/imgForm/ImgForm";
-import Setting from "../modal/setting/Setting";
+import Setting from "../../atoms/modal/setting/Setting";
 
 interface OwnProps {
   items: feedListsType;

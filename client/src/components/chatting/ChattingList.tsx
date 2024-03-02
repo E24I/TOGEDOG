@@ -17,7 +17,6 @@ import {
   TimeStamp,
   OpenButton,
 } from "./ChattingList.Style";
-import DropDown from "../../atoms/dropdown/DropDown";
 import { GetAllRoomsQuery } from "../../hooks/ChatHooks";
 import { roomsDataType } from "../../types/chatType";
 import SearchUser from "./SearchUsers";
@@ -26,6 +25,7 @@ import UserName from "./UserName";
 import UserImage from "./UserImage";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { alreadyExistChatMemberAtom, chatRoomIdAtom } from "../../atoms";
+import DropDown from "../../atoms/dropdown/Dropdown";
 
 const ChattingLists: React.FC = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -158,7 +158,7 @@ const ChattingLists: React.FC = () => {
                     >
                       <SeeMoreButton />
                       {room.chatRoomId === listNumber && (
-                        <DropDown component="list" roomId={listNumber} />
+                        <DropDown roomId={listNumber} />
                       )}
                     </button>
                   </ChattingListContainer>

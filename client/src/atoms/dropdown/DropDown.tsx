@@ -1,16 +1,15 @@
 import React from "react";
-import { Menu, DropDownContainer } from "./DropDown.Style";
 import { useExitRoom } from "../../hooks/ChatHooks";
 import { useRecoilState } from "recoil";
 import { reportAtom } from "../../atoms";
+import { DropDownContainer, DropDownMenu } from "./Dropdown.style";
 
 interface DropDownProps {
-  component?: string;
   roomId?: number;
 }
 
-const DropDown: React.FC<DropDownProps> = ({ component, roomId }) => {
-  const menus = ["채팅방 나가기", "알림 끄기", "채팅방 신고"];
+const DropDown: React.FC<DropDownProps> = ({ roomId }) => {
+  const menus = ["채팅방 나가기", "채팅방 신고"];
   const { mutate: exitRoom } = useExitRoom(roomId);
   const [reportModal, setReportModal] = useRecoilState(reportAtom);
 
@@ -23,12 +22,15 @@ const DropDown: React.FC<DropDownProps> = ({ component, roomId }) => {
   };
 
   return (
-    <DropDownContainer data={component}>
+    <DropDownContainer>
       {menus.map((menu, idx) => {
         return (
-          <Menu key={idx} onMouseDown={() => onClickController(menu, roomId)}>
+          <DropDownMenu
+            key={idx}
+            onMouseDown={() => onClickController(menu, roomId)}
+          >
             {menu}
-          </Menu>
+          </DropDownMenu>
         );
       })}
     </DropDownContainer>

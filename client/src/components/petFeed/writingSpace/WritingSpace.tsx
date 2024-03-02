@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as W from "./WritingSpaces.Style";
-import CreatingSpace from "./CreatingSpace/CreatingSpace";
+import CreatingSpace from "./creatingSpace/CreatingSpace";
 import UpdatingSpace from "./updatingSpace/UpdatingSpace";
 import { getPresignedUrl, uploadToS3 } from "../../../services/feedService";
 import { postInformationType } from "../../../types/feedDataType";
-import Map from "./Map";
+import Map from "./mapApi-sgis/Map";
 import { useRecoilValue } from "recoil";
 import { tokenAtom } from "../../../atoms";
 import { usePostFeed, useUpdateFeed } from "../../../hooks/FeedHook";
 import { enrollMapType } from "../../../types/mapType";
-import UploadSpace from "./CreatingSpace/Upload";
+import UploadSpace from "./creatingSpace/Upload";
+import Loading from "../../../atoms/lodaing/Loading";
 
 interface WritingSpaceProps {
   page: string;
@@ -49,7 +50,7 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
 
   const navigator = useNavigate();
 
-  const { mutate: postFeedMutate } = usePostFeed(
+  const { mutate: postFeedMutate, isPending } = usePostFeed(
     postInformation,
     token,
     isMapAssign,
@@ -117,13 +118,14 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
     });
   };
   //선택한 좌표 정보 초기화
-  const deleteLocation = () => {
-    if (isMarked === true) {
-      setMark(false);
-      enrollCoordinate("x", "");
-      enrollCoordinate("y", "");
-    }
-  };
+  // const deleteLocation = () => {
+  //   if (isMarked === true) {
+  //     setMark(false);
+  //     enrollCoordinate("x", "");
+  //     enrollCoordinate("y", "");
+  //   }
+  // };
+
   //게시 버튼 눌렀을 때
   const send = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElement = e.target as HTMLElement;
@@ -188,78 +190,87 @@ const WritingSpace: React.FC<WritingSpaceProps> = ({ page }) => {
   };
 
   return (
-    <W.CreateFeedContainer>
-      <W.FeedTopContainer>
-        <W.BackspaceButton onClick={() => navigator(-1)} />
-        <W.PageName>
-          {page === "create" ? "새 피드 올리기" : "피드 수정"}
-        </W.PageName>
-        <W.CreateButton onClick={send}>
-          {page === "create" ? "게시" : "완료"}
-        </W.CreateButton>
-      </W.FeedTopContainer>
-      {page === "create" ? (
-        <CreatingSpace
-          handleInputChange={handleInputChange}
-          setAttachments={setAttachments}
-          contentLength={contentLength}
-          setContentLength={setContentLength}
-        />
+    <>
+      {isPending ? (
+        <Loading />
       ) : (
-        <UpdatingSpace
-          handleUpdatedInfoChange={handleUpdatedInfoChange}
-          setFeedId={setFeedId}
-          setFeedPublic={setFeedPublic}
-          setContentLength={setContentLength}
-        />
-      )}
-      <W.FeedBottomContainer>
-        {/* <W.AddressContainer>
-          {isMarked === false ? (
-            ""
+        <W.WritingSpaceContainer>
+          <W.TopContainer>
+            <W.BackspaceButton onClick={() => navigator(-1)} />
+            <W.PageName>
+              {page === "create" ? "새 피드 올리기" : "피드 수정"}
+            </W.PageName>
+            <W.CreateButton onClick={send}>
+              {page === "create" ? "게시" : "완료"}
+            </W.CreateButton>
+          </W.TopContainer>
+          {page === "create" ? (
+            <CreatingSpace
+              handleInputChange={handleInputChange}
+              setAttachments={setAttachments}
+              contentLength={contentLength}
+              setContentLength={setContentLength}
+            />
           ) : (
-            <>
-              <W.CancelBtn onClick={deleteLocation} />
-              <W.MarkResult>
-                마킹장소(추후 수정 또는 삭제 될 수 있습니다 - UI)
-              </W.MarkResult>
-            </>
+            <UpdatingSpace
+              handleUpdatedInfoChange={handleUpdatedInfoChange}
+              setFeedId={setFeedId}
+              setFeedPublic={setFeedPublic}
+              setContentLength={setContentLength}
+            />
           )}
-        </W.AddressContainer> */}
-        <W.Toggles>
-          <W.ToggleFlex>
-            <W.ToggleWrap onClick={() => attachmentToggleCheck()}>
-              파일 첨부
-              <W.ToggleContainer data={isAttach.toString()}>
-                <W.ToggleCircle data={isAttach.toString()} />
-              </W.ToggleContainer>
-            </W.ToggleWrap>
-            {isAttach && <UploadSpace setAttachments={setAttachments} />}
-          </W.ToggleFlex>
-          <W.ToggleFlex>
-            <W.ToggleWrap onClick={() => feedToggleCheck()}>
-              피드 공개
-              <W.ToggleContainer data={isFeedPublic.toString()}>
-                <W.ToggleCircle data={isFeedPublic.toString()} />
-              </W.ToggleContainer>
-            </W.ToggleWrap>
-          </W.ToggleFlex>
-          {page === "create" && (
-            <W.ToggleFlex>
-              <W.ToggleWrap onClick={() => mapToggleCheck()}>
-                지도 연동하기
-                <W.ToggleContainer data={isMapAssign.toString()}>
-                  <W.ToggleCircle data={isMapAssign.toString()} />
-                </W.ToggleContainer>
-              </W.ToggleWrap>
-              {isMapAssign && (
-                <Map enrollCoordinate={enrollCoordinate} setMark={setMark} />
+          <W.BottomContainer>
+            {/* <W.AddressContainer>
+        {isMarked === false ? (
+          ""
+        ) : (
+          <>
+            <W.CancelBtn onClick={deleteLocation} />
+            <W.MarkResult>
+              마킹장소(추후 수정 또는 삭제 될 수 있습니다 - UI)
+            </W.MarkResult>
+          </>
+        )}
+      </W.AddressContainer> */}
+            <W.Toggles>
+              <W.ToggleFlex>
+                <W.ToggleWrap onClick={() => attachmentToggleCheck()}>
+                  파일 첨부
+                  <W.ToggleContainer data={isAttach.toString()}>
+                    <W.ToggleCircle data={isAttach.toString()} />
+                  </W.ToggleContainer>
+                </W.ToggleWrap>
+                {isAttach && <UploadSpace setAttachments={setAttachments} />}
+              </W.ToggleFlex>
+              <W.ToggleFlex>
+                <W.ToggleWrap onClick={() => feedToggleCheck()}>
+                  피드 공개
+                  <W.ToggleContainer data={isFeedPublic.toString()}>
+                    <W.ToggleCircle data={isFeedPublic.toString()} />
+                  </W.ToggleContainer>
+                </W.ToggleWrap>
+              </W.ToggleFlex>
+              {page === "create" && (
+                <W.ToggleFlex>
+                  <W.ToggleWrap onClick={() => mapToggleCheck()}>
+                    지도 연동하기
+                    <W.ToggleContainer data={isMapAssign.toString()}>
+                      <W.ToggleCircle data={isMapAssign.toString()} />
+                    </W.ToggleContainer>
+                  </W.ToggleWrap>
+                  {isMapAssign && (
+                    <Map
+                      enrollCoordinate={enrollCoordinate}
+                      setMark={setMark}
+                    />
+                  )}
+                </W.ToggleFlex>
               )}
-            </W.ToggleFlex>
-          )}
-        </W.Toggles>
-      </W.FeedBottomContainer>
-    </W.CreateFeedContainer>
+            </W.Toggles>
+          </W.BottomContainer>
+        </W.WritingSpaceContainer>
+      )}
+    </>
   );
 };
 

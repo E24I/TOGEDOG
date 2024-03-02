@@ -18,7 +18,7 @@ import {
 } from "../../../hooks/UserInfoHook";
 import { ChageData } from "../../../types/userInfoType";
 import { UserImgForm } from "../../../atoms/imgForm/ImgForm";
-import { AttachingInput } from "../../petFeed/writingSpace/CreatingSpace/Upload.Style";
+import { AttachingInput } from "../../petFeed/writingSpace/creatingSpace/Upload.Style";
 import { getPresignedUrl, uploadToS3 } from "../../../services/feedService";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { patchProfileImg } from "../../../services/userInfoService";
