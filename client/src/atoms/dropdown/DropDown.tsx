@@ -2,7 +2,7 @@ import React from "react";
 import { useExitRoom } from "../../hooks/ChatHooks";
 import { useRecoilState } from "recoil";
 import { reportAtom } from "../../atoms";
-import { DropDownContainer, DropDownMenu } from "./Dropdown.style";
+import { DropDownContainer, DropDownMenu } from "./DropDown.Style";
 
 interface DropDownProps {
   roomId?: number;

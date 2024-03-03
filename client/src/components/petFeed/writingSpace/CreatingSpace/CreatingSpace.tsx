@@ -41,7 +41,6 @@ const modules = {
 
 const CreatingSpace: React.FC<CreatingSpaceProps> = ({
   handleInputChange,
-  setAttachments,
   contentLength,
   setContentLength,
 }) => {
