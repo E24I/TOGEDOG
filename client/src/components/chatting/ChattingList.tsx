@@ -25,7 +25,7 @@ import UserName from "./UserName";
 import UserImage from "./UserImage";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { alreadyExistChatMemberAtom, chatRoomIdAtom } from "../../atoms";
-import DropDown from "../../atoms/dropdown/Dropdown";
+import DropDown from "../../atoms/dropdown/DropDown";
 
 const ChattingLists: React.FC = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
