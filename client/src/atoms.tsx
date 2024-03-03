@@ -1,30 +1,92 @@
 import { atom } from "recoil";
+import { recoilPersist } from "recoil-persist";
+
+const { persistAtom } = recoilPersist({
+  key: "TOGEDOG",
+  storage: sessionStorage,
+});
 
 export const isLoginAtom = atom<boolean>({
   key: "isLogin",
   default: false,
+  effects_UNSTABLE: [persistAtom],
 });
-// 다른 컴포넌트에서 로그인 비로그인을 따질때는
-// import { useRecoilValue } from "recoil";
-// import { isLoginAtom } from "~~/atoms";
 
-// const ??? = () => {
-//     const isLogin = useRecoilValue(isLoginAtom); // Recoil 상태 조회
+export const tokenAtom = atom<string>({
+  key: "token",
+  default: "",
+  effects_UNSTABLE: [persistAtom],
+});
 
-//     return (
-//       <div>
-//         {isLogin ? (
-//           <div>로그인되었습니다</div>
-//         ) : (
-//           <span>로그인이 필요합니다</span>
-//         )}
-//       </div>
-//     );
-//   };
+export const memberIdAtom = atom<number | undefined>({
+  key: "memberId",
+  default: undefined,
+  effects_UNSTABLE: [persistAtom],
+});
 
-//번외
-// import { isLoginAtom } from "./atoms";
-// import { useRecoilState } from "recoil";
+export const theOtherMemberIdAtom = atom<number | undefined>({
+  key: "theOtherMemberId",
+  default: undefined,
+});
 
-// const [isLogin, setIsLogin] = useRecoilState(isLoginAtom)
-// 이렇게 useState처럼 사용도 가능
+export const chatRoomIdAtom = atom<number | undefined>({
+  key: "chatRoomId",
+  default: undefined,
+});
+
+export const alreadyExistChatMemberAtom = atom<object>({
+  key: "chatMembers",
+  default: undefined,
+});
+
+export const alertAtom = atom<string>({
+  key: "alert",
+  default: "",
+});
+
+type confirmType = {
+  sort: string;
+  content: string;
+  currentPetId: string | undefined;
+};
+
+export const confirmAtom = atom<confirmType>({
+  key: "confirm",
+  default: {
+    sort: "",
+    content: "",
+    currentPetId: undefined,
+  },
+});
+
+type reportType = {
+  sort: string;
+  feedId: number | undefined;
+  replyId: number | undefined;
+  commentId: number | undefined;
+  chatRoomId: number | undefined;
+};
+
+export const reportAtom = atom<reportType>({
+  key: "report",
+  default: {
+    sort: "",
+    feedId: undefined,
+    replyId: undefined,
+    commentId: undefined,
+    chatRoomId: undefined,
+  },
+});
+
+export const darkAtom = atom<boolean>({
+  key: "isDark",
+  default: false,
+});
+
+export const replyAtom = atom<{
+  replyId: number | undefined;
+  nickname: number | undefined;
+}>({
+  key: "reply",
+  default: { replyId: undefined, nickname: undefined },
+});

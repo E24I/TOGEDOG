@@ -1,78 +1,79 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router";
+import { useRecoilValue } from "recoil";
+import { darkAtom } from "../../atoms";
 import Oauth from "./Oauth";
-import PasswordChangeForm from "../myPage/infoChangeComponent/PasswordChange";
+import PasswordChangeForm from "../userInfo/infoChangeComponent/PasswordChange";
 import {
   InputContainer,
   LoginButtonOn,
-  LoginButtonOff,
   LostPassword,
   SignUpMove,
   LoginInput,
-  LogoImg,
+  UnLogin,
+  LoginLogo,
+  BottomMenu,
+  MobileDarkMode,
 } from "./LoginForm.style";
-import { LoginApiCall } from "../../services/loginService";
+import { usePostLogin } from "../../hooks/MemberHook";
 
 const LoginForm: React.FC = () => {
   const [lostPw, setLostPw] = useState<boolean>(false); //비밀번호 변경 모달
-  const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
+  const { register, watch } = useForm();
+  const isDark = useRecoilValue(darkAtom);
   const handleModal = () => {
     setLostPw(!lostPw);
   };
+  const email = watch("email", "");
+  const password = watch("password", "");
+  const { mutate } = usePostLogin({ email, password });
 
-  const loginButton = (data: object) => {
-    // window.localStorage.clear();
-    LoginApiCall(data);
-    // navigate("/feeds");
+  const handleLogin = () => {
+    if (!email || !password) {
+      alert("이메일과 비밀번호를 입력하세요.");
+      return;
+    }
+    mutate();
   };
 
   return (
-    <>
-      <InputContainer>
-        <LogoImg>로고</LogoImg>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <LoginInput
-            type="text"
-            placeholder="이메일을 입력하세요."
-            {...register("email", { required: true })}
-          />
-          <LoginInput
-            type="password"
-            placeholder="비밀번호를 입력하세요."
-            {...register("password", { required: true })}
-          />
-          <LostPassword onClick={handleModal}>
-            비밀번호를 잊으셨나요?
-          </LostPassword>
-          {lostPw && <PasswordChangeForm setLostPw={setLostPw} />}
-          <LoginButtonOn
-            type="submit"
-            onClick={handleSubmit((data) => {
-              LoginApiCall(data);
-              // navigate("/feeds");
-            })}
-          >
-            로그인
-          </LoginButtonOn>
-        </form>
-        <div>
-          <Oauth />
-          <p>
-            계정이 없으신가요?{" "}
-            <Link to="/SignUp">
-              <SignUpMove>가입하기</SignUpMove>
-            </Link>
-          </p>
-        </div>
-      </InputContainer>
-    </>
+    <InputContainer isDark={isDark}>
+      <MobileDarkMode />
+      <LoginLogo />
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <LoginInput
+          isDark={isDark}
+          type="text"
+          placeholder="이메일을 입력하세요."
+          {...register("email", { required: true })}
+        />
+        <LoginInput
+          isDark={isDark}
+          type="password"
+          placeholder="비밀번호를 입력하세요."
+          {...register("password", { required: true })}
+        />
+        {lostPw && <PasswordChangeForm setLostPw={setLostPw} />}
+        <LoginButtonOn onClick={handleLogin}>Login</LoginButtonOn>
+      </form>
+      <Link to="/feeds" className="unLogin">
+        <UnLogin isDark={isDark}>비회원으로 시작하기</UnLogin>
+      </Link>
+      <div>
+        <Oauth />
+        <BottomMenu>
+          <LostPassword onClick={handleModal}>비밀번호 찾기</LostPassword>
+          <Link to="/SignUp">
+            <SignUpMove>가입하기</SignUpMove>
+          </Link>
+        </BottomMenu>
+      </div>
+    </InputContainer>
   );
 };
 

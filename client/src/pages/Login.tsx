@@ -1,26 +1,38 @@
 import React from "react";
-import { styled } from "styled-components";
+import { useRecoilState } from "recoil";
+import { darkAtom } from "../atoms";
 import LoginForm from "../components/loginElement/LoginForm";
-
-const LoginContainer = styled.div`
-  padding-top: 100px;
-  width: 1028px;
-  display: flex;
-  margin: 0 auto;
-`;
-
-const ImgBox = styled.div`
-  width: 514px;
-  height: 632px;
-  background: gray;
-  border-radius: 30px 0 0 30px;
-`;
+import {
+  LoginContainer,
+  MainContainer,
+  MainImage,
+  LoginTogedog,
+  LoginText,
+  LoginDog,
+  DarkMode,
+} from "../components/loginElement/LoginForm.style";
 
 const Login: React.FC = () => {
+  const [isDark, setIsDark] = useRecoilState(darkAtom);
+  const darkMode = () => {
+    setIsDark(!isDark);
+  };
+  const darkModeFn = () => {
+    darkMode();
+  };
   return (
-    <LoginContainer>
-      <ImgBox />
-      <LoginForm />
+    <LoginContainer isDark={isDark}>
+      <MainContainer>
+        <MainImage>
+          <LoginText />
+          <LoginTogedog />
+          <LoginDog />
+        </MainImage>
+        <LoginForm />
+      </MainContainer>
+      <button onClick={() => darkModeFn()}>
+        <DarkMode />
+      </button>
     </LoginContainer>
   );
 };

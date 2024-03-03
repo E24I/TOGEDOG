@@ -1,164 +1,316 @@
 import styled from "styled-components";
 import { ReactComponent as Dots } from "../../assets/images/icons/Dots.svg";
-import { ReactComponent as Person } from "../../assets/images/icons/Person.svg";
+import { ReactComponent as Person } from "../../assets/images/icons/Person2.svg";
 import { ReactComponent as PinMark } from "../../assets/images/icons/PinMark.svg";
-import { ReactComponent as LeftArrow } from "../../assets/images/icons/LeftArrow.svg";
-import { ReactComponent as RightArrow } from "../../assets/images/icons/RightArrow.svg";
-import { ReactComponent as ImageCover } from "../../assets/images/icons/ImageCover.svg";
-import { ReactComponent as Cancel } from "../../assets/images/icons/Cancel.svg";
+import { ReactComponent as MessageIcon } from "../../assets/images/icons/Message.svg";
+import { ReactComponent as Up_Circle } from "../../assets/images/icons/Up_Circle.svg";
+import { ReactComponent as LeftArrowIcon } from "../../assets/images/icons/LeftArrow.svg";
+import { ReactComponent as RightArrowIcon } from "../../assets/images/icons/RightArrow.svg";
+
+export const FeedContainer = styled.div`
+  background-color: ${({ theme }) => theme.feed_bgColor};
+  color: ${({ theme }) => theme.feed_color};
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+`;
+
+export const Feeds = styled.ul`
+  width: 100%;
+  max-width: 1170px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  @media screen and (max-width: 1024px) {
+    padding-bottom: 50px;
+  }
+`;
 
 export const Feed = styled.li`
-  border-bottom: 1px solid rgb(215, 215, 215);
+  border-bottom: 2px solid ${({ theme }) => theme.feed_border};
   width: 100%;
-  max-width: 1100px;
-  padding: 50px 70px;
+  max-width: 1000px;
+  padding: 30px 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  position: relative;
 `;
 
 export const FeedHeader = styled.div`
-  position: relative;
   width: 100%;
+  max-width: 830px;
+  margin: 0px 0px 5px 0px;
+  padding: 0px 25px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+export const Profile = styled.div`
+  max-height: 50px;
+  margin: 5px 0px;
   display: flex;
   justify-content: start;
   align-items: center;
 `;
-
-export const Profile = styled.div`
+export const Unknown = styled(Person)`
+  width: 50px;
+  height: 50px;
+  path {
+    fill: rgb(248, 210, 89);
+  }
+`;
+export const ProfileInfo = styled.div`
+  margin-left: 12px;
   display: flex;
+  flex-direction: column;
   justify-content: start;
-  align-items: center;
+  align-items: start;
+`;
+export const UserName = styled.button`
+  margin-bottom: 2px;
+  white-space: nowrap;
+  color: ${({ theme }) => theme.feed_color};
+  font-size: 17px;
+  font-weight: 600; // 지워달라고 요청함.
+`;
+export const UploadTime = styled.span`
+  color: ${({ theme }) => theme.feed_color};
+  font-size: 11px;
 `;
 
 export const ProfileBox = styled.div`
+  background-color: ${({ theme }) => theme.feed_bgColor};
   width: 50px;
   height: 50px;
-  margin: 0px 15px 0px 0px;
   border-radius: 50%;
-  background-color: rgb(215, 215, 215);
   display: flex;
   justify-content: center;
   align-items: center;
 `;
-
-export const ProfileImg = styled.img`
-  width: 30px;
-  height: 30px;
-`;
-
-export const Unknown = styled(Person)`
-  width: 30px;
-  height: 30px;
-  path {
-    fill: white;
-  }
-`;
-
-export const UserName = styled.div`
-  margin-bottom: 5px;
-  white-space: nowrap;
-  font-size: 18px;
-  font-weight: 600;
-`;
-
-export const FeedAddress = styled.div`
-  font-size: 12px;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-`;
-
+// export const FeedAddress = styled.div`
+//   font-size: 12px;
+//   display: flex;
+//   justify-content: start;
+//   align-items: center;
+// `;
 export const PinPoint = styled(PinMark)`
   width: 15px;
   height: 15px;
-  margin-right: 5px;
-`;
+  margin-left: 5px;
 
-export const UploadTime = styled.div`
-  width: 100%;
-  text-align: right;
+  path {
+    fill: rgb(105, 211, 176);
+  }
 `;
 
 export const SettingBox = styled.button`
   position: relative;
-  width: 25px;
+  width: 20px;
   height: 20px;
   margin: 0px 20px;
 `;
-
-export const Setting = styled(Dots)`
-  width: 25px;
+export const SettingIcon = styled(Dots)`
+  width: 20px;
   height: 20px;
+  cursor: pointer;
   path {
-    fill: rgb(200, 200, 200);
+    fill: ${({ theme }) => theme.feed_color};
   }
 `;
 
 export const FeedContents = styled.div`
-  padding: 10px 65px;
+  width: 100%;
+  max-width: 830px;
+  padding: 10px 30px;
 `;
 
 export const FeedTitle = styled.div`
   width: 100%;
-  padding: 10px 0px;
+  padding: 0px 5px 10px 5px;
+  color: ${({ theme }) => theme.feed_color};
+  font-size: 16px;
   font-weight: 600;
+`;
+
+export const ContentBox = styled.div`
+  position: relative;
 `;
 
 export const FeedContent = styled.div`
   width: 100%;
-  padding: 10px 0px;
-`;
-
-export const FeedMedia = styled.div`
-  border: 1px solid rgb(215, 215, 215);
-  border-radius: 15px;
-  /* width: 980px; */
-  margin: 0px 0px 5px 0px;
-  padding: 15px 5px;
+  min-height: 41px;
+  max-height: 3rem;
+  line-height: 1.5rem;
+  -webkit-line-clamp: 2;
+  color: ${({ theme }) => theme.feed_color};
+  font-size: 14px;
+  overflow: hidden;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  &.show {
+    display: block;
+    max-height: none;
+    overflow: auto;
+    -webkit-line-clamp: unset;
+  }
 `;
 
-export const FeedImgs = styled.div`
-  width: 880px;
+export const MoreBtn = styled.button`
+  width: 70px;
+  max-height: 1.5rem;
+  line-height: 1.5rem;
+  color: ${({ theme }) => theme.feed_color};
+  font-size: 14px;
+`;
+
+export const MediaSection = styled.section`
+  width: 100%;
+  max-width: 830px;
+  margin: 0px 0px 5px 0px;
+  padding: 10px 25px;
   display: flex;
   justify-content: start;
   align-items: center;
-  white-space: nowrap;
-  overflow-x: auto;
+  position: relative;
+  overflow: hidden;
 `;
 
-export const FeedImgBox = styled.div`
-  border: 1px solid rgb(215, 215, 215);
+export const MediaBar = styled.div`
   border-radius: 15px;
-  height: 300px;
-  margin: 10px;
-  background-color: rgb(215, 215, 215);
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+`;
+
+export const MediaBox = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  scroll-behavior: smooth;
+  overflow: hidden;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const FeedMedia = styled.div`
+  white-space: nowrap;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+
+  video {
+    margin-right: 20px;
+  }
+
+  img {
+    margin-right: 20px;
+
+    &:nth-last-child(1) {
+      margin-right: 0px;
+    }
+  }
+`;
+
+export const FeedVideo = styled.video`
+  background-color: ${({ theme }) => theme.feed_border};
+  border-radius: 15px;
+  width: 309px;
+  height: 309px;
+  object-fit: cover;
+  z-index: 0;
 `;
 
 export const FeedImg = styled.img`
+  background-color: ${({ theme }) => theme.feed_border};
   border-radius: 15px;
-  /* aspect-ratio: 7/6; */
-  /* min-width: 350px; */
-  height: 100%;
-  background-size: cover;
+  width: 309px;
+  height: 309px;
+  object-fit: cover;
   background-repeat: no-repeat;
   background-position: center;
 `;
 
-export const LeftScroll = styled(LeftArrow)`
-  min-width: 30px;
+export const LeftBar = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 100%;
+  z-index: 10;
+  cursor: pointer;
+  &:hover {
+    background-color: rgb(1, 163, 255);
+    filter: blur(30px);
+    -webkit-filter: blur(30px);
+  }
+  &:active {
+    background-color: rgb(1, 163, 255);
+    filter: blur(20px);
+    -webkit-filter: blur(20px);
+  }
+`;
+export const RightBar = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 100%;
+  z-index: 10;
+  cursor: pointer;
+  &:hover {
+    background-color: rgb(1, 163, 255);
+    filter: blur(30px);
+    -webkit-filter: blur(30px);
+  }
+  &:active {
+    background-color: rgb(1, 163, 255);
+    filter: blur(20px);
+    -webkit-filter: blur(20px);
+  }
+`;
+
+export const LeftArrow = styled(LeftArrowIcon)`
+  position: absolute;
+  left: 0;
+  width: 30px;
   height: 30px;
   margin: 10px;
 `;
-export const RightScroll = styled(RightArrow)`
-  min-width: 30px;
+export const RightArrow = styled(RightArrowIcon)`
+  position: absolute;
+  right: 0;
+  width: 30px;
   height: 30px;
   margin: 10px;
 `;
 
 export const FeedStatus = styled.div`
   width: 100%;
-  padding: 20px 50px;
+  max-width: 830px;
+  padding: 5px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+`;
+
+export const LeftStatus = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: start;
+`;
+
+export const RightStatus = styled.div`
   display: flex;
   justify-content: start;
   align-items: start;
@@ -169,231 +321,85 @@ export const LikeBox = styled.div`
   flex-direction: column;
   justify-content: start;
   align-items: center;
+  span {
+    padding: 2px;
+    font-size: 16px;
+    color: ${({ theme }) => theme.feed_color};
+  }
 `;
 
-export const FeedBottom = styled.div`
-  padding: 0px 50px;
-`;
-
-export const ReviewCount = styled.span`
-  cursor: pointer;
-`;
-
-export const ModalBackground = styled.div`
-  background-color: rgb(215, 215, 215, 50%);
-  z-index: 40;
-  width: 100vw;
-  height: 100vh;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-`;
-
-export const DetailContainer = styled.div`
-  width: 100%;
-  max-width: 80vw;
-  max-height: 100vh;
-  padding: 50px 50px;
-  aspect-ratio: 1.5/1;
-  background-color: white;
-  border-radius: 20px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const CloseModal = styled(Cancel)`
-  position: absolute;
-  top: 2%;
-  right: -10%;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: rgb(215, 215, 215);
-  font-size: 50px;
-  cursor: pointer;
-`;
-
-export const LeftDetail = styled.div`
-  width: 100%;
-  max-width: calc(40vw - 70px);
-  height: 100%;
-  padding: 30px 0px;
-`;
-
-export const FeedDetailMedia = styled.div`
-  border: 1px solid black;
-  width: 100%;
-  max-width: 880px;
-  height: 100%;
-  max-height: 600px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-export const FeedDetailImgs = styled.div`
-  width: 100%;
-  max-width: 610px;
-  height: 100%;
-  max-height: 600px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-`;
-
-export const FeedDetailImgBox = styled.div`
-  border: 1px solid black;
-  width: 100%;
-  max-width: 610px;
-  height: 100%;
-  max-height: 600px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const FeedDetailImg = styled.img`
-  border-radius: 15px;
-  width: 100%;
-  max-width: 610px;
-  height: 100%;
-  max-height: 600px;
-  /* aspect-ratio: 7/6; */
-  background-size: auto 100%; // cover
-  background-repeat: no-repeat;
-  background-position: center;
-  transition: 300ms;
-`;
-
-export const FeedDetailStatus = styled.div`
-  width: 100%;
-  padding: 10px 30px;
-  display: flex;
-  justify-content: start;
-  align-items: start;
-`;
-
-export const RightDetail = styled.div`
-  border-left: 1px solid rgb(215, 215, 215);
-  width: 100%;
-  max-width: calc(40vw - 70px);
-  height: 100%;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-export const FeedReviewTop = styled.div`
-  width: 90%;
-  margin: 0px 50px;
-  padding: 20px 0px;
-  border-bottom: 1px solid rgb(215, 215, 215);
-`;
-
-export const Replies = styled.ul`
-  width: 100%;
+export const ReviewCount = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
+  span {
+    padding: 2px;
+    font-size: 16px;
+    color: ${({ theme }) => theme.feed_color};
+  }
 `;
 
-export const Reply = styled.li`
-  width: 100%;
-  padding: 20px 15px;
-  display: flex;
-  justify-content: start;
-  align-items: start;
-`;
-
-export const ReplyLeft = styled.div`
-  min-width: 50px;
-  min-height: 50px;
+export const Message = styled(MessageIcon)`
+  width: 25px;
+  height: 25px;
   margin: 0px 10px;
-  border-radius: 50%;
-  background-color: rgb(215, 215, 215);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  cursor: pointer;
+
+  path {
+    fill: rgb(217, 217, 217);
+  }
+  &:hover {
+    path {
+      stroke: rgb(73, 73, 73);
+      fill: rgb(73, 73, 73);
+    }
+  }
+  &:active {
+    path {
+      stroke: rgb(110, 110, 110);
+      fill: rgb(109, 109, 109);
+    }
+  }
 `;
 
-export const ReplyProfile = styled.img`
-  width: 30px;
-  height: 30px;
+export const PaginationImage = styled.div`
+  position: absolute;
+  left: calc(50% - 35px);
+  bottom: 10px;
+  width: 70px;
 `;
 
-export const ReplyContents = styled.div`
-  padding: 0px 5px;
-`;
-
-export const ReplyNickname = styled.div`
-  padding: 5px 0px;
-  font-weight: 600;
-`;
-
-export const ReplyContent = styled.div`
-  padding: 5px 0px;
-`;
-
-export const ReplySetting = styled.div`
-  font-size: 12px;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-`;
-
-export const Mentions = styled.span`
-  margin-right: 5px;
-  color: #71bddb;
-  font-weight: 600;
-`;
-
-export const ReplyDate = styled.button`
-  padding: 5px 20px 5px 0px;
-`;
-
-export const ReplyLikeCount = styled.button`
-  padding: 5px 20px 5px 0px;
-`;
-
-export const ShowComment = styled.button`
-  padding: 10px 10px;
+export const ScrollTop = styled.button`
+  background-color: rgb(255, 255, 255);
+  box-shadow: 1px 1px 2px 0.1px rgb(150, 150, 150);
+  border-radius: 40px;
+  width: 104px;
+  height: 36px;
   font-size: 14px;
+  position: fixed;
+  bottom: 65px;
+  left: calc(50vw - 52px);
 `;
 
-export const AddBox = styled.div`
-  border-bottom: 1px solid rgb(215, 215, 215);
-  /* border-radius: 12px; */
-  width: 90%;
-  height: 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
+export const UpBtn = styled(Up_Circle)`
+  width: 104px;
+  height: 36px;
+  position: fixed;
+  bottom: 40px;
+  right: 10px;
+  cursor: pointer;
+  path {
+    fill: rgb(187, 187, 187);
+  }
+  &:hover {
+    path {
+      fill: rgb(73, 73, 73);
+    }
+  }
+  &:active {
+    path {
+      fill: rgb(73, 73, 73);
+    }
+  }
 `;
-
-export const AddReply = styled.input`
-  padding: 0px 0px 5px 10px;
-`;
-
-export const AddBtn = styled.button`
-  padding: 5px 15px;
-`;
-
-export const Comments = styled(Replies)``;
-export const Comment = styled(Reply)``;
-export const CommentLeft = styled(ReplyLeft)``;
-export const CommentProfile = styled(ReplyProfile)``;
-export const CommentContents = styled(ReplyContents)``;
-export const CommentNickname = styled(ReplyNickname)``;
-export const CommentContent = styled(ReplyContent)``;

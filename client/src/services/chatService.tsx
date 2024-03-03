@@ -1,83 +1,95 @@
-import { useQuery } from "@tanstack/react-query";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
-import { createNewChatType } from "../types/chatType";
 
-export const createNewChat = async (memberId: createNewChatType) => {
-  const res = await axios.post(
-    `https://7540-61-101-53-142.ngrok-free.app/chat`,
+const ROOT_URL = process.env.REACT_APP_ROOT_URL;
+
+//유저 검색
+export const searchUsers = async (
+  nickname: string,
+  token: string,
+  pageNumber: number,
+): Promise<any> => {
+  const res = await axios.get(
+    `${ROOT_URL}/member/find?n=${nickname}&page=${pageNumber}`,
     {
-      requestMemberId: memberId.requestMemberId,
-      inviteMemberId: memberId.inviteMemberId,
+      headers: {
+        Authorization: token,
+      },
+    },
+  );
+  return res;
+};
+
+//채팅방 생성
+export const createNewChat = async (
+  token: string,
+  myMemberId: number | undefined,
+  inviteMemberId: number | undefined,
+) => {
+  const res = await axios.post(
+    `${ROOT_URL}/chat`,
+    {
+      requestMemberId: myMemberId,
+      inviteMemberId: inviteMemberId,
     },
     {
       headers: {
-        Authorization:
-          "BearereyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJVU0VSIl0sImlkIjoxLCJlbWFpbCI6Imxqd3cxMjNAbmF2ZXIuY29tIiwic3ViIjoibGp3dzEyM0BuYXZlci5jb20iLCJleHAiOjE3MDExNjQxNDB9.A9s67ninLGOWY49WmturKat99shXVr9JBM9GcStUAQw",
-        "ngrok-skip-browser-warning": 0,
+        Authorization: token,
       },
     },
   );
   return res;
 };
 
-export const getAllRooms = async () => {
-  try {
-    const res = await axios.get(
-      `https://67ca-61-101-53-142.ngrok-free.app/chat`,
-      {
-        headers: { Authorization: "" },
-      },
-    );
-    return res.data;
-  } catch (error) {
-    console.error("데이터 가져오기 실패:", error);
-    throw new Error("데이터 가져오기 실패");
-  }
-};
-export const GetAllRoomsQuery = () => {
-  const { data } = useQuery({
-    queryKey: ["rooms"],
-    queryFn: async () => await getAllRooms(),
+//모든 채팅방 조회
+export const getAllRooms = async (memberId: number, token: string) => {
+  const res = await axios.get(`${ROOT_URL}/chat?member-id=${memberId}`, {
+    headers: { Authorization: token },
   });
-  return data;
+  return res.data;
 };
 
-export const getAllMessages = async (roomId: number) => {
+//특정 채팅방의 모든 대화 내용 조회
+export const getAllMessages = async (
+  token: string,
+  pageParam?: number,
+  roomId?: number,
+) => {
   const res = await axios.get(
-    `https://67ca-61-101-53-142.ngrok-free.app/chat/${roomId}/message`,
+    `${ROOT_URL}/chat/${roomId}/message?page_number=${pageParam}&page_size=10`,
     {
-      headers: { Authorization: "" },
-    },
-  );
-  return res;
-};
-export const GetAllMessagesQuery = (roomId: number) => {
-  const { data, isError } = useQuery({
-    queryKey: ["messages", roomId],
-    queryFn: () => getAllMessages(roomId),
-    // select: (data) => data.toString(),
-  });
-  if (isError) {
-    console.log(isError);
-  }
-  return data;
-};
-
-export const exitARoom = async (roomId: number) => {
-  const res = axios.delete(
-    `https://67ca-61-101-53-142.ngrok-free.app/chat/${roomId}`,
-    {
-      headers: { Authorization: "" },
+      headers: { Authorization: token },
     },
   );
   return res;
 };
 
-export const reportAMessage = async (roomId: number) => {
+//채팅방 나가기
+export const exitARoom = async (token: string, roomId?: number) => {
+  const res =
+    roomId &&
+    axios.delete(`${ROOT_URL}/chat/${roomId}`, {
+      headers: { Authorization: token },
+    });
+  return res;
+};
+
+//채팅 신고
+export const reportChat = async (
+  token: string,
+  reason: string,
+  memberId?: number,
+  roomId?: number,
+) => {
   const res = axios.post(
-    `https://67ca-61-101-53-142.ngrok-free.app/chat/${roomId}`,
+    `${ROOT_URL}/chat/report`,
     {
-      headers: { Authorization: "" },
+      memberId: memberId,
+      chatRoomId: roomId,
+      content: reason,
+    },
+    {
+      headers: { Authorization: token },
     },
   );
   return res;

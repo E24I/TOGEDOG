@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import Oauth from "../loginElement/Oauth";
 import SignUpInputs from "./SignUpInputs";
-import { SignUpBox, Head, BottomText } from "./SignUpForm.style";
+import { SignUpBox, Head, BottomText, Logo } from "./SignUpForm.style";
 
 const SignUpForm: React.FC = () => {
   return (
     <SignUpBox>
       <Head>
         <h1>Welcome!</h1>
-        <div>로고</div>
+        <Logo />
       </Head>
       <SignUpInputs />
       <div>

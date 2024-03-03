@@ -1,29 +1,36 @@
 import React from "react";
-import { Menu, DropDownContainer } from "./DropDown.Style";
+import { useExitRoom } from "../../hooks/ChatHooks";
+import { useRecoilState } from "recoil";
+import { reportAtom } from "../../atoms";
+import { DropDownContainer, DropDownMenu } from "./Dropdown.style";
 
 interface DropDownProps {
-  component: string;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  roomId?: number;
 }
 
-const DropDown: React.FC<DropDownProps> = ({ component, setOpen }) => {
-  const menus = ["읽음 처리", "알림 끄기", "채팅방 신고"];
+const DropDown: React.FC<DropDownProps> = ({ roomId }) => {
+  const menus = ["채팅방 나가기", "채팅방 신고"];
+  const { mutate: exitRoom } = useExitRoom(roomId);
+  const [reportModal, setReportModal] = useRecoilState(reportAtom);
 
-  if (component === "content") {
-    menus[0] = "대화방 삭제";
-  }
-
-  const onClickController = () => {
-    setOpen(false);
+  const onClickController = (menu: string, chatRoomId: number | undefined) => {
+    if (menu === "채팅방 나가기") {
+      exitRoom();
+    } else if (menu === "채팅방 신고") {
+      setReportModal({ ...reportModal, sort: "chat", chatRoomId: chatRoomId });
+    }
   };
 
   return (
-    <DropDownContainer data={component}>
+    <DropDownContainer>
       {menus.map((menu, idx) => {
         return (
-          <Menu key={idx} onClick={onClickController}>
+          <DropDownMenu
+            key={idx}
+            onMouseDown={() => onClickController(menu, roomId)}
+          >
             {menu}
-          </Menu>
+          </DropDownMenu>
         );
       })}
     </DropDownContainer>

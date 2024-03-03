@@ -1,193 +1,471 @@
-import React, { useState } from "react";
-import KaKaoMap from "../components/petMap/KaKaoMap";
-import styled from "styled-components";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  PetMapContainer,
+  Search,
+  SearchBtn,
+  MapMode,
+  SideContainer,
+  ResultList,
+  ResultAddress,
+  ResultCategory,
+  ResultContents,
+  ResultOrder,
+  ResultTitle,
+  ResultLists,
+  SearchInput,
+  SearchBox,
+  SearchInputBtn,
+  SearchCloseBtn,
+  SearchSection,
+  ResultSection,
+  ResultMsg,
+  SearchContainer,
+  PageSection,
+  LeftPageBtn,
+  RightPageBtn,
+  SideCloseBtn,
+  SideOpenBtn,
+  MapToggle,
+  MapToggleBtn,
+  MapToggleContent,
+  SetMode,
+  MapContainer,
+  PlusLevel,
+  MinusLevel,
+} from "../components/petMap/PetMap.Style";
+import { usePetMap } from "../hooks/MapHooks";
+import { alertAtom, tokenAtom } from "../atoms";
+import MapFeedItem from "../components/petMap/MapFeedItem";
+import {
+  MapFeedContainer,
+  MapFeedHeader,
+  MapFeedMsg,
+  MapFeeds,
+} from "../components/petMap/MapFeed.style";
+import MarkerIconG from "./../assets/images/icons/MarkerIconG.svg";
+import MarkerIconY from "./../assets/images/icons/MarkerIconY.svg";
+import FeedDetail from "../components/petFeed/FeedDetail";
+
+export type MarkerLocation = {
+  lat: number;
+  lng: number;
+};
+
+export type MyLocation = {
+  center: MarkerLocation;
+};
 
 const PetMap: React.FC = () => {
-  const [sort, setSort] = useState<string>("");
+  const accesstoken = useRecoilValue(tokenAtom);
 
+  // kakao map api
+  const { kakao } = window;
+  const mapRef = useRef<any>(null);
+
+  // 검색한 데이터를 저장한 state
+  const [isData, setData] = useState<any>([]);
+  const getData = (data: any) => setData(data);
+
+  // 검색창 value에 대한 state
+  const [searchValue, setSearchValue] = useState<string>("");
+
+  // 지도 확대 레벨
+  const defaultLevel = 3;
+  const [level, setLevel] = useState<number>(defaultLevel);
+
+  // 지도의 중심 좌표, 초기 설정 좌표, 현재 위치 탐색하면 이 값이 바뀜
+  const defaultCoordinate = {
+    lat: 37.738661630975955,
+    lng: 127.04591390005008,
+  };
+  const [location, setLoacation] = useState<MarkerLocation>(defaultCoordinate);
+
+  // 현재 중앙 좌표 얻기
+  const getLocations = () =>
+    setLoacation({
+      lat: mapRef.current?.getCenter().getLat(),
+      lng: mapRef.current?.getCenter().getLng(),
+    });
+
+  // 페이지네이션 정보
+  const [isPage, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(5);
+  const [totalCount, setTotalCount] = useState(0);
+
+  // 지도 검색
+  const getSearchResult = () => {
+    const ps = new kakao.maps.services.Places();
+    ps.keywordSearch(`${searchValue}`, placesSearchCallBack);
+  };
+  const handleSearch = () => {
+    if (!searchValue) {
+      return alertWrite();
+    }
+    return getSearchResult();
+  };
+
+  // Alert 창
+  const [alertModal, setAlertModal] = useRecoilState(alertAtom);
+  const alertNothig = () => setAlertModal("검색 결과가 존재하지 않습니다.");
+  const alertError = () => setAlertModal("검색 결과 중 오류가 발생했습니다.");
+  const alertWrite = () => setAlertModal("검색어를 입력해주세요.");
+
+  const placesSearchCallBack = (data: any, status: any, pagination: any) => {
+    if (status === kakao.maps.services.Status.OK) {
+      getData(data);
+      pagination.gotoPage(isPage);
+      setTotalPage(pagination.last);
+      setTotalCount(pagination.totalCount);
+    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+      alertNothig();
+    } else if (status === kakao.maps.services.Status.ERROR) {
+      alertError();
+    }
+  };
+
+  const sideRef = useRef<any>(null);
+  const [sideOpen, setSideOpen] = useState(true);
+  const [mapMode, setMapMode] = useState(true);
+  const [mapData, setMapData] = useState<any>([]);
+  const [searchInput, setSearchInput] = useState(false);
+
+  // 펫지도 좌표에 따른 피드 리스트 조회
+  const getMapData = (res: any) => setMapData(res);
+  const { mutate: petMap, isError } = usePetMap(
+    {
+      wgs84_y: location.lat,
+      wgs84_x: location.lng,
+      range: level * 2.6,
+    },
+    accesstoken,
+    getMapData,
+    () => setAlertModal("피드를 불러오는데 실패했습니다."),
+  );
+
+  // SearchInput 창 열고 닫기
+  const handleOpenSearch = () => {
+    if (searchInput) {
+      setSearchInput(false);
+      sideRef.current.style.transform = "translateY(-200%)";
+    } else {
+      setSearchInput(true);
+      sideRef.current.style.transform = "translateY(0%)";
+    }
+  };
+  useEffect(() => {
+    sideRef.current.style.transform = "translateY(-200%)";
+  }, []);
+
+  // SideContainer 열고 닫기
+  const handleOpenSide = () => {
+    if (sideOpen) {
+      setSideOpen(false);
+      sideRef.current.style.transform = "translateX(-100%)";
+    } else {
+      setSideOpen(true);
+      sideRef.current.style.transform = "translateX(0%)";
+    }
+  };
+
+  // Page 변경하기
+  const handlePrevPage = () => {
+    if (isPage > 1) setPage(isPage - 1);
+  };
+
+  const handleNextPage = () => {
+    if (isPage < totalPage) setPage(isPage + 1);
+  };
+
+  // mapMode 변경
+  const handleToggle = () => {
+    if (mapMode) {
+      sideRef.current.style.transform = "translateY(0%)";
+      setMapMode(false);
+      setSearchInput(true);
+      setSearchValue("");
+      setData([]);
+    } else {
+      setMapMode(true);
+      setSearchInput(false);
+      setMapData([]);
+    }
+  };
+
+  // 토글버튼 보이기/안보이기
+  const setRef = useRef<any>(null);
+  const toggleRef = useRef<any>(null);
+  const [modeBtn, setModeBtn] = useState(false);
+  const handleOpenToggle = () => {
+    let reset;
+    if (modeBtn) {
+      setModeBtn(false);
+      setRef.current.style.transform = "rotate(0deg)";
+      toggleRef.current.style.transform = "translateX(120%)";
+      clearTimeout(reset);
+    } else {
+      setModeBtn(true);
+      setRef.current.style.transform = "rotate(390deg)";
+      toggleRef.current.style.transform = "translateX(0%)";
+      reset = setTimeout(() => {
+        setModeBtn(false);
+        setRef.current.style.transform = "rotate(0deg)";
+        toggleRef.current.style.transform = "translateX(120%)";
+      }, 3000);
+    }
+  };
+  useEffect(() => {
+    toggleRef.current.style.transform = "translateX(120%)";
+  }, []);
+
+  // 페이지네이션 실행
+  useMemo(() => {
+    searchValue && getSearchResult();
+  }, [isPage]);
+
+  // 지도 범위 재설정하기
+  useMemo(() => {
+    if (mapMode && isData.length > 0) {
+      const bounds = new kakao.maps.LatLngBounds();
+      isData.forEach((data: any) => {
+        bounds.extend(new kakao.maps.LatLng(data.y, data.x));
+      });
+      if (mapRef.current) mapRef.current.setBounds(bounds);
+    }
+  }, [isData]);
+
+  // 펫 맵 피드 data 불러오기
+  useMemo(() => {
+    if (!mapMode) petMap();
+  }, [location, level, mapMode]);
+
+  // 피드 상세 모달창 열기
+  const [feedId, setFeedId] = useState<number | undefined>(undefined);
+  const handleGetFeedId = (id: number) => setFeedId(id);
+  const handleFeedDetail = () => setFeedId(undefined);
+
+  if (isError) {
+    return <>페이지를 불러오는데 실패했습니다.</>;
+  }
   return (
     <PetMapContainer>
-      <KaKaoMap />
-      <SideContainer>
-        <SideSearchBox>
-          <SideSearch placeholder="검색어를 입력하세요." />
-        </SideSearchBox>
-        <SideSortBox>
-          <SideSortBtn>전체</SideSortBtn>
-          <SideSortBtn>카페</SideSortBtn>
-          <SideSortBtn>공원</SideSortBtn>
-          <SideSortBtn>식당</SideSortBtn>
-          <SideSortBtn>병원</SideSortBtn>
-          <SideSortBtn>숙소</SideSortBtn>
-        </SideSortBox>
-        <SideLists>
-          {[1, 2, 3, 4, 5, 6].map((el, idx) => (
-            <SideList key={idx}>
-              <SideListImg src="" alt="장소 이미지" />
-              <SideListContents>
-                <SideListTitle>
-                  장소이름
-                  <SideListCategory>카테고리</SideListCategory>
-                </SideListTitle>
-                <SideListAddress>
-                  별내동 불암산로 59번길 48-31, Namyangju
-                </SideListAddress>
-                <SideListStatus>
-                  <button>좋아요</button>
-                  <button>북마크</button>
-                </SideListStatus>
-              </SideListContents>
-            </SideList>
+      <MapContainer>
+        {location && (
+          <Map
+            ref={mapRef}
+            center={location}
+            style={{ width: "100vw", height: "calc(100vh - 70px)" }}
+            level={level}
+            onClick={(_t, mouseEvent) =>
+              setLoacation({
+                lat: mouseEvent.latLng.getLat(),
+                lng: mouseEvent.latLng.getLng(),
+              })
+            }
+            onDragEnd={() => getLocations()}
+            onZoomChanged={(map) => setLevel(map.getLevel())}
+          >
+            {mapMode
+              ? isData.length > 0 &&
+                isData.map((el: any, idx: number) => (
+                  <MapMarker
+                    key={idx}
+                    position={{
+                      lat: parseFloat(el.y),
+                      lng: parseFloat(el.x),
+                    }}
+                    title={el.place_name}
+                    image={{
+                      src: MarkerIconG,
+                      size: {
+                        width: 40,
+                        height: 40,
+                      },
+                    }}
+                    onClick={() => {
+                      setMapMode(false);
+                      setSearchInput(true);
+                      setLoacation({
+                        lat: el.y,
+                        lng: el.x,
+                      });
+                    }}
+                  />
+                ))
+              : mapData.length > 0 &&
+                mapData.map((el: any, idx: number) => (
+                  <MapMarker
+                    key={idx}
+                    position={{
+                      lat: parseFloat(el.wgs84_y),
+                      lng: parseFloat(el.wgs84_x),
+                    }}
+                    title={el.title}
+                    image={{
+                      src: MarkerIconY,
+                      size: {
+                        width: 40,
+                        height: 40,
+                      },
+                    }}
+                  />
+                ))}
+            <PlusLevel onClick={() => setLevel(level - 1)}>+</PlusLevel>
+            <MinusLevel onClick={() => setLevel(level + 1)}>-</MinusLevel>
+          </Map>
+        )}
+      </MapContainer>
+      <SetMode ref={setRef} onClick={handleOpenToggle} />
+      <MapMode ref={toggleRef}>
+        <MapToggle mapMode={mapMode} onClick={handleToggle}>
+          <MapToggleContent>
+            {mapMode ? "위치검색" : "근처피드"}
+          </MapToggleContent>
+          <MapToggleBtn />
+        </MapToggle>
+      </MapMode>
+      {!searchInput && (
+        <SearchBtn onClick={handleOpenSearch}>
+          <Search />
+        </SearchBtn>
+      )}
+      <SideContainer mapMode={mapMode} ref={sideRef}>
+        {mapMode ? (
+          <SearchContainer>
+            <SearchSection>
+              <SearchBox>
+                <SearchInput
+                  placeholder="장소, 주소로 검색"
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  onKeyUp={(e) => {
+                    if (e.key === "Enter") handleSearch();
+                  }}
+                />
+                <SearchInputBtn onClick={handleSearch} />
+              </SearchBox>
+              {!isData.length && (
+                <SearchCloseBtn onClick={handleOpenSearch}>
+                  &times;
+                </SearchCloseBtn>
+              )}
+            </SearchSection>
+            {isData.length > 0 && (
+              <ResultSection>
+                <ResultMsg>
+                  <span>
+                    {`"${searchValue}"(으)로 검색한 결과입니다.(${totalCount}개)`}
+                  </span>
+                  <PageSection>
+                    <LeftPageBtn onClick={handlePrevPage} />
+                    <span>{`${isPage}/${totalPage}`}</span>
+                    <RightPageBtn onClick={handleNextPage} />
+                  </PageSection>
+                </ResultMsg>
+                <ResultLists>
+                  {isData.map((data: any, idx: number) => (
+                    <ResultList
+                      key={idx}
+                      onClick={() =>
+                        setLoacation({
+                          lat: data.y,
+                          lng: data.x,
+                        })
+                      }
+                    >
+                      <ResultOrder>{idx + 1}</ResultOrder>
+                      <ResultContents>
+                        <ResultTitle>
+                          <span>{data.place_name}</span>
+                          <ResultCategory>
+                            {data.category_group_name}
+                          </ResultCategory>
+                        </ResultTitle>
+                        <ResultAddress>{data.address_name}</ResultAddress>
+                      </ResultContents>
+                    </ResultList>
+                  ))}
+                </ResultLists>
+              </ResultSection>
+            )}
+          </SearchContainer>
+        ) : (
+          <MapFeedContainer>
+            <MapFeedMsg>{`지도 중심으로부터 일정 거리에 존재하는 게시글 입니다.`}</MapFeedMsg>
+            <MapFeedHeader>{`총 ${mapData.length}개의 게시글`}</MapFeedHeader>
+            <MapFeeds>
+              {mapData?.map((el: any, idx: number) => (
+                <MapFeedItem
+                  key={idx}
+                  el={el}
+                  handleGetFeedId={handleGetFeedId}
+                />
+              ))}
+            </MapFeeds>
+          </MapFeedContainer>
+        )}
+        {(isData.length > 0 || !mapMode) &&
+          (sideOpen ? (
+            <SideCloseBtn mapMode={mapMode} onClick={handleOpenSide} />
+          ) : (
+            <SideOpenBtn mapMode={mapMode} onClick={handleOpenSide} />
           ))}
-        </SideLists>
       </SideContainer>
+      {feedId && (
+        <FeedDetail feedId={feedId} handleFeedDetail={handleFeedDetail} />
+      )}
     </PetMapContainer>
   );
 };
 
 export default PetMap;
 
-export const PetMapContainer = styled.div`
-  position: relative;
-  width: 100vw;
-  height: calc(100vh - 80px);
-`;
+// // http가 아닌 https 주소(localhost도 가능)에서 사용 가능함, 현 위치 탐색 기능
+// useEffect(() => {
+//   const successHandler = (response: any): void => {
+//     const { latitude, longitude } = response.coords;
+//     setLoacation({ latitude, longitude });
+//   };
 
-export const SideContainer = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100%;
-  max-width: 530px;
-  height: 100%;
-  padding: 10px 20px;
-  background-color: none; // none;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-`;
+//   const errorHandler = (error: any): void => {
+//     console.log(error);
+//   };
+//   navigator.geolocation.getCurrentPosition(successHandler, errorHandler);
+// }, []);
 
-export const SideSearchBox = styled.div`
-  background-color: white;
-  border: 1px solid rgb(215, 215, 215);
-  box-shadow: 1px 1px 2px 0.01px rgb(131, 131, 131);
-  border-radius: 24px;
-  width: 100%;
-  height: 50px;
-  margin: 5px 0px;
-  padding: 0px 20px;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-`;
+// // 주소로 변환할 좌표 입력 // 현재 위치의 좌표값을 저장할 상태
+// const [coordinates, setCoordinates] = useState<MyLocation>({
+//   center: defaultCoordinate,
+// });
 
-export const SideSearch = styled.input`
-  width: 100%;
-  font-size: 16px;
-  font-weight: bold;
-`;
+// // 현재 중앙 좌표 얻기
+// const getCoordinates = () =>
+//   setCoordinates({
+//     center: {
+//       lat: mapRef.current?.getCenter().getLat(),
+//       lng: mapRef.current?.getCenter().getLng(),
+//     },
+//   });
 
-export const SideSortBox = styled.div`
-  width: 100%;
-  margin: 10px 0px 0px 0px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
+// // 현재 좌표의 주소를 저장할 상태
+// const [address, setAddress] = useState<any>(null);
 
-export const SideSortBtn = styled.button`
-  background-color: white;
-  border: 1px solid rgb(215, 215, 215);
-  box-shadow: 1px 1px 2px 0.01px rgb(131, 131, 131);
-  border-radius: 18px;
-  width: 68px; // 추후 padding으로 수정
-  height: 30px;
-  padding: 4px;
-  text-align: center;
-  font-weight: bold;
-`;
+// // 현재 중앙 좌표의 주소 얻기
+// const getAddress = () => {
+//   // 좌표 -> 주소로 변환해주는 객체
+//   const geocoder = new kakao.maps.services.Geocoder();
 
-export const SideLists = styled.ul`
-  width: 100%;
-  height: calc(100vh - 140px);
-  margin-top: 20px;
-  padding-top: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: start;
-  overflow-y: auto;
+//   // 주소로 변환할 좌표 입력
+//   const coord = new kakao.maps.LatLng(
+//     coordinates.center.lat,
+//     coordinates.center.lng,
+//   );
 
-  &::-webkit-scrollbar {
-    width: 8px; // 스크롤바의 너비
-  }
-  &::-webkit-scrollbar-thumb {
-    height: 30%; //스크롤바의 길이
-    background: rgb(215, 215, 215); // 스크롤바의 색상
-    border-radius: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    background: none; //스크롤바 뒷 배경 색상
-  }
-`;
-
-export const SideList = styled.li`
-  background-color: white;
-  border: 1px solid rgb(215, 215, 215);
-  box-shadow: 2px 2px 8px 0.01px rgb(131, 131, 131);
-  border-radius: 12px;
-  width: 98%;
-  margin-bottom: 30px;
-  padding: 15px;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-`;
-
-export const SideListImg = styled.img`
-  background-color: rgb(215, 215, 215); //수정
-  border: 1px solid rgb(215, 215, 215);
-  border-radius: 12px;
-  min-width: 190px;
-  min-height: 190px;
-`;
-
-export const SideListContents = styled.div`
-  width: 100%;
-  height: 100%;
-  margin-left: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-`;
-
-export const SideListTitle = styled.div`
-  width: 100%;
-  padding: 5px 0px;
-  font-weight: bold;
-`;
-
-export const SideListCategory = styled.span`
-  width: 100%;
-  padding-left: 10px;
-  color: rgb(119, 119, 119);
-  font-size: 12px;
-`;
-
-export const SideListAddress = styled.div`
-  width: 100%;
-  height: 130px;
-  padding: 5px 0px;
-  color: rgb(119, 119, 119);
-`;
-
-export const SideListStatus = styled.div`
-  width: 100%;
-  height: 30px;
-  display: flex;
-  justify-content: end;
-  align-items: center;
-`;
+//   const callback = function (result: any, status: any) {
+//     if (status === kakao.maps.services.Status.OK) {
+//       setAddress(result[0].address);
+//     }
+//   };
+//   geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+// };

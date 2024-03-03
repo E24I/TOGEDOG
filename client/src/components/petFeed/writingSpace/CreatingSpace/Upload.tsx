@@ -1,56 +1,73 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable react-hooks/exhaustive-deps */
+//피드 작성 - 첨부파일 업로드 컴포넌트
 import React, { ChangeEvent, useEffect, useState } from "react";
 import * as U from "./Upload.Style";
-import { deleteS3, uploadToS3 } from "../../../../services/feedService";
 
 interface UploadSpaceType {
-  type: string;
+  setAttachments: React.Dispatch<
+    React.SetStateAction<
+      {
+        type: string;
+        url: string;
+        file: File | null;
+      }[]
+    >
+  >;
 }
 
-const UploadSpace: React.FC<UploadSpaceType> = ({ type }) => {
-  const [file, setFile] = useState({
+const UploadSpace: React.FC<UploadSpaceType> = ({ setAttachments }) => {
+  const [imageFiles, setImageFiles] = useState<
+    { type: string; url: string; file: File | null }[]
+  >([]);
+  const [videoFile, setVideoFile] = useState<{
+    type: string;
+    url: string;
+    file: File | null;
+  }>({
+    type: "",
     url: "",
-    image: false,
-    video: false,
+    file: null,
   });
-  const [imageFiles, setImageFiles] = useState<string[]>([]);
-  const [videoFile, setVideoFile] = useState<string>("");
-  const uploadImage = (e: ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files && e.target.files[0];
 
+  //브라우저에서 파일을 선택하면 일어나는 동작 - 영상과 이미지를 구분하여 각 속성을 상태로 저장
+  const uploadFiles = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files && e.target.files[0];
+    const imgLimitedSize = 10 * 1024 * 1024;
+    const videoLimitedSize = 50 * 1024 * 1024;
     if (selectedFile) {
+      const fileSize = selectedFile.size;
       const imageType = selectedFile.type.includes("image");
       const videoType = selectedFile.type.includes("video");
 
-      if (imageType) {
-        setFile({
+      console.log(selectedFile);
+      if (imageType && fileSize < imgLimitedSize) {
+        setImageFiles((prev) => [
+          ...prev,
+          {
+            type: selectedFile.type,
+            url: URL.createObjectURL(selectedFile),
+            file: selectedFile,
+          },
+        ]);
+      } else if (videoType && fileSize < videoLimitedSize) {
+        setVideoFile({
+          type: selectedFile.type,
           url: URL.createObjectURL(selectedFile),
-          image: imageType,
-          video: false,
+          file: selectedFile,
         });
-        uploadToS3("presinedUrl", `${file.url}/feed`, "image/*");
-      } else if (videoType) {
-        setFile({
-          url: URL.createObjectURL(selectedFile),
-          image: false,
-          video: videoType,
-        });
-        uploadToS3("presinedUrl", `${file.url}/feed`, "video/*");
+      } else {
+        alert("지원하지 않는 형식이거나 첨부파일이 제한 크기보다 큽니다");
       }
     }
   };
+  //첨부된 영상과 이미지 파일을 WritingSpace.tsx의 postInformation으로 전달
   useEffect(() => {
-    if (file.image) {
-      setImageFiles((prev) => [...prev, file.url]);
-      console.log(file.url);
-    } else if (file.video) {
-      setVideoFile(file.url);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [file]);
-
-  const deleteFile = (idx?: number) => {
-    setVideoFile("");
+    const videoAndImages = [videoFile, ...imageFiles];
+    setAttachments(videoAndImages);
+  }, [videoFile, imageFiles]);
+  //브라우저 상에서 첨부한 이미지 파일 제거
+  const deleteImageFile = (idx?: number) => {
     if (idx !== undefined) {
       setImageFiles((prevFiles) => {
         const newFiles = [...prevFiles];
@@ -58,62 +75,62 @@ const UploadSpace: React.FC<UploadSpaceType> = ({ type }) => {
         return newFiles;
       });
     }
-    deleteS3();
   };
+  //브라우저 상에서 첨부한 영상 파일 제거
+  const deleteVideoFile = () => {
+    setVideoFile({ type: "", url: "", file: null });
+  };
+
   return (
-    <>
-      {type === "image" ? (
-        <>
-          <U.AttachmentSpaceContainer>
-            이미지
-            {imageFiles &&
-              imageFiles.map((file, idx) => (
-                <U.AttachmentWrap key={idx}>
-                  <U.AttachedImg src={file} alt={`${idx + 1}번째 사진`} />
-                  <U.DeleteButton onClick={() => deleteFile(idx)} />
-                </U.AttachmentWrap>
-              ))}
-            {imageFiles.length < 4 && (
-              <>
-                <U.AttachingButton htmlFor="add_image">
-                  <U.AddButton />
-                </U.AttachingButton>
-                <U.AttachingInput
-                  id="add_image"
-                  type="file"
-                  accept="image/*"
-                  onChange={uploadImage}
-                />
-              </>
+    <U.AttachmentSpaceWrap>
+      <U.FilesCount>{videoFile.url.length > 0 ? 1 : 0}/1</U.FilesCount>
+      <U.AttachmentSpaceContainer>
+        {videoFile.url ? (
+          <U.AttachmentWrap>
+            <U.AttachedVideo controls src={videoFile.url}></U.AttachedVideo>
+            <U.DeleteButton onClick={() => deleteVideoFile()} />
+          </U.AttachmentWrap>
+        ) : (
+          <U.AttachingButton htmlFor="add_video">
+            <U.AddVideoButton />
+          </U.AttachingButton>
+        )}
+        <U.AttachingInput
+          id="add_video"
+          type="file"
+          accept="video/*"
+          onChange={uploadFiles}
+        />
+      </U.AttachmentSpaceContainer>
+      <>
+        <U.FilesCount>{imageFiles.length}/4</U.FilesCount>
+        <U.AttachmentSpaceContainer>
+          {imageFiles &&
+            imageFiles.map(
+              (file, idx) =>
+                file.url && (
+                  <U.AttachmentWrap key={idx}>
+                    <U.AttachedImg src={file.url} alt={`${idx + 1}번째 사진`} />
+                    <U.DeleteButton onClick={() => deleteImageFile(idx)} />
+                  </U.AttachmentWrap>
+                ),
             )}
-          </U.AttachmentSpaceContainer>
-          <U.FilesCount>{imageFiles.length}/4</U.FilesCount>
-        </>
-      ) : (
-        <>
-          <U.AttachmentSpaceContainer>
-            영상
-            {videoFile ? (
-              <U.AttachmentWrap>
-                <U.AttachedVideo controls src={videoFile}></U.AttachedVideo>
-                <U.DeleteButton onClick={() => deleteFile()} />
-              </U.AttachmentWrap>
-            ) : (
-              <U.AttachingButton htmlFor="add_video">
-                <U.AddButton />
+          {imageFiles.length < 4 && (
+            <>
+              <U.AttachingButton htmlFor="add_image">
+                <U.AddImageButton />
               </U.AttachingButton>
-            )}
-            <U.AttachingInput
-              id="add_video"
-              type="file"
-              accept="video/*"
-              onChange={uploadImage}
-            />
-          </U.AttachmentSpaceContainer>
-          <U.FilesCount>{videoFile ? 1 : 0}/1</U.FilesCount>
-        </>
-      )}
-    </>
+              <U.AttachingInput
+                id="add_image"
+                type="file"
+                accept="image/*"
+                onChange={uploadFiles}
+              />
+            </>
+          )}
+        </U.AttachmentSpaceContainer>
+      </>
+    </U.AttachmentSpaceWrap>
   );
 };
 

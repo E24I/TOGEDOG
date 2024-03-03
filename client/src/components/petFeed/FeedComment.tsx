@@ -1,36 +1,43 @@
-import React from "react";
-import {
-  AddBox,
-  AddBtn,
-  AddReply,
-  Comment,
-  CommentContent,
-  CommentContents,
-  CommentLeft,
-  CommentNickname,
-  Mentions,
-  Unknown,
-} from "./Feed.Style";
+import React, { useState } from "react";
+import { useInfiniteGetComments } from "../../hooks/CommentHook";
+import { feedCommentType } from "../../types/feedDataType";
+import CommentItem from "./CommentItems";
+import useIntersectionObserver from "../../hooks/useIntersectionObserver";
+import { Comments } from "./FeedComment.style";
+import { MoreReply } from "./FeedReply.style";
 
-const FeedComment: React.FC = () => {
+interface OwnProps {
+  replyId: number;
+}
+
+const FeedComment: React.FC<OwnProps> = ({ replyId }) => {
+  const [moreComments, setMoreComments] = useState(false);
+  const callbackFn = () => setMoreComments(false);
+  const { data, isLoading, isError, fetchNextPage, hasNextPage } =
+    useInfiniteGetComments(replyId);
+  const commentsData = data?.pages.flat();
+  const { setTarget } = useIntersectionObserver({
+    hasNextPage,
+    fetchNextPage,
+    callbackFn,
+  });
+
+  if (isLoading) {
+    return <></>;
+  }
+  if (isError) {
+    return <>오류 발생</>;
+  }
   return (
-    <Comment>
-      <CommentLeft>
-        {/* <CommentProfile /> */}
-        <Unknown />
-      </CommentLeft>
-      <CommentContents>
-        <CommentNickname>마루언니</CommentNickname>
-        <CommentContent>
-          <Mentions>@세계최강 귀요미 몽자</Mentions>
-          오.. 그런가요?! 마루한테도 사줘봐야겠네요~ 좋은 정보 감사합니다~ㅎㅎ
-        </CommentContent>
-        <AddBox>
-          <AddReply placeholder="답글 달기..." />
-          <AddBtn>게시</AddBtn>
-        </AddBox>
-      </CommentContents>
-    </Comment>
+    <Comments>
+      {commentsData?.map((comment: feedCommentType) => (
+        <CommentItem key={comment.commentId} comment={comment} />
+      ))}
+      {moreComments && <div ref={setTarget} />}
+      {commentsData && commentsData.length > 0 && hasNextPage && (
+        <MoreReply onClick={() => setMoreComments(true)}>답글 더보기</MoreReply>
+      )}
+    </Comments>
   );
 };
 

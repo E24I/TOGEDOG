@@ -1,35 +1,72 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { ChangeEvent, useState, useRef, KeyboardEvent } from "react";
+//피드 작성 컴포넌트
+import React, {
+  ChangeEvent,
+  useState,
+  useRef,
+  KeyboardEvent,
+  useEffect,
+} from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 import * as C from "./CreatingSpace.Style";
-import UploadSpace from "./Upload";
-import { title } from "process";
+import UserName from "../../../chatting/UserName";
+import { useRecoilValue } from "recoil";
+import { memberIdAtom } from "../../../../atoms";
+import UserImage from "../../../chatting/UserImage";
 
 interface CreatingSpaceProps {
   handleInputChange: (
     fieldName: string,
-    value: string | boolean | { x: string; y: string } | string[],
+    value: string | boolean | string[],
   ) => void;
+  setAttachments: React.Dispatch<
+    React.SetStateAction<
+      {
+        type: string;
+        url: string;
+        file: File | null;
+      }[]
+    >
+  >;
+  contentLength: number;
+  setContentLength: React.Dispatch<React.SetStateAction<number>>;
 }
 
+//react-query modules - toolbar제거
 const modules = {
   toolbar: false,
 };
 
-const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
+const CreatingSpace: React.FC<CreatingSpaceProps> = ({
+  handleInputChange,
+  setAttachments,
+  contentLength,
+  setContentLength,
+}) => {
   const [quillValue, setQuillValue] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const contentRef = useRef<any>();
-  const [contentLength, sendContentLength] = useState<number>(0);
+  const quillRef = useRef<any>();
   const [alert, setAlert] = useState<string>("");
+  const myMemberId = useRecoilValue(memberIdAtom);
 
+  useEffect(() => {
+    if (quillRef.current) {
+      const quill = quillRef.current.getEditor();
+
+      quill.root.addEventListener("mousedown", () => {
+        quillRef.current.focus();
+      });
+    }
+  }, []);
+
+  //제목 입력칸에서 엔터 누르면 내용 입력칸으로 넘어가게 만든 함수
   const enterToContent = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter") {
-      contentRef.current.focus();
+      quillRef.current.focus();
     }
   };
-
+  //입력한 제목을 검증하여 handleInputChange의 파라미터로 WritingSpace.ts의 postInformation에 전달
   const sendTitle = (e: ChangeEvent<HTMLInputElement>) => {
     const trimmedValue = e.target.value.trim();
     const words = trimmedValue.split(/\s+/);
@@ -40,29 +77,29 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
       handleInputChange("title", e.target.value);
     }
   };
-
+  //입력한 내용을 handleInputChange의 파라미터로 WritingSpace.ts의 postInformation에 전달
   const sendContent = (editor: string) => {
-    handleInputChange("content", editor);
-    setQuillValue(editor);
-    // sendContentLength(editor.length);
     const p = "</p>";
-    sendContentLength(
-      editor
-        .replace(/<br>/g, "")
-        .replace(/<p>/g, "")
-        .replace(new RegExp(p, "g"), "").length,
-    );
+    //본문 글자 수
+    const textLength = editor
+      .replace(/<br>/g, "")
+      .replace(/<p>/g, "")
+      .replace(new RegExp(p, "g"), "").length;
+    if (textLength <= 200) {
+      handleInputChange("content", editor);
+      setQuillValue(editor);
+    }
+    setContentLength(textLength);
   };
 
   return (
     <C.CreateSpace>
       <C.ProfileWrap>
-        <C.ProfileImg />
-        <C.Username>세계 최강 귀요미 몽자</C.Username>
+        <UserImage id={myMemberId} page="create" />
+        <UserName id={myMemberId} page="create" />
       </C.ProfileWrap>
-      <UploadSpace type="video" />
-      <UploadSpace type="image" />
       <C.CreateTitleWrap>
+        <C.Title>제목</C.Title>
         <C.CreateTitle
           placeholder="제목을 입력하세요"
           onKeyDown={(e) => enterToContent(e)}
@@ -71,14 +108,16 @@ const CreatingSpace: React.FC<CreatingSpaceProps> = ({ handleInputChange }) => {
         {alert && <C.Alert>{alert}</C.Alert>}
       </C.CreateTitleWrap>
       <C.CreateContentWrap className="custom-quill-container">
+        <C.Content length={contentLength}>
+          내용 (<span>{contentLength}</span>/200)
+        </C.Content>
         <ReactQuill
           placeholder="내용을 입력하세요"
-          ref={contentRef}
+          ref={quillRef}
           value={quillValue}
           modules={modules}
           onChange={(editor) => sendContent(editor)}
         />
-        <C.TextCount>{contentLength} / 200</C.TextCount>
       </C.CreateContentWrap>
     </C.CreateSpace>
   );

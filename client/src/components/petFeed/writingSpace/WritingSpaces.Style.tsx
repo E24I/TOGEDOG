@@ -5,6 +5,20 @@ import { ReactComponent as Cancel } from "../../../assets/images/icons/CancelBut
 
 // assets
 export const BackspaceButton = styled(Backspace)`
+  width: 34px;
+  height: 34px;
+  path {
+    fill: #494949;
+  }
+  &:hover {
+    path {
+      fill: #f8d259;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    width: 24px;
+    height: 24px;
+  }
   cursor: pointer;
 `;
 export const CancelBtn = styled(Cancel)`
@@ -13,35 +27,54 @@ export const CancelBtn = styled(Cancel)`
 `;
 
 // 피드 전체 컨테이너
-export const CreateFeedContainer = styled.div`
-  border: 2px solid #ffa1a1; // 구분선 입니다
-  margin: 60px;
+export const WritingSpaceContainer = styled.div`
+  margin: 120px;
+  @media screen and (min-width: 768px) and (max-width: 1023px) {
+    margin: 56px;
+  }
+  @media screen and (max-width: 767px) {
+    margin: 8px;
+  }
+  transition: all 0.2s;
 `;
 
 //피드 탑 컨테이너
-export const FeedTopContainer = styled.div`
+export const TopContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  border: 2px solid #63af80; //구분선 입니다
 `;
 
 export const PageName = styled.p`
-  font-weight: 800;
+  font-size: 24px;
+  font-weight: 500;
+  @media screen and (max-width: 767px) {
+    font-size: 17px;
+    font-weight: 600;
+  }
 `;
 
 export const CreateButton = styled.button`
-  font-weight: 800;
-  width: 100px;
+  font-size: 20px;
+  color: #494949;
+  font-weight: 500;
+  width: fit-content;
+  @media screen and (max-width: 767px) {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  &:hover {
+    color: #f8d259;
+  }
 `;
 
 //하단 컨테이너(지도 검색, 토글)
-export const FeedBottomContainer = styled.div`
+export const BottomContainer = styled.div`
   display: flex;
   flex-direction: row;
-  border-top: 1px solid #d7d7d7;
-  padding-top: 31px; //임시사이징
+  border-top: 1px solid #494949;
+  padding-top: 5px;
 `;
 
 //검색한 주소 컨테이너
@@ -63,14 +96,22 @@ export const MarkResult = styled.div`
 `;
 
 //토글들
-export const Toggles = styled.div``;
+export const Toggles = styled.div`
+  width: 100%;
+`;
+
+export const ToggleFlex = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #d7d7d7;
+`;
 
 //토클 래핑
 export const ToggleWrap = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: end;
-  padding: 5px;
+  padding: 10px;
 `;
 
 //토글배경
